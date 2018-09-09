@@ -1,0 +1,470 @@
+
+\chapter{Experimental results}
+In this study, we have made a set of statistical analysis on a set of open-source projects in order to extract the structural and logical dependencies between classes \cite{ct5}, \cite{ct8} . Table \ref{table:1} illustrates all the systems studied. The 1st column shows the projects IDs; 2nd column shows the project name; 3rd column shows the number of classes extracted; 4th column shows the number of commits from the active branch of each project and the 5th shows the language in which the project was developed.\\
+
+\begin{table}[h]
+  \centering
+  \begin{tabular}{@{}ccccc@{}}
+    \toprule
+    ID  & Project    & Nr. of classes & Nr. of commits& Type\\
+    \midrule
+ \ch{1}	&	urSQL	&	39	&	89	\\
+ \ch{2}	&	JavaCoder	&	4	&	11	\\
+ \ch{3}	&	jbandwidthlog	&	14	&	54	\\
+\ch{4}	&	sjava-logging	&	18	&	62	\\
+\ch{5}	&	daedalum	&	62	&	29	\\
+\ch{6}	&	prettyfaces	&	257	&	207	\\
+\ch{7}	&	jbal	&	102	&	113	\\
+\ch{8}	&	guavatools	&	209	&	85	\\
+\ch{9}	&	monome-pages	&	196	&	280	\\
+\ch{10}	&	kryo	&	289	&	743	\\
+\ch{11}	&	bitlyj	&	21	&	81	\\
+\ch{12}	&	slema	&	267	&	368	\\
+\ch{13}	&	bluecove	&	386	&	1679	\\
+\ch{14}	&	gp-net-radius	&	25	&	28	\\
+\ch{15}	&	aima-java	&	818	&	1181	\\
+\ch{16}	&	powermock	&	803	&	1512	\\
+\ch{17}	&	restfb	&	713	&	1545	\\
+\ch{18}	&	Tensorflow	&	1104	&	2386	\\
+\ch{19}	&	magnum	&	143	&	1728	\\
+
+    \bottomrule
+  \end{tabular}
+  \caption{Summary of open source projects studied.}
+   \label{table:1}
+\end{table}
+
+\newpage
+Table \ref{table:2}, illustrates results for commits with less than 5 files changed. The 1st column shows the projects IDs; 2nd column shows the number of structural dependencies; 3rd column shows the number logical dependencies found with comments taken into consideration as change; 4th column shows the number of logical dependencies found in col. 3 that are also structural dependencies; 5th column shows logical dependencies found without taking into consideration comments as change; finally the 6th column shows the number of logical dependencies found in col.5 that are also structural dependencies.\\
+
+\begin{table}
+  \centering
+  \begin{tabular}{@{}cccccc@{}}
+    \toprule
+    ID  & SD & LD+comments & Overlaps & LD-comments & Overlaps    \\
+  &\multicolumn{5}{c}{Fasting Value}\\
+    \midrule
+ \ch{1}	&	52	&	59	&	15	&	49	&	12	\\
+ \ch{2}	&	5	&	6	&	3	&	6	&	3	\\
+ \ch{3}	&	8	&	51	&	5	&	51	&	5	\\
+\ch{4}	&	8	&	20	&	0	&	19	&	0	\\
+\ch{5}	&	66	&	5	&	2	&	5	&	2	\\
+\ch{6}	&	264	&	21	&	5	&	19	&	5	\\
+\ch{7}	&	106	&	27	&	2	&	27	&	2	\\
+\ch{8}	&	138	&	89	&	19	&	84	&	19	\\
+\ch{9}	&	250	&	239	&	40	&	217	&	38	\\
+\ch{10}	&	566	&	1576	&	129	&	1505	&	126	\\
+\ch{11}	&	16	&	64	&	5	&	58	&	5	\\
+\ch{12}	&	358	&	217	&	37	&	200	&	34	\\
+\ch{13}	&	447	&	649	&	61	&	581	&	58	\\
+\ch{14}	&	26	&	14	&	4	&	14	&	4	\\
+\ch{15}	&	1463	&	1062	&	101	&	973	&	86	\\
+\ch{16}	&	466	&	1052	&	73	&	938	&	68	\\
+\ch{17}	&	832	&	1515	&	297	&	1371	&	286	\\
+\ch{18}	&	293	&	867	&	45	&	861	&	39	\\
+\ch{19}	&	46	&	94	&	9	&	90	&	8	\\
+    \bottomrule
+  \end{tabular}
+  \caption{Results for commits with less than 5 files changed}
+   \label{table:2}
+\end{table}
+
+
+\newpage
+Table \ref{table:3}, illustrates results for commits with more than 5  and less than 20 files changed. The 1st column shows the projects IDs; 2nd column shows the number of structural dependencies; 3rd column shows the number logical dependencies found with comments taken into consideration as change; 4th column shows the number of logical dependencies found in col. 3 that are also structural dependencies; 5th column shows logical dependencies found without taking into consideration comments as change; finally the 6th column shows the number of logical dependencies found in col.5 that are also structural dependencies.\\
+
+\begin{table}
+  \centering
+  \begin{tabular}{@{}cccccc@{}}
+    \toprule
+    ID  & SD & LD+comm. & Overlaps & LD-comm. & Overlaps    \\
+    \midrule
+ \ch{1}	&	52	&	259	&	25	&	232	&	23	\\
+ \ch{2}	&	5	&	0	&	0	&	0	&	0	\\
+ \ch{3}	&	8	&	107	&	5	&	104	&	5	\\
+\ch{4}	&	8	&	113	&	7	&	72	&	6	\\
+\ch{5}	&	66	&	39	&	0	&	39	&	0	\\
+\ch{6}	&	264	&	55	&	0	&	55	&	0	\\
+\ch{7}	&	106	&	211	&	18	&	149	&	11	\\
+\ch{8}	&	138	&	521	&	49	&	494	&	48	\\
+\ch{9}	&	250	&	1532	&	112	&	1258	&	103	\\
+\ch{10}	&	566	&	3042	&	162	&	2801	&	160	\\
+\ch{11}	&	16	&	186	&	13	&	185	&	13	\\
+\ch{12}	&	358	&	1617	&	147	&	1376	&	139	\\
+\ch{13}	&	447	&	1763	&	135	&	1563	&	123	\\
+\ch{14}	&	26	&	43	&	7	&	37	&	5	\\
+\ch{15}	&	1463	&	5599	&	293	&	5082	&	268	\\
+\ch{16}	&	466	&	4901	&	116	&	4015	&	110	\\
+\ch{17}	&	832	&	3105	&	258	&	2609	&	248	\\
+\ch{18}	&	293	&	2040	&	39	&	1913	&	31	\\
+\ch{19}	&	46	&	336	&	0	&	327	&	0	\\
+    \bottomrule
+  \end{tabular}
+  \caption{Results for commits with more than 5  and less than 20 files changed}
+   \label{table:3}
+\end{table}
+
+\newpage
+
+Table \ref{table:4}, illustrates results for commits with more than 20 files changed. The 1st column shows the projects IDs; 2nd column shows the number of structural dependencies; 3rd column shows the number logical dependencies found with comments taken into consideration as change; 4th column shows the number of logical dependencies found in col. 3 that are also structural dependencies; 5th column shows logical dependencies found without taking into consideration comments as change; finally the 6th column shows the number of logical dependencies found in col.5 that are also structural dependencies.\\
+
+\begin{table}
+  \centering
+  \begin{tabular}{@{}cccccc@{}}
+    \toprule
+   ID  & SD & LD+comm. & Overlaps & LD-comm. & Overlaps    \\
+    \midrule
+ \ch{1}	&	52	&	190	&	18	&	105	&	17	\\
+ \ch{2}	&	5	&	0	&	0	&	0	&	0	\\
+ \ch{3}	&	8	&	0	&	0	&	0	&	0	\\
+\ch{4}	&	8	&	0	&	0	&	0	&	0	\\
+\ch{5}	&	66	&	0	&	0	&	0	&	0	\\
+\ch{6}	&	264	&	0	&	0	&	0	&	0	\\
+\ch{7}	&	106	&	5561	&	91	&	5544	&	91	\\
+\ch{8}	&	138	&	474	&	36	&	474	&	36	\\
+\ch{9}	&	250	&	4213	&	159	&	3581	&	152	\\
+\ch{10}	&	566	&	21214	&	330	&	19360	&	321	\\
+\ch{11}	&	16	&	38	&	0	&	38	&	0	\\
+\ch{12}	&	358	&	5802	&	152	&	3635	&	100	\\
+\ch{13}	&	447	&	31266	&	224	&	30688	&	222	\\
+\ch{14}	&	26	&	119	&	6	&	119	&	6	\\
+\ch{15}	&	1463	&	154757	&	1044	&	148333	&	1028	\\
+\ch{16}	&	466	&	38736	&	130	&	32767	&	123	\\
+\ch{17}	&	832	&	29956	&	447	&	26498	&	418	\\
+\ch{18}	&	293	&	1256784	&	134	&	1255963	&	124	\\
+\ch{19}	&	46	&	941	&	7	&	522	&	3	\\
+
+    \bottomrule
+  \end{tabular}
+  \caption{Results for commits with more than 20 files changed}
+   \label{table:4}
+\end{table}
+
+\newpage
+
+Table \ref{table:5} and \ref{table:6} illustrates results in percentage, reported to the structural dependencies, of the analysis for all the systems when logical dependencies where build with/ without comments taken into consideration as change.The 1st column shows the projects IDs;2nd column shows the overlaping procentage between logical and structural dependencies for commits with less then 5 files changed; 3rd shows the overlaping procentage between logical and structural dependencies for commits with more then 5 and less then 20 files changed; 4th column shows the overlaping procentage between logical dependencies and structural dependencies for commits with more then 20 files changed; 5th column shows the overlaping procentage between logical and structural dependencies for all commits regardless of the number of files (this percentage is not always the sum of the other ones since logical dependencies are taken as unique and one logical dependency can be found in many categories);\\
+
+\begin{table}
+  \centering
+  \begin{tabular}{@{}cccccc@{}}
+    \toprule
+      ID  & \%  less 5  & \%  more 5 less 20 & \% more 20 &  \% Total    \\
+    \midrule
+ \ch{1}	&	28,85	&	48,08	&	34,62	&	76,92	\\
+ \ch{2}	&	60,00	&	0,00	&	0,00	&	60,00	\\
+ \ch{3}	&	62,50	&	62,50	&	0,00	&	62,50	\\
+\ch{4}	&	0,00	&	87,50	&	0,00	&	87,50	\\
+\ch{5}	&	3,03	&	0,00	&	0,00	&	3,03	\\
+\ch{6}	&	1,89	&	0,00	&	0,00	&	1,89	\\
+\ch{7}	&	1,89	&	16,98	&	85,85	&	85,85	\\
+\ch{8}	&	13,77	&	35,51	&	26,09	&	70,29	\\
+\ch{9}	&	16,00	&	44,80	&	63,60	&	69,60	\\
+\ch{10}	&	22,79	&	28,62	&	58,30	&	65,55	\\
+\ch{11}	&	31,25	&	81,25	&	0,00	&	87,50	\\
+\ch{12}	&	10,34	&	41,06	&	42,46	&	66,48	\\
+\ch{13}	&	13,65	&	30,20	&	50,11	&	64,88	\\
+\ch{14}	&	15,38	&	26,92	&	23,08	&	46,15	\\
+\ch{15}	&	6,90	&	20,03	&	71,36	&	75,32	\\
+\ch{16}	&	15,67	&	24,89	&	27,90	&	57,73	\\
+\ch{17}	&	35,70	&	31,01	&	53,73	&	81,49	\\
+\ch{18}	&	15,36	&	13,31	&	45,73	&	45,73	\\
+\ch{19}	&	19,57	&	0,00	&	15,22	&	32,61	\\
+\bottomrule
+\ch{Avg}	&	19,7	&	31,19	&	31,47	&	60,4	\\
+    \bottomrule
+  \end{tabular}
+  \caption{Percentage rates of dependencies overlaps, reported to the structural dependencies, case with comments }
+   \label{table:5}
+\end{table}
+
+\newpage
+
+
+\begin{table}
+  \centering
+  \begin{tabular}{@{}cccccc@{}}
+    \toprule
+     ID  & \%  less 5  & \%  more 5 less 20 & \% more 20 &  \% Total    \\
+    \midrule
+ \ch{1}	&	23,08	&	44,23	&	32,69	&	71,15	\\
+ \ch{2}	&	60,00	&	0,00	&	0,00	&	60,00	\\
+ \ch{3}	&	62,50	&	62,50	&	0,00	&	62,50	\\
+\ch{4}	&	0,00	&	75,00	&	0,00	&	75,00	\\
+\ch{5}	&	3,03	&	0,00	&	0,00	&	3,03	\\
+\ch{6}	&	1,89	&	0,00	&	0,00	&	1,89	\\
+\ch{7}	&	1,89	&	10,38	&	85,85	&	85,85	\\
+\ch{8}	&	13,77	&	34,78	&	26,09	&	69,57	\\
+\ch{9}	&	15,20	&	41,20	&	60,80	&	68,40	\\
+\ch{10}	&	22,26	&	28,27	&	56,71	&	63,96	\\
+\ch{11}	&	31,25	&	81,25	&	0,00	&	87,50	\\
+\ch{12}	&	9,50	&	38,83	&	27,93	&	58,38	\\
+\ch{13}	&	12,98	&	27,52	&	49,66	&	63,31	\\
+\ch{14}	&	15,38	&	19,23	&	23,08	&	42,31	\\
+\ch{15}	&	5,88	&	18,32	&	70,27	&	74,16	\\
+\ch{16}	&	14,59	&	23,61	&	26,39	&	55,58	\\
+\ch{17}	&	34,38	&	29,81	&	50,24	&	78,97	\\
+\ch{18}	&	13,31	&	10,58	&	42,32	&	43,00	\\
+\ch{19}	&	19,05	&	0,00	&	7,14	&	23,81	\\
+\bottomrule
+\ch{Avg}	&	18,9 &	28,7	&	29,43	&	57,28	\\
+    \bottomrule
+  \end{tabular}
+  \caption{Percentage rate of dependencies overlaps, reported to the structural dependencies , case without comments }
+   \label{table:6}
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
+
+\tab For the following results we have filtered the logical dependencies after the number of occurrences in the categories mentioned . Only logical dependencies that have appeared more than once will be taken into consideration. Once again the logical dependencies are splited in three categories : logical dependencies with multiple occurences found in commits with less then 5 files changed, logical dependencies with multiple occurences found in commits with more the 5 files changed and less then 20 and logical dependencies with multiple occurences found in commits with more then 20 files changed.\\
+
+Table \ref{table:7}, illustrates results  \textit{for multiple occurences of logical dependencies taken into consideration as valid dependencies} for commits with less than 5 files changed. The 1st column shows the projects IDs; 2nd column shows the number of structural dependencies; 3rd column shows the number logical dependencies found with comments taken into consideration as change; 4th column shows the number of logical dependencies found in col. 3 that are also structural dependencies; 5th column shows logical dependencies found without taking into consideration comments as change; finally the 6th column shows the number of logical dependencies found in col.5 that are also structural dependencies.\\
+
+\begin{table}
+  \centering
+  \begin{tabular}{@{}cccccc@{}}
+    \toprule
+    ID  & SD & LD+comments & Overlaps & LD-comments & Overlaps    \\
+  &\multicolumn{5}{c}{Fasting Value}\\
+    \midrule
+ \ch{1}	&	52	&	21	&	8	&	17	&	5	\\
+ \ch{2}	&	5	&	1	&	1	&	1	&	1	\\
+ \ch{3}	&	8	&	32	&	4	&	32	&	4	\\
+\ch{4}	&	8	&	3	&	0	&	3	&	0	\\
+\ch{5}	&	66	&	0	&	0	&	0	&	0	\\
+\ch{6}	&	264	&	4	&	2	&	4	&	2	\\
+\ch{7}	&	106	&	3	&	1	&	3	&	1	\\
+\ch{8}	&	138	&	13	&	3	&	13	&	3	\\
+\ch{9}	&	250	&	70	&	20	&	61	&	19	\\
+\ch{10}	&	566	&	714	&	71	&	699	&	70	\\
+\ch{11}	&	16	&	15	&	0	&	15	&	0	\\
+\ch{12}	&	358	&	33	&	13	&	27	&	11	\\
+\ch{13}	&	447	&	124	&	26	&	100	&	23	\\
+\ch{14}	&	26	&	2	&	0	&	2	&	0	\\
+\ch{15}	&	1463	&	217	&	26	&	206	&	24	\\
+\ch{16}	&	466	&	145	&	12	&	133	&	12	\\
+\ch{17}	&	832	&	817	&	221	&	737	&	215	\\
+\ch{18}	&	293	&	291	&	28	&	283	&	26	\\
+\ch{19}	&	46	&	5	&	6	&	2	&	6	\\
+    \bottomrule
+  \end{tabular}
+  \caption{Results for commits with less than 5 files changed with filtered logical dependencies}
+   \label{table:7}
+\end{table}
+
+
+\newpage
+Table \ref{table:8}, illustrates results for  \textit{multiple occurences of logical dependencies taken into consideration as valid dependencies} for commits with more than 5  and less than 20 files changed. The 1st column shows the projects IDs; 2nd column shows the number of structural dependencies; 3rd column shows the number logical dependencies found with comments taken into consideration as change; 4th column shows the number of logical dependencies found in col. 3 that are also structural dependencies; 5th column shows logical dependencies found without taking into consideration comments as change; finally the 6th column shows the number of logical dependencies found in col.5 that are also structural dependencies.\\
+
+\begin{table}
+  \centering
+  \begin{tabular}{@{}cccccc@{}}
+    \toprule
+    ID  & SD & LD+comm. & Overlaps & LD-comm. & Overlaps    \\
+    \midrule
+ \ch{1}	&	52	&	50	&	11	&	37	&	7	\\
+ \ch{2}	&	5	&	0	&	0	&	0	&	0	\\
+ \ch{3}	&	8	&	73	&	5	&	73	&	5	\\
+\ch{4}	&	8	&	32	&	3	&	7	&	1	\\
+\ch{5}	&	66	&	0	&	0	&	0	&	0	\\
+\ch{6}	&	264	&	0	&	0	&	0	&	0	\\
+\ch{7}	&	106	&	76	&	5	&	67	&	2	\\
+\ch{8}	&	138	&	156	&	7	&	154	&	7	\\
+\ch{9}	&	250	&	716	&	81	&	565	&	70	\\
+\ch{10}	&	566	&	1255	&	84	&	1181	&	84	\\
+\ch{11}	&	16	&	63	&	7	&	48	&	7	\\
+\ch{12}	&	358	&	423	&	76	&	304	&	62	\\
+\ch{13}	&	447	&	452	&	61	&	368	&	49	\\
+\ch{14}	&	26	&	7	&	0	&	6	&	0	\\
+\ch{15}	&	1463	&	1098	&	103	&	913	&	91	\\
+\ch{16}	&	466	&	988	&	42	&	756	&	38	\\
+\ch{17}	&	832	&	1546	&	188	&	1402	&	187	\\
+\ch{18}	&	293	&	665	&	18	&	641	&	16	\\
+\ch{19}	&	46	&	6	&	0	&	6	&	0	\\
+    \bottomrule
+  \end{tabular}
+  \caption{Results for commits with more than 5  and less than 20 files changed with filtered logical dependencies}
+   \label{table:8}
+\end{table}
+
+\newpage
+
+Table \ref{table:9}, illustrates results  \textit{for multiple occurences of logical dependencies taken into consideration as valid dependencies} for commits with more than 20 files changed. The 1st column shows the projects IDs; 2nd column shows the number of structural dependencies; 3rd column shows the number logical dependencies found with comments taken into consideration as change; 4th column shows the number of logical dependencies found in col. 3 that are also structural dependencies; 5th column shows logical dependencies found without taking into consideration comments as change; finally the 6th column shows the number of logical dependencies found in col.5 that are also structural dependencies.\\
+
+\begin{table}
+  \centering
+  \begin{tabular}{@{}cccccc@{}}
+    \toprule
+   ID  & SD & LD+comm. & Overlaps & LD-comm. & Overlaps    \\
+    \midrule
+ \ch{1}	&	52	&	0	&	0	&	0	&	0	\\
+ \ch{2}	&	5	&	0	&	0	&	0	&	0	\\
+ \ch{3}	&	8	&	0	&	0	&	0	&	0	\\
+\ch{4}	&	8	&	0	&	0	&	0	&	0	\\
+\ch{5}	&	66	&	0	&	0	&	0	&	0	\\
+\ch{6}	&	264	&	0	&	0	&	0	&	0	\\
+\ch{7}	&	106	&	4571	&	89	&	4550	&	89	\\
+\ch{8}	&	138	&	132	&	10	&	132	&	10	\\
+\ch{9}	&	250	&	2001	&	115	&	1616	&	89	\\
+\ch{10}	&	566	&	3806	&	134	&	3650	&	133	\\
+\ch{11}	&	16	&	33	&	0	&	33	&	0	\\
+\ch{12}	&	358	&	509	&	46	&	201	&	14	\\
+\ch{13}	&	447	&	6814	&	117	&	6624	&	105	\\
+\ch{14}	&	26	&	0	&	0	&	0	&	0	\\
+\ch{15}	&	1463	&	87249	&	770	&	84242	&	743	\\
+\ch{16}	&	466	&	18138	&	86	&	16879	&	83	\\
+\ch{17}	&	832	&	14702	&	302	&	11773	&	248	\\
+\ch{18}	&	293	&	922737	&	118	&	922315	&	97	\\
+\ch{19}	&	46	&	23	&	5	&	14	&	2	\\
+    \bottomrule
+  \end{tabular}
+  \caption{Results for commits with more than 20 files changed with filtered logical dependencies}
+   \label{table:9}
+\end{table}
+
+\newpage
+
+Table \ref{table:10} and \ref{table:11} illustrates results in percentage, \textit{reported to the structural dependencies}, of the analysis for all the systems when logical dependencies where build with/ without comments taken into consideration as change and multiple occurences of logical dependencies taken into consideration as valid dependencies.The 1st column shows the projects IDs; 2nd column shows the overlaping procentage between logical and structural dependencies, reported to the structural dependencies, for commits with less then 5 files changed; 3rd shows the overlaping procentage between logical and structural dependencies, reported to the structural dependencies, for commits with more then 5 and less then 20 files changed; 4th column shows the overlaping procentage between logical dependencies and structural dependencies, reported to the structural dependencies, for commits with more then 20 files changed; 5th column shows the overlaping procentage between logical and structural dependencies, reported to the structural dependencies, for all commits regardless of the number of files (this percentage is not always the sum of the other ones since logical dependencies are taken as unique and one logical dependency can be found in many categories);\\
+
+\begin{table}
+  \centering
+  \begin{tabular}{@{}cccccc@{}}
+    \toprule
+      ID  & \%  less 5  & \%  more 5 less 20 & \% more 20 &  \% Total    \\
+    \midrule
+ \ch{1}	&	15,38	&	21,15	&	0,00	&	46,15	\\
+ \ch{2}	&	20,00	&	0,00	&	0,00	&	20,00	\\
+ \ch{3}	&	50,00	&	62,50	&	0,00	&	62,50	\\
+\ch{4}	&	0,00	&	37,50	&	0,00	&	37,50	\\
+\ch{5}	&	0,00	&	0,00	&	0,00	&	0,00	\\
+\ch{6}	&	0,76	&	0,00	&	0,00	&	0,76	\\
+\ch{7}	&	0,94	&	4,72	&	83,96	&	84,91	\\
+\ch{8}	&	2,17	&	5,07	&	7,25	&	15,22	\\
+\ch{9}	&	8,00	&	32,40	&	46,00	&	58,40	\\
+\ch{10}	&	12,54	&	14,84	&	23,67	&	42,05	\\
+\ch{11}	&	0,00	&	43,75	&	0,00	&	62,50	\\
+\ch{12}	&	3,63	&	21,23	&	12,85	&	32,68	\\
+\ch{13}	&	5,82	&	13,65	&	26,17	&	43,40	\\
+\ch{14}	&	0,00	&	0,00	&	0,00	&	19,23	\\
+\ch{15}	&	1,78	&	7,04	&	52,63	&	58,58	\\
+\ch{16}	&	2,58	&	9,01	&	18,45	&	30,69	\\
+\ch{17}	&	26,56	&	22,60	&	36,30	&	64,66	\\
+\ch{18}	&	9,56	&	6,14	&	40,27	&	40,27	\\
+\ch{19}	&	13,04	&	0,00	&	10,87	&	23,91	\\
+\bottomrule
+\ch{Avg}	&	9,09	&	15,87	&	18,8	&	39,1	\\
+    \bottomrule
+  \end{tabular}
+  \caption{Percentage rates of dependencies overlaps reported to the structural dependencies with filtered logical dependencies, case with comments }
+   \label{table:10}
+\end{table}
+
+
+
+
+\begin{table}
+  \centering
+  \begin{tabular}{@{}cccccc@{}}
+    \toprule
+     ID  & \%  less 5  & \%  more 5 less 20 & \% more 20 &  \% Total    \\
+    \midrule
+ \ch{1}	&	9,62	&	13,46	&	0,00	&	34,62	\\
+ \ch{2}	&	20,00	&	0,00	&	0,00	&	20,00	\\
+ \ch{3}	&	50,00	&	62,50	&	0,00	&	62,50	\\
+\ch{4}	&	0,00	&	12,50	&	0,00	&	12,50	\\
+\ch{5}	&	0,00	&	0,00	&	0,00	&	0,00	\\
+\ch{6}	&	0,76	&	0,00	&	0,00	&	0,76	\\
+\ch{7}	&	0,94	&	1,89	&	83,96	&	83,96	\\
+\ch{8}	&	2,17	&	5,07	&	7,25	&	15,22	\\
+\ch{9}	&	7,60	&	28,00	&	35,60	&	52,00	\\
+\ch{10}	&	12,37	&	14,84	&	23,50	&	42,05	\\
+\ch{11}	&	0,00	&	43,75	&	0,00	&	62,50	\\
+\ch{12}	&	3,07	&	17,32	&	3,91	&	24,86	\\
+\ch{13}	&	5,15	&	10,96	&	23,49	&	41,16	\\
+\ch{14}	&	0,00	&	0,00	&	0,00	&	15,38	\\
+\ch{15}	&	1,64	&	6,22	&	50,79	&	56,73	\\
+\ch{16}	&	2,58	&	8,15	&	17,81	&	29,18	\\
+\ch{17}	&	25,84	&	22,48	&	29,81	&	60,70	\\
+\ch{18}	&	8,87	&	5,46	&	33,11	&	34,47	\\
+\ch{19}	&	14,29	&	0,00	&	4,76	&	21,43	\\
+\bottomrule
+\ch{Avg}	&	8,67	&	13,29	&	16,53	&	35,38	\\
+    \bottomrule
+  \end{tabular}
+  \caption{Percentage rates of dependencies overlaps reported to the structural dependencies with filtered logical dependencies, case without comments }
+   \label{table:11}
+\end{table}
+
+\newpage
+
+Table \ref{table:ldol1} and \ref{table:ldol2} illustrates results in percentage, \textit{ reported to the logical dependencies}, of the analysis for all the systems when logical dependencies where build with/ without comments taken into consideration as change without filtering the number of occurrences of the logical dependencies found. The 1st column shows the projects IDs; 2nd column shows the overlaping procentage between logical and structural dependencies reported to the logical dependencies found for commits with less then 5 files changed; 3rd shows the overlaping procentage between logical and structural dependencies reported to the logical dependencies found for commits with more then 5 and less then 20 files changed; 4th column shows the overlaping procentage between logical dependencies and structural dependencies reported to the logical dependencies found for commits with more then 20 files changed; 5th column shows the overlaping procentage between logical and structural dependencies reported to the logical dependencies found for all commits regardless of the number of files (this percentage is not always the sum of the other ones since logical dependencies are taken as unique and one logical dependency can be found in many categories);\\
+
+
+\begin{table}
+  \centering
+  \begin{tabular}{@{}cccccc@{}}
+    \toprule
+     ID  & \%  less 5  & \%  more 5 less 20 & \% more 20 &  \% Total    \\
+    \midrule
+ \ch{1}	&	25,42	&	9,65	&	9,47	&	9,47	\\
+ \ch{2}	&	50,00	&	0,00	&	0,00	&	0,00	\\
+ \ch{3}	&	9,80	&	4,67	&	0,00	&	0,00	\\
+\ch{4}	&	0,00	&	6,19	&	0,00	&	0,00	\\
+\ch{5}	&	40,00	&	0,00	&	0,00	&	0,00	\\
+\ch{6}	&	23,81	&	0,00	&	0,00	&	0,00	\\
+\ch{7}	&	7,41	&	8,53	&	1,64	&	1,64	\\
+\ch{8}	&	21,35	&	9,40	&	7,59	&	7,59	\\
+\ch{9}	&	16,74	&	7,31	&	3,77	&	3,77	\\
+\ch{10}	&	8,19	&	5,33	&	1,56	&	1,56	\\
+\ch{11}	&	7,81	&	6,99	&	0,00	&	0,00	\\
+\ch{12}	&	17,05	&	9,09	&	2,62	&	2,62	\\
+\ch{13}	&	9,40	&	7,66	&	0,72	&	0,72	\\
+\ch{14}	&	28,57	&	16,28	&	5,04	&	5,04	\\
+\ch{15}	&	9,51	&	5,23	&	0,67	&	0,67	\\
+\ch{16}	&	6,94	&	2,37	&	0,34	&	0,34	\\
+\ch{17}	&	19,60	&	8,31	&	1,49	&	1,49	\\
+\ch{18}	&	5,19	&	1,91	&	0,01	&	0,01	\\
+\ch{19}	&	9,57	&	0,00	&	0,74	&	0,74	\\
+
+\bottomrule
+\ch{Avg}	&	16,65	&	5,73	&	1,87	&	1,87	\\
+    \bottomrule
+  \end{tabular}
+  \caption{Percentage rates of dependencies overlaps reported to the logical dependencies, case without comments }
+   \label{table:ldol1}
+\end{table}
+
+
+\begin{table}
+  \centering
+  \begin{tabular}{@{}cccccc@{}}
+    \toprule
+     ID  & \%  less 5  & \%  more 5 less 20 & \% more 20 &  \% Total    \\
+    \midrule
+ \ch{1}	&	24,49	&	9,91	&	16,19	&	11,60	\\
+ \ch{2}	&	50,00	&	0,00	&	0,00	&	50,00	\\
+ \ch{3}	&	9,80	&	4,81	&	0,00	&	4,76	\\
+\ch{4}	&	0,00	&	8,33	&	0,00	&	7,32	\\
+\ch{5}	&	40,00	&	0,00	&	0,00	&	4,65	\\
+\ch{6}	&	26,32	&	0,00	&	0,00	&	6,76	\\
+\ch{7}	&	7,41	&	7,38	&	1,64	&	1,64	\\
+\ch{8}	&	22,62	&	9,72	&	7,59	&	9,78	\\
+\ch{9}	&	17,51	&	8,19	&	4,24	&	4,27	\\
+\ch{10}	&	8,37	&	5,71	&	1,66	&	1,76	\\
+\ch{11}	&	8,62	&	7,03	&	0,00	&	5,76	\\
+\ch{12}	&	17,00	&	10,10	&	2,75	&	4,41	\\
+\ch{13}	&	9,98	&	7,87	&	0,72	&	0,89	\\
+\ch{14}	&	28,57	&	13,51	&	5,04	&	7,75	\\
+\ch{15}	&	8,84	&	5,27	&	0,69	&	0,72	\\
+\ch{16}	&	7,25	&	2,74	&	0,38	&	0,72	\\
+\ch{17}	&	20,86	&	9,51	&	1,58	&	2,30	\\
+\ch{18}	&	4,53	&	1,62	&	0,01	&	0,01	\\
+\ch{19}	&	8,89	&	0,00	&	0,57	&	1,05	\\
+\bottomrule
+\ch{Avg}	&	16,89	&	5,87	&	2,26	&	6,63	\\
+    \bottomrule
+  \end{tabular}
+  \caption{Percentage rates of dependencies overlaps reported to the logical dependencies, case with comments }
+   \label{table:ldol2}
+\end{table}

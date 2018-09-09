@@ -1,0 +1,120 @@
+\documentclass[12pt,a4paper,oneside]{report}
+
+\usepackage{titlesec}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs, chemformula}
+\usepackage{titlesec, blindtext, color}
+\usepackage{listings}
+
+\usepackage{xcolor} % for setting colors
+
+% set the default code style
+\lstset{
+basicstyle=\fontsize{9}{11}\ttfamily,
+    frame=tb, % draw a frame at the top and bottom of the code block
+    tabsize=4, % tab space width
+    showstringspaces=false, % don't mark spaces in strings
+    numbers=left, % display line numbers on the left
+    commentstyle=\color{green}, % comment color
+    keywordstyle=\color{blue}, % keyword color
+    stringstyle=\color{red} % string color
+}
+
+\newcommand\tab[1][1cm]{\hspace*{#1}}
+
+ \geometry{
+ a4paper,
+ top=35mm,
+bottom=30mm,
+bindingoffset=0.0in
+ }
+\pagenumbering{arabic} 
+
+\pagestyle{headings}
+
+\newcommand{\dspaceon}{\renewcommand{\baselinestretch}{1.3}\large\normalsize}
+\newcommand{\dspaceoff}{\renewcommand{\baselinestretch}{1}\large\normalsize}
+
+\graphicspath{ {images/} }
+
+\definecolor{gray75}{gray}{0.75}
+\newcommand{\hsp}{\hspace{20pt}}
+\titleformat{\chapter}[hang]{\Large\bfseries}{\thechapter\hsp\textcolor{gray75}{$|$}\hsp}{0pt}{\Large\bfseries}
+\titleformat{\section}{\normalfont\large\bfseries}{\thesection}{1em}{}
+
+
+\begin{document}
+\input{Title.tex}
+
+\tableofcontents
+
+\newpage
+
+\include{Introduction}
+
+\include{TheoreticAspects}
+
+\include{Implementation}
+
+\include{ToolDescription}
+
+\include{ExperimentalResults}
+
+\include{Conclusions}
+
+
+\begin{thebibliography}{1}
+
+\bibitem{ct1}
+David Binkley, \emph{Source Code Analysis: A Road Map}, Future of Software Engineering, 2007. FOSE '07.
+\bibitem{ct8}
+N. Ajienka and A. Capiluppi, \emph{Understanding the interplay between the logical and structural coupling of software classes}, J. Systems Software, vol. 134, pp. 120-137, 2017.
+\bibitem{cappilupi2}
+Ajienka, N., Capiluppi, A., Counsell., \emph{An empirical study on the interplay between semantic coupling and co-change of software classes}, S. Empir Software Eng (2018) 23: 1791.
+\bibitem{ct6}
+Igor Wiese, Rodrigo Kuroda, Reginaldo Re, Gustavo Oliva, Marco Gerosa, \emph{An Empirical Study of the Relation Between Strong Change Coupling and Defects Using History and Social Metrics in the Apache Aries Project}, IFIP International Conference on Open Source Systems, OSS 2015: Open Source Systems: Adoption and Impact, pp. 3-12.
+\bibitem{ct_oliva2011}
+Oliva, G.A., Gerosa, M.A., \emph{On the interplay between structural and logical dependencies in open-source software.}, Software Engineering (SBES), 2011 25th Brazilian Symposium on. IEEE, pp. 144–153
+\bibitem{ct2}
+G. Booch, \emph{Object-Oriented Analysis and Design with Applications}, Third Edition: Addison-Wesley, 2007.
+\bibitem{ct3}
+Marcelo Cataldo, Audris Mockus, Jeffrey A. Roberts, and James D. Herbsleb, \emph{Software Dependencies, Work Dependencies, and Their Impact on Failures},  IEEE Transactions on Software Engineering ( Volume: 35, Issue: 6, Nov.-Dec. 2009 ), pp. 864-878.
+\bibitem{ct4}
+Beck F., Diehl S.,\emph{ On the congruence of modularity and code coupling}, In ESEC/FSE'11: European Software Engineering Conference and Symposium on Foundations of Software Engineering (2011), pp. 354-364.
+\bibitem{ct5}
+Liguo Yu,\emph{Understanding component co-evolution with a study on Linux}, Empirical Software Engineering, April 2007, Volume 12, Issue 2, pp. 123-141.
+\bibitem{ct7}
+ Ben Collins-Sussman, Brian W. Fitzpatrick, and C. Michael Pilato, \emph{Version Control with Subversion}, http://svnbook.red-bean.com/en/1.7/svn.basic.version-control-basics.html, 2008.
+\bibitem{ct9}
+ Huzefa Kagdi, Malcom Gethers, Denys Poshyvanyk, Michael L. Collard,\emph{Blending Conceptual and Evolutionary Couplings to Support Change Impact Analysis in Source Code}, 17th Working Conference on IEEE, 2010, pp. 119-128.
+\bibitem{ct10}
+Poshyvanyk, Denys, \emph{Using information retrieval based coupling measures for impact analysis}, Empirical Software Engineering 14 ,2008, pp. 5-32.
+\bibitem{ct11}
+Arisholm E, Briand LC, Foyen A \emph{Dynamic coupling measurement for object-oriented software.}, 2004, IEEE Trans Softw Eng 30(8):491–506.
+\bibitem{srcml1}
+Collard, M. L., Kagdi, H., and Maletic, J. I., \emph{An XML-Based Lightweight C++ Fact Extractor}, IEEE International Workshop on Program Comprehension (IWPC'03), Portland, OR, May 10-11 2003, pp. 134-143
+\bibitem{srcml2}
+Collard, M.L., Decker, M., Maletic, J. I.,  \emph{Lightweight Transformation and Fact Extraction with the srcML Toolkit}, IEEE International Working Conference on Source Code Analysis and Manipulation (SCAM'11), 2011, pp. 173-184.
+\bibitem{python}
+Kuhlman Dave, \emph{A Python Book: Beginning Python, Advanced Python, and Python Exercises.}, 2009, pp. 12-13.
+\bibitem{oopconcept}
+ K. B. Bruce, \emph{ Foundations of Object-Oriented Languages.} The MIT Press, Cambridge, MA, 2002, pp. 18-20.
+\bibitem{oop2}
+Gilbert, Stephen, Bill McCarty. \emph{Object-Oriented Design in Java.} The Waite Group, 1998, pp. 34-46.
+
+
+\end{thebibliography}
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
