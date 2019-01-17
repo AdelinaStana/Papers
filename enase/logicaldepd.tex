@@ -1,3 +1,4 @@
+
 \documentclass[a4paper,twoside]{article}
 
 \usepackage{epsfig}
@@ -148,37 +149,46 @@ The tool looks through the main branch of the project and gets all the existing 
 \label{sec:experiments}
 
 
-We have analysed a set of open-source projects found on GitHub\footnote{http://github.com/} in order to extract the structural and logical dependencies between classes. Table \ref{table:1} enumerates all the systems studied. The 1st column assigns the projects IDs; 2nd column shows the project name; 3rd column shows the number of classes extracted; 4th column shows the number of most recent commits analysed from the active branch of each project and the 5th shows the language in which the project was developed.
+We have analysed a set of open-source projects found on GitHub in order to extract the structural and logical dependencies between classes. Table \ref{table:1} enumerates all the systems studied. The 1st column assigns the projects IDs; 2nd column shows the project name; 3rd column shows the number of classes extracted; 4th column shows the number of most recent commits analysed from the active branch of each project and the 5th shows the language in which the project was developed.
 
-\begin{table}[h]
-	\caption{Summary of open source projects studied.}
-	\centering
-  \begin{tabular}{@{}ccccc@{}}
-    \toprule
-    ID  & Project    & Nr. of classes & Nr. of commits& Type\\
-    \midrule
- \ch{1}	&	urSQL	&	39	&	89	&	java	\\
- \ch{2}	&	prettyfaces	&	257	&	207	&	java	\\
- \ch{3}	&	jbal	&	102	&	113	&	java	\\
-\ch{4}	&	guavatools	&	209	&	85	&	java	\\
-\ch{5}	&	monome-pages	&	196	&	280	&	java	\\
-\ch{6}	&	kryo	&	289	&	743	&	java	\\
-\ch{7}	&	selma	&	267	&	368	&	java	\\
-\ch{8}	&	bluecove	&	386	&	1679	&	java	\\
-\ch{9}	&	aima-java	&	818	&	1181	&	java	\\
-\ch{10}	&	powermock	&	803	&	1512	&	java	\\
-\ch{11}	&	restfb	&	713	&	1545	&	java	\\
-\ch{12}	&	rxjava	&	2251	&	2468	&	java	\\
-\ch{13}	&	metro-jax-ws	&	365	&	2222	&	java	\\
-\ch{14}	&	mockito	&	1121	&	1572	&	java	\\
-\ch{15}	&	grizzly	&	1170	&	3122	&	java	\\
-\ch{16}	&	shipkit	&	222	&	1483	&	java	\\
-\ch{17}	&	Tensorflow	&	1104	&	2386	&	cpp	\\
-
-    \bottomrule
-  \end{tabular}
-  
-   \label{table:1}
+\begin{table}[!h]
+\caption{Summary of open source projects studied.}
+\label{table:1}
+\centering
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+   ID  & Project    & Nr. of & Nr. of& Type\\
+     &     & entites & commits & \\
+\hline
+1	&	bluecove	&	586	&	1679	&	java	\\
+2	&	aima-java	&	987	&	1181	&	java	\\
+3	&	powermock	&	1084	&	1512	&	java	\\
+4	&	restfb	&	783	&	1545	&	java	\\
+5	&	rxjava	&	2673	&	2468	&	java	\\
+6	&	metro-jax-ws	&	1103	&	2222	&	java	\\
+7	&	mockito	&	1409	&	1572	&	java	\\
+8	&	grizzly	&	1592	&	3122	&	java	\\
+9	&	shipkit	&	242	&	1483	&	java	\\
+10	&	OpenClinica	&	1653	&	3749	&	java	\\
+11	&	robolectric	&	2050	&	5029	&	java	\\
+12	&	aeron	&	541	&	5101	&	java	\\
+13	&	antlr4	&	1381	&	3449	&	java	\\
+14	&	mcidasv	&	805	&	3668	&	java	\\
+15	&	ShareX	&	919	&	2505	&	csharp	\\
+16	&	aspnetboilerplate	&	2353	&	1615	&	csharp	\\
+17	&	orleans	&	3485	&	3353	&	csharp	\\
+18	&	cli	&	767	&	2397	&	csharp	\\
+19	&	cake	&	2250	&	1853	&	csharp	\\
+20	&	Avalonia	&	1677	&	2445	&	csharp	\\
+21	&	EntityFramework	&	7107	&	2443	&	csharp	\\
+22	&	jellyfin	&	2179	&	4065	&	csharp	\\
+23	&	PowerShell	&	861	&	2033	&	csharp	\\
+24	&	WeiXinMPSDK	&	2029	&	2723	&	csharp	\\
+25	&	ArchiSteamFarm	&	117	&	2181	&	csharp	\\
+26	&	VisualStudio	&	1016	&	4417	&	csharp	\\
+27	&	CppSharp	&	259	&	3882	&	csharp	\\
+\hline
+\end{tabular}
 \end{table}
 
 
@@ -219,10 +229,10 @@ In all the six tables, \ref{tab:ratio:comm}, \ref{tab:ratio:nocomm}, \ref{tab:pe
 \hline
 	      &	$cs\leq 5$	&	$cs\leq 10$	&	$cs\leq 20$	&	$cs<\infty$	\\
 \hline
-$occ\geq 1$	&	1.13	&	3.13	&	5.54	&	72.96	\\
-$occ\geq 2$	&	0.31	&	1.04	&	1.70	&	26.13	\\
-$occ\geq 3$	&	0.11	&	0.44	&	0.80	&	11.84	\\
-$occ\geq 4$	&	0.04	&	0.13	&	0.31	&	5.22	\\
+$occ\geq 1$	&	8.02	&	17.25	&	33.24	&	319.19	\\
+$occ\geq 2$	&	4.05	&	8.93	&	16.25	&	278.97	\\
+$occ\geq 3$	&	2.61	&	5.05	&	10.05	&	201.82	\\
+$occ\geq 4$	&	1.86	&	3.44	&	6.24	&	135	\\
 \hline
 \end{tabular}
 \end{table}
@@ -239,10 +249,11 @@ $occ\geq 4$	&	0.04	&	0.13	&	0.31	&	5.22	\\
 \hline
 	      &	$cs\leq 5$	&	$cs\leq 10$	&	$cs\leq 20$	&	$cs< \infty$	\\
 \hline
-$occ\geq 1$	&	0.94	&	2.77	&	4.63	&	66.07	\\
-$occ\geq 2$	&	0.27	&	0.83	&	1.46	&	21.10	\\
-$occ\geq 3$	&	0.08	&	0.35	&	0.63	&	9.29	\\
-$occ\geq 4$	&	0.03	&	0.10	&	0.24	&	3.33	\\
+$occ\geq 1$	&	7.85	&	16.33	&	29.78	&	306.54	\\
+$occ\geq 2$	&	3.93	&	7.78	&	15.65	&	246.08	\\
+$occ\geq 3$	&	2.42	&	4.91	&	8.19	&	115.56	\\
+$occ\geq 4$	&	1.64	&	3.19	&	5.47	&	51.77	\\
+
 \hline
 \end{tabular}
 \end{table}
@@ -259,10 +270,10 @@ $occ\geq 4$	&	0.03	&	0.10	&	0.24	&	3.33	\\
 \hline
 	      &	$cs\leq 5$	&	$cs\leq 10$	&	$cs\leq 20$	&	$cs< \infty$	\\
 \hline
-$occ\geq 1$	&	13.77	&	23.27	&	36.04	&	66.48	\\
-$occ\geq 2$	&	4.11	&	9.90	&	15.79	&	42.05	\\
-$occ\geq 3$	&	1.92	&	5.82	&	8.41	&	21.15	\\
-$occ\geq 4$	&	0.85	&	2.68	&	5.80	&	13.46	\\
+$occ\geq 1$	&	17.11	&	25.69	&	37.94	&	78.11	\\
+$occ\geq 2$	&	9.74	&	15.8	&	25.2	&	68.32	\\
+$occ\geq 3$	&	5.92	&	10.6	&	17.86	&	63.6	\\
+$occ\geq 4$	&	5.01	&	8.45	&	13.81	&	56.52	\\
 \hline
 \end{tabular}
 \end{table}
@@ -279,10 +290,10 @@ $occ\geq 4$	&	0.85	&	2.68	&	5.80	&	13.46	\\
 \hline
 	      &	$cs\leq 5$	&	$cs\leq 10$	&	$cs\leq 20$	&	$cs< \infty$	\\
 \hline
-$occ\geq 1$	&	13.77	&	22.15	&	34.38	&	63.96	\\
-$occ\geq 2$	&	3.67	&	9.17	&	12.53	&	34.62	\\
-$occ\geq 3$	&	1.82	&	4.03	&	6.83	&	17.60	\\
-$occ\geq 4$	&	0.67	&	2.34	&	4.47	&	11.60	\\
+$occ\geq 1$	&	16.56	&	24.77	&	37.33	&	75.98	\\
+$occ\geq 2$	&	9.03	&	15.2	&	23.85	&	61.66	\\
+$occ\geq 3$	&	5.92	&	10.6	&	15.81	&	49.03	\\
+$occ\geq 4$	&	4.59	&	7.41	&	11.85	&	37.53	\\
 \hline
 \end{tabular}
 \end{table}
@@ -299,11 +310,10 @@ $occ\geq 4$	&	0.67	&	2.34	&	4.47	&	11.60	\\
 \hline
 	      &	$cs\leq 5$	&	$cs\leq 10$	&	$cs\leq 20$	&	$cs< \infty$	\\
 \hline
-$occ\geq 1$	&	9.40	&	7.81	&	5.53	&	0.89	\\
-$occ\geq 2$	&	20.97	&	16.50	&	7.41	&	1.97	\\
-$occ\geq 3$&	18.82	&	18.53	&	13.73	&	2.10	\\
-$occ\geq 4$&	27.39	&	21.59	&	18.60	&	2.88	\\
-
+$occ\geq 1$	&	1.62	&	1.26	&	1.07	&	0.24	\\
+$occ\geq 2$	&	2.72	&	1.95	&	1.57	&	0.32	\\
+$occ\geq 3$	&	3.93	&	2.27	&	1.71	&	0.34	\\
+$occ\geq 4$	&	4.66	&	2.69	&	2.42	&	0.41	\\
 \hline
 \end{tabular}
 \end{table}
@@ -319,89 +329,102 @@ $occ\geq 4$&	27.39	&	21.59	&	18.60	&	2.88	\\
 \hline
 	      &	$cs\leq 5$	&	$cs\leq 10$	&	$cs\leq 20$	&	$cs< \infty$	\\
 \hline
-$occ\geq 1$	&	8.94	&	8.50	&	6.08	&	0.89	\\
-$occ\geq 2$	&	23.00	&	16.21	&	7.25	&	1.96	\\
-$occ\geq 3$	&	18.78	&	18.67	&	14.47	&	2.09	\\
-$occ\geq 4$	&	25.29	&	19.69	&	16.76	&	4.55	\\
-
+$occ\geq 1$	&	1.62	&	1.47	&	1.15	&	0.28	\\
+$occ\geq 2$	&	2.72	&	2.1	&	1.7	&	0.31	\\
+$occ\geq 3$	&	3.63	&	2.38	&	2.3	&	0.35	\\
+$occ\geq 4$	&	4.66	&	2.62	&	2.34	&	0.53	\\
 \hline
 \end{tabular}
 \end{table}
 
 
-
-
-
-\begin{table}
-  \centering
-  \caption{Number of logical dependencies, for different threshold values for $cs$, when $occ\geq 1$, case with comments}
-	\begin{tabular}{@{}cccccc@{}}
-    \toprule
-		 ID  & SD & LD	&	LD	&	LD	&	LD \\
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1.25}
+\caption{Number of logical dependencies, for different threshold values for $cs$, when $occ\geq 1$, case with comments}
+\label{table:5}
+\centering
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+ID  & SD & LD	&	LD	&	LD	&	LD \\
       &   & $cs\leq 5$	&	$cs\leq 10$	&	$cs\leq 20$	&	$cs< \infty$ \\
-    \midrule
- \ch{1}	&	52	&	59	&	145	&	288	&	415	\\
- \ch{2}	&	264	&	21	&	21	&	76	&	76	\\
- \ch{3}	&	106	&	27	&	57	&	231	&	5570	\\
-\ch{4}	&	138	&	89	&	210	&	598	&	1023	\\
-\ch{5}	&	250	&	239	&	824	&	1593	&	4635	\\
-\ch{6}	&	566	&	1576	&	2548	&	4217	&	22437	\\
-\ch{7}	&	358	&	223	&	1051	&	1756	&	6845	\\
-\ch{8}	&	447	&	687	&	1421	&	2308	&	32612	\\
-\ch{9}	&	1463	&	1063	&	2640	&	6257	&	156710	\\
-\ch{10}	&	466	&	1052	&	2693	&	5696	&	42726	\\
-\ch{11}	&	832	&	1529	&	2604	&	4184	&	32133	\\
-\ch{12}	&	2557	&	1172	&	3575	&	9319	&	577118	\\
-\ch{13}	&	154	&	488	&	940	&	1811	&	55837	\\
-\ch{14}	&	541	&	2360	&	5871	&	9689	&	182276	\\
-\ch{15}	&	2698	&	2620	&	6773	&	16058	&	218476	\\
-\ch{16}	&	138	&	1519	&	3584	&	6233	&	22145	\\
-\ch{17}	&	293	&	1569	&	3253	&	5667	&	32347	\\
-\midrule
-Median for LD/SD	&	&	1.13	&	3.13	&	5.54	&	72.96	\\
-    \bottomrule
-  \end{tabular}
-  
-   \label{table:5}
+\hline
+1	&	698	&	9016	&	11441	&	15079	&	89274	\\
+2	&	2249	&	2206	&	4569	&	8981	&	124414	\\
+3	&	728	&	5577	&	12558	&	20754	&	137161	\\
+4	&	948	&	92979	&	115459	&	188150	&	294576	\\
+5	&	5280	&	14988	&	72030	&	134049	&	2881199	\\
+6	&	716	&	1621	&	2438	&	4157	&	346004	\\
+7	&	1231	&	7342	&	15700	&	27506	&	461617	\\
+8	&	4447	&	18705	&	43341	&	88931	&	1212519	\\
+9	&	182	&	1190	&	2333	&	4063	&	14600	\\
+10	&	5244	&	6905	&	16257	&	27567	&	453439	\\
+11	&	1830	&	22186	&	47270	&	89063	&	304631	\\
+12	&	1253	&	5735	&	10834	&	15654	&	24186	\\
+13	&	1853	&	21489	&	62122	&	77859	&	199154	\\
+14	&	1189	&	6497	&	9288	&	13279	&	306682	\\
+15	&	295	&	4752	&	9065	&	16209	&	334934	\\
+16	&	1223	&	4871	&	10436	&	17319	&	220890	\\
+17	&	1868	&	14981	&	32904	&	76908	&	944326	\\
+18	&	233	&	1792	&	4455	&	9387	&	74372	\\
+19	&	535	&	11300	&	24004	&	52495	&	1849862	\\
+20	&	717	&	4486	&	10983	&	23835	&	826110	\\
+21	&	2549	&	48082	&	94388	&	2343062	&	4995768	\\
+22	&	979	&	11573	&	33812	&	66460	&	562112	\\
+23	&	262	&	3512	&	6974	&	9816	&	275373	\\
+24	&	970	&	7957	&	15631	&	31880	&	975910	\\
+25	&	16	&	2839	&	4023	&	4646	&	6877	\\
+26	&	362	&	6028	&	12746	&	26964	&	219046	\\
+27	&	115	&	3645	&	6329	&	9755	&	14489	\\
+
+\hline
+M	&	TBD&	1.13	&	3.13	&	5.54	&	72.96	\\
+\hline
+\end{tabular}
 \end{table}
 
 
-
-\begin{table}
-  \centering
-  
-	\caption{Number of logical dependencies, for different threshold values for $cs$, when $occ\geq 1$, case without comments}
-	\begin{tabular}{@{}cccccc@{}}
-    \toprule
-		ID  & SD & LD	&	LD	&	LD	&	LD \\
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1.25}
+\caption{Number of logical dependencies, for different threshold values for $cs$, when $occ\geq 1$, case without comments}
+\label{table:6}
+\centering
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+ID  & SD & LD	&	LD	&	LD	&	LD \\
       &   & $cs\leq 5$	&	$cs\leq 10$	&	$cs\leq 20$	&	$cs< \infty$ \\
-    \midrule
- \ch{1}	&	52	&	49	&	121	&	257	&	319	\\
- \ch{2}	&	264	&	19	&	19	&	74	&	74	\\
- \ch{3}	&	106	&	27	&	33	&	171	&	5553	\\
-\ch{4}	&	138	&	84	&	194	&	566	&	991	\\
-\ch{5}	&	250	&	217	&	712	&	1327	&	4004	\\
-\ch{6}	&	566	&	1488	&	2307	&	3928	&	20396	\\
-\ch{7}	&	358	&	200	&	918	&	1502	&	4751	\\
-\ch{8}	&	447	&	619	&	1255	&	2066	&	31879	\\
-\ch{9}	&	1463	&	963	&	2374	&	5632	&	149531	\\
-\ch{10}	&	466	&	932	&	2399	&	4729	&	35846	\\
-\ch{11}	&	832	&	1373	&	2305	&	3618	&	28401	\\
-\ch{12}	&	2557	&	1107	&	3340	&	7948	&	333585	\\
-\ch{13}	&	154	&	417	&	758	&	1407	&	51894	\\
-\ch{14}	&	541	&	2246	&	5424	&	8504	&	148053	\\
-\ch{15}	&	2698	&	2341	&	5716	&	12486	&	178262	\\
-\ch{16}	&	138	&	1406	&	3161	&	5475	&	20215	\\
-\ch{17}	&	293	&	1539	&	3195	&	5578	&	29720	\\
-\midrule
-Median for LD/SD	&	&	0.94	&	2.77	&	4.63	&	66.07\\
-    \bottomrule
-  \end{tabular}
-  
-   \label{table:6}
+\hline
+1	&	698	&	8734	&	10566	&	13950	&	84906	\\
+2	&	2249	&	1969	&	4022	&	7980	&	109807	\\
+3	&	728	&	5424	&	11890	&	18279	&	78914	\\
+4	&	948	&	88298	&	110676	&	117676	&	290599	\\
+5	&	5280	&	14205	&	65015	&	119070	&	2868648	\\
+6	&	716	&	1425	&	1960	&	3260	&	252659	\\
+7	&	1231	&	7190	&	14918	&	24586	&	392655	\\
+8	&	4447	&	16820	&	36347	&	67334	&	565626	\\
+9	&	182	&	1085	&	2071	&	3555	&	13781	\\
+10	&	5244	&	6799	&	15162	&	23956	&	40923	\\
+11	&	1830	&	21621	&	45099	&	81986	&	254614	\\
+12	&	1253	&	5367	&	9908	&	13763	&	20906	\\
+13	&	1853	&	18970	&	31176	&	43366	&	182243	\\
+14	&	1189	&	5929	&	8466	&	11480	&	115211	\\
+15	&	295	&	4741	&	8940	&	15744	&	334819	\\
+16	&	1223	&	4868	&	10420	&	17269	&	200771	\\
+17	&	1868	&	14978	&	32870	&	75985	&	937506	\\
+18	&	233	&	1782	&	4441	&	9369	&	64527	\\
+19	&	535	&	11300	&	23878	&	51556	&	1798026	\\
+20	&	717	&	4486	&	10983	&	23799	&	799645	\\
+21	&	2549	&	48075	&	94277	&	2341304	&	4977238	\\
+22	&	979	&	11494	&	33785	&	66397	&	548014	\\
+23	&	262	&	3512	&	6974	&	9644	&	243969	\\
+24	&	970	&	7615	&	13974	&	28889	&	801760	\\
+25	&	16	&	2801	&	3889	&	4623	&	6877	\\
+26	&	362	&	6024	&	12708	&	26837	&	209870	\\
+27	&	115	&	3645	&	6329	&	9689	&	14451	\\
+\hline
+M	&	TBD&	1.13	&	3.13	&	5.54	&	72.96	\\
+\hline
+\end{tabular}
 \end{table}
-
-
 
 
 
@@ -473,73 +496,93 @@ We consider that an optimal level of filtering is given by threshold combination
 
 Tables \ref{table:10} and \ref{table:11} relate with table \ref{tab:percSD:comm} and they detail information about overlaps between logical and structural dependencies. Table \ref{table:10} gives details about the cases summarized in the first column, while table \ref{table:11} gives details about the cases summarized in the last column of table \ref{tab:percSD:comm}.
   
+
 \begin{table}[!h]
-  \centering
-  \caption{Percentage of SD that are also LD,  when $cs \leq 5$, for different threshold values for $occ$ }
-	\begin{tabular}{@{}ccccc@{}}
-    \toprule
+\renewcommand{\arraystretch}{1.25}
+\caption{Percentage of SD that are also LD,  when $cs \leq 5$, for different threshold values for $occ$}
+\label{table:10}
+\centering
+\begin{tabular}{|c|c|c|c|c|}
+\hline
     ID  & $occ\geq 1$ & $occ\geq 2$ & $occ\geq 3$ & $occ\geq 4$  \\
-    \midrule
- \ch{1}	&	28.85	&	15.38	&	1.92	&	0.00	\\
- \ch{2}	&	1.89	&	0.76	&	0.38	&	0.38	\\
- \ch{3}	&	1.89	&	0.94	&	0.00	&	0.00	\\
-\ch{4}	&	13.77	&	2.17	&	1.45	&	0.72	\\
-\ch{5}	&	16.00	&	8.00	&	3.20	&	1.20	\\
-\ch{6}	&	22.79	&	12.54	&	4.24	&	2.12	\\
-\ch{7}	&	10.34	&	3.63	&	0.56	&	0.28	\\
-\ch{8}	&	13.65	&	5.82	&	2.68	&	1.12	\\
-\ch{9}	&	6.90	&	1.78	&	0.27	&	0.21	\\
-\ch{10}	&	15.67	&	2.58	&	1.07	&	0.86	\\
-\ch{11}	&	35.70	&	26.56	&	9.38	&	8.29	\\
-\ch{12}	&	1.25	&	0.82	&	0.35	&	0.31	\\
-\ch{13}	&	6.49	&	2.60	&	1.30	&	0.00	\\
-\ch{14}	&	24.40	&	14.05	&	6.28	&	3.14	\\
-\ch{15}	&	12.42	&	4.11	&	2.04	&	0.93	\\
-\ch{16}	&	46.38	&	29.71	&	14.49	&	7.97	\\
-\ch{17}	&	15.70	&	9.56	&	5.46	&	3.41	\\
-
-\midrule
-Median	&	13,77	&	4,11	&	1,92	& 0.85\\	
-    \bottomrule
-  \end{tabular}
-  
-   \label{table:10}
+\hline
+1	&	18.48	&	9.74	&	5.73	&	5.01	\\
+2	&	9.52	&	4.31	&	2.13	&	1.82	\\
+3	&	19.92	&	8.79	&	5.77	&	3.3	\\
+4	&	53.69	&	43.14	&	28.38	&	26.05	\\
+5	&	9.17	&	6.16	&	3.31	&	2.31	\\
+6	&	12.57	&	8.66	&	5.31	&	4.33	\\
+7	&	18.85	&	13.73	&	9.34	&	6.9	\\
+8	&	19.99	&	11.94	&	7.96	&	5.89	\\
+9	&	53.85	&	40.11	&	25.82	&	18.68	\\
+10	&	8.07	&	5.45	&	3.15	&	2.27	\\
+11	&	40.93	&	31.37	&	25.9	&	22.08	\\
+12	&	36.07	&	24.74	&	17.88	&	13.49	\\
+13	&	17.11	&	10.79	&	7.56	&	5.94	\\
+14	&	39.95	&	28.68	&	18.92	&	15.56	\\
+15	&	16.27	&	6.44	&	3.73	&	3.39	\\
+16	&	14.8	&	7.85	&	4.25	&	3.27	\\
+17	&	10.33	&	5.19	&	3.1	&	2.36	\\
+18	&	3.86	&	2.15	&	0.86	&	0	\\
+19	&	3.55	&	2.43	&	0.93	&	0.75	\\
+20	&	14.78	&	8.09	&	4.46	&	3.63	\\
+21	&	16.56	&	10.67	&	5.92	&	4.59	\\
+22	&	9.5	&	5.72	&	3.17	&	1.43	\\
+23	&	21.76	&	16.79	&	14.89	&	13.36	\\
+24	&	10.72	&	8.56	&	7.11	&	6.08	\\
+25	&	62.5	&	62.5	&	62.5	&	62.5	\\
+26	&	25.14	&	18.78	&	14.92	&	11.33	\\
+27	&	51.3	&	30.43	&	26.96	&	24.35	\\
+\hline
+M	&	TBD&	TBD	&	TBD	&	TBD	\\
+\hline
+\end{tabular}
 \end{table}
 
 
 
 \begin{table}[!h]
-  \centering
-	\caption{Percentage of SD that are also LD,  when  $cs< \infty$, for different threshold values for $occ$ }
-  \begin{tabular}{@{}ccccc@{}}
-    \toprule
-    ID  & $occ\geq 1$ & $occ\geq 2$ & $occ\geq 3$ & $occ\geq 4$ \\
-    \midrule
- \ch{1}	&	76.92	&	46.15	&	21.15	&	13.46	\\
- \ch{2}	&	1.89	&	0.76	&	0.38	&	0.38	\\
- \ch{3}	&	85.85	&	84.91	&	83.96	&	81.13	\\
-\ch{4}	&	70.29	&	15.22	&	10.87	&	10.14	\\
-\ch{5}	&	69.60	&	58.40	&	44.80	&	34.40	\\
-\ch{6}	&	65.55	&	42.05	&	30.57	&	21.20	\\
-\ch{7}	&	66.48	&	32.68	&	18.99	&	12.57	\\
-\ch{8}	&	64.88	&	43.40	&	20.58	&	13.20	\\
-\ch{9}	&	75.32	&	58.58	&	41.90	&	23.44	\\
-\ch{10}	&	57.73	&	30.69	&	19.53	&	13.30	\\
-\ch{11}	&	81.49	&	64.66	&	37.98	&	33.41	\\
-\ch{12}	&	14.74	&	8.80	&	5.91	&	3.75	\\
-\ch{13}	&	33.12	&	9.74	&	7.79	&	5.84	\\
-\ch{14}	&	67.28	&	45.84	&	26.80	&	17.19	\\
-\ch{15}	&	52.85	&	33.80	&	22.65	&	15.27	\\
-\ch{16}	&	80.43	&	71.01	&	55.07	&	48.55	\\
-\ch{17}	&	24.57	&	18.43	&	17.06	&	11.95	\\
-
-\midrule
-Median	&	66,48	&	42,04	&	21,15 & 13.46\\		
-    \bottomrule
-  \end{tabular}
- 
-   \label{table:11}
+\renewcommand{\arraystretch}{1.25}
+\caption{Percentage of SD that are also LD,  when  $cs< \infty$, for different threshold values for $occ$ }
+\label{table:11}
+\centering
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+    ID  & $occ\geq 1$ & $occ\geq 2$ & $occ\geq 3$ & $occ\geq 4$  \\
+\hline
+1	&	77.51	&	54.44	&	46.85	&	31.38	\\
+2	&	82.44	&	58.43	&	41.22	&	25.57	\\
+3	&	71.15	&	50.14	&	32.69	&	25.41	\\
+4	&	98.52	&	90.93	&	87.55	&	86.18	\\
+5	&	91.55	&	81.06	&	72.8	&	65.27	\\
+6	&	91.06	&	84.78	&	75.7	&	65.78	\\
+7	&	87.73	&	68.32	&	49.96	&	35.99	\\
+8	&	97.57	&	96.42	&	77.87	&	65.28	\\
+9	&	90.66	&	87.91	&	80.77	&	73.63	\\
+10	&	66.7	&	48.84	&	32.23	&	26.87	\\
+11	&	72.68	&	64.48	&	56.56	&	49.78	\\
+12	&	70.07	&	59.22	&	47.73	&	37.35	\\
+13	&	56.61	&	47	&	40.26	&	33.94	\\
+14	&	97.73	&	95.04	&	94.2	&	85.95	\\
+15	&	97.63	&	95.93	&	94.24	&	64.41	\\
+16	&	46.03	&	39.33	&	28.21	&	20.69	\\
+17	&	72.64	&	51.07	&	37.79	&	30.35	\\
+18	&	78.11	&	75.54	&	67.81	&	54.08	\\
+19	&	93.27	&	91.4	&	88.22	&	80.56	\\
+20	&	71.13	&	65.97	&	63.6	&	59.83	\\
+21	&	77.09	&	54.96	&	41.43	&	32.33	\\
+22	&	52.71	&	51.48	&	35.14	&	32.07	\\
+23	&	98.09	&	90.08	&	86.26	&	69.08	\\
+24	&	77.63	&	75.88	&	65.57	&	63.81	\\
+25	&	100	&	100	&	100	&	100	\\
+26	&	72.1	&	67.68	&	67.68	&	65.47	\\
+27	&	80.87	&	68.7	&	59.13	&	56.52	\\
+\hline
+M	&	TBD&	TBD	&	TBD	&	TBD	\\
+\hline
+\end{tabular}
 \end{table}
+
 
 Looking at the detailed tables, we can notice that the values for individual projects may present significant differences from the median. For smaller projects, such as projects with IDs 1, 3, 4, the filtering can lead to loosing logical dependencies.  
 
