@@ -1,0 +1,144 @@
+\begin{thebibliography}{}
+
+\bibitem[Ajienka and Capiluppi, 2017]{DBLP:journals/jss/AjienkaC17}
+Ajienka, N. and Capiluppi, A. (2017).
+\newblock Understanding the interplay between the logical and structural
+  coupling of software classes.
+\newblock {\em Journal of Systems and Software}, 134:120--137.
+
+\bibitem[Ajienka et~al., 2018]{DBLP:journals/ese/AjienkaCC18}
+Ajienka, N., Capiluppi, A., and Counsell, S. (2018).
+\newblock An empirical study on the interplay between semantic coupling and
+  co-change of software classes.
+\newblock {\em Empirical Software Engineering}, 23(3):1791--1825.
+
+\bibitem[Beck and Diehl, 2011]{Beck:2011:CMC:2025113.2025162}
+Beck, F. and Diehl, S. (2011).
+\newblock On the congruence of modularity and code coupling.
+\newblock In {\em Proceedings of the 19th ACM SIGSOFT Symposium and the 13th
+  European Conference on Foundations of Software Engineering}, ESEC/FSE '11,
+  pages 354--364, New York, NY, USA. ACM.
+
+\bibitem[Collard et~al., 2011]{Collard:2011:LTF:2067850.2068011}
+Collard, M.~L., Decker, M.~J., and Maletic, J.~I. (2011).
+\newblock Lightweight transformation and fact extraction with the {srcML}
+  toolkit.
+\newblock In {\em Proceedings of the 2011 IEEE 11th International Working
+  Conference on Source Code Analysis and Manipulation}, SCAM '11, pages
+  173--184, Washington, DC, USA. IEEE Computer Society.
+
+\bibitem[Collard et~al., 2003]{2003:XLC:851042.857028}
+Collard, M.~L., Kagdi, H.~H., and Maletic, J.~I. (2003).
+\newblock An {XML}-based lightweight {C++} fact extractor.
+\newblock In {\em Proceedings of the 11th IEEE International Workshop on
+  Program Comprehension}, IWPC '03, pages 134--, Washington, DC, USA. IEEE
+  Computer Society.
+
+\bibitem[Collins-Sussman et~al., 2010]{svn}
+Collins-Sussman, B., Fitzpatrick, B.~W., and Pilato, C.~M. (2010).
+\newblock {\em Version Control With Subversion for Subversion 1.6: The Official
+  Guide And Reference Manual}.
+\newblock CreateSpace, Paramount, CA.
+
+\bibitem[\c{S}ora, 2015]{PagerankENASE}
+\c{S}ora, I. (2015).
+\newblock Helping program comprehension of large software systems by
+  identifying their most important classes.
+\newblock In {\em Evaluation of Novel Approaches to Software Engineering - 10th
+  International Conference, {ENASE} 2015, Barcelona, Spain, April 29-30, 2015,
+  Revised Selected Papers}, pages 122--140. Springer International Publishing.
+
+\bibitem[\c{S}ora et~al., 2010]{SoraConti}
+\c{S}ora, I., Glodean, G., and Gligor, M. (2010).
+\newblock Software architecture reconstruction: An approach based on combining
+  graph clustering and partitioning.
+\newblock In {\em Computational Cybernetics and Technical Informatics
+  ({ICCC-CONTI}), 2010 International Joint Conference on}, pages 259--264.
+
+\bibitem[Ducasse and Pollet, 2009]{sar}
+Ducasse, S. and Pollet, D. (2009).
+\newblock Software architecture reconstruction: A process-oriented taxonomy.
+\newblock {\em IEEE Transactions on Software Engineering}, 35(4):573--591.
+
+\bibitem[Gall et~al., 1998]{Gall:1998:DLC:850947.853338}
+Gall, H., Hajek, K., and Jazayeri, M. (1998).
+\newblock Detection of logical coupling based on product release history.
+\newblock In {\em Proceedings of the International Conference on Software
+  Maintenance}, ICSM '98, pages 190--, Washington, DC, USA. IEEE Computer
+  Society.
+
+\bibitem[Kagdi et~al., 2010]{posh2010}
+Kagdi, H., Gethers, M., Poshyvanyk, D., and Collard, M.~L. (2010).
+\newblock Blending conceptual and evolutionary couplings to support change
+  impact analysis in source code.
+\newblock In {\em 2010 17th Working Conference on Reverse Engineering}, pages
+  119--128.
+
+\bibitem[Kalliamvakou et~al., 2016]{Kalliamvakou2016}
+Kalliamvakou, E., Gousios, G., Blincoe, K., Singer, L., German, D.~M., and
+  Damian, D. (2016).
+\newblock An in-depth study of the promises and perils of mining github.
+\newblock {\em Empirical Software Engineering}, 21(5):2035--2071.
+
+\bibitem[Oliva and Gerosa, 2011]{Oliva:2011:ISL:2067853.2068086}
+Oliva, G.~A. and Gerosa, M.~A. (2011).
+\newblock On the interplay between structural and logical dependencies in
+  open-source software.
+\newblock In {\em Proceedings of the 2011 25th Brazilian Symposium on Software
+  Engineering}, SBES '11, pages 144--153, Washington, DC, USA. IEEE Computer
+  Society.
+
+\bibitem[Oliva and Gerosa, 2015]{DBLP:conf/issre/OlivaG15}
+Oliva, G.~A. and Gerosa, M.~A. (2015).
+\newblock Experience report: How do structural dependencies influence change
+  propagation? an empirical study.
+\newblock In {\em 26th {IEEE} International Symposium on Software Reliability
+  Engineering, {ISSRE} 2015, Gaithersbury, MD, USA, November 2-5, 2015}, pages
+  250--260.
+
+\bibitem[Poshyvanyk et~al., 2009]{Poshyvanyk2009}
+Poshyvanyk, D., Marcus, A., Ferenc, R., and Gyim{\'o}thy, T. (2009).
+\newblock Using information retrieval based coupling measures for impact
+  analysis.
+\newblock {\em Empirical Software Engineering}, 14(1):5--32.
+
+\bibitem[Ren et~al., 2005]{1553643}
+Ren, X., Ryder, B.~G., Stoerzer, M., and Tip, F. (2005).
+\newblock Chianti: a change impact analysis tool for java programs.
+\newblock In {\em Proceedings. 27th International Conference on Software
+  Engineering, 2005. ICSE 2005.}, pages 664--665.
+
+\bibitem[Shtern and Tzerpos, 2012]{Shtern:2012:CMS:2332427.2332428}
+Shtern, M. and Tzerpos, V. (2012).
+\newblock Clustering methodologies for software engineering.
+\newblock {\em Adv. Soft. Eng.}, 2012:1:1--1:1.
+
+\bibitem[Sora, 2013]{SoraSem13}
+Sora, I. (2013).
+\newblock Software architecture reconstruction through clustering: Finding the
+  right similarity factors.
+\newblock In {\em Proceedings of the 1st International Workshop in Software
+  Evolution and Modernization - Volume 1: SEM, (ENASE 2013)}, pages 45--54.
+  INSTICC, SciTePress.
+
+\bibitem[Wiese et~al., 2015]{wiese}
+Wiese, I.~S., Kuroda, R.~T., Re, R., Oliva, G.~A., and Gerosa, M.~A. (2015).
+\newblock An empirical study of the relation between strong change coupling and
+  defects using history and social metrics in the apache aries project.
+\newblock In Damiani, E., Frati, F., Riehle, D., and Wasserman, A.~I., editors,
+  {\em Open Source Systems: Adoption and Impact}, pages 3--12, Cham. Springer
+  International Publishing.
+
+\bibitem[Yu, 2007]{Yu2007}
+Yu, L. (2007).
+\newblock Understanding component co-evolution with a study on linux.
+\newblock {\em Empirical Software Engineering}, 12(2):123--141.
+
+\bibitem[Zimmermann et~al., 2004]{Zimmermann:2004:MVH:998675.999460}
+Zimmermann, T., Weisgerber, P., Diehl, S., and Zeller, A. (2004).
+\newblock Mining version histories to guide software changes.
+\newblock In {\em Proceedings of the 26th International Conference on Software
+  Engineering}, ICSE '04, pages 563--572, Washington, DC, USA. IEEE Computer
+  Society.
+
+\end{thebibliography}
