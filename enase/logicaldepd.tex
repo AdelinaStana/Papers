@@ -31,7 +31,7 @@
 \keywords{software evolution, logical dependencies, structural dependencies}
 
 \abstract{
-Emerging software engineering approaches support the idea that logical dependencies should be included next to structural dependencies in general methods and tools for dependency management.  However, logical dependencies are still hard to identify, as not all co-changes during the system evolution represent true logical dependencies. Our work identifies a set of factors that can be used to filter the recordings of class co-changes in order to find logical dependencies. Also we analyze the quantitative relationships between the sets of logical and structural dependencies and their intersection and differences. We present results obtained through an experimental study on a set of 
+Emerging software engineering approaches support the idea that logical dependencies should be included next to structural dependencies in general methods and tools for dependency management.  However, logical dependencies are still hard to identify, as not all co-changes during the system evolution represent true logical dependencies. Our work identifies a set of factors that can be used to filter the recordings of class co-changes in order to find logical dependencies.Also we analyze the quantitative relationships between the sets of logical and structural dependencies and their intersection and differences because we believe that a part of structural dependencies should have corresponding logical dependencies in the versioning system. We present results obtained through an experimental study on a set of 
 open source software projects with their historical evolution. Identifying logical dependencies from co-changing classes will enhance dependency models used in various software analysis activities.
 }
 
@@ -42,9 +42,9 @@ open source software projects with their historical evolution. Identifying logic
 \section{Introduction}
 \label{sec:intro}
 
-Coupling reflects the degree of interdependence between different software modules, being a measure of how closely connected they are. Coupling should be low in order to ensure the testability, reusability, and evolvability properties of modules.  The traditional approach on coupling was to quantify the structural dependencies or interactions between modules. Structural dependencies can be determined by analysis of the source code.
+Coupling reflects the degree of interdependence between different software modules, being a measure of how closely connected they are. Coupling should be low in order to ensure the testability, reusability, and evolvability properties of modules.The traditional approach on coupling was to quantify the structural dependencies or interactions between modules which both can be determined by source code analysis
    
-State of the art has already established that modules may present different kinds and degrees of interdependence, even if no structural dependencies can be found by analyzing the source code. Gall \cite{Gall:1998:DLC:850947.853338} identified as logical coupling between two modules the fact that these modules repeatedly change together during the historical evolution of the software system. This can be an indicator of a logical dependency between these modules.
+Modules may present different kinds and degrees of interdependence, even if no structural dependencies can be found by analyzing the source code. Gall \cite{Gall:1998:DLC:850947.853338} identified as logical coupling between two modules the fact that these modules repeatedly change together during the historical evolution of the software system. This can be an indicator of a logical dependency between these modules.
 
 The concepts of logical coupling and logical dependencies were first used in different analysis tasks, all related to changes: for software change impact analysis \cite{1553643}, for identifying the potential ripple effects caused by software changes during software maintenance and evolution \cite{DBLP:conf/issre/OlivaG15}, \cite{Oliva:2011:ISL:2067853.2068086}, \cite{Poshyvanyk2009}, \cite{posh2010} or for their link to deffects \cite{wiese}, \cite{Zimmermann:2004:MVH:998675.999460}.
 
@@ -52,7 +52,7 @@ The current trend recommends that general dependency management methods and tool
 Thus, in order to add logical dependencies besides structural dependencies in dependency models, class co-changes must be filtered until they remain only a reduced but relevant set of true logical dependencies. 
 
 
-In the next section we analyze the state of the art results for determining logical dependencies from the point of view of their quantitative relationship with structural dependencies. Starting from this analysis, in Section \ref{sec:question} we identify a set of factors that can be used to filter the recordings of class co-changes such that logical dependencies are identified and formulate the research questions. In order to answer these research questions, we have built a tool that extracts structural and logical dependencies in different scenarios. The design and implementation of the tool is briefly presented in section \ref{sec:tool}. We have analyzed several open-source software systems of different sizes with our tool, obtaining the experimental results presented in Section \ref{sec:experiments}. Section \ref{sec:discussion} discusses the experimental results and answers the research questions. Threats to validity and future work directions are identified in Section {sec:validity}.
+In the next section we analyze the state of the art results for determining logical dependencies from the point of view of their quantitative relationship with structural dependencies. Starting from this analysis, in Section \ref{sec:question} we identify a set of factors that can be used to filter the recordings of class co-changes such that logical dependencies are identified and formulate the research questions. In order to answer these research questions, we have built a tool that extracts structural and logical dependencies in different scenarios. The design and implementation of the tool is briefly presented in section \ref{sec:tool}. We have analyzed several open-source software systems of different sizes with our tool, obtaining the experimental results presented in Section \ref{sec:experiments}. Section \ref{sec:discussion} discusses the experimental results and answers the research questions. Threats to validity and future work directions are identified in Section \ref{sec:validity}.
  
 
 
@@ -199,8 +199,9 @@ We have analysed a set of open-source projects found on GitHub\footnote{http://g
 \end{table}
 
 
+In a first experiment, we determined the commit sizes $cs$ for all commit transactions for all projects and grouped them into 4 categories: small transactions (ST), when 	$cs\leq 5$; medium transactions (MT), when 	$5 < cs\leq 10$; large transactions (LT), when 	$10 < cs\leq 20$; and very large transactions (VLT), when 	$20 < cs$. The results are presented in Tables \ref{table:5} and \ref{table:6}.
 
-For each system, we extracted its structural dependencies, its logical dependencies and determined the overlap between the two dependencies sets, in various experimental conditions. 
+In the main series of experiments, for each system, we extracted its structural dependencies, its logical dependencies and determined the overlap between the two dependencies sets, in various experimental conditions. 
 
 One variable experimental condition is whether changes located in comments contribute towards logical dependencies. This condition distinguishes between two different cases: 
 \begin{itemize}
@@ -354,7 +355,7 @@ $occ\geq 4$	&	4.66	&	2.62	&	2.34	&	0.53	\\
 \centering
 \begin{tabular}{|c|c|c|c|c|}
 \hline
-   &	$cs\leq 5$	&	$cs\leq 10$	&	$cs\leq 20$	&	$cs< \infty$	\\
+   &	ST	&	 MT	&	LT	&	VLT	\\
 \hline
 1	&	82.55	&	10.85	&	4.14	&	2.46	\\
 2	&	71.39	&	13.08	&	7.82	&	7.7	\\
@@ -396,7 +397,7 @@ Avg	&	79.7	&	9.93	&	5.22	&	5.16	\\
 \centering
 \begin{tabular}{|c|c|c|c|c|}
 \hline
-   &	$cs\leq 5$	&	$cs\leq 10$	&	$cs\leq 20$	&	$cs< \infty$	\\
+   &	ST	&	MT	&	LT	&	VLT	\\
 \hline
 1	&	10.1	&	2.72	&	4.08	&	83.11	\\
 2	&	1.77	&	1.9	&	3.55	&	92.78	\\
@@ -446,35 +447,36 @@ This section uses the experimental results to answer the research questions outl
 Table \ref{table:5} presents the size distribution for commit transactions in percentage relative to the total number of commits for each system presented in table \ref{table:1}.The average percentage for commit transactions with less than 5 source code files is 79.7\%, on the opposite side are commit transactions with more than 20 source code files which have an average percentage of 5.16\%. Based on the results we can say that the majority of the commit transactions have no more than 5 source code files.
 
 \textit{\textbf{Question 2}}. Is it necessary to set a threshold on the size of commit transactions which are considered to generate valid logical dependencies ?
-Based on the results from table \ref{table:6} and table \ref{table:5} we identify that a small amount of commits as in the case of commit transactions with more than 20 source code files can lead to a vast amount of logical dependencies.  
-The commit transactions with less than 5 files, which are the most frequent types of commits, produce in average only 6.97\% of the total logical denedencies extracted from the systems. TBD
+Logical dependencies are generated for all pairs of classes which have changed in the same commit transaction. The number of logical dependencies generated from a commit transaction is proportional with the square of the number of participating classes.  Table \ref{table:6} presents how many logical dependencies are extracted from commit transactions of different sizes. 
+Based on the results from Table \ref{table:6} and Table \ref{table:5} we identify that a small amount of commits as in the case of commit transactions with more than 20 source code files can lead to a vast amount of logical dependencies.  
+The commit transactions with less than 5 files, which are the most frequent types of commits, produce in average only 6.97\% of the total logical dependencies extracted from the systems. But big commit transactions can be caused by development branches merge into the main branch, in this case the commit transaction is actually the sum of many other commit transactions made into a different branch and we cannot consider them as one single commit and definitely we cannot consider the logical dependencies extracted as valid logical dependencies. So a threshold to filter this kind of commit transactions is required.
 
-Based on the results presented in tables \ref{tab:ratio:comm} and \ref{tab:ratio:nocomm}, the number 
+Based on the results presented in Tables \ref{tab:ratio:comm} and \ref{tab:ratio:nocomm}, the number 
 of changed files taken into consideration has an important influence over the ratio of the number  of 
-logical dependencies to the number of structural dependencies.  If no threshold is set for the number of files in a commit (the cases in the last column in tables \ref{tab:ratio:comm} and 
+logical dependencies to the number of structural dependencies.  If no threshold is set for the number of files in a commit (the cases in the last column in Tables \ref{tab:ratio:comm} and 
 \ref{tab:ratio:nocomm} ) then the number of logical dependencies outnumbers the structural dependencies with a factor of up to 314. The maximum factor is measured in the case when no filtering is done on the number of occurrences (first row).  
 In this case, we can not talk about logical dependencies, but about classes that happened to once change in the same time, by various reasons. The number of pairs of classes that happen to once change in the same time is up to 300 times bigger than the number of pairs of classes presenting structural dependencies.
 %Tables \ref{table:5} and \ref{table:6}  present the detailed situation of the number of logical dependencies, under the conditions of a varying threshold for the number of files accepted in a commit, without any filtering according to the number of occurrences, for all test systems. These tables detail the situations summarized in the 1st rows of tables \ref{tab:ratio:comm} and respectively \ref{tab:ratio:nocomm}. 
 
-When filtering is done according to conditions on the number of occurrences, we observe in tables \ref{tab:ratio:comm} and \ref{tab:ratio:nocomm} that the values on the last column still do not fall below 51. This number is still too big to accept for logical dependencies.  It is clear that it is necessary to  put a threshold on the number of files accepted in a commit in order to filter out noise.
+When filtering is done according to conditions on the number of occurrences, we observe in Tables \ref{tab:ratio:comm} and \ref{tab:ratio:nocomm} that the values on the last column still do not fall below 51. This number is still too big to accept for logical dependencies.  It is clear that it is necessary to  put a threshold on the number of files accepted in a commit in order to filter out noise.
 
 
-If we refer to the overlap between structural and logical dependencies, we can see in tables \ref{tab:percSD:comm} and \ref{tab:percSD:nocomm} that the percentage of structural dependencies which are also logical dependencies is as well affected by setting a threshold on the number of files accepted in a commit. When setting a threshold, then we have less logical dependencies overall and one could say that this is what affects also the smaller number of structural dependencies that are also logical dependencies. However, we can see that the percentage of dependencies in the overlap decreases much slower than the total number of logical dependencies. For example, when setting  the $cs$ threshold at 10, we see in Table \ref{tab:ratio:comm} that the total number of logical dependencies decreases approx 20 times compared with no threshold. In the same time, we can see in Table \ref{tab:percSD:comm}  that the overlap between the logical and structural dependencies decreases less, only approx 3 times. This confirms the fact that the logical dependencies filtered out were not true dependencies. It is clear that setting a threshold on the maximum number of files accepted in a commit is essential for the quality of finding true logical dependencies.
+If we refer to the overlap between structural and logical dependencies, we can see in Tables \ref{tab:percSD:comm} and \ref{tab:percSD:nocomm} that the percentage of structural dependencies which are also logical dependencies is as well affected by setting a threshold on the number of files accepted in a commit. Setting a threshold leads to a smaller number of logical dependencies overall and this is what affects also the smaller number of structural dependencies that are also logical dependencies. However, we can see that the percentage of dependencies in the overlap decreases much slower than the total number of logical dependencies. For example, when setting  the $cs$ threshold at 10, we see in Table \ref{tab:ratio:comm} that the total number of logical dependencies decreases approx 20 times compared with no threshold. In the same time, we can see in Table \ref{tab:percSD:comm}  that the overlap between the logical and structural dependencies decreases less, only approx 3 times. This confirms the fact that the logical dependencies filtered out were not true dependencies. It is clear that setting a threshold on the maximum number of files accepted in a commit is essential for the quality of finding true logical dependencies.
 
 
 \textit{\textbf{Question 3}}. Considering changes only in comments as valid can lead to additional logical dependencies? How many logical dependencies are introduced by considering comment changes as valid changes and in what percentage this can influence the analysis?
 
-In order to assess the influence of comments, we compare pairwise tables \ref{tab:ratio:comm} and \ref{tab:ratio:nocomm},  
-tables \ref{tab:percSD:comm} and \ref{tab:percSD:nocomm} and tables \ref{tab:percLD:comm} and \ref{tab:percLD:nocomm}. 
+In order to assess the influence of comments, we compare pairwise Tables \ref{tab:ratio:comm} and \ref{tab:ratio:nocomm},  
+Tables \ref{tab:percSD:comm} and \ref{tab:percSD:nocomm} and Tables \ref{tab:percLD:comm} and \ref{tab:percLD:nocomm}. 
 We observe that, although there are some differences between pairs of measurements done in similar conditions with and without comments, the differences are not significant.
 
-In the case of the ratio of the number of logical dependencies to the number of structural dependencies, from tables \ref{tab:ratio:comm} and \ref{tab:ratio:nocomm} we can see that the maximum difference is for the values from the position of the first row, last column. Without comments, the value of the ratio is 306.54, compared to the value with comments which is 314.6. The decrease represents less than 3\% of the value with comments. In the case of the percentage of structural dependencies that are also logical dependencies, from tables \ref{tab:percSD:comm} and \ref{tab:percSD:nocomm}, we can see that the maximum difference is also for the values from the first row, last column. Without comments, the overlap is 75.98, compared to the value with comments which is 78.11.  The decrease represents also less than 3\% of the value with comments. We notice that the differences between the two cases are very small. %decrease percentage is smaller for the overlap than for the ratio of the total number of logical dependencies, thus we can say that eliminating changes due only to comments can slightly improve the quality of finding logical dependencies. 
+In the case of the ratio of the number of logical dependencies to the number of structural dependencies, from Tables \ref{tab:ratio:comm} and \ref{tab:ratio:nocomm} we can see that the maximum difference is for the values from the position of the first row, last column. Without comments, the value of the ratio is 306.54, compared to the value with comments which is 314.6. The decrease represents less than 3\% of the value with comments. In the case of the percentage of structural dependencies that are also logical dependencies, from Tables \ref{tab:percSD:comm} and \ref{tab:percSD:nocomm}, we can see that the maximum difference is also for the values from the first row, last column. Without comments, the overlap is 75.98, compared to the value with comments which is 78.11.  The decrease represents also less than 3\% of the value with comments. We notice that the differences between the two cases are very small. %decrease percentage is smaller for the overlap than for the ratio of the total number of logical dependencies, thus we can say that eliminating changes due only to comments can slightly improve the quality of finding logical dependencies. 
 
 
 
 \textit{\textbf{Question 4}}. How many occurrences of a logical dependency are needed to consider it a \textit{valid} logical dependency ? 
 
-If we look at consecutive rows in table \ref{tab:ratio:comm} or in table \ref{tab:ratio:nocomm}, corresponding to increased threshold values for the number of occurrences, we can roughly say that  increasing by 1 the occurrence threshold while maintaining the other conditions reduces with more than half the total number of logical dependencies.  
+If we look at consecutive rows in Table \ref{tab:ratio:comm} or in Table \ref{tab:ratio:nocomm}, corresponding to increased threshold values for the number of occurrences, we can roughly say that  increasing by 1 the occurrence threshold while maintaining the other conditions reduces with more than half the total number of logical dependencies.  
 
 In order to find the appropriate level of filtering out false logical dependencies, we assume as a rule of thumb that the number of logical dependencies should be not bigger that the number of structural dependencies. Choosing the most restrictive combination of thresholds (a commit size threshold of 5 files combined with an occurrence threshold of 4) leads to a number of logical dependencies which comes near to the number of structural dependencies.
 
@@ -483,36 +485,14 @@ In order to find the appropriate level of filtering out false logical dependenci
 
 \textit{\textbf{Question 5}}. How does filtering affect the overlap between structural and logical dependencies ? 
 
-In order to present overlaps between structural and logical dependencies we will use Venn diagrams, used for this purpose also in \cite{Oliva:2011:ISL:2067853.2068086} and \cite{DBLP:journals/jss/AjienkaC17}. In Figure \ref{fig_venn} we present the intersections of logical and structural dependencies, in a selection of relevant cases. In all cases, the left circle, which is of constant size, represents the set of structural dependencies. The right circle represents the logical dependencies and its area is proportional with the number of logical dependencies. All cases are cases without comments.
+The overlap between structural and logical dependencies is given by the number of pairs of classes that have both structural and logical dependencies. We evaluate this overlap as a percentage relative to the number of structural dependencies in Tables \ref{tab:percSD:comm} and \ref{tab:percSD:nocomm}, respectively as  a percentage relative to the number of logical dependencies in Tables \ref{tab:percLD:comm} and \ref{tab:percLD:nocomm}.
 
-In Figure \ref{fig_venn}, case a.) which corresponds to no filtering, the number of logical dependencies is bigger than the number of structural dependencies by a factor of 314. In this case, we also have the biggest percentage of structural dependencies which are also co-changing as logical dependencies (78\%). This case shows that classes with structural dependencies change together more often, but these changes cannot be yet considered logical dependencies.
+A first observation from Tables \ref{tab:percSD:comm} and \ref{tab:percSD:nocomm} is that not all pairs of classes with structural dependencies co-change. The biggest value for the percentage of structural dependencies that are also logical dependencies is 78.11\% obtained in the case when no filterings are done.  Tables \ref{table:10} and \ref{table:11} relate with Table \ref{tab:percSD:comm} as they detail information about overlaps between logical and structural dependencies. Table \ref{table:10} gives details about the cases summarized in the first column, while Table \ref{table:11} gives details about the cases summarized in the last column of Table \ref{tab:percSD:comm}. 
+We can see in Table \ref{table:11} that only in case of a single project (with project ID 25) we record the existence of co-changes for all pairs of classes that have structural dependencies. This is an indicator for the design quality of the analysed projects. 
+%Looking at the detailed tables, we can notice that the values for individual projects may present significant differences from the median. For smaller projects, such as projects with IDs 1, 3, 4, the filtering can lead to loosing logical dependencies.  
 
-In Figure \ref{fig_venn}, case b.) corresponding to the highest level of filtering, the number of logical dependencies is only slightly bigger than the number of structural dependencies by a factor of 1.8. In this case, the percentage of structural dependencies which are also logical is small, as well as the percentage of logical dependencies that are also structural.  The percentage of logical dependencies that are also structural is 4.66\% in this case. The percentage of logical dependencies that are not structural is 95.34\%, and we consider that they deserve to be considered as additional dependencies.
-We consider that this is the optimal level of filtering. 
-%is given by threshold combinations such as in cases c.), d.) and e.).  In the case d.) the number of logical dependencies represents one third of the number of structural dependencies. 
-
-The percentage of structural dependencies which are also logical is 4.87\%,  while the percentage of logical dependencies that are also structural is 4.66\%. We can see that a percentage of 95.34\% of logical dependencies do not correspond with  structural dependencies, while 95.13\% of the structural dependencies are not doubled by logical dependencies. These percentages are statistically similar with the values obtained in \cite{Oliva:2011:ISL:2067853.2068086}: they measured LCOP (Logical Coupling Only Percentage)  and SCOP (Structural Coupling Only Percentage) and obtained 95\% for SCOP and 91\% for LCOP. 
-
-In \cite{DBLP:journals/jss/AjienkaC17} the authors  measured CSD (Co-changes Structural Dependencies ratio) and the CLD (Coupled Logical Dependencies ratio) and obtained the values for CSD about 80\% and CLD about 15\%.  Also in case of \cite{DBLP:journals/jss/AjienkaC17}  the total number of logical dependencies is 10 times bigger than the number of structural dependencies, while in our work, in the case considered of optimal filtering,  the total number of logical dependencies can be approximated with the number of structural dependencies. The explanation for this difference lies in the different manner of determining the logical dependencies: while \cite{DBLP:journals/jss/AjienkaC17} also uses a threshold of 10 for the maximum number of files in a commit, they count all co-changes toward logical dependencies, although they assign them different strengths. This would correspond to the filtering case determined by the combination: the commit size threshold is 10 files and the occurrence threshold is 1. 
-
-
-\begin{figure*}[!t]
-\centering
-\includegraphics[width=5.7in]{figvenn-new.pdf}
-\vspace{-1cm}
-% where an .eps filename suffix will be assumed under latex, 
-% and a .pdf suffix will be assumed for pdflatex; or what has been declared
-% via \DeclareGraphicsExtensions.
-\caption{Intersections of logical and structural dependencies, in different cases defined by different combinations of filtering thresholds. }
-\label{fig_venn}
-\end{figure*}
-
-
-
-
-Tables \ref{table:10} and \ref{table:11} relate with table \ref{tab:percSD:comm} and they detail information about overlaps between logical and structural dependencies. Table \ref{table:10} gives details about the cases summarized in the first column, while table \ref{table:11} gives details about the cases summarized in the last column of table \ref{tab:percSD:comm}.
-  
-
+From Tables \ref{tab:percLD:comm} and \ref{tab:percLD:nocomm} we notice that the percentage of logical dependencies which are also structural is always low to very low. This means that most co-changes are recorded between classes that have no structural dependencies to each other.   
+ 
 \begin{table}[!h]
 \renewcommand{\arraystretch}{1.25}
 \caption{Percentage of SD that are also LD,  when $cs \leq 5$, for different threshold values for $occ$}
@@ -601,7 +581,34 @@ M	&	78,11&	68,23	&	63,59	&	56,52	\\
 \end{table}
 
 
-Looking at the detailed tables, we can notice that the values for individual projects may present significant differences from the median. For smaller projects, such as projects with IDs 1, 3, 4, the filtering can lead to loosing logical dependencies.  
+
+
+In order to present overlaps between structural and logical dependencies we will use Venn diagrams, used for this purpose also in \cite{Oliva:2011:ISL:2067853.2068086} and \cite{DBLP:journals/jss/AjienkaC17}.In Figure \ref{fig_venn} we present the intersections of logical and structural dependencies, in two relevant cases.In both cases, the left circle, which is of constant size, represents the set of structural dependencies.The right circle represents the logical dependencies and its area is proportional with the number of logical dependencies. Both are cases without comments.
+
+In Figure \ref{fig_venn}, case a.) which corresponds to no filtering, the number of logical dependencies is bigger than the number of structural dependencies by a factor of 314. In this case, we also have the biggest percentage of structural dependencies which are also co-changing as logical dependencies (78\%). %This case shows that classes with structural dependencies change together more often, but these changes cannot be yet considered logical dependencies.
+
+In Figure \ref{fig_venn}, case b.) corresponding to the highest level of filtering, the number of logical dependencies is only slightly bigger than the number of structural dependencies by a factor of 1.8. In this case, the percentage of structural dependencies which are also logical is small, as well as the percentage of logical dependencies that are also structural.  The percentage of logical dependencies that are also structural is 4.66\% in this case. The percentage of logical dependencies that are not structural is 95.34\%, and we consider that they deserve to be considered as additional dependencies.
+We consider that this may be the optimal level of filtering. 
+%is given by threshold combinations such as in cases c.), d.) and e.).  In the case d.) the number of logical dependencies represents one third of the number of structural dependencies. 
+
+The percentage of structural dependencies which are also logical is 4.87\%,  while the percentage of logical dependencies that are also structural is 4.66\%. We can see that a percentage of 95.34\% of logical dependencies do not correspond with structural dependencies, while 95.13\% of the structural dependencies are not doubled by logical dependencies. These percentages are statistically similar with the values obtained in \cite{Oliva:2011:ISL:2067853.2068086}: they measured LCOP (Logical Coupling Only Percentage)  and SCOP (Structural Coupling Only Percentage) and obtained 95\% for SCOP and 91\% for LCOP. 
+
+In \cite{DBLP:journals/jss/AjienkaC17} the authors measured CSD (Co-changes Structural Dependencies ratio) and the CLD (Coupled Logical Dependencies ratio) and obtained the values for CSD about 80\% and CLD about 15\%.  Also in case of \cite{DBLP:journals/jss/AjienkaC17}  the total number of logical dependencies is 10 times bigger than the number of structural dependencies, while in our work, in the case considered of optimal filtering,  the total number of logical dependencies can be approximated with the number of structural dependencies. The explanation for this difference lies in the different manner of determining the logical dependencies: while \cite{DBLP:journals/jss/AjienkaC17} also uses a threshold of 10 for the maximum number of files in a commit, they count all co-changes toward logical dependencies, although they assign them different strengths. This would correspond to the filtering case determined by the combination: the commit size threshold is 10 files and the occurrence threshold is 1. 
+
+
+\begin{figure*}[!t]
+\centering
+\includegraphics[width=5.7in]{figvenn-new.pdf}
+\vspace{-1cm}
+% where an .eps filename suffix will be assumed under latex, 
+% and a .pdf suffix will be assumed for pdflatex; or what has been declared
+% via \DeclareGraphicsExtensions.
+\caption{Intersections of logical and structural dependencies, in different cases defined by different combinations of filtering thresholds. }
+\label{fig_venn}
+\end{figure*}
+
+
+
 
 
 \section {Threats to validity}
@@ -614,7 +621,7 @@ The 18 class pairs where we could confirm by manual inspection a logical link ar
 We consider that in the future, the validation of extracted logical dependencies will occur by using them to enhance dependency graphs for  applications such as architectural reconstruction through clustering \cite{SoraConti} or finding of key classes \cite{PagerankENASE}, and evaluating the positive impact on their results.   
 
 
-As we could see in tables \ref{tab:percLD:comm} and \ref{tab:percLD:nocomm}, only a small amount of logical dependencies are between classes that also present structural dependencies.  In our experiments, even after filtering, around 95\% of the logical dependencies are between classes without structural dependencies. Although this big percentage is supported also by experiments of related works, we consider that future work must further investigate its cause. One possible cause could be that some of the co-changes were legit logical dependencies at some moment in the past, maybe even doubled by structural dependencies in previous revisions, but in the mean time the problem causing them may have been refactored and they should not be added to the dependency model of the current system.  
+As we could see in Tables \ref{tab:percLD:comm} and \ref{tab:percLD:nocomm}, only a small amount of logical dependencies are between classes that also present structural dependencies.  In our experiments, even after filtering, around 95\% of the logical dependencies are between classes without structural dependencies. Although this big percentage is supported also by experiments of related works, we consider that future work must further investigate its cause. One possible cause could be that some of the co-changes were legit logical dependencies at some moment in the past, maybe even doubled by structural dependencies in previous revisions, but in the mean time the problem causing them may have been refactored and they should not be added to the dependency model of the current system.  
 
 In this work we have extracted logical dependencies from all the revisions of the system, and structural dependencies from the last revision of the system. In future work we will take into account also structural dependencies from all the revisions of the system, in order to filter out the old, out-of-date logical dependencies.  Some logical dependencies may have been also structural in previous revisions of the system but not in the current one. If we take into consideration also structural dependencies from previous revisions then the overlapping rate between logical and structural dependencies could probably increase. Another way to investigate this problem could be to study the trend of occurrencies of co-changes: if co-changes between a pair of classes used to happen more often in the remote past than in the more recent past, it may be a sign that the problem causing the logical coupling has been removed in the mean time. 
 
