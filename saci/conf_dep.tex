@@ -180,6 +180,14 @@ In the following subsections we will define two filtering mechanisms for logical
 
 We define the size of a commit transaction as the total number of source code files that have changed. Big commit transactions can be due to merges with other branches or folders renamings. In this case, a series of irrelevant logical dependencies can be introduced since not all the files are updated in the same time for a development reason. Different works ignore logical dependencies produced by big commit transactions, by choosing fixed threshold values for the maximum number of files accepted in a commit transaction: \cite{DBLP:journals/jss/AjienkaC17}, \cite{DBLP:journals/ese/AjienkaCC18}, \cite{Beck:2011:CMC:2025113.2025162}.
 
+
+\begin{figure}[h]
+\includegraphics[scale=0.9]{fig_cs.png}
+\caption{Transaction size(ts) trend in percentages}
+\label{fig:fig_cs}
+\centering
+\end{figure}
+
 Before we decided to also put a fixed threshold over the size of commit transactions we analyzed the overall transaction size trend of our studied the systems.
 In order to do this we have chosen the following threshold values for the number of files in a commit transaction: 5, 10, 20 and no threshold (infinity) and we counted the number of commit transactions that fall into each category.
 Based on the results presented in figure \ref{fig:fig_cs} we can say that 90\% of the total commit transactions made are with less than 10 source code files changed. This percent allows us to say that setting a threshold of 10 files for the maximum size of the commit transactions will not affect so much the total number of commit transactions from the systems since it will still remain 90\% of the commit transactions from where we can extract logical dependencies.
@@ -192,12 +200,6 @@ $\Comb{n}{k}=\frac{n!}{k!(n-k)!} = \frac{1030!}{2!(1028)!} = 529 935$ logical de
 
 So filtering 10\% of the total amount of commit transactions can indeed lead to a significant decrease of the amount of logical dependencies and that is why we choose the value of 10 as our fixed threshold for the maximum size of a commit transaction.
 
-\begin{figure}[h]
-\includegraphics[scale=0.9]{fig_cs.png}
-\caption{Transaction size(ts) trend in percentages}
-\label{fig:fig_cs}
-\centering
-\end{figure}
 
 \begin{figure}[h]
 \includegraphics[scale=0.9]{fig_ld_ts.png}
@@ -207,65 +209,112 @@ So filtering 10\% of the total amount of commit transactions can indeed lead to 
 \end{figure}
 
 
-\subsection{Filtering based on the number of occurrences}
-\label{sec:filterocc}
-Filtering only based on the commit size transaction is not enought to filter logical dependencies since the remaining amount still exceeds the amount of structural dependencies.
-One occurrence of a logical dependency between two entities cannot be a valid logical dependency since that can be a coincidence. If two entities have multiple occurrences together then the probability of a coincidence is smaller.
-Based on this assumption we have performed a series of analysis on the systems with a incremented number of occurrences from 1 to 4. In each of the cases the extracted logical dependencies from commit transaction with less or equal to 10 changed source code files were also filtered by the minimum number of occurrences established and all the logical dependencies that did not exceeded the minimum number of occurrences were discarded. 
-The results of the analysis were presented in table \ref{table:ld_percentages} as percentages of logical dependencies reported to the total number of dependencies in the system. The total number of dependencies from the system is the sum of logical and structural dependencies.
-
-We stopped the minimum occurrences number to 4 because we observed that for systems with ID 2, 6 and 10 the percent of LD is lower than 50\% which means that the number of SD is higher than the number of LD. On the other hand for systems with
-ID 19, 24, 27 the threshold of 4 for minimum number of occurrences has not changed almost at all the discrepancy between the number of logical and structural dependencies.
-
-If we try to go higher with the occurrences threshold we will risk to filter all the existing logical dependencies for some of the systems.
-So, filtering with a threshold of 4 for the minimum number of occurrences will indeed filter the logical dependencies but for some of the systems the remaining number of logical dependencies will still be significantly higher compared to the number of structural dependencies.
-
-
 
 \begin{table}[!h]
 \renewcommand{\arraystretch}{1.25}
-\caption{Percentage of LD raported to the total number of dependencies in the sistem}
-\label{table:ld_percentages}
+\caption{Percentage of LD that are also SD}
+\label{table:sd_percentages}
 \centering
 \begin{tabular}{|c|c|c|c|c|}
 \hline
     ID  & $occ\geq 1$ & $occ\geq 2$ & $occ\geq 3$ & $occ\geq 4$  \\
 \hline
-1	&	94,22	&	88,72	&	83,58	&	55,57	\\
-2	&	66,95	&	47,03	&	32,05	&	24,20	\\
-3	&	94,51	&	87,27	&	74,77	&	60,58	\\
-4	&	99,19	&	98,97	&	98,87	&	98,81	\\
-5	&	92,87	&	89,91	&	74,04	&	70,06	\\
-6	&	77,26	&	61,79	&	52,07	&	45,05	\\
-7	&	92,72	&	88,08	&	76,75	&	70,78	\\
-8	&	90,68	&	79,70	&	66,59	&	57,20	\\
-9	&	92,75	&	88,41	&	82,38	&	77,22	\\
-10	&	75,20	&	68,56	&	51,74	&	44,34	\\
-11	&	96,26	&	93,68	&	90,81	&	87,50	\\
-12	&	89,61	&	83,07	&	77,56	&	71,92	\\
-13	&	97,10	&	91,51	&	81,16	&	78,47	\\
-14	&	88,64	&	80,35	&	75,73	&	72,30	\\
-15	&	89,70	&	78,35	&	69,91	&	57,46	\\
-16	&	80,51	&	63,74	&	49,90	&	41,58	\\
-17	&	84,82	&	75,70	&	61,57	&	53,13	\\
-18	&	88,06	&	81,87	&	70,79	&	61,36	\\
-19	&	93,00	&	89,04	&	81,50	&	79,27	\\
-20	&	80,93	&	68,30	&	58,95	&	46,89	\\
-21	&	93,84	&	84,06	&	75,83	&	70,34	\\
-22	&	88,68	&	81,67	&	70,49	&	64,44	\\
-23	&	90,27	&	77,51	&	68,61	&	55,92	\\
-24	&	90,80	&	83,13	&	74,19	&	66,94	\\
-25	&	97,71	&	96,90	&	96,18	&	95,77	\\
-26	&	91,75	&	85,81	&	81,20	&	77,17	\\
-27	&	93,34	&	88,93	&	84,73	&	80,63	\\
-
+1	&	1,56	&	1,99	&	1,88	&	6,96	\\
+2	&	8,32	&	10,60	&	11,74	&	11,89	\\
+3	&	1,99	&	2,41	&	3,14	&	5,46	\\
+4	&	0,54	&	0,60	&	0,47	&	0,44	\\
+5	&	1,29	&	1,41	&	2,40	&	2,34	\\
+6	&	5,18	&	7,00	&	7,64	&	6,79	\\
+7	&	2,56	&	2,89	&	4,83	&	5,06	\\
+8	&	3,11	&	4,75	&	6,98	&	7,50	\\
+9	&	5,23	&	7,58	&	9,44	&	10,07	\\
+10	&	5,05	&	5,10	&	6,43	&	6,30	\\
+11	&	1,82	&	2,57	&	3,32	&	4,11	\\
+12	&	6,67	&	8,97	&	9,60	&	10,43	\\
+13	&	0,72	&	1,59	&	2,65	&	2,30	\\
+14	&	5,49	&	8,52	&	8,40	&	8,36	\\
+15	&	4,02	&	6,35	&	7,03	&	8,63	\\
+16	&	5,00	&	6,83	&	6,85	&	6,65	\\
+17	&	2,41	&	2,59	&	2,89	&	2,99	\\
+18	&	3,03	&	3,90	&	5,06	&	6,71	\\
+19	&	1,72	&	2,17	&	1,51	&	1,25	\\
+20	&	4,44	&	6,20	&	6,73	&	7,54	\\
+21	&	1,22	&	2,18	&	2,47	&	2,07	\\
+22	&	2,55	&	3,31	&	4,17	&	4,67	\\
+23	&	3,95	&	6,57	&	8,25	&	9,38	\\
+24	&	1,84	&	3,00	&	4,03	&	5,03	\\
+25	&	0,42	&	0,59	&	0,73	&	0,77	\\
+26	&	1,01	&	1,50	&	1,82	&	2,11	\\
+27	&	3,87	&	5,05	&	5,59	&	5,86	\\
 
 \hline
-M	&	89,31&	81,55&	72,66	&	65,36\\
+M	&	2,56	&	3,15	&	4,50	&	5,88	\\
+
 
 \hline
 \end{tabular}
 \end{table}
+
+
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1.25}
+\caption{Ratio of number of LD to number of SD}
+\label{table:ld_ratio}
+\centering
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+    ID  & $occ\geq 1$ & $occ\geq 2$ & $occ\geq 3$ & $occ\geq 4$  \\
+\hline
+1	&	15,64	&	7,36	&	4,65	&	0,99	\\
+2	&	1,80	&	0,73	&	0,35	&	0,23	\\
+3	&	16,10	&	6,10	&	2,45	&	1,18	\\
+4	&	121,01	&	95,24	&	86,90	&	82,32	\\
+5	&	12,66	&	8,60	&	2,63	&	2,17	\\
+6	&	2,78	&	1,20	&	0,79	&	0,60	\\
+7	&	11,88	&	6,73	&	2,81	&	2,04	\\
+8	&	9,40	&	3,65	&	1,75	&	1,14	\\
+9	&	11,55	&	6,45	&	3,61	&	2,46	\\
+10	&	2,87	&	2,04	&	0,96	&	0,70	\\
+11	&	24,84	&	14,02	&	9,20	&	6,38	\\
+12	&	8,22	&	4,52	&	3,09	&	2,23	\\
+13	&	27,09	&	8,47	&	3,26	&	2,74	\\
+14	&	7,23	&	3,61	&	2,74	&	2,28	\\
+15	&	8,08	&	3,12	&	1,91	&	1,03	\\
+16	&	3,63	&	1,41	&	0,76	&	0,54	\\
+17	&	6,94	&	4,08	&	2,27	&	1,63	\\
+18	&	6,52	&	3,79	&	1,84	&	1,09	\\
+19	&	12,40	&	7,38	&	3,90	&	3,41	\\
+20	&	3,85	&	1,85	&	1,19	&	0,69	\\
+21	&	14,79	&	4,95	&	2,91	&	2,20	\\
+22	&	7,57	&	4,24	&	2,21	&	1,65	\\
+23	&	8,68	&	3,04	&	1,89	&	1,06	\\
+24	&	9,20	&	4,35	&	2,41	&	1,64	\\
+25	&	41,46	&	30,04	&	23,98	&	21,44	\\
+26	&	10,45	&	5,47	&	3,78	&	2,90	\\
+27	&	14,42	&	8,04	&	5,55	&	4,20	\\
+
+\hline
+M	&	9,30	&	4,44	&	2,54	&	1,64	\\
+
+\hline
+\end{tabular}
+\end{table}
+
+
+\subsection{Filtering based on the number of occurrences}
+\label{sec:filterocc}
+Filtering only based on the commit size transaction is not enought to filter logical dependencies since the remaining amount still exceeds the amount of structural dependencies.
+One occurrence of a logical dependency between two entities cannot be a valid logical dependency since that can be a coincidence. If two entities have multiple occurrences together then the probability of a coincidence is smaller.
+Based on this assumption we have performed a series of analysis on the systems with a incremented number of occurrences from 1 to 4. In each of the cases the extracted logical dependencies from commit transaction with less or equal to 10 changed source code files were also filtered by the minimum number of occurrences established and all the logical dependencies that did not exceeded the minimum number of occurrences were discarded. 
+
+The results of the analysis were presented in table \ref{table:sd_percentages} as percentages of logical dependencies (LD) that are also structural dependencies and table \ref{table:ld_ratio} as ratio of the number of logical dependencies (LD) to the number of structural dependencies (SD).
+
+Based on table \ref{table:sd_percentages} we can say that only a small percentage of the extracted logical dependencies are also structural dependencies \cite{DBLP:journals/jss/AjienkaC17}, \cite{DBLP:journals/ese/AjienkaCC18}. The SD percentage increase once with the minimum number of occurrences because the number of logical dependencies from the systems decrease once with the minimum number of occurrences. 
+We calculate the overlapping between logical and structural dependencies not only because we want to get an idea of how many structural dependencies are reflected in the versioning system trought logical dependencies but also because we want to eliminate logical dependencies that are also structural dependencies since they don't bring any new information to the systems.
+
+We stopped the minimum occurrences number to 4 because we observed that for systems with ID 2, 6, 10 and 16 from table \ref{table:ld_ratio} the ratio number is lower than 1 which means that the number of SD is higher than the number of LD. On the other hand for systems with ID 4, 11, 19, 27 the threshold of 4 for minimum number of occurrences does not change the discrepancy between the number of logical and structural dependencies.
+If we try to go higher with the occurrences threshold we will risk to filter all the existing logical dependencies for some of the systems.
+So, filtering with a threshold of 4 for the minimum number of occurrences will indeed filter the logical dependencies but for some of the systems the remaining number of logical dependencies will still be significantly higher compared to the number of structural dependencies.
 
 
 
