@@ -34,7 +34,7 @@ Timisoara, Romania }
 \maketitle
 
 \begin{abstract}
-Emerging software engineering approaches support the idea that general methods and tools for dependency management should take into account not only structural dependencies but also logical dependencies. In this work we try to identify a set of factors that can be used to filter the co-changes such that true logical dependencies are identified. We present preliminary results obtained through an experimental study on a set of open source software projects with their historical evolution, and outline additional factors which need to be investigated in future work.
+Emerging software engineering approaches support the idea that general methods and tools for dependency management should take into account not only structural dependencies but also logical dependencies. Logical dependencies between modules of a software system can be diagnosed when these modules repeatedly change together during the evolution of the system.  In this work we identify a set of factors that can be used to filter the co-changes such that true logical dependencies are identified. We present preliminary results obtained through an experimental study on a set of open source software projects with their historical evolution, and outline additional factors which need to be investigated in future work.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -128,6 +128,7 @@ The tool looks through the main branch of the project and gets all the existing 
 
 We have analyzed a set of open-source projects found on GitHub\footnote{http://github.com/} \cite{Kalliamvakou2016} in order to extract the structural and logical dependencies between classes. Table \ref{table:1} enumerates all the systems studied. The 1st column assigns the projects IDs; 2nd column shows the project name; 3rd column shows the number of entities(classes and interfaces) extracted; 4th column shows the number of most recent commits analyzed from the active branch of each project and the 5th shows the language in which the project was developed.
 \begin{table}[!h]
+\renewcommand{\arraystretch}{1.25}
 \caption{Summary of open source projects studied.}
 \label{table:1}
 \centering
@@ -168,45 +169,58 @@ We have analyzed a set of open-source projects found on GitHub\footnote{http://g
 \end{table}
 
 \subsection{Estimating the number of co-changing classes vs the number of structural dependencies}
+\label{sec:preliminary}
 
-In a preliminary experiment, we consider every pair of classes that change together in any transaction  as a logical dependency. By extracting all the logical dependencies(LD) of systems from table \ref{table:1} and integrating them as they are with the structural dependencies(SD) we will obtain a huge amount of dependencies. 
-To get an overview of how huge is that amount, we summed the extracted logical and structural dependencies from each system then calculated the percentages of each type of dependency from that amount. In average, structural dependencies represent only 0,23\% of the total amount of dependencies, the rest of 99,77\% are logical dependencies.
+In a preliminary experiment, we consider every pair of classes that change together in any transaction  as a logical dependency. By extracting all the logical dependencies(LD) of all systems from table \ref{table:1} and comparing  their number with the number of structural dependencies,  we found that, in average for a system,  the logical dependencies outnumber the structural dependencies by an average factor of 300.  
 
-
-It is clear that we cannot use the extracted logical dependencies(LD) as they are since they number is to high and we have to find filtering mechanisms in order to reduce their percentage until it is smaller than the percentage of structural dependencies(SD).
+It is clear that we cannot use the extracted logical dependencies(LD) obtained from all pairs of co-changing classes, since their number is much too high and we have to find filtering mechanisms in order to reduce their number until it becomes comparable or smaller than the number structural dependencies(SD), and there remain only the most significant, valid logical dependencies.
 In the following subsections we will define two filtering mechanisms for logical dependencies.
 
-\subsection{Filtering based on commit size transaction}
+\subsection{Filtering based on commit transaction size}
 
-We define the size of a commit transaction as the total number of source code files that have changed. Big commit transactions can be due to merges with other branches or folders renamings. In this case, a series of irrelevant logical dependencies can be introduced since not all the files are updated in the same time for a development reason. Different works ignore logical dependencies produced by big commit transactions, by choosing fixed threshold values for the maximum number of files accepted in a commit transaction: \cite{DBLP:journals/jss/AjienkaC17}, \cite{DBLP:journals/ese/AjienkaCC18}, \cite{Beck:2011:CMC:2025113.2025162}.
+We define the size of a commit transaction (cs) as the total number of source code files that have changed. Big commit transactions can be due to merges with other branches or folders renamings. In this case, a series of irrelevant logical dependencies can be introduced since not all the files are updated in the same time for a development reason. Different related works ignore logical dependencies produced by big commit transactions, by choosing fixed threshold values for the maximum number of files accepted in a commit transaction \cite{DBLP:journals/jss/AjienkaC17}, \cite{DBLP:journals/ese/AjienkaCC18}, \cite{Beck:2011:CMC:2025113.2025162}.
+
+
+Before we decided to also put a fixed threshold over the size of commit transactions we analyzed the overall transaction size trend of our studied the systems.
+In order to do this we have chosen the following threshold values for the number of files in a commit transaction: 5, 10, 20 and no threshold (infinity) and we counted the number of commit transactions that fall into each category.
 
 
 \begin{figure}[h]
 \includegraphics[scale=0.9]{fig_cs.png}
-\caption{Transaction size(ts) trend in percentages}
+\caption{Commit transaction size(cs) trend in percentages}
 \label{fig:fig_cs}
 \centering
 \end{figure}
 
-Before we decided to also put a fixed threshold over the size of commit transactions we analyzed the overall transaction size trend of our studied the systems.
-In order to do this we have chosen the following threshold values for the number of files in a commit transaction: 5, 10, 20 and no threshold (infinity) and we counted the number of commit transactions that fall into each category.
-Based on the results presented in figure \ref{fig:fig_cs} we can say that 90\% of the total commit transactions made are with less than 10 source code files changed. This percent allows us to say that setting a threshold of 10 files for the maximum size of the commit transactions will not affect so much the total number of commit transactions from the systems since it will still remain 90\% of the commit transactions from where we can extract logical dependencies.
 
-So, how will this threshold will help in filtering the huge amount of extracted logical dependencies from the systems?
-As we can see in figure \ref{fig:fig_ld_ts} even though only 5\% of the commit transactions have more than 20 files changed ($ts<inf$) they generate in average 80\% of the total amount of logical dependencies extracted from the systems.
-The high number of logical dependencies extracted from such a small number of commit transactions is caused by big commit transactions. 
-One single big commit transaction can lead to a large amount of logical dependencies. For example in RxJava we have a very few commit transactions with 1030 source code files, this means that those files can generate 
-$\Comb{n}{k}=\frac{n!}{k!(n-k)!} = \frac{1030!}{2!(1028)!} = 529 935$ logical dependencies. By setting a threshold on the commit size transaction we can avoid the introduction of those logical dependencies into the system.
-
-So filtering 10\% of the total amount of commit transactions can indeed lead to a significant decrease of the amount of logical dependencies and that is why we choose the value of 10 as our fixed threshold for the maximum size of a commit transaction.
+Based on the results presented in Figure \ref{fig:fig_cs} we can say that 90\% of the total commit transactions made are with less than 10 source code files changed. This percent allows us to say that setting a threshold of 10 files for the maximum size of the commit transactions will not affect so much the total number of commit transactions from the systems since it will still remain 90\% of the commit transactions from where we can extract logical dependencies.
 
 
 \begin{figure}[h]
 \includegraphics[scale=0.9]{fig_ld_ts.png}
-\caption{Percentages of LD extracted from each transaction size(ts) group}
+\caption{Percentages of LD extracted from each commit transaction size(cs) group}
 \label{fig:fig_ld_ts}
 \centering
 \end{figure}
+
+So, how will this threshold will help in filtering the huge amount of extracted logical dependencies from the systems?
+As we can see in Figure \ref{fig:fig_ld_ts} even though only 5\% of the commit transactions have more than 20 files changed ($20<cs<inf$) they generate in average 80\% of the total amount of logical dependencies extracted from the systems.
+The high number of logical dependencies extracted from such a small number of commit transactions is caused by big commit transactions. 
+One single big commit transaction can lead to a large amount of logical dependencies. For example in RxJava we have a very few commit transactions with 1030 source code files, this means that those files can generate 
+$\Comb{n}{k}=\frac{n!}{k!(n-k)!} = \frac{1030!}{2!(1028)!} = 529 935$ logical dependencies. By setting a threshold on the commit transaction size we can avoid the introduction of those logical dependencies into the system.
+
+So filtering 10\% of the total amount of commit transactions can indeed lead to a significant decrease of the amount of logical dependencies and that is why we choose the value of 10 files as our fixed threshold for the maximum size of a commit transaction.
+
+We computed again the number of logical dependencies from all the test systems, and found out that, in average for a system, it outnumbers the structural dependencies by an average factor of 9.  Compared with the average factor of 300 determined in the conditions of subsection \ref{sec:preliminary}, it is a very significant improvement.
+
+
+\subsection{Filtering based on the number of occurrences}
+\label{sec:filterocc}
+Filtering only based on the commit transaction size is not enough to filter logical dependencies since the remaining amount still exceeds the amount of structural dependencies by an average factor of 9 which is still too big. 
+One occurrence of a co-change between two entities cannot be a valid logical dependency since that can be a coincidence. If two entities have multiple occurrences of co-changes then the probability of a coincidence is smaller. We define a threshold value for the minimum number of occurrences (occ) of a co-change in order to be considered a valid logical dependency.
+We have performed a series of analysis on the test systems, incrementing the threshold value occ from 1 to 4. In each of the cases the extracted logical dependencies from commit transaction with less or equal to 10 changed source code files were also filtered by the minimum number of occurrences established and all the logical dependencies that did not exceeded the minimum number of occurrences were discarded. 
+
+The results of the analysis are presented in Table \ref{table:sd_percentages} as percentages of logical dependencies (LD) that are also structural dependencies and Table \ref{table:ld_ratio} as ratio of the number of logical dependencies (LD) to the number of structural dependencies (SD).
 
 
 
@@ -248,7 +262,7 @@ So filtering 10\% of the total amount of commit transactions can indeed lead to 
 27	&	3,87	&	5,05	&	5,59	&	5,86	\\
 
 \hline
-M	&	2,56	&	3,15	&	4,50	&	5,88	\\
+Average	&	2,56	&	3,15	&	4,50	&	5,88	\\
 
 
 \hline
@@ -294,25 +308,19 @@ M	&	2,56	&	3,15	&	4,50	&	5,88	\\
 27	&	14,42	&	8,04	&	5,55	&	4,20	\\
 
 \hline
-M	&	9,30	&	4,44	&	2,54	&	1,64	\\
+Average	&	9,30	&	4,44	&	2,54	&	1,64	\\
 
 \hline
 \end{tabular}
 \end{table}
 
 
-\subsection{Filtering based on the number of occurrences}
-\label{sec:filterocc}
-Filtering only based on the commit size transaction is not enought to filter logical dependencies since the remaining amount still exceeds the amount of structural dependencies.
-One occurrence of a logical dependency between two entities cannot be a valid logical dependency since that can be a coincidence. If two entities have multiple occurrences together then the probability of a coincidence is smaller.
-Based on this assumption we have performed a series of analysis on the systems with a incremented number of occurrences from 1 to 4. In each of the cases the extracted logical dependencies from commit transaction with less or equal to 10 changed source code files were also filtered by the minimum number of occurrences established and all the logical dependencies that did not exceeded the minimum number of occurrences were discarded. 
 
-The results of the analysis were presented in table \ref{table:sd_percentages} as percentages of logical dependencies (LD) that are also structural dependencies and table \ref{table:ld_ratio} as ratio of the number of logical dependencies (LD) to the number of structural dependencies (SD).
 
-Based on table \ref{table:sd_percentages} we can say that only a small percentage of the extracted logical dependencies are also structural dependencies \cite{DBLP:journals/jss/AjienkaC17}, \cite{DBLP:journals/ese/AjienkaCC18}. The SD percentage increase once with the minimum number of occurrences because the number of logical dependencies from the systems decrease once with the minimum number of occurrences. 
-We calculate the overlapping between logical and structural dependencies not only because we want to get an idea of how many structural dependencies are reflected in the versioning system trought logical dependencies but also because we want to eliminate logical dependencies that are also structural dependencies since they don't bring any new information to the systems.
+Based on Table \ref{table:sd_percentages} we can say that only a small percentage of the extracted logical dependencies are also structural dependencies. This is consistent with the findings of related works \cite{DBLP:journals/jss/AjienkaC17}, \cite{DBLP:journals/ese/AjienkaCC18}. The percentage of LD which are also SD  increases with the minimum number of occurrences because the number of logical dependencies from the systems decreases with the minimum number of occurrences. 
+We calculate the overlapping between logical and structural dependencies not only because we want to get an idea of how many structural dependencies are reflected in the versioning system through logical dependencies but also because we want to eliminate logical dependencies that are also structural dependencies since they don't bring any new information to the systems.
 
-We stopped the minimum occurrences number to 4 because we observed that for systems with ID 2, 6, 10 and 16 from table \ref{table:ld_ratio} the ratio number is lower than 1 which means that the number of SD is higher than the number of LD. On the other hand for systems with ID 4, 11, 19, 27 the threshold of 4 for minimum number of occurrences does not change the discrepancy between the number of logical and structural dependencies.
+We stopped the minimum occurrences threshold to 4 because we observed that for systems with ID 2, 6, 10 and 16 from Table \ref{table:ld_ratio} the ratio number is lower than 1 which means that the number of SD is higher than the number of LD. On the other hand for systems with ID 4, 11, 19, 25 the threshold of 4 for minimum number of occurrences does not change the discrepancy between the number of logical and structural dependencies.
 If we try to go higher with the occurrences threshold we will risk to filter all the existing logical dependencies for some of the systems.
 So, filtering with a threshold of 4 for the minimum number of occurrences will indeed filter the logical dependencies but for some of the systems the remaining number of logical dependencies will still be significantly higher compared to the number of structural dependencies.
 
@@ -320,8 +328,8 @@ So, filtering with a threshold of 4 for the minimum number of occurrences will i
 
 \section{Future work}
 \label{sec:future}
-As we can see in section \ref{sec:filterocc} filtering logical dependencies based on occurrences with a fixed value is not the best solution.
-The threshold for occurrences may also be related to the number of commits of the system. Logical dependencies from systems with 5000 commits will have more chances to appear together than logical dependencies from systems with 1000 commits. Also the number of entities from the systems can influence the number of occurrences. A system with a small number of entities and a big number of commits may have bigger numbers of occurrences since there are not so many combinations of entities that can appear together.
+As we could see in section \ref{sec:filterocc} filtering logical dependencies based on a fixed value threshold for the number of occurrences achieves a degree of filtering which is satisfactory in average: when $occ\geq 4$ the number of logical dependencies is comparable with the number of logical structural dependencies. However, as it results from the detailed situation presented in Table \ref{table:ld_ratio}, this kind of filtering is not always the best solution for each test system.
+The threshold for occurrences may also be related to the number of commits of the system. Logical dependencies from systems with 5000 commits will have more chances to occur than logical dependencies from systems with 1000 commits. Also the number of entities from the systems can influence the number of occurrences. A system with a small number of entities and a big number of commits may have bigger numbers of occurrences since there are not so many combinations of entities that can appear together.
 We will try to establish all the factors that influence the number of occurrences and dynamically calculate the threshold value for the minimum number of occurrences for each system.
 
 Also, we consider that in the future, the validation of extracted logical dependencies will occur by using them to enhance dependency graphs for applications such as architectural reconstruction \cite{Shtern:2012:CMS:2332427.2332428}, \cite{sar}  through clustering \cite{SoraConti} or finding of key classes \cite{PagerankENASE}, and evaluating the positive impact on their results.
@@ -331,7 +339,7 @@ Also, we consider that in the future, the validation of extracted logical depend
 \label{sec:conclusion}
 In this work we experimentally define methods to filter out the most relevant logical dependencies from co-changing classes. 
 
-Our experiments showed that the most important factors studied until now, which affect the quality of logical dependencies are: the maximum number of files allowed in a commit to be counted as logical dependency, and the minimum number of repeated occurrences for a co-change to be counted as logical dependency.
+Our experiments identified two important factors which affect the quality of logical dependencies are: the maximum number of files allowed in a commit transaction to be counted as logical dependency, and the minimum number of repeated occurrences for a co-change to be counted as logical dependency.
 
 %\section*{References}
 
