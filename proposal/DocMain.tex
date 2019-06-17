@@ -1,0 +1,96 @@
+\documentclass[12pt,a4paper,oneside]{report}
+
+\usepackage{titlesec}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs, chemformula}
+\usepackage{titlesec, blindtext, color}
+\usepackage{listings}
+\usepackage{natbib}
+\usepackage{xcolor} % for setting colors
+
+% set the default code style
+\lstset{
+basicstyle=\fontsize{9}{11}\ttfamily,
+    frame=tb, % draw a frame at the top and bottom of the code block
+    tabsize=4, % tab space width
+    showstringspaces=false, % don't mark spaces in strings
+    numbers=left, % display line numbers on the left
+    commentstyle=\color{green}, % comment color
+    keywordstyle=\color{blue}, % keyword color
+    stringstyle=\color{red} % string color
+}
+
+\newcommand\tab[1][1cm]{\hspace*{#1}}
+
+ \geometry{
+ a4paper,
+ top=35mm,
+bottom=30mm,
+bindingoffset=0.0in
+ }
+\pagenumbering{arabic} 
+
+\pagestyle{headings}
+
+\newcommand{\dspaceon}{\renewcommand{\baselinestretch}{1.3}\large\normalsize}
+\newcommand{\dspaceoff}{\renewcommand{\baselinestretch}{1}\large\normalsize}
+
+\graphicspath{ {images/} }
+
+\definecolor{gray75}{gray}{0.75}
+\newcommand{\hsp}{\hspace{20pt}}
+\titleformat{\chapter}[hang]{\Large\bfseries}{\thechapter\hsp\textcolor{gray75}{$|$}\hsp}{0pt}{\Large\bfseries}
+\titleformat{\section}{\normalfont\large\bfseries}{\thesection}{1em}{}
+
+\begin{document}
+{\let\clearpage\relax \chapter{Presentation of the research topic (max. 1 page)}}
+The domain of the proposed thesis is Automated Software Engineering. The thesis will develop methods for the analysis of legacy software systems, focusing on using historical information describing the evolution of the systems extracted from the versioning systems. 
+The methods for analysis will integrate techniques based on computational algorithms as well as data-mining. As proof-of-concept, tool prototypes will implement the proposed methods and validate them by extensive experimentation on several cases of real-life systems.
+
+{\let\clearpage\relax \chapter{Current status of research within the proposed topic (max. 1 page)}}
+The current trend recommends that general dependency management methods and tools should also include logical dependencies besides the structural dependencies \cite{Oliva:2011:ISL:2067853.2068086}, \cite{DBLP:journals/jss/AjienkaC17}. 
+
+Structural dependencies are the result of the source code analysis of the system \cite{struct_dep} while logical dependencies refer to those dependencies between entities that are not always visible through source code analysis and can be added during the development process. Logical dependencies can be easily extracted from the versioning system (e.g. Subversion , Git) commits. 
+
+The concepts of logical coupling and logical dependencies were first used in different analysis tasks, all related to changes: for software change impact analysis \cite{1553643}, for identifying the potential ripple effects caused by software changes during software maintenance and evolution \cite{DBLP:conf/issre/OlivaG15}, \cite{Oliva:2011:ISL:2067853.2068086}, \cite{Poshyvanyk2009}, \cite{posh2010} or for their link to deffects \cite{wiese}, \cite{Zimmermann:2004:MVH:998675.999460}.
+
+Different applications based on dependency analysis could be improved if, beyond structural dependencies, they also take into account the hidden non-structural dependencies. For example, works  which investigate different methods for architectural reconstruction \cite{SoraConti}, \cite{SoraSem13}, \cite{PagerankENASE},  all of them based on the information provided by structural dependencies, could enrich their dependency models by taking into account also logical dependencies. However, a thorough survey \cite{sar} shows that historical information has been rarely used in architectural reconstruction. 
+
+Another survey \cite{Shtern:2012:CMS:2332427.2332428} mentions one possible explanation why historical information have been rarely used in architectural reconstruction: the size of the extracted information. One problem is the size of the extraction process, which has to analyze many versions from the historical evolution of the system. Another problem is the big number of pairs of classes which record co-changes and how they relate to the number of pairs of classes with structural dependencies.
+
+
+{\let\clearpage\relax \chapter{Justification of research topic (max. 3 page)}}
+The software architecture is important in order to understand and maintain the systems. The software architecture is created at the beginning together with the code and shall be updated once in a while to reflect the reality of the code. So reconstructing the architecture and verifying if still matches the reality is important \cite{sar}. 
+
+As  mentioned above, the main reason why historical information is rarely used in architectural reconstruction is the size of the extracted information. 
+
+Logical dependencies should integrate harmoniously with structural dependencies in an unitary dependency model: valid logical dependencies should not be omitted from the dependency model, but structural dependencies should not be engulfed by questionable logical dependencies generated by casual co-changes.  
+Thus, in order to add logical dependencies besides structural dependencies in dependency models, class co-changes must be filtered until they remain only a reduced but relevant set of valid logical dependencies. 
+
+Other works have also tried to filter co-changes and study the overlapping between the filtered co-changes and structural dependencies\cite{Oliva:2011:ISL:2067853.2068086}, \cite{DBLP:journals/jss/AjienkaC17}.
+
+One of the most used co-changes filter is the commit size. Each change or group of changes in the source code are submitted in the versioning system as a commit. The commit size is the number of files changed in that particular commit.
+
+Comparing the total amount of co-changes extracted without any filtering with the amount extracted with commit size filter we can say that the filter has indeed a big impact on the total number of extracted co-changes. This kind of filter can only shrink the number of co-changes extracted but cannot guarantee that the remaining ones have more relevancy and are more logical linked.
+
+A logical dependency can be also a structural dependency and vice-versa so studying the overlapping between logical and structural dependencies while filtering is important since we want to introduce those logical dependencies among with structural dependencies in architectural reconstruction systems. If their overlapping is to high then extracting and filtering in order to introduce only a couple of new dependencies in the system will maybe not worth the effort. But current studies have shown a small percentage of overlapping between them with and without any kind of filtering \cite{DBLP:journals/jss/AjienkaC17}. 
+
+Taking into account also structural dependencies from all the revisions of the system, in order to filter out the old, out-of-date logical dependencies.  Some logical dependencies may have been also structural in previous revisions of the system but not in the current one. If we take into consideration also structural dependencies from previous revisions then the overlapping rate between logical and structural dependencies could probably increase. Another way to investigate this problem could be to study the trend of concurrences of co-changes: if co-changes between a pair of classes used to happen more often in the remote past than in the more recent past, it may be a sign that the problem causing the logical coupling has been removed in the mean time. 
+ 
+
+
+Try not to give a fixed number as threshold for filters and try to deduce that number from the size of the system  
+
+\chapter{Research content and stages of research-implementation schedule}
+blblablu
+
+{\let\clearpage\relax \chapter{Necessary resources and available resources in UPT for the implementation of the research training}}
+
+The topic will be developed within the Database and Artificial Intelligence lab from UPT. The topic continues the research directions from grant "Automated recovery of architectural information from source code - AReAS".
+
+\bibliographystyle{plain}
+\bibliography{logicaldepd}
+
+
+\end{document}
