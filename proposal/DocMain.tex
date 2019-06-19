@@ -36,7 +36,6 @@ bindingoffset=0.0in
 \newcommand{\dspaceon}{\renewcommand{\baselinestretch}{1.3}\large\normalsize}
 \newcommand{\dspaceoff}{\renewcommand{\baselinestretch}{1}\large\normalsize}
 
-\graphicspath{ {images/} }
 
 \definecolor{gray75}{gray}{0.75}
 \newcommand{\hsp}{\hspace{20pt}}
@@ -102,12 +101,32 @@ The research will be made by following the next stages of implementation:
 \textbf{Stage 3:} Study the impact of those filters and the coresponding thresholds on the remaining quantity of co-changes for each system.
 Study the overlappings between the remaining pairs of co-changing entites and the structural dependencies extracted.
 
-\textbf{Stage 4:} Based on the findings from stage 3, establish a dynamic method to determine the thresholds in order to fit the best each studied sistem.
+\textbf{Stage 4:} Establish a dynamic way to determine the thresholds for filters in order to fit the best each studied sistem. Main focus on the threshold for number of occurences of co-changing pairs.
+Use plots or other visual instruments in order to see the highests and the lowest rates for the numbers of occurrences among co-changing pairs.
+Also filter those rates into normal and abnormal ones and study what was the cause of the highest rates (code or human related).
 
-\textbf{Stage 5:} Export the remaining co-changes whom at this step we can call logical dependencies and use them among structural dependencies in tools for architectural reconstruction to evaluate the improvement.
-Also manually evaluating some logical dependencies extracted from the systems in order to verify their true logical connection.
+\textbf{Stage 5:} Take into account also structural dependencies from all the revisions of the system to filter out the old, out-of-date logical dependencies. 
+Study how this affects the remaining number of logical dependencies.Here an extra check is needed, it can be a case in which old structural dependencies that were also logically linked to continue to be logically linked
+even after the structural dependency was removed.
 
-\textbf{Stage 6:} Identify or build other tools that use historical information and evaluate the impact of filtering of co-changes into logical dependences for them. 
+\textbf{Stage 6:} Export the remaining co-changes whom at this step we can call logical dependencies and use them among structural dependencies in tools for architectural reconstruction to evaluate the improvement.
+
+\textbf{Stage 7:} Compare the number of logical dependencies with metrics like Fan Out, Fan In, Efferent Coupling (Ce), Afferent Coupling (Ca) and study their connections.
+
+\textbf{Stage 8:} Identify other tools that use historical information and evaluate the impact of co-changes filtering into logical dependences for them. 
+
+\begin{figure*}[h]
+\centering
+\includegraphics[width=\textwidth]{gantt_chart.PNG}
+\label{fig:gantt1}
+\end{figure*}
+
+\begin{figure*}[h]
+\centering
+\includegraphics[width=\textwidth]{gantt_plot.PNG}
+\label{fig:gantt2}
+\end{figure*}
+
 
 \chapter{Necessary resources and available resources in UPT for the implementation of the research training}
 
