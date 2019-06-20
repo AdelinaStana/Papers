@@ -94,12 +94,15 @@ Also, logical dependency can be also a structural dependency and vice-versa, so 
 
 The research will be made by following the next stages of implementation:
 
+
+\textbf{A.} DEVELOPMENT OF CONTENT AND TOOLS
+
 \textbf{Stage 1:} Build tool to extract structural dependencies from code and co-changes from git for a given set of projects.
 
 \textbf{Stage 2:} Find filters for the co-changes extracted, the filters can be the ones already mentioned in previous works or new ones. Establish different thresholds for those filters.
 
 \textbf{Stage 3:} Study the impact of those filters and the coresponding thresholds on the remaining quantity of co-changes for each system.
-Study the overlappings between the remaining pairs of co-changing entites and the structural dependencies extracted.
+Study the overlappings between the remaining pairs of co-changing entites and the structural dependencies extracted. \cite{enase19}
 
 \textbf{Stage 4:} Establish a dynamic way to determine the thresholds for filters in order to fit the best each studied sistem. Main focus on the threshold for number of occurences of co-changing pairs.
 Use plots or other visual instruments in order to see the highests and the lowest rates for the numbers of occurrences among co-changing pairs.
@@ -108,6 +111,8 @@ Also filter those rates into normal and abnormal ones and study what was the cau
 \textbf{Stage 5:} Take into account also structural dependencies from all the revisions of the system to filter out the old, out-of-date logical dependencies. 
 Study how this affects the remaining number of logical dependencies.Here an extra check is needed, it can be a case in which old structural dependencies that were also logically linked to continue to be logically linked
 even after the structural dependency was removed.
+
+\textbf{B.} USAGE
 
 \textbf{Stage 6:} Export the remaining co-changes whom at this step we can call logical dependencies and use them among structural dependencies in tools for architectural reconstruction to evaluate the improvement.
 
