@@ -130,15 +130,44 @@ Compare the number of logical dependencies with metrics and study their connecti
 
  \begin{frame}
 \frametitle{Paper: Identifying logical dependencies from co-changing classes}
+Filter Thresholds
+\begin{itemize}
+	\item commit size (cs): the maximum size of commit transactions
+which are accepted to generate logical dependencies. The
+values for this threshold were 5, 10, 20 and no threshold (infinity).
+	\item  number of occurrences (occ): the minimum number of
+repeated occurrences for a co-change to be counted as logical
+dependency. The values for this threshold were 1, 2, 3 and 4.
+	\item with/without taking comments into consideration as valid
+change.
+\end{itemize}
 
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
  \begin{frame}
-\frametitle{Summary}
+\frametitle{Paper: Identifying logical dependencies from co-changing classes}
+
+\begin{center}
+     \begin{figure}
+	\includegraphics[width= 9.4 cm]{ld_overlapp.PNG}
+	\caption{\label{fig:fig5} Logical and structural dependencies overlapping. }
+     \end{figure}
+\end{center}
 
 \end{frame}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+ \begin{frame}
+\frametitle{Conclusions}
+ \begin{itemize}
+        \item  Large number of structural dependencies are not doubled by logical dependencies.
+        \item  The most important factors in co-changing classes filtering: commit size (cs) and number of occurrences (occ).
+        \item The commit size threshold(cs) influence the size of the extracted co-changes but not their relevance.
+        \item Filtering the logical dependencies after occurrences must be made using a dynamically calculated threshold. 
+    \end{itemize}
+\end{frame}
 
 \end{document}
