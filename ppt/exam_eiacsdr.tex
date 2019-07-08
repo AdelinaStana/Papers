@@ -102,7 +102,7 @@ But there are no strict rules to \textit{filter co-changes into logical dependen
 \begin{center}
      \begin{figure}
 	\includegraphics[width= 9.0 cm]{filter_occ.PNG}
-	\caption{\label{fig:fig4} Occurrences rates of co-changing classes extracted from one system. }
+	\caption{\label{fig:fig4} Occurrences rates of co-changing classes extracted from one system. Number of total commits: 6000. }
      \end{figure}
 \end{center}
 
@@ -130,7 +130,8 @@ Compare the number of logical dependencies with metrics and study their connecti
 
  \begin{frame}
 \frametitle{Paper: Identifying logical dependencies from co-changing classes}
-Filter Thresholds
+We studied 20 open source systems written in Java and CSharp.
+Filters and Thresholds:
 \begin{itemize}
 	\item commit size (cs): the maximum size of commit transactions
 which are accepted to generate logical dependencies. The
@@ -161,7 +162,7 @@ change.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
  \begin{frame}
-\frametitle{Conclusions}
+\frametitle{Paper: Conclusions}
  \begin{itemize}
         \item  Large number of structural dependencies are not doubled by logical dependencies.
         \item  The most important factors in co-changing classes filtering: commit size (cs) and number of occurrences (occ).
