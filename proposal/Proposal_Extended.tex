@@ -7,6 +7,7 @@
 \usepackage{titlesec, blindtext, color}
 \usepackage{listings}
 \usepackage{natbib}
+\usepackage{float}
 \usepackage{xcolor} 
 \pagestyle{plain}
 
@@ -23,15 +24,52 @@ The methods for analysis will integrate techniques based on computational algori
 
 \chapter{Software evolution and maintainability}
 \section{Software evolution}
-Software evolves 
+\subsection{Stages}
+\label{stages}
+Software has distinctive stages during its life:
 
-P. Brooks \cite{Brooks:1987:NSB:26440.26441} notes the following properties of large software systems:
+\textbf{Initial development} In this stage, the first functional version of the system is developed. Also, many of the main features are developed and documented and, the architecture is defined: components that compose the system, their interactions, and properties. 
+
+In this stage, the architecture is defined and must be made in such a manner that the software will easily support new additions. Changes made in the evolution stages must change very little the architecture defined in the initial stage \cite{model-bennett}.  The architecture must:
+\begin{itemize}
+\item allow unanticipated change in the software without compromising system integrity.
+\item evolve in controlled ways. \cite{Bennett}
+\end{itemize}
+
+\textbf{Evolution} The evolution stage begins only after the initial stage is passed successfully. In this stage, iterative changes are made. By changes, we mean additions (new software features), modifications (changes of requirements or misunderstood requirements) or deletions. There are two main reasons for the change: the learning process of the software team and new requests from the client.
+
+\textbf{Servicing} - Like we mentioned in the description of the initial stage, the architecture must be made in such a manner that the software may easily embrace changes. But, if not, then new changes are no longer easy to be made, are very difficult and time-consuming. At this point, the software enters the servicing stage (also called aging software, decayed software, and legacy) \cite{Software-life-cycle}, \cite{363157}.
+
+\textbf{Phase out} - This stage is also called decline \cite{Software-life-cycle}. If in the servicing stage limited changes are implemented, in the phase-out stage the entire development is frozen. In this way the software becomes outdated. The users must make workarounds in order to cover the deficiencies of the software.
+
+\textbf{Close down} - In this stage, the software is completely shut down, and the users redirected to a replacement system if this exists.
+
+The stages presented above are represented in Figure \ref{fig:stagedmodel}.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{staged_model.pdf}
-\label{fig:The versioned staged model}
+\includegraphics[width=\textwidth]{staged_model.png}
+\label{fig:stagedmodel}
+\caption{The versioned staged model \cite{model-bennett}}
 \end{figure}
+
+\subsection{Software change}
+As mentioned in section \ref{stages}, software change in made in evolution and servicing stages. The difference between changes made in the evolution stage and changes made in the servicing stage is the effort of making changes. In the evolution stage, software changes are made easily and do not require much effort while in the servicing stage only a limited number of changes are made and require a lot of effort, so are really time-consuming \cite{Bennett}.
+
+The change is a process that either introduces new requirements into an existing
+system, or modifies the system if the requirements were not correctly implemented, or
+moves the system into a new operating environment. It is called the change minicycle \cite{810308} and consists of the following phases :
+\begin{itemize}
+\item Request for change
+\item Planning phase: Program comprehension, Change impact analysis
+\item Change implementation: Restructuring for change, Change propagation
+\item Verification and validation
+\item Redocumentation
+\end{itemize}
+
+\subsection{Large software systems}
+P. Brooks \cite{Brooks:1987:NSB:26440.26441} notes the following properties of large software systems:
+\cite{nsbreloaded}
 
 \section{Software maintenance}
 In early days software maintenance was a small part of the software life cycle. As time was passing and more software was created, people realized that software does not die. Even if the actual development of the software may be frozen, requests regarding bug fixing and compatibility with new operating systems may appear over time. Sometimes software maintenance requires more effort than to build the system from scratch \cite{Yang:2003:SES:599790}.
@@ -92,8 +130,37 @@ A subprogram is a sequence of instructions that performs a certain task. Dependi
 
 \section{Fault detection}
 past changes are good predictors of future faults
+
 \section{Architectural reconstruction}
 Currently, the software systems contain tens of thousands of lines of code and are updated multiple times a day by multiple developers.  In order to successfully accomplish a task as a developer in such a system, you need to have a clear overview of the entire system and its connections. If for small systems a short look through the code can give the developer a good overview of the data-flow and functionalities of the system, in systems with tens of thousands of lines of code that's impossible. That is one of the reasons why the system's architecture is needed.
+
+
+The software architecture also changes its characteristics from one stage to another.
+During the initial development, the architecture of software is established. The
+architecture represents a significant commitment, and it will determine the future ease
+of evolution. In the projects we studied, the architecture changed only very little and
+hence the architectural commitments made during initial development are decisive
+factors for the future of the software.
+As the changes accumulate, the architecture can lose its original lucidity and integrity.
+There may be episodes of restructuringwhere the architecture is being partially rebuilt
+in order to facilitate future evolution.
+In the stage of servicing, the architecture becomes out of step with the needs of
+evolution and becomes an obstacle, limiting the scope of possible changes. Wrapping
+is a common process in this stage and it further damages the architecture, making it
+cryptic and very hard to understand. Where code changes are undertaken, they need to
+be very tactical and have minimal impact on other components. When the
+deterioration reaches a certain point, the architecture is no longer serviceable and the
+phase-out stage is the only option.
+The software decay can be explained as a positive feedback between loss of staff
+expertise, and loss of coherence in the program architecture. As the system
+architecture degrades, there is a stronger demand for greater and more sophisticated
+expertise to recognize and exploit the core design, to satisfy the main architectural
+constraints, and possibly to try to improve the architectural design where it has
+degraded too much. The real expert can understand when a change is tactical, and
+where it has profound effects on the architecture. The expert is able to spot danger
+signals. It is almost impossible to document or codify such expertise; it is almost
+always tacit. \ cite{model-bennett}
+
 \section{Software metrics}
 
 \chapter{Problems in Dependency Tracing}
@@ -173,19 +240,30 @@ even after the structural dependency was removed.
 
 \section{Gantt chart}
 
-\begin{figure*}[h]
+\begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{gantt_chart.PNG}
 \label{fig:gantt1}
-\end{figure*}
+\end{figure}
 
-\begin{figure*}[h]
+\begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{gantt_plot.PNG}
 \label{fig:gantt2}
-\end{figure*}
+\end{figure}
 
 \section{Proposed contents of the thesis}
+
+CHAPTER I - theoretical notions
+
+CHAPTER II - dependencies in software systems
+
+CHAPTER III - co-changes
+
+CHAPTER IV - co-changes filtering
+
+CHAPTER V - usage of dependencies
+
 
 \bibliographystyle{plain}
 \bibliography{logicaldepd}
