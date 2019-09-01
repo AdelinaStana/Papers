@@ -21,8 +21,48 @@
 The domain of the proposed thesis is Automated Software Engineering. The thesis will develop methods for the analysis of legacy software systems, focusing on using historical information describing the evolution of the systems extracted from the versioning systems. 
 The methods for analysis will integrate techniques based on computational algorithms as well as data-mining. As proof-of-concept, tool prototypes will implement the proposed methods and validate them by extensive experimentation on several cases of real-life systems.
 
-\section{Dependencies in software systems}
-A developer understands and gains information about a software system by looking at it in two different ways: 
+\chapter{Software evolution and maintainability}
+\section{Software evolution}
+Software evolves 
+
+P. Brooks \cite{Brooks:1987:NSB:26440.26441} notes the following properties of large software systems:
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{staged_model.pdf}
+\label{fig:The versioned staged model}
+\end{figure}
+
+\section{Software maintenance}
+In early days software maintenance was a small part of the software life cycle. As time was passing and more software was created, people realized that software does not die. Even if the actual development of the software may be frozen, requests regarding bug fixing and compatibility with new operating systems may appear over time. Sometimes software maintenance requires more effort than to build the system from scratch \cite{Yang:2003:SES:599790}.
+
+Lientz and Swanson categorised maintenance activities into four classes \cite{Lientz:1981:PAS:358790.358796}:
+\begin{itemize}
+\item Adaptive maintenance: changes in the software environment.
+\item Perfective maintenance: new user requirements and documentation improvement.
+\item Corrective maintenance: debugging anf bug fixing.
+\item Preventive maintenance: prevent future problems.
+\end{itemize}
+
+They also made a survey on the problems of application software maintenance in 487 organizations. The survey showed that most of the maintenance effort was on the first two types (adaptive and perfective maintenance). Many other studies suggest similar results.\cite{Bennett}
+All these studies underline one thing: \textit{the incorporation of new user requirements is the main problem for software evolution and maintenance} \cite{Lientz:1981:PAS:358790.358796}.
+
+One may ask why maintenance requires so much effort? There are some main problem factors when it comes to maintenance:
+
+\begin{itemize}
+\item User knowledge: lack of user training and/or lack of understanding of the system.
+\item Programmer effectiveness: lack of skills or experience for maintenance, development.
+\item Product quality: quality of the original system, quality of documentation and specs.
+\item Machine requirements: increasing storage or decreasing processing time requirements.
+\item System reliability: data integrity, hardware, and software reliability.
+\end{itemize}
+
+\section{Software quality}
+
+\chapter{Dependencies in software systems}
+A dependency is created by two elements that are in a relationship and indicates that an element of the relationship, in some manner, depends on the other element of the relationship \cite{Booch:2004:OAD:975416}, \cite{Cataldo2009SoftwareDW}.
+
+A developer gains information about a software system by looking at it in two different ways: 
 \begin{itemize}
 	\item top-down: starting from the highest level of abstraction of the system and going down to the code.
 	\item bottom-up: starting from the code and going up to the highest level of abstraction.
@@ -30,33 +70,33 @@ A developer understands and gains information about a software system by looking
 
 Both ways imply gradually gaining new information about the system and in both, the developer traces the dependencies and connections of the software system \cite{Wilde90understandingprogram}, \cite{341244}.
 
-A dependency is created by two elements that are in a relationship and indicates that an element of the relationship, in some manner, depends on the other element of the relationship \cite{Booch:2004:OAD:975416}, \cite{Cataldo2009SoftwareDW}.
-
-\subsection{Structural dependencies}
-Structural dependencies can be found by the analysis of the source code.
-There are several types of relationships between these source code entities and all those create \textit{structural dependencies} between classes (a.k.a syntactic dependencies or structural coupling):
+\section{Structural dependencies}
+Structural dependencies can be found by analysing the source code. \cite{Sangal:2005:UDM:1094811.1094824}. 
+There are several types of relationships between these source code entities and all those create \textit{structural dependencies}:
 
 \subsubsection{Data Item Dependencies}
 Data items can be variables, records or structures. A dependency is created between two data items when the value held in the first data item is used or affects the value from the second.
 
 \subsubsection{Data Type Dependencies}
+Data items are declared to be of a specific data type. Besides the built-in data types that every programming language has, developers can also create new types that they can use. Each time the data type definition is changed it will affect all the data items that are declared to be of that type. 
 
 \subsubsection{Subprogram Dependencies}
-\subsubsection{Source File Dependencies}
+A subprogram is a sequence of instructions that performs a certain task. Depending on the programming language a subprogram may also be called a routine, a method, a function or a procedure. When a subprogram is changed, the developer must check the effects of that change in all the places that are calling that subprogram. Subprograms may also have dependencies with the data items that they receive as input or the data items that they are computing.
 
 
-In the case of object oriented software systems, dependency models are usually class dependency models where elements are entities such as classes and interfaces \cite{Sangal:2005:UDM:1094811.1094824}. 
+\section{Logical dependencies}
+\subsection{Co-change filtering}
 
-\subsection{Logical dependencies}
 
-\section{Usage of dependencies}
+\chapter{Usage of dependencies}
 
-\subsection{Fault detection}
+\section{Fault detection}
 past changes are good predictors of future faults
-\subsection{Architectural reconstruction}
+\section{Architectural reconstruction}
 Currently, the software systems contain tens of thousands of lines of code and are updated multiple times a day by multiple developers.  In order to successfully accomplish a task as a developer in such a system, you need to have a clear overview of the entire system and its connections. If for small systems a short look through the code can give the developer a good overview of the data-flow and functionalities of the system, in systems with tens of thousands of lines of code that's impossible. That is one of the reasons why the system's architecture is needed.
-\subsection{Software metrics}
-\subsection{Clustering}
+\section{Software metrics}
+
+\chapter{Problems in Dependency Tracing}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -74,7 +114,7 @@ Different applications based on dependency analysis could be improved if, beyond
 Another survey \cite{Shtern:2012:CMS:2332427.2332428} mentions one possible explanation why historical information have been rarely used in architectural reconstruction: the size of the extracted information. One problem is the size of the extraction process, which has to analyze many versions from the historical evolution of the system. Another problem is the big number of pairs of classes which record co-changes and how they relate to the number of pairs of classes with structural dependencies.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Logical dependencies filtering}
+\chapter{Co-changes filtering}
 The software architecture is important in order to understand and maintain a system. Often code updates are made without checking or updating the architecture. This kind of updates cause the architecture to drift from the reality of the code over time.\cite{sar}
 So reconstructing the architecture and verifying if still matches the reality is important. 
 
