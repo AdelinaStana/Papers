@@ -54,6 +54,7 @@ The stages presented above are represented in Figure \ref{fig:stagedmodel}.
 \end{figure}
 
 \subsection{Software change}
+\label{change}
 As mentioned in section \ref{stages}, software change in made in evolution and servicing stages. The difference between changes made in the evolution stage and changes made in the servicing stage is the effort of making changes. In the evolution stage, software changes are made easily and do not require much effort while in the servicing stage only a limited number of changes are made and require a lot of effort, so are really time-consuming \cite{Bennett}, \cite{Rajlich}.
 
 The change is triggered either by new feature requests from the client or by misunderstanding the previous requirements and re-implementing them. 
@@ -105,7 +106,7 @@ A developer gains information about a software system by looking at it in two di
 Both ways imply gradually gaining new information about the system and in both, the developer traces the dependencies and connections of the software system \cite{Wilde90understandingprogram}, \cite{341244}.
 
 \section{Structural dependencies}
-Structural dependencies can be found by analyzing the source code. \cite{Sangal:2005:UDM:1094811.1094824}. 
+Structural dependencies can be found by analyzing the source code \cite{Sangal:2005:UDM:1094811.1094824}, \cite{CalloArias2011}. 
 There are several types of relationships between these source code entities and all those create \textit{structural dependencies}:
 
 \subsubsection{Data Item Dependencies}
@@ -118,26 +119,44 @@ Data items are declared to be of a specific data type. Besides the built-in data
 A subprogram is a sequence of instructions that performs a certain task. Depending on the programming language a subprogram may also be called a routine, a method, a function or a procedure. When a subprogram is changed, the developer must check the effects of that change in all the places that are calling that subprogram. Subprograms may also have dependencies with the data items that they receive as input or the data items that they are computing.
 
 
+
 \section{Logical dependencies}
+\subsection{Software evolution and version control systems}
+Software evolution implies change which can be triggered either by new feature requests or bug reports \cite{articleEvolution}. As presented also in section \ref{change}, one phase of the change mini-cycle consists of change implementation and propagation (changing source code files). 
+Usually, developers use version control when it comes to software development. Version control is a system that records changes to a file or set of files over time so that developers can recall specific versions of those files later \cite{svn}.
+Distributed version control systems (such as Git, Mercurial, Bazaar or Darcs) allows many developers to collaboratively develop their projects \cite{7471284}.
+
 \subsection{Definition}
-\subsection{Current status of research}
+\textit{Logical dependencies} (a.k.a logical coupling) can be found by software history analysis and can reveal relationships that are not always present in the source code (structural dependencies).  
+
+Software engineering practice has shown that sometimes modules which do not present structural dependencies still appear to be related. Co-evolution represents the phenomenon when one component changes in response to a change in another component \cite{Yu:2007:UCC:1231330.1231370}, \cite{5166450}. Those changes can be found in the software history maintained by the versioning system. Gall \cite{Gall:1998:DLC:850947.853338}, \cite{Gall:2003:CRH:942803.943741} identified as logical coupling between two modules the fact that these modules  \textit{repeatedly} change together during the historical evolution of the software system \cite{6606615}.
+
+The concepts of logical coupling and logical dependencies were first used in different analysis tasks, all related to changes: for software change impact analysis \cite{1553643}, for identifying the potential ripple effects caused by software changes during software maintenance and evolution \cite{DBLP:conf/issre/OlivaG15}, \cite{Oliva:2011:ISL:2067853.2068086}, \cite{Poshyvanyk2009}, \cite{posh2010} or for their link to deffects \cite{wiese}, \cite{Zimmermann:2004:MVH:998675.999460}.
 
 The current trend recommends that general dependency management methods and tools should also include logical dependencies besides the structural dependencies \cite{Oliva:2011:ISL:2067853.2068086}, \cite{DBLP:journals/jss/AjienkaC17}. 
 
-Software engineering practice has shown that sometimes modules which do not present structural dependencies still appear to be related. Co-evolution represents the phenomenon when one component changes in response to a change in another component \cite{Yu:2007:UCC:1231330.1231370}. Those changes can be found in the software history maintained by the versioning system. Gall \cite{Gall:1998:DLC:850947.853338} identified as logical coupling between two modules the fact that these modules  \textit{repeatedly} change together during the historical evolution of the software system. 
- \textit{Logical dependencies} (a.k.a logical coupling) can be found by software history analysis and can reveal relationships that are not always present in the source code (structural dependencies).  
 
-The concepts of logical coupling and logical dependencies were first used in different analysis tasks, all related to changes: for software change impact analysis \cite{1553643}, for identifying the potential ripple effects caused by software changes during software maintenance and evolution \cite{DBLP:conf/issre/OlivaG15}, \cite{Oliva:2011:ISL:2067853.2068086}, \cite{Poshyvanyk2009}, \cite{posh2010} or for their link to deffects \cite{wiese}, \cite{Zimmermann:2004:MVH:998675.999460}.
+
+\subsection{Current status of research}
+
+Oliva and Gerosa \cite{Oliva:2011:ISL:2067853.2068086}, \cite{DBLP:conf/issre/OlivaG15} have found first that the set of co-changed classes was much larger compared to the set of structurally coupled classes. They identified structural and logical dependencies from 150000 revisions from the Apache Software Foundation SVN repository. Also they concluded  that in at least 91\% of the cases, logical dependencies involve files that are not structurally related. This implies that not all of the change dependencies are related to structural dependencies and there could be other reasons for software artifacts to be change dependent.
+
+Ajienka and Capiluppi also studied the interplay between logical and structural coupling of software classes. In \cite{DBLP:journals/jss/AjienkaC17} they  perform experiments on 79 open source systems: for each system, they determine the sets of structural dependencies, the set of logical dependencies and the intersections of these sets. They quantify the overlapping or intersection of these sets, coming to the conclusion that not all co-changed class pairs (classes with logical dependencies) are also linked by structural dependencies. One other interesting aspect which has not been investigated by the authors in \cite{DBLP:journals/jss/AjienkaC17}  is the total number of logical dependencies, reported to the total number of structural dependencies of a software systems. However, they provide the raw data of their measurements and we calculated the ratio between the number of logical dependencies and the number of structural dependencies for all the projects analyzed by them: the average ratio resulted 12.  This means that, using their method of detecting logical dependencies for a system, the number of logical dependencies outnumbers by one order of magnitude the number of structural dependencies. We consider that such a big number of logical dependencies needs additional filtering. 
+
+
+Another kind of non-structural dependencies are the semantic or conceptual dependencies \cite{Poshyvanyk2009}, \cite{posh2010}. Semantic coupling is given by the degree to which the identifiers and comments from different classes are similar to each other. Semantic coupling could be an indicator for logical dependencies, as studied by Ajienka et al in \cite{DBLP:journals/ese/AjienkaCC18}. The experiments showed that a large number of co-evolving classes do not present semantic coupling, adding to the earlier research which showed that a large number of co-evolving classes do not present structural coupling. All these experimental findings rise the question whether it is a legitimate approach to accept all co-evolving classes as logical coupling.
+
+Zimmermann et al \cite{Zimmermann:2004:MVH:998675.999460} introduced data mining techniques to obtain association rules from version histories.
+The mined association rules  have a probabilistic interpretation based on the amount of evidence in the transactions they are derived from. This amount of evidence is determined by two measures: support and confidence.  They developed a tool to predict future or missing changes.
 
 Different applications based on dependency analysis could be improved if, beyond structural dependencies, they also take into account the hidden non-structural dependencies. For example, works  which investigate different methods for architectural reconstruction \cite{SoraConti}, \cite{SoraSem13}, \cite{PagerankENASE},  all of them based on the information provided by structural dependencies, could enrich their dependency models by taking into account also logical dependencies. However, a thorough survey \cite{sar} shows that historical information has been rarely used in architectural reconstruction. 
 
 Another survey \cite{Shtern:2012:CMS:2332427.2332428} mentions one possible explanation why historical information have been rarely used in architectural reconstruction: the size of the extracted information. One problem is the size of the extraction process, which has to analyze many versions from the historical evolution of the system. Another problem is the big number of pairs of classes which record co-changes and how they relate to the number of pairs of classes with structural dependencies.
 
-\subsection{Extracting logical dependencies from co-changes}
-The software architecture is important in order to understand and maintain a system. Often code updates are made without checking or updating the architecture. This kind of updates cause the architecture to drift from the reality of the code over time.\cite{sar}
-So reconstructing the architecture and verifying if still matches the reality is important. 
+The software architecture is important in order to understand and maintain a system. Often code updates are made without checking or updating the architecture. This kind of updates cause the architecture to drift from the reality of the code over time \cite{sar}.
+So reconstructing the architecture and verifying if still matches the reality is important \cite{Kalliamvakou2016}. 
 
-Surveys show that architectural reconstruction is mainly made based on structural dependencies \cite{Shtern:2012:CMS:2332427.2332428} \cite{sar}, the main reason why historical information is rarely used in architectural reconstruction is the size of the extracted information.
+Surveys also show that architectural reconstruction is mainly made based on structural dependencies \cite{Shtern:2012:CMS:2332427.2332428}, \cite{sar}, the main reason why historical information is rarely used in architectural reconstruction is the size of the extracted information.
 
 Logical dependencies should integrate harmoniously with structural dependencies in an unitary dependency model: valid logical dependencies should not be omitted from the dependency model, but structural dependencies should not be engulfed by questionable logical dependencies generated by casual co-changes.  
 Thus, in order to add logical dependencies besides structural dependencies in dependency models, class co-changes must be filtered until they remain only a reduced but relevant set of valid logical dependencies. 
@@ -154,62 +173,86 @@ Although, some unrelated files can be updated by human error in small commits, f
 
 Taking into account also structural dependencies from all the revisions of the system was not made in previous works, this step is important in order to filter out the old, out-of-date logical dependencies. Some logical dependencies may have been also structural in previous revisions of the system but not in the current one. If we take into consideration also structural dependencies from previous revisions then the overlapping rate between logical and structural dependencies could probably increase. Another way to investigate this problem could be to study the trend of concurrences of co-changes: if co-changes between a pair of classes used to happen more often in the remote past than in the more recent past, it may be a sign that the problem causing the logical coupling has been removed in the mean time. 
 
-Also, logical dependency can be also a structural dependency and vice-versa, so studying the overlapping between logical and structural dependencies while filtering is important since the intention is to introduce those logical dependencies among with structural dependencies in architectural reconstruction systems. Current studies have shown a relatively small percentage of overlapping between them with and without any kind of filtering \cite{DBLP:journals/jss/AjienkaC17}. This means that a lot of non related entities update together in the versioning system, the goal here is to establish the factors that determine such a small percentage of overlapping.
 
-\subsubsection{Filtering after number of occurrences}
+
+\section{Extracting logical dependencies from co-changes}
+
+Changes made to two components in the same commit do not necessarily indicate the co-evolution of the two. These changes could be completely unrelated. The study \cite{Yu2007} acknowledges the fact that evolutionary coupling could also be determined accidentally by two components changing in the same commit (independent evolution, as it is called) and this will bring noise to the measurement of evolutionary coupling. 
+
+In order to add logical dependencies besides structural dependencies as inputs for methods and tools for dependency management and analysis, class co-changes must be filtered until they remain only a reduced but relevant set of valid logical dependencies. 
+
+\subsection{Filtering based on the size of commit transactions}
+
+A big commit transaction can indicate that a merge with another branch or a folder renaming has been made.
+In this case, a series of irrelevant logical dependencies can be introduced since not all the files are updated in the same time for a development reason. Different works have chosen fixed threshold values for the maximum number of files accepted in a commit. Cappiluppi and Ajienka, in their works \cite{DBLP:journals/jss/AjienkaC17}, \cite{DBLP:journals/ese/AjienkaCC18} only take into consideration commits with less then 10 source code files changed in building the logical dependencies.
+
+The research of Beck et al \cite{Beck:2011:CMC:2025113.2025162} only takes in consideration transactions with up to 25 files. The research \cite{Oliva:2011:ISL:2067853.2068086} provided also a quantitative analysis of the number of files per revision; Based on the analysis of 40,518 revisions, the mean value obtained for the number of files in a revision is 6 files. However, standard deviation value shows that the dispersion is high. 
+
+\subsection{Filtering based on the number of occurrences}
+One occurrence of a co-change between two software entities can be a valid logical dependency, but can also be a coincidence. Taking into consideration only co-changes with multiple occurrences as valid dependencies can lead to more accurate logical dependencies and more accurate results. On the other hand, if the project studied has a relatively small amount of commits, the probability to find multiple updates of the same classes in the same time can be small, so filtering after the number of occurrences can lead to filtering all the logical dependencies extracted. Giving the fact that we will study multiple projects of different sizes and number of commits, we will analyze also the impact of this filtering on different projects.
+
+\subsection{Overlaps between structural and logical dependencies}
+Logical dependency can be also a structural dependency and vice-versa, so studying the overlapping between logical and structural dependencies while filtering is important since the intention is to introduce those logical dependencies among with structural dependencies in architectural reconstruction systems. Current studies have shown a relatively small percentage of overlapping between them with and without any kind of filtering \cite{DBLP:journals/jss/AjienkaC17}. This means that a lot of non related entities update together in the versioning system, the goal here is to establish the factors that determine such a small percentage of overlapping.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \chapter{Applications of software dependencies}
 
-Examples of areas where dependencies are used:
-
-\section{Architecture reconstruction}
-
+\section{Reverse engineering}
 The term reverse engineering was first defined by Chikofsky and Cross \cite{ChikofskyReverse} as the \textit{"process of analyzing a system to (i) identify the system’s components and
 their inter-relationships and (ii) create representations of the system in another form or at a higher level of abstraction."} 
 
 Reverse engineering is viewed as a two step process: information extraction and abstraction. \cite{FoSEReverseEngineering} 
-The firs step, information extraction, is made by source code analysis which generates dependencies between software artifacts. So, reverse engineering uses dependencies in order to create new representations of the system or provide a higher level of abstraction. \cite{struct_dep}
+The firs step, information extraction, is made by source code analysis which generates dependencies between software artifacts. So, reverse engineering uses dependencies in order to create new representations of the system or provide a higher level of abstraction \cite{struct_dep}, \cite{Gueheneuc}.
 
+\section{Architecture reconstruction}
 Currently, the software systems contain tens of thousands of lines of code and are updated multiple times a day by multiple developers.  
 The software architecture is important in order to understand and maintain a system. Often code updates are made without checking or updating the architecture.
-This kind of updates cause the architecture to drift from the reality of the code over time. So reconstructing the architecture and verifying if still matches the reality is important. \cite{sar},\cite{PagerankENASE}, \cite{Bass-archreconstruction} ,\cite{RecoverySartipi}, \ cite{model-bennett}.
+This kind of updates cause the architecture to drift from the reality of the code over time. So reconstructing the architecture and verifying if still matches the reality is important. \cite{sar},\cite{PagerankENASE}, \cite{Bass-archreconstruction} ,\cite{RecoverySartipi}, \cite{model-bennett}.
 
 \section{Identifying clones}
-Research suggests that a considerable fraction (5-10\%) of the source code of large-scale software is duplicate code (“clones”). Source code is often duplicated in part, or in whole, for a variety of reasons. Programmers may simply be reusing a piece of code by copy and paste or they may be “reinventing the wheel” \cite{ClonesMayrand}, \cite{clones}.
+Research suggests that a considerable part (around 5-10\%) of the source code of large-scale software is duplicate code (“clones”). Source code is often duplicated for a variety of reasons, programmers may simply be reusing a piece of code by copy and paste or they may be “reinventing the wheel” \cite{ClonesMayrand}, \cite{clones}.
 Detection and removal of clones can decrease software maintenance costs \cite{CloneDetection}, \cite{cloneKamiya}.
 
 \section{Code smells }
-Code smells are a metaphor to describe patterns that are generally associated with bad design and bad programming practices. Originally, code smells are used to find the places in software that could benefit from refactoring \cite{articlesmells}.
-Examples of code smells are: “large class”: classes with many fields, “feature envy” for methods that access more methods and fields of another class
-than of its own class, “switch statements” where inheritance should be used for specialization, “data class” for classes that do not contain functionality, only fields, “refused bequest”
-for classes that leave many of the fields and methods they inherit unused, and “data clumps” for clusters of data that are often seen together as class members or in method signatures
-but are not grouped in a class \cite{bookFowler}.
+Code smells have been defined by Fowler \cite{bookFowler} and describe patterns that are generally associated with bad design and bad programming practices.
+Originally, code smells are used to find the places in software may need refactoring \cite{articlesmells}. Studies have found that smells may affect comprehension and possibly increase change and fault proneness \cite{5741260}, \cite{5328703}, \cite{articlefault-proneness}.
+Examples of code smells:
+\begin{itemize}
+	\item Large Class: one class with many fields.
+	\item Feature Envy:  methods that access more methods and fields of another class than of its own class.
+	\item Data Class: classes that only fields and do not contain functionality.
+	\item Refused Bequest: classes that leave many of the fields and methods they inherit unused
+	\item Parallel Inheritance: every time you make a subclass of one class you also have to make a subclass of the other.
+	\item Shotgun Surgery: one method is changing together with other methods contained other classes.
+\end{itemize}
+
+Previous studies already explored the idea of using history information in order to detect code smells \cite{6963448}. 
 
 \section{Comprehension}
-Program comprehension is the process of acquiring knowledge about a computer program.
-Increased knowledge enables such activities as bug correction, enhancement, reuse, and documentation \cite{Comprehension}.
-Program comprehension is an emerging interest area within the software engineering field. Software engineering itself is concerned with improving the productivity of the software development process and the quality of the systems it produces. However, as currently practiced, the majority
-of the software development effort is spent on maintaining existing systems rather than developing new ones. Estimates of the proportion of resources and time devoted to maintenance range from 50\% to 75\% \cite{articleLientz}.
-The greatest part of the software maintenance process, in turn, is devoted to understanding the
-system being maintained. These involve reading the documentation, scanning the source code, and understanding the changes to be made.
+Software comprehension is the process of gaining knowledge about a software system.
+An increased knowledge of the software system help activities such as bug correction, enhancement, reuse and documentation \cite{Comprehension}, \cite{1199197}, \cite{2003:XLC:851042.857028}.
+Previous studies show that the proportion of resources and time allocated to maintenance may vary from 50\% to 75\% \cite{articleLientz}.
+Regarding maintenance, the greatest part of the software maintenance process is the activity of understanding the
+system. 
+Thanking into consideration the previous statements we can say that if we want to improve software maintenance we have to improve software comprehension \cite{article-cognitive-processes}.
 
 \section{Fault location}
-Debugging software is an expensive and mostly manual process. Of all debugging activities, locating the faults, or fault localization, is the most expensive [14]. This expense
-occurs in both the time and the cost required to find the fault. Because of this high cost, any improvement in the process of finding faults can greatly decrease the cost of
-debugging.\cite{fault-localization} \cite{program-failures}
+Debugging software is an expensive and mostly manual process. Of all debugging activities, fault localization, is the most expensive \cite{articleDebugging}. 
 
-\section{Program evolution}
-\cite{Bennett:2000:SME:336512.336534}, \cite{articleEvolution}
+Software developers locate faults in their programs using a manual process. This process begins when the developers observe failures in the program. The developers choose a set of data to inject in the system(a set of data that most likely replicate previous failures or may generate new ones) and place breakpoints using a debugger. Then they observe the system's state until an failed state is reached, and then backtrack until the fault is found. 
+
+As we said, this process has high costs so because of this high cost, any improvement in the process can decrease the cost of debugging.\cite{fault-localization} \cite{program-failures}
+
+
+\section{Error proneness}
+Research has shown that based on the software error history and simple metrics related to the amount of data and the structural complexity of software,
+modules that are most likely to contain errors can be identified \cite{67595}, \cite{1702015}.
 
 
 \section{Empirical software engineering research}
-Empirical research seeks to explore, describe, predict, and explain natural, social, or cognitive phenomena by using evidence based on observation or experience. It involves obtaining and interpreting evidence by, e.g., experimentation, systematic observation, interviews or surveys, or by the careful examination of documents or artifacts. \cite{inproceedingsEmpirical}
-
-
-
-\chapter{Problems in Dependency Tracing}
-
+Empirical research seeks to explore, describe, predict, and explain natural or social phenomena by using evidence based on observation or experience.
+It involves obtaining and interpreting evidence by experimentation, systematic observation, interviews or surveys, or by the careful examination of documents or artifacts. \cite{inproceedingsEmpirical}
 
 
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -217,33 +260,33 @@ Empirical research seeks to explore, describe, predict, and explain natural, soc
 \chapter{Research content and stages of research}
 
 \section{Proposed research stages}
-The research will be made by following the next stages of implementation:
+The research will be made by following the next stages of implementation:\\
 
-
-\textbf{A.} DEVELOPMENT OF CONTENT AND TOOLS
+\textbf{Section 1:  Development of content and tools}
 
 \textbf{Stage 1:} Build tool to extract structural dependencies from code and co-changes from git for a given set of projects.
 
 \textbf{Stage 2:} Find filters for the co-changes extracted, the filters can be the ones already mentioned in previous works or new ones. Establish different thresholds for those filters.
 
-\textbf{Stage 3:} Study the impact of those filters and the coresponding thresholds on the remaining quantity of co-changes for each system.
-Study the overlappings between the remaining pairs of co-changing entites and the structural dependencies extracted. \cite{enase19}
+\textbf{Stage 3:} Study the impact of those filters and the corresponding thresholds on the remaining quantity of co-changes for each system.
+Study the overlapping between the remaining pairs of co-changing entities and the structural dependencies extracted. \cite{enase19}
 
-\textbf{Stage 4:} Establish a dynamic way to determine the thresholds for filters in order to fit the best each studied sistem. Main focus on the threshold for number of occurences of co-changing pairs.
-Use plots or other visual instruments in order to see the highests and the lowest rates for the numbers of occurrences among co-changing pairs.
+\textbf{Stage 4:} Establish a dynamic way to determine the thresholds for filters in order to fit the best each studied system. Main focus on the threshold for number of occurrences of co-changing pairs.
+Use plots or other visual instruments in order to see the highest and the lowest rates for the numbers of occurrences among co-changing pairs.
 Also filter those rates into normal and abnormal ones and study what was the cause of the highest rates (code or human related).
 
 \textbf{Stage 5:} Take into account also structural dependencies from all the revisions of the system to filter out the old, out-of-date logical dependencies. 
 Study how this affects the remaining number of logical dependencies.Here an extra check is needed, it can be a case in which old structural dependencies that were also logically linked to continue to be logically linked
-even after the structural dependency was removed.
+even after the structural dependency was removed.\\
 
-\textbf{B.} USAGE
+
+\textbf{Section 2: Usage}
 
 \textbf{Stage 6:} Export the remaining co-changes whom at this step we can call logical dependencies and use them among structural dependencies in tools for architectural reconstruction to evaluate the improvement.
 
 \textbf{Stage 7:} Compare the number of logical dependencies with metrics like Fan Out, Fan In, Efferent Coupling (Ce), Afferent Coupling (Ca) and study their connections.
 
-\textbf{Stage 8:} Identify other tools that use historical information and evaluate the impact of co-changes filtering into logical dependences for them. 
+\textbf{Stage 8:} Identify other tools that use historical information and evaluate the impact of co-changes filtering into logical dependencies for them. 
 
 \section{Gantt chart}
 
@@ -261,16 +304,17 @@ even after the structural dependency was removed.
 
 \section{Proposed contents of the thesis}
 
-CHAPTER I - theoretical notions
+ 	\textbf{Chapter 1.} Introduction - This chapter will contain the motivation of the research topic and the motivation for choosing it.
 
-CHAPTER II - dependencies in software systems
+\textbf{Chapter 2.} Software evolution and maintainability - This chapter will present the notions of software evolution and maintainability and the processes that those imply.
 
-CHAPTER III - co-changes
+\textbf{Chapter 3.} Dependencies in software systems - This chapter will present existing types of dependencies in software systems and their nature.
 
-CHAPTER IV - co-changes filtering
+\textbf{Chapter 4.} Filtering co-changes into logical dependencies - This chapter will present methods and experiments in filtering co-changes in order to obtain logical dependencies.
 
-CHAPTER V - usage of dependencies
+\textbf{Chapter 5.} Logical dependencies in practice - This chapter will present a series of applications of logical dependencies extracted from software systems.
 
+\textbf{Chapter 6.} Conclusions - This chapter will provide the final conclusions and will summarize the contributions realized through this paper.
 
 \bibliographystyle{plain}
 \bibliography{logicaldepd}
