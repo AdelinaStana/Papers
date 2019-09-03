@@ -246,13 +246,25 @@ As we said, this process has high costs so because of this high cost, any improv
 
 
 \section{Error proneness}
-Research has shown that based on the software error history and simple metrics related to the amount of data and the structural complexity of software,
-modules that are most likely to contain errors can be identified \cite{67595}, \cite{1702015}.
+Various studies have analyzed the connection between software metrics and software quality. \cite{544352}
+Those studies have shown that modules that are most likely to contain errors can be identified based on the software error history and metrics related to the amount of data and the structural complexity of software \cite{67595}, \cite{1702015}.
+The most used metrics in error prone detection are the following:
+\begin{itemize}
+	\item WMC (Weighted Methods per Class): is the sum of all methods weights of a class
+	\item DIT (Depth of Inheritance Tree): is the maximum inheritance path from the class to the root class.
+	\item RFC (Response For a Class): is the number of methods that can be executed in response to a message received by an object of a class.
+	\item LCOM (Lack of Cohesion of Methods): is the lack of cohesion of the methods of a class.
+	\item NOC (Number Of Children): is the number of immediate sub-classes of a class.
+	\item CBO (Coupling Between Object classes): is the number of classes to which a class is coupled \cite{295895}.
+\end{itemize}
+
+WMC, NOC and DIT metrics reflect class hierarchy, CBO and RFC metric reflect class coupling and LCOM reflects cohesion.
+
 
 
 \section{Empirical software engineering research}
 Empirical research seeks to explore, describe, predict, and explain natural or social phenomena by using evidence based on observation or experience.
-It involves obtaining and interpreting evidence by experimentation, systematic observation, interviews or surveys, or by the careful examination of documents or artifacts. \cite{inproceedingsEmpirical}
+It involves obtaining and interpreting evidence by experimentation, surveys or observation of documents or artifacts. \cite{inproceedingsEmpirical}
 
 
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
