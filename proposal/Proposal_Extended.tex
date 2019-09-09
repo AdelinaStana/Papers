@@ -22,42 +22,18 @@
 The domain of the proposed thesis is Automated Software Engineering. The thesis will develop methods for the analysis of legacy software systems, focusing on using historical information describing the evolution of the systems extracted from the versioning systems. 
 The methods for analysis will integrate techniques based on computational algorithms as well as data-mining. As proof-of-concept, tool prototypes will implement the proposed methods and validate them by extensive experimentation on several cases of real-life systems.
 
-\chapter{Software evolution and maintainability}
-\section{Software evolution}
-\subsection{Stages}
-\label{stages}
-Software has distinctive stages during its life:
+\chapter{Dependencies in software systems}
 
-\textbf{Initial development} In this stage, the first functional version of the system is developed. Also, many of the main features are developed and documented and, the architecture is defined: components that compose the system, their interactions, and properties. 
-
-In this stage, the architecture is defined and must be made in such a manner that the software will easily support new additions. Changes made in the evolution stages must change very little the architecture defined in the initial stage \cite{model-bennett}.  The architecture must:
-\begin{itemize}
-\item allow unanticipated change in the software without compromising system integrity.
-\item evolve in controlled ways. \cite{Bennett}
-\end{itemize}
-
-\textbf{Evolution} The evolution stage begins only after the initial stage is passed successfully. In this stage, iterative changes are made. By changes, we mean additions (new software features), modifications (changes of requirements or misunderstood requirements) or deletions. There are two main reasons for the change: the learning process of the software team and new requests from the client.
-
-\textbf{Servicing} - Like we mentioned in the description of the initial stage, the architecture must be made in such a manner that the software may easily embrace changes. But, if not, then new changes are no longer easy to be made, are very difficult and time-consuming. At this point, the software enters the servicing stage (also called aging software, decayed software, and legacy) \cite{Software-life-cycle}, \cite{363157}.
-
-\textbf{Phase out} - This stage is also called decline \cite{Software-life-cycle}. If in the servicing stage limited changes are implemented, in the phase-out stage the entire development is frozen. In this way the software becomes outdated. The users must make workarounds in order to cover the deficiencies of the software.
-
-\textbf{Close down} - In this stage, the software is completely shut down, and the users redirected to a replacement system if this exists.
-
-The stages presented above are represented in Figure \ref{fig:stagedmodel}.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{staged_model.png}
-\label{fig:stagedmodel}
-\caption{The versioned staged model \cite{model-bennett}}
-\end{figure}
-
-\subsection{Software change}
+\section{Software change}
 \label{change}
-As mentioned in section \ref{stages}, software change in made in evolution and servicing stages. The difference between changes made in the evolution stage and changes made in the servicing stage is the effort of making changes. In the evolution stage, software changes are made easily and do not require much effort while in the servicing stage only a limited number of changes are made and require a lot of effort, so are really time-consuming \cite{Bennett}, \cite{Rajlich}.
 
-The change is triggered either by new feature requests from the client or by misunderstanding the previous requirements and re-implementing them. 
+Software has distinctive stages during its life: Initial development, Evolution, Servicing, Phase out and Close down \cite{Software-life-cycle}, \cite{model-bennett}.
+
+In the \textit{evolution stage} iterative changes are made. By changes, we mean additions (new software features), modifications (changes of requirements or misunderstood requirements) or deletions. There are two main reasons for the change: the learning process of the software team and new requests from the client.
+
+If new changes are no longer easy to be made or are very difficult and time-consuming, the software enters the \textit{servicing stage} also called aging software, decayed software and legacy \cite{Software-life-cycle}, \cite{363157}.
+
+The main difference between changes made in the evolution stage and changes made in the servicing stage is the effort of making changes. In the evolution stage, software changes are made easily and do not require much effort while in the servicing stage only a limited number of changes are made and require a lot of effort, so are really time-consuming \cite{Bennett}, \cite{Rajlich}.
 
 The change mini-cycle consists of the following phases \cite{810308}:
 \begin{itemize}
@@ -83,7 +59,7 @@ Lientz and Swanson categorized maintenance activities into four classes \cite{Li
 They also made a survey on the problems of application software maintenance in 487 organizations. The survey showed that most of the maintenance effort was on the first two types (adaptive and perfective maintenance). Many other studies suggest similar results \cite{Bennett}.
 All these studies underline one thing: \textit{the incorporation of new user requirements is the main problem for software evolution and maintenance} \cite{Lientz:1981:PAS:358790.358796}, \cite{Brooks:1987:NSB:26440.26441}.
 
-One may ask why maintenance requires so much effort? There are some main problem factors when it comes to maintenance:
+One may ask why maintenance requires so much effort? There are some main problem factors when it comes to maintenance \cite{Wilde90understandingprogram}, \cite{341244}:
 
 \begin{itemize}
 \item User knowledge: lack of user training and/or lack of understanding of the system.
@@ -93,19 +69,11 @@ One may ask why maintenance requires so much effort? There are some main problem
 \item System reliability: data integrity, hardware, and software reliability.
 \end{itemize}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Dependencies in software systems}
-A dependency is created by two elements that are in a relationship and indicates that an element of the relationship, in some manner, depends on the other element of the relationship \cite{Booch:2004:OAD:975416}, \cite{Cataldo2009SoftwareDW}.
-
-A developer gains information about a software system by looking at it in two different ways: 
-\begin{itemize}
-	\item top-down: starting from the highest level of abstraction of the system and going down to the code.
-	\item bottom-up: starting from the code and going up to the highest level of abstraction.
-\end{itemize}
-
-Both ways imply gradually gaining new information about the system and in both, the developer traces the dependencies and connections of the software system \cite{Wilde90understandingprogram}, \cite{341244}.
+Due to these factors, a series of methods and tools were created in order to help the developers to maintain the code. Some of the methods imply the usage of structural and logical dependencies.
 
 \section{Structural dependencies}
+A dependency is created by two elements that are in a relationship and indicates that an element of the relationship, in some manner, depends on the other element of the relationship \cite{Booch:2004:OAD:975416}, \cite{Cataldo2009SoftwareDW}.
+
 Structural dependencies can be found by analyzing the source code \cite{Sangal:2005:UDM:1094811.1094824}, \cite{CalloArias2011}. 
 There are several types of relationships between these source code entities and all those create \textit{structural dependencies}:
 
@@ -134,7 +102,6 @@ Software engineering practice has shown that sometimes modules which do not pres
 The concepts of logical coupling and logical dependencies were first used in different analysis tasks, all related to changes: for software change impact analysis \cite{1553643}, for identifying the potential ripple effects caused by software changes during software maintenance and evolution \cite{DBLP:conf/issre/OlivaG15}, \cite{Oliva:2011:ISL:2067853.2068086}, \cite{Poshyvanyk2009}, \cite{posh2010} or for their link to deffects \cite{wiese}, \cite{Zimmermann:2004:MVH:998675.999460}.
 
 The current trend recommends that general dependency management methods and tools should also include logical dependencies besides the structural dependencies \cite{Oliva:2011:ISL:2067853.2068086}, \cite{DBLP:journals/jss/AjienkaC17}. 
-
 
 
 \subsection{Current status of research}
@@ -177,9 +144,12 @@ Taking into account also structural dependencies from all the revisions of the s
 
 \section{Extracting logical dependencies from co-changes}
 
+The versioning system contains the long-term change history of every file. Each project change made by an individual at a certain point of time is contained into a commit \cite{svn}.
+
 Changes made to two components in the same commit do not necessarily indicate the co-evolution of the two. These changes could be completely unrelated. The study \cite{Yu2007} acknowledges the fact that evolutionary coupling could also be determined accidentally by two components changing in the same commit (independent evolution, as it is called) and this will bring noise to the measurement of evolutionary coupling. 
 
 In order to add logical dependencies besides structural dependencies as inputs for methods and tools for dependency management and analysis, class co-changes must be filtered until they remain only a reduced but relevant set of valid logical dependencies. 
+
 
 \subsection{Filtering based on the size of commit transactions}
 
@@ -187,6 +157,18 @@ A big commit transaction can indicate that a merge with another branch or a fold
 In this case, a series of irrelevant logical dependencies can be introduced since not all the files are updated in the same time for a development reason. Different works have chosen fixed threshold values for the maximum number of files accepted in a commit. Cappiluppi and Ajienka, in their works \cite{DBLP:journals/jss/AjienkaC17}, \cite{DBLP:journals/ese/AjienkaCC18} only take into consideration commits with less then 10 source code files changed in building the logical dependencies.
 
 The research of Beck et al \cite{Beck:2011:CMC:2025113.2025162} only takes in consideration transactions with up to 25 files. The research \cite{Oliva:2011:ISL:2067853.2068086} provided also a quantitative analysis of the number of files per revision; Based on the analysis of 40,518 revisions, the mean value obtained for the number of files in a revision is 6 files. However, standard deviation value shows that the dispersion is high. 
+
+We analyzed the overall transaction size trend for 27 open-source cpp and java systems. The results are presented in Figure \ref{fig:fig_cs}, based on them we can say that 90\% of the total commit transactions made are with less than 10 source code files changed. This percent allows us to say that setting a threshold of 10 files for the maximum size of the commit transactions will not affect so much the total number of commit transactions from the systems since it will still remain 90\% of the commit transactions from where we can extract logical dependencies \cite{DepSACI}.
+
+
+\begin{figure}[h]
+\centering
+\includegraphics{fig_cs.png}
+\caption{Commit transaction size(cs) trend in percentages}
+\label{fig:fig_cs}
+\centering
+\end{figure}
+
 
 \subsection{Filtering based on the number of occurrences}
 One occurrence of a co-change between two software entities can be a valid logical dependency, but can also be a coincidence. Taking into consideration only co-changes with multiple occurrences as valid dependencies can lead to more accurate logical dependencies and more accurate results. On the other hand, if the project studied has a relatively small amount of commits, the probability to find multiple updates of the same classes in the same time can be small, so filtering after the number of occurrences can lead to filtering all the logical dependencies extracted. Giving the fact that we will study multiple projects of different sizes and number of commits, we will analyze also the impact of this filtering on different projects.
@@ -246,25 +228,13 @@ As we said, this process has high costs so because of this high cost, any improv
 
 
 \section{Error proneness}
-Various studies have analyzed the connection between software metrics and software quality. \cite{544352}
-Those studies have shown that modules that are most likely to contain errors can be identified based on the software error history and metrics related to the amount of data and the structural complexity of software \cite{67595}, \cite{1702015}.
-The most used metrics in error prone detection are the following:
-\begin{itemize}
-	\item WMC (Weighted Methods per Class): is the sum of all methods weights of a class
-	\item DIT (Depth of Inheritance Tree): is the maximum inheritance path from the class to the root class.
-	\item RFC (Response For a Class): is the number of methods that can be executed in response to a message received by an object of a class.
-	\item LCOM (Lack of Cohesion of Methods): is the lack of cohesion of the methods of a class.
-	\item NOC (Number Of Children): is the number of immediate sub-classes of a class.
-	\item CBO (Coupling Between Object classes): is the number of classes to which a class is coupled \cite{295895}.
-\end{itemize}
-
-WMC, NOC and DIT metrics reflect class hierarchy, CBO and RFC metric reflect class coupling and LCOM reflects cohesion.
-
+Research has shown that based on the software error history and simple metrics related to the amount of data and the structural complexity of software,
+modules that are most likely to contain errors can be identified \cite{67595}, \cite{1702015}.
 
 
 \section{Empirical software engineering research}
 Empirical research seeks to explore, describe, predict, and explain natural or social phenomena by using evidence based on observation or experience.
-It involves obtaining and interpreting evidence by experimentation, surveys or observation of documents or artifacts. \cite{inproceedingsEmpirical}
+It involves obtaining and interpreting evidence by experimentation, systematic observation, interviews or surveys, or by the careful examination of documents or artifacts. \cite{inproceedingsEmpirical}
 
 
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -318,13 +288,13 @@ even after the structural dependency was removed.\\
 
  	\textbf{Chapter 1.} Introduction - This chapter will contain the motivation of the research topic and the motivation for choosing it.
 
-\textbf{Chapter 2.} Software evolution and maintainability - This chapter will present the notions of software evolution and maintainability and the processes that those imply.
+\textbf{Chapter 2.} Software evolution and maintainability - State of the art - This chapter will present the notions of software evolution and maintainability and the processes that those imply.
 
-\textbf{Chapter 3.} Dependencies in software systems - This chapter will present existing types of dependencies in software systems and their nature.
+\textbf{Chapter 3.} Dependencies in software systems \textit{- State of the art -} This chapter will present existing types of dependencies in software systems and their nature.
 
-\textbf{Chapter 4.} Filtering co-changes into logical dependencies - This chapter will present methods and experiments in filtering co-changes in order to obtain logical dependencies.
+\textbf{Chapter 4.} Filtering co-changes into logical dependencies \textit{- Original contribution -} This chapter will present methods and experiments in filtering co-changes in order to obtain logical dependencies.
 
-\textbf{Chapter 5.} Logical dependencies in practice - This chapter will present a series of applications of logical dependencies extracted from software systems.
+\textbf{Chapter 5.} Logical dependencies in practice \textit{- Validation -} This chapter will present a series of applications of logical dependencies extracted from software systems.
 
 \textbf{Chapter 6.} Conclusions - This chapter will provide the final conclusions and will summarize the contributions realized through this paper.
 
