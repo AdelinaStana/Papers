@@ -449,33 +449,20 @@ reserved.\par\permission}}
 %% a macro to change the (expanded) argument to uppercase.
 \def\maketitle{\begin{titlepage}
 \large
-{\def\baselinestretch{1.2}\Large\bf \choosecase{\@title} \par}
-by\par
-{\Large  \choosecase{\@author}}
 \par
+\par
+\par
+{\def\baselinestretch{1.2}\Large\bf \choosecase{\@title} \par
+}
 \@prevdegrees
 \par
-\choosecase{Submitted to the} \choosecase{\@department} \\
-\choosecase{in partial fulfillment of the requirements for the}
-\choosecase{\@degreeword} 
-\choosecase{of}
-\par
-\choosecase{\@degree}
-\par
-at the
-\par\MIT\par
-\@degreemonth\ \@degreeyear
-\par
-\@copyrightnotice
+\choosecase{\@department\\ \@thesisdate} \\
 \par
 \vskip 3\baselineskip
-\signature{Author}{\@department \\ \@thesisdate}
+{Ph.D. student: \@author }
 \par
-\vfill
-\unvbox\@titlesupervisor
+{Scientific supervisor: prof.dr.ing Cretu Vladimir-Ioan}
 \par
-\vfill
-\signature{Accepted by}{\@chairmanname \\ \@chairmantitle}
 \vfill
 \end{titlepage}}
 

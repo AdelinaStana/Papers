@@ -197,17 +197,17 @@ It involves obtaining and interpreting evidence by experimentation, systematic o
 \section{Tool for measuring software dependencies}
 \label{sec:tool}
 
-In order to build structural and logical dependencies we have developed a tool that takes as input the source code repository and builds the required software dependencies \cite{DepSACI}. The workflow can be delimited by three major steps as it follows (Figure \ref{fig:fig3}):\\ \\
-\textit{\textbf{Step 1:} Extracting structural dependencies.}\\
-\textit{\textbf{Step 2:} Extracting logical dependencies.}\\
-\textit{\textbf{Step 3:} Processing the information extracted.}
-
-\begin{figure}[H]
+\begin{figure}[h]
 \centering
 \includegraphics[width=\textwidth]{fig3.png}
 \caption{Processing phases}
 \label{fig:fig3}
 \end{figure}
+
+In order to build structural and logical dependencies we have developed a tool that takes as input the source code repository and builds the required software dependencies. The workflow can be delimited by three major steps as it follows (Figure \ref{fig:fig3}):\\ \\
+\textit{\textbf{Step 1:} Extracting structural dependencies.}\\
+\textit{\textbf{Step 2:} Extracting logical dependencies.}\\
+\textit{\textbf{Step 3:} Processing the information extracted.}
 
 
 \subsection{ Extracting structural dependencies}
@@ -409,7 +409,7 @@ So, filtering with a threshold of 4 for the minimum number of occurrences will i
 
 
 \section{Overlaps between structural and logical dependencies}
-A logical dependency can be also a structural dependency and vice-versa, so studying the overlapping between logical and structural dependencies while filtering is important since the intention is to introduce those logical dependencies among with structural dependencies in architectural reconstruction systems. Current studies have shown a relatively small percentage of overlapping between them with and without any kind of filtering \cite{DBLP:journals/jss/AjienkaC17}. This means that a lot of non related entities update together in the versioning system, the goal here is to establish the factors that determine such a small percentage of overlapping \cite{enase19}.
+A logical dependency can be also a structural dependency and vice-versa, so studying the overlapping between logical and structural dependencies while filtering is important since the intention is to introduce those logical dependencies among with structural dependencies in architectural reconstruction systems. Current studies have shown a relatively small percentage of overlapping between them with and without any kind of filtering \cite{DBLP:journals/jss/AjienkaC17}. This means that a lot of non related entities update together in the versioning system, the goal here is to establish the factors that determine such a small percentage of overlapping.
 
 
 In the main series of experiments, for each system, we extracted the structural dependencies and the logical dependencies and determined the overlap between the two dependencies sets, in various experimental conditions. 
@@ -560,16 +560,15 @@ A first observation from Tables \ref{tab:percSD:comm} and \ref{tab:percSD:nocomm
 
 From Tables \ref{tab:percLD:comm} and \ref{tab:percLD:nocomm} we notice that the percentage of logical dependencies which are also structural is always low to very low. This means that most co-changes are recorded between classes that have no structural dependencies to each other \cite{enase19}.   
  
-\section{Conclusions and future work}
+\section{Conclusion}
 \label{sec:Conclusion}
 
 Our experiments show that the most important factors which affect the quality of logical dependencies are: the maximum size of commit transactions which are accepted to generate logical dependencies, and the minimum number of repeated occurrences for a co-change to be counted as logical dependency. 
 
 We conclude that it is important to put a threshold on the maximum size of commit transactions which are accepted to generate logical dependencies. Only small commit transactions (changing up to 5 source code files) can be reliably used for introducing logical dependencies. We have also determined that small commit transactions are the most frequent kind of transactions, representing in average 80\% of all commit transactions. Under these conditions, we have determined that increasing the threshold for the minimum number of repeated occurrences for a co-change to be counted as a logical dependency reduces significantly the number of logical dependencies. In average, increasing with 1 the threshold for repeated occurrences determines a reduction to half for the number of logical dependencies.  A value of 4 for the threshold for repeated occurrences, combined with the condition of accepting only small commit transactions, already keeps the number of logical dependencies in the same range as the number of structural dependencies. Future work will investigate further the issue of repeated occurrences, analyzing also their trend in time. 
 
-Currently we have extracted logical dependencies from all the revisions of the system, and structural dependencies from the last revision of the system. In future work we will take into account also structural dependencies from all the revisions of the system, in order to filter out the old, out-of-date logical dependencies. If we take into consideration also structural dependencies from previous revisions then the overlapping rate between logical and structural dependencies could probably increase. Another way to investigate this problem could be to study the trend of occurrences of co-changes: if co-changes between a pair of classes used to happen more often in the remote past than in the more recent past, it may be a sign that the problem causing the logical coupling has been removed in the mean time. 
+The analysis of the experimental data shows that logical dependencies are distinct from structural dependencies. Even after filtering, a very big percentage of logical dependencies are between classes without structural dependencies. This leads to the conclusion that including into dependency models also logical dependencies besides structural dependencies has the potential to improve analysis applications based on dependency models.
 
-The future work will be performed in the next stages of the doctoral program as presented in Chapter \ref{prop}. 
 
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -586,7 +585,7 @@ The research will be made by following the next stages of implementation:\\
 \textbf{Stage 2:} Find filters for the co-changes extracted, the filters can be the ones already mentioned in previous works or new ones. Establish different thresholds for those filters.
 
 \textbf{Stage 3:} Study the impact of those filters and the corresponding thresholds on the remaining quantity of co-changes for each system.
-Study the overlapping between the remaining pairs of co-changing entities and the structural dependencies extracted \cite{enase19}. 
+Study the overlapping between the remaining pairs of co-changing entities and the structural dependencies extracted. \cite{enase19}
 
 \textbf{Stage 4:} Establish a dynamic way to determine the thresholds for filters in order to fit the best each studied system. Main focus on the threshold for number of occurrences of co-changing pairs.
 Use plots or other visual instruments in order to see the highest and the lowest rates for the numbers of occurrences among co-changing pairs.
@@ -603,17 +602,7 @@ even after the structural dependency was removed.\\
 
 \textbf{Stage 7:} Compare the number of logical dependencies with metrics like Fan Out, Fan In, Efferent Coupling (Ce), Afferent Coupling (Ca) and study their connections.
 
-\textbf{Stage 8:} Identify other tools that use structural dependencies and evaluate the impact of co-changes filtering into logical dependencies for them. \\
-
-
-
-\textbf{Section 3: Scientific reports}
-
-\textbf{Report 1:} Logical dependencies extraction - impact factors. 
-
-\textbf{Report 2:} Logical dependencies in practice.
-
-
+\textbf{Stage 8:} Identify other tools that use structural dependencies and evaluate the impact of co-changes filtering into logical dependencies for them. 
 
 \section{Gantt chart}
 
