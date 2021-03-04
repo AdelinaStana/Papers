@@ -10,7 +10,11 @@
 \usepackage{float}
 \usepackage{xcolor} 
 \usepackage{array}
+\usepackage{color, colortbl}
+
+\definecolor{LightCyan}{rgb}{0.93,1,1}
 \newcolumntype{L}{>{\centering\arraybackslash}m{10cm}}
+\newcolumntype{l}{>{\centering\arraybackslash}m{7cm}}
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
@@ -406,7 +410,11 @@ From Tables \ref{tab:percLD:comm} and \ref{tab:percLD:nocomm} we notice that the
  
 \chapter{Usage of the extracted dependencies}
 \section{Data set used}
-In order to extract the key classes based on logical dependencies we took the same set of data used in another research involving key classes detection. The research of I. Sora et al \cite{Finding-key-classes} takes in consideration structural dependencies that are extracted using static analysis techniques and was performed on the object-oriented systems presented in table \ref{tab:keyclass:overview}. 
+To extract the key classes based on logical dependencies, we took the same set of data used in another research involving key class detection. The research of I. Sora et al \cite{Finding-key-classes} takes into consideration structural public dependencies that are extracted using static analysis techniques and was performed on the object-oriented systems presented in table \ref{tab:keyclass:overview}.
+
+The requirements for a system to qualify as suited for investigations using logical dependencies are: has to be on GitHub, has to have release tags to identify the version, and also has to have an increased number of commits. 
+From the total of 14 object-oriented systems listed in the paper \cite{Finding-key-classes}, 13 of them have repositories in Github \ref{tab:gitfoundsystems}. And from the found repositories we identified only 6 repositories that have the same release tag as the specified version from table \ref{tab:keyclass:overview}. It is important to identify the correct release tag for each repository to limit the commits further analyzed by date. Only commits that were made until the specified release are considered and analyzed.
+The commits number found on the remaining 6 repositories varies from 19108 commits for Tomcat Catalina to 149 commits for JHotDraw. In order to have more accurate results, we need a significant number of commits, so we reached the conclusion that only 3 systems can be used for key classes detection using logical dependencies: Apache Ant, Hibernate, and Tomcat Catalina.  
 
 \begin{table}[H]
 \renewcommand{\arraystretch}{1}
@@ -443,32 +451,59 @@ S15	&	Wro4J	&	The Wro4J is a web resource (JS and CSS) optimizer for Java.	&	1.6
 \caption{Analyzed software systems in previous research paper.}
 \label{tab:gitfoundsystems}
 \centering
-\begin{tabular}{|c|c|c|L|c|c|}
+\begin{tabular}{|c|c|c|c|c|}
 \hline
-ID	&	System	&	Version	&	Git URL	&	Release Tag name	&	Commits number	\\
+ID	&	System	&	Version	&	Release Tag name	&	Commits number	\\
 \hline
-Sl	&	Apache Ant	&	1.6.1	&	https://github.com/apache/ant	&	rel/1.6.1	&	6713	\\
-S2	&	Argo UML	&	0.9.5	&	Not found	&	not found	&	0	\\
-S3	&	GWT Portlets	&	0.9.5 beta	&	https://github.com/siwiwit/gwtportlets	&	not found	&	0	\\
-S4	&	Hibernate 	&	5.2.12	&	https://github.com/hibernate/hibernate-orm	&	5.2.12	&	6733	\\
-S5	&	javaclient	&	2.0.0	&	https://github.com/kragniz/java-player	&	not found	&	0	\\
-S6	&	jEdit	&	5.1.0	&	https://github.com/albfan/jEdit	&	not found	&	0	\\
-S7	&	JGAP	&	3.6.3	&	https://github.com/martin-steghoefer/jgap	&	not found	&	0	\\
-S8	&	JHotDraw	&	6.0b.1	&	https://github.com/wrandelshofer/jhotdraw	&	not found	&	149	\\
-S9	&	JMeter	&	2.0.1	&	https://github.com/apache/jmeter	&	v2_1_1	&	2506	\\
-S10	&	Log4j	&	2.10.0	&	https://github.com/apache/log4j	&	v1_2_10-recalled	&	634	\\
-S11	&	Mars	&	3.06.0	&	https://github.com/mars-sim/mars-sim	&	not found	&	0	\\
-S12	&	Maze	&	1.0.0	&	Not found	&	not found	&	0	\\
-S13	&	Neuroph	&	2.2.0	&	https://github.com/neuroph/neuroph	&	not found	&	0	\\
-S14	&	Tomcat Catalina	&	9.0.4	&	https://github.com/apache/tomcat/tree/master/java/org/apache/catalina	&	9.0.4	&	19108	\\
-S15	&	Wro4J	&	1.6.3	&	https://github.com/wro4j/wro4j	&	v1.6.3	&	2871	\\
+\rowcolor{LightCyan}
+Sl	&	Apache Ant	&	1.6.1	&	rel/1.6.1	&	6713	\\
+S2	&	Argo UML	&	0.9.5	&	not found	&	0	\\
+S3	&	GWT Portlets	&	0.9.5 beta	&	not found	&	0	\\
+\rowcolor{LightCyan}
+S4	&	Hibernate 	&	5.2.12	&	5.2.12	&	6733	\\
+S5	&	javaclient	&	2.0.0	&	not found	&	0	\\
+S6	&	jEdit	&	5.1.0	&	not found	&	0	\\
+S7	&	JGAP	&	3.6.3	&	not found	&	0	\\
+S8	&	JHotDraw	&	6.0b.1	&	not found	&	149	\\
+S9	&	JMeter	&	2.0.1	&	v2\_1\_1	&	2506	\\
+S10	&	Log4j	&	2.10.0	&	v1\_2\_10-recalled	&	634	\\
+S11	&	Mars	&	3.06.0	&	not found	&	0	\\
+S12	&	Maze	&	1.0.0	&	not found	&	0	\\
+S13	&	Neuroph	&	2.2.0	&	not found	&	0	\\
+\rowcolor{LightCyan}
+S14	&	Tomcat Catalina	&	9.0.4	&	9.0.4	&	19108	\\
+S15	&	Wro4J	&	1.6.3	&	v1.6.3	&	2871	\\
+
 \hline
 \end{tabular}
 \end{table}
 
 
 \section{Identifying key classes using logical dependencies}
+\subsection{Definition and previous work}
+Zaidman et al \cite{ZaidmanJurnal} were the first to introduce the concept of key classes and it refers to classes that can be found in documents written to provide an architectural overview of the system or an introduction to the system structure. 
+Also, other researchers use a similar concept as the one defined by Zaidman but under different terms like important classes  \cite{Meyer2014IdentifyingIC} or central software classes \cite{CentralClassesSteidl}.
 
+\subsection{Measurements}
+
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1}
+\caption{Analyzed software systems in previous research paper.}
+\label{tab:measurements:ant}
+\centering
+\begin{tabular}{|c|ccccccccccc|}
+\hline
+ &	10	&	20	&	30	&	40	&	50	&	60	&	70	&	80	&	90	&	100	&	Previous \\
+\hline
+PR\_U2\_W	&	0.70	&	0.64	&	0.75	&	0.66	&	0.63	&	0.75	&	0.81	&	0.87	&	0.79	&	0.79	&	0.93	\\							
+PR	&	0.70	&	0.64	&	0.75	&	0.66	&	0.63	&	0.75	&	0.81	&	0.87	&	0.79	&	0.79	&	0.86	\\							
+PR\_U	&	0.70	&	0.64	&	0.75	&	0.66	&	0.63	&	0.75	&	0.81	&	0.87	&	0.79	&	0.79	&	0.93	\\							
+CONN\_TOTAL\_W	&	0.73	&	0.70	&	0.67	&	0.66	&	0.65	&	0.73	&	0.80	&	0.84	&	0.80	&	0.80	&	0.93	\\							
+CONN\_TOTAL	&	0.73	&	0.70	&	0.67	&	0.66	&	0.65	&	0.73	&	0.80	&	0.84	&	0.80	&	0.80	&	0.94	\\							
+
+\hline
+\end{tabular}
+\end{table}
 \section{Comparison of the extracted data with FAN-IN and FAN-OUT metric}
 
 
