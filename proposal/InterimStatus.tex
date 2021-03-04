@@ -9,6 +9,8 @@
 \usepackage{natbib}
 \usepackage{float}
 \usepackage{xcolor} 
+\usepackage{array}
+\newcolumntype{L}{>{\centering\arraybackslash}m{10cm}}
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
@@ -25,8 +27,8 @@
 
 
 
-\chapter{Current status of doctoral research}
-\label{ld}
+\chapter{Extracting software dependencies}
+\label{extraction}
 
 \section{Tool for measuring software dependencies}
 \label{sec:tool}
@@ -44,20 +46,29 @@ In order to build structural and logical dependencies we have developed a tool t
 \end{figure}
 
 
-\subsection{ Extracting structural dependencies}
+\section{Extracting structural dependencies}
 
-A structural dependency between two classes A and B is given by the fact that A statically depends on B, meaning that A cannot be compiled without knowing about B. In object oriented system, this dependency can be given by many types of relationships between the two classes: A extends B, A implements B, A has attributes of type B, A has methods which have type B in their signature, A uses local variables of type B, A calls methods of B.
+A dependency is created by two elements that are in a relationship and indicates that an element of the relationship, in some manner, depends on the other element of the relationship \cite{Booch:2004:OAD:975416}, \cite{Cataldo2009SoftwareDW}.
+
+Structural dependencies can be found by analyzing the source code \cite{Sangal:2005:UDM:1094811.1094824}, \cite{CalloArias2011}. A structural dependency between two classes A and B is given by the fact that A statically depends on B, meaning that A cannot be compiled without knowing about B. In object oriented system, this dependency can be given by many types of relationships between the two classes: A extends B, A implements B, A has attributes of type B, A has methods which have type B in their signature, A uses local variables of type B, A calls methods of B.
 
 
  We use an external tool called srcML \cite{2003:XLC:851042.857028},
 \cite{Collard:2011:LTF:2067850.2068011} to convert all source code files from the current release into XML files. All the information about classes, methods, calls to other classes are afterwards extracted by our tool parsing the XML files and building a dependencies data structure. We have chosen to rely on srcML as a preprocessing tool because it reduces a significant number of syntactic differences from different programming languages and can make easier the parsing of source code written in different programming languages such as Java, C++ and C\#.    
 
-\subsection{Extracting logical dependencies}
+\section{Extracting logical dependencies}
+
+\textit{Logical dependencies} (a.k.a logical coupling) can be found by software history analysis and can reveal relationships that are not always present in the source code (structural dependencies).  
+
+Software engineering practice has shown that sometimes modules which do not present structural dependencies still appear to be related. Co-evolution represents the phenomenon when one component changes in response to a change in another component \cite{Yu:2007:UCC:1231330.1231370}, \cite{5166450}. Those changes can be found in the software history maintained by the versioning system. Gall \cite{Gall:1998:DLC:850947.853338}, \cite{Gall:2003:CRH:942803.943741} identified as logical coupling between two modules the fact that these modules  \textit{repeatedly} change together during the historical evolution of the software system \cite{6606615}.
 
 The versioning system contains the long-term change history of every file. Each project change made by an individual at a certain point of time is contained into a commit \cite{svn}. All the commits are stored in the versioning system chronologically and each commit has a parent. The parent commit is the baseline from which development began, the only exception to this rule is the first commit which has no parent. We will take into consideration only \textit{commits that have a parent} since the first commit can include source code files that are already in development (migration from one versioning system to another) and this can introduce redundant logical links \cite{DBLP:journals/jss/AjienkaC17}. 
 
 The tool looks through the main branch of the project and gets all the existing commits. For each commit a diff against the parent will be made and stored. Here we have the option to ignore commits that contain more files than a threshold value for commit size. Also, we have the option to check whether the differences are in actual code or if they affect only parts of source files that are only comments.  Finally after all the difference files are stored, all the files are parsed and logical dependencies are build. For a group of files that are committed together, logical dependencies are added between all pairs formed by members of the group. Adding a logical dependency increases an occurrence counter for the logical link. \\
 
+\chapter {Filtering extracted logical dependencies}
+
+\section{Data set used}
 
 We have analyzed a set of open-source projects found on GitHub\footnote{http://github.com/} \cite{Kalliamvakou2016} in order to extract the structural and logical dependencies between classes. Table \ref{table:1} enumerates all the systems studied. The 1st column assigns the projects IDs; 2nd column shows the project name; 3rd column shows the number of entities(classes and interfaces) extracted; 4th column shows the number of most recent commits analyzed from the active branch of each project and the 5th shows the language in which the project was developed.
 \begin{table}[H]
@@ -99,7 +110,6 @@ We have analyzed a set of open-source projects found on GitHub\footnote{http://g
 \hline
 \end{tabular}
 \end{table}
-
 
 
 \section{Filtering based on the size of commit transactions}
@@ -394,16 +404,73 @@ A first observation from Tables \ref{tab:percSD:comm} and \ref{tab:percSD:nocomm
 
 From Tables \ref{tab:percLD:comm} and \ref{tab:percLD:nocomm} we notice that the percentage of logical dependencies which are also structural is always low to very low. This means that most co-changes are recorded between classes that have no structural dependencies to each other \cite{enase19}.   
  
-\section{Conclusions and future work}
-\label{sec:Conclusion}
+\chapter{Usage of the extracted dependencies}
+\section{Data set used}
+In order to extract the key classes based on logical dependencies we took the same set of data used in another research involving key classes detection. The research of I. Sora et al \cite{Finding-key-classes} takes in consideration structural dependencies that are extracted using static analysis techniques and was performed on the object-oriented systems presented in table \ref{tab:keyclass:overview}. 
 
-Our experiments show that the most important factors which affect the quality of logical dependencies are: the maximum size of commit transactions which are accepted to generate logical dependencies, and the minimum number of repeated occurrences for a co-change to be counted as logical dependency. 
+\begin{table}[H]
+\renewcommand{\arraystretch}{1}
+\caption{Analyzed software systems in previous research paper.}
+\label{tab:keyclass:overview}
+\centering
+\begin{tabular}{|c|c|L|c|}
+\hline
+ID	&	System	&	Description	&	Version	\\
+\hline
+Sl	&	Apache Ant	&	Java library and command line tool that drive the build processes as targets and extension points depending upon each other	&	1.6.1	\\
+S2	&	Argo UML	&	UML modelling tool with support for all UML diagrams.	&	0.9.5	\\
+S3	&	GWT Portlets	&	Open source web framework for building GWT (Google Web Toolkit) Applications.	&	0.9.5 beta	\\
+S4	&	Hibernate 	&	Persistence framework for Java.	&	5.2.12	\\
+S5	&	javaclient	&	Java distributed application for playing with robots	&	2.0.0	\\
+S6	&	jEdit	&	Java mature text editor for programmers.	&	5.1.0	\\
+S7	&	JGAP	&	Genetic Algorithms and Genetic Programming Java library.	&	3.6.3	\\
+S8	&	JHotDraw	&	JHotDraw is a two-dimensional graphics framework for structured drawing editors that is written in Java.	&	6.0b.1	\\
+S9	&	JMeter	&	JMeter is a Java application designed to load test functional behavior and measure performance	&	2.0.1	\\
+S10	&	Log4j	&	Logging Service	&	2.10.0	\\
+S11	&	Mars	&	The Mars Simulation Project is a Java project that models and simulates human settlements on Mars planet	&	3.06.0	\\
+S12	&	Maze	&	The Maze-solver project simulates an artificial intelligence algorithm on a maze	&	1.0.0	\\
+S13	&	Neuroph	&	Neuroph is a Java neural network framework.	&	2.2.0	\\
+S14	&	Tomcat Catalina	&	The Apache Tomcat project is an open-source implementation of JavaServlet and JavaServerPages technologies	&	9.0.4	\\
+S15	&	Wro4J	&	The Wro4J is a web resource (JS and CSS) optimizer for Java.	&	1.6.3	\\
+\hline
+\end{tabular}
+\end{table}
 
-We conclude that it is important to put a threshold on the maximum size of commit transactions which are accepted to generate logical dependencies. Only small commit transactions (changing up to 5 source code files) can be reliably used for introducing logical dependencies. We have also determined that small commit transactions are the most frequent kind of transactions, representing in average 80\% of all commit transactions. Under these conditions, we have determined that increasing the threshold for the minimum number of repeated occurrences for a co-change to be counted as a logical dependency reduces significantly the number of logical dependencies. In average, increasing with 1 the threshold for repeated occurrences determines a reduction to half for the number of logical dependencies.  A value of 4 for the threshold for repeated occurrences, combined with the condition of accepting only small commit transactions, already keeps the number of logical dependencies in the same range as the number of structural dependencies. Future work will investigate further the issue of repeated occurrences, analyzing also their trend in time. 
 
-Currently we have extracted logical dependencies from all the revisions of the system, and structural dependencies from the last revision of the system. In future work we will take into account also structural dependencies from all the revisions of the system, in order to filter out the old, out-of-date logical dependencies. If we take into consideration also structural dependencies from previous revisions then the overlapping rate between logical and structural dependencies could probably increase. Another way to investigate this problem could be to study the trend of occurrences of co-changes: if co-changes between a pair of classes used to happen more often in the remote past than in the more recent past, it may be a sign that the problem causing the logical coupling has been removed in the mean time. 
 
-The future work will be performed in the next stages of the doctoral program as presented in Chapter \ref{prop}. 
+\begin{table}[H]
+\renewcommand{\arraystretch}{1}
+\caption{Analyzed software systems in previous research paper.}
+\label{tab:gitfoundsystems}
+\centering
+\begin{tabular}{|c|c|c|L|c|c|}
+\hline
+ID	&	System	&	Version	&	Git URL	&	Release Tag name	&	Commits number	\\
+\hline
+Sl	&	Apache Ant	&	1.6.1	&	https://github.com/apache/ant	&	rel/1.6.1	&	6713	\\
+S2	&	Argo UML	&	0.9.5	&	Not found	&	not found	&	0	\\
+S3	&	GWT Portlets	&	0.9.5 beta	&	https://github.com/siwiwit/gwtportlets	&	not found	&	0	\\
+S4	&	Hibernate 	&	5.2.12	&	https://github.com/hibernate/hibernate-orm	&	5.2.12	&	6733	\\
+S5	&	javaclient	&	2.0.0	&	https://github.com/kragniz/java-player	&	not found	&	0	\\
+S6	&	jEdit	&	5.1.0	&	https://github.com/albfan/jEdit	&	not found	&	0	\\
+S7	&	JGAP	&	3.6.3	&	https://github.com/martin-steghoefer/jgap	&	not found	&	0	\\
+S8	&	JHotDraw	&	6.0b.1	&	https://github.com/wrandelshofer/jhotdraw	&	not found	&	149	\\
+S9	&	JMeter	&	2.0.1	&	https://github.com/apache/jmeter	&	v2_1_1	&	2506	\\
+S10	&	Log4j	&	2.10.0	&	https://github.com/apache/log4j	&	v1_2_10-recalled	&	634	\\
+S11	&	Mars	&	3.06.0	&	https://github.com/mars-sim/mars-sim	&	not found	&	0	\\
+S12	&	Maze	&	1.0.0	&	Not found	&	not found	&	0	\\
+S13	&	Neuroph	&	2.2.0	&	https://github.com/neuroph/neuroph	&	not found	&	0	\\
+S14	&	Tomcat Catalina	&	9.0.4	&	https://github.com/apache/tomcat/tree/master/java/org/apache/catalina	&	9.0.4	&	19108	\\
+S15	&	Wro4J	&	1.6.3	&	https://github.com/wro4j/wro4j	&	v1.6.3	&	2871	\\
+\hline
+\end{tabular}
+\end{table}
+
+
+\section{Identifying key classes using logical dependencies}
+
+\section{Comparison of the extracted data with FAN-IN and FAN-OUT metric}
+
 
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

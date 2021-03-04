@@ -1043,3 +1043,26 @@ booktitle={International Symposium on Applied Computational Intelligence and Inf
 title={Analyzing information from versioning systems to detect logical dependencies in software systems}, 
 year={2019}, 
 month={May},}
+
+@article{Finding-key-classes,
+title = {Finding key classes in object-oriented software systems by techniques based on static analysis},
+journal = {Information and Software Technology},
+volume = {116},
+pages = {106176},
+year = {2019},
+issn = {0950-5849},
+doi = {https://doi.org/10.1016/j.infsof.2019.106176},
+url = {https://www.sciencedirect.com/science/article/pii/S0950584919301727},
+author = {Ioana Şora and Ciprian-Bogdan Chirila},
+keywords = {Key classes, Program comprehension, Static analysis},
+abstract = {Context
+Software maintenance is burdened by program comprehension activities which consume a big part of project resources. Program comprehension is difficult because the code to be analyzed is very large and the documentation may not be well structured to help navigating through the code.
+Objective
+Tools should support the early stages of program comprehension. Our goal is to build tools that analyze the code and filter this large amount of information such that only the most important information is presented to the software maintenance team. In the case of object-oriented systems, finding the important information means finding the most important classes, also called the key classes of the system.
+Method
+In this work, we formulate and explore several hypotheses regarding which are the class attributes that characterize important classes. By class attributes, we understand here different metrics that quantify properties of the class such as its connections and relationships with other classes. All the necessary input data for computing class attributes are extracted from code by static analysis. We experimentally investigate which attributes are best suited to rank classes according to their importance, doing an extensive empirical study on fifteen software systems.
+Result
+Attributes from the categories of direct connections and network centrality are the best for finding key classes. We identified three class attributes which are best as class ranking criteria: PR-U2-W and CONN-TOTAL-W when the target set of key classes is small and CONN-TOTAL when the target set has a large and variable size. We show that the method of ranking classes based on these attributes outperforms known related work approaches of finding key classes.
+Conclusions
+Our method allows us to build easy-to-use fully automatic tools which find almost instantly the key classes of a software system starting from its code.}
+}
