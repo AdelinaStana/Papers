@@ -414,7 +414,7 @@ To extract the key classes based on logical dependencies, we took the same set o
 
 The requirements for a system to qualify as suited for investigations using logical dependencies are: has to be on GitHub, has to have release tags to identify the version, and also has to have an increased number of commits. 
 From the total of 14 object-oriented systems listed in the paper \cite{Finding-key-classes}, 13 of them have repositories in Github \ref{tab:gitfoundsystems}. And from the found repositories we identified only 6 repositories that have the same release tag as the specified version from table \ref{tab:keyclass:overview}. It is important to identify the correct release tag for each repository to limit the commits further analyzed by date. Only commits that were made until the specified release are considered and analyzed.
-The commits number found on the remaining 6 repositories varies from 19108 commits for Tomcat Catalina to 149 commits for JHotDraw. In order to have more accurate results, we need a significant number of commits, so we reached the conclusion that only 3 systems can be used for key classes detection using logical dependencies: Apache Ant, Hibernate, and Tomcat Catalina.  
+The commits number found on the remaining 6 repositories varies from 19108 commits for Tomcat Catalina to 149 commits for JHotDraw. In order to have more accurate results, we need a significant number of commits, so we reached the conclusion that only 3 systems can be used for key classes detection using logical dependencies: Apache Ant, Hibernate, and Tomcat Catalina.  From all the systems mentioned in table \ref{tab:keyclass:overview} Apache Ant is the most used and analyzed in other  works \cite{enase19}, \cite{7332515}, \cite{1402122}, \cite{Kamran2016IdentificationOC}.
 
 \begin{table}[H]
 \renewcommand{\arraystretch}{1}
@@ -448,7 +448,7 @@ S15	&	Wro4J	&	The Wro4J is a web resource (JS and CSS) optimizer for Java.	&	1.6
 
 \begin{table}[H]
 \renewcommand{\arraystretch}{1}
-\caption{Analyzed software systems in previous research paper.}
+\caption{Found systems and versions of the systems in GitHub. }
 \label{tab:gitfoundsystems}
 \centering
 \begin{tabular}{|c|c|c|c|c|}
@@ -482,28 +482,96 @@ S15	&	Wro4J	&	1.6.3	&	v1.6.3	&	2871	\\
 \section{Identifying key classes using logical dependencies}
 \subsection{Definition and previous work}
 Zaidman et al \cite{ZaidmanJurnal} were the first to introduce the concept of key classes and it refers to classes that can be found in documents written to provide an architectural overview of the system or an introduction to the system structure. 
+Tahvildari and Kontogiannis have a more detailed definition regarding key classes concept: “Usually, the most important concepts of a system are implemented by very few key classes which can be characterized by the specific properties. These classes, which we refer to as key classes, manage many other classes or use them in order to implement their functionality. The key classes are tightly coupled with other parts of the system. Additionally, they tend to be rather complex, since they implement much of the legacy system’s functionality” \cite{Tahvildari2004ImprovingDQ}.
 Also, other researchers use a similar concept as the one defined by Zaidman but under different terms like important classes  \cite{Meyer2014IdentifyingIC} or central software classes \cite{CentralClassesSteidl}.
+
+
+In previous works, the approach for finding key classes is based on ranking the classes with a page ranking algorithm \cite{PagerankENASE}, \cite{enase15}, \cite{Finding-key-classes}, \cite{PagerankSACI} . The page ranking algorithm is a customization of PageRank, the algorithm used to rank web pages \cite{ilprints422}. 
+The PageRank algorithm works based on a recommendation system. If one node has a connection with another node, then it recommends the second node. In previous works, connections are established based on structural dependencies extracted from static code analysis. If A has a structural dependency with B, then A recommends B, and also B recommends A. 
+
+\subsection{Metrics to determine key classes}
+In order to identify the key classes of an object-oriented system, we have to determine what metrics can be used in order to get a good overview of the system and its most important classes \cite{Ding2016AnIA}, \cite{ZaidmanJurnal}, \cite{PAN2018188} . 
+The metrics used in previous research can be grouped into the following categories: 
+
+\begin{itemize}
+	\item class size metrics: number of fields (NoF),  number of methods (NoM), global size (Size = NoF+NoM).
+	\item class connection metrics, any structural dependency between two classes:
+		\begin{itemize}
+			\item CONN-IN, the number of distinct classes that use a class;
+			\item CONN-OUT, the total number of distinct classes that are used by a class;
+			\item CONN-TOTAL, the total number of distinct classes that a class uses or are used by a class (CONN-IN + CONN-OUT).
+			\item CONN-IN-W, the total weight of distinct classes that use a class. 
+			\item CONN-OUT-W, the total weight of distinct classes that are used by a class. 
+			\item CONN-TOTAL-W, the total weight of all connections of the class (CONN-IN-W + CONN-OUT-W) \cite{Finding-key-classes}.
+		\end{itemize}
+	\item class pagerank values, previous research use pagerank values computed on both directed and undirected, weighted and unweighted graphs:
+		\begin{itemize}
+			\item PR - value computed on the directed and unweighted graph;
+			\item PR-W - value computed on the directed and weighted graph;
+			\item PR-U - value computed on the undirected and unweighted graph;
+			\item PR-U-W - value computed on the undirected and weighted graph;
+			\item PR-U2-W - value computed on the weighted graph with back-recommendations \cite{PagerankENASE}, \cite{enase15}, \cite{Finding-key-classes}, \cite{PagerankSACI}.
+		\end{itemize}
+\end{itemize}
 
 \subsection{Measurements}
 
 \begin{table}[!h]
 \renewcommand{\arraystretch}{1}
-\caption{Analyzed software systems in previous research paper.}
+\caption{Measurements for Ant}
 \label{tab:measurements:ant}
 \centering
 \begin{tabular}{|c|ccccccccccc|}
 \hline
  &	10	&	20	&	30	&	40	&	50	&	60	&	70	&	80	&	90	&	100	&	Previous \\
 \hline
-PR\_U2\_W	&	0.70	&	0.64	&	0.75	&	0.66	&	0.63	&	0.75	&	0.81	&	0.87	&	0.79	&	0.79	&	0.93	\\							
-PR	&	0.70	&	0.64	&	0.75	&	0.66	&	0.63	&	0.75	&	0.81	&	0.87	&	0.79	&	0.79	&	0.86	\\							
-PR\_U	&	0.70	&	0.64	&	0.75	&	0.66	&	0.63	&	0.75	&	0.81	&	0.87	&	0.79	&	0.79	&	0.93	\\							
-CONN\_TOTAL\_W	&	0.73	&	0.70	&	0.67	&	0.66	&	0.65	&	0.73	&	0.80	&	0.84	&	0.80	&	0.80	&	0.93	\\							
-CONN\_TOTAL	&	0.73	&	0.70	&	0.67	&	0.66	&	0.65	&	0.73	&	0.80	&	0.84	&	0.80	&	0.80	&	0.94	\\							
+PR\_U2\_W	&	0.70	&	0.64	&	0.75	&	0.66	&	0.63	&	0.75	&	0.81	&	\cellcolor{LightCyan}0.87	&	0.79	&	0.79	&	0.93	\\							
+PR	&	0.70	&	0.64	&	0.75	&	0.66	&	0.63	&	0.75	&	0.81	&	\cellcolor{LightCyan}0.87	&	0.79	&	0.79	&	0.86	\\							
+PR\_U	&	0.70	&	0.64	&	0.75	&	0.66	&	0.63	&	0.75	&	0.81	&	\cellcolor{LightCyan}0.87	&	0.79	&	0.79	&	0.93	\\							
+CONN\_TOTAL\_W	&	0.73	&	0.70	&	0.67	&	0.66	&	0.65	&	0.73	&	0.80	&	\cellcolor{LightCyan}0.84	&	0.80	&	0.80	&	0.93	\\							
+CONN\_TOTAL	&	0.73	&	0.70	&	0.67	&	0.66	&	0.65	&	0.73	&	0.80	&	\cellcolor{LightCyan}0.84	&	0.80	&	0.80	&	0.94	\\							
 
 \hline
 \end{tabular}
 \end{table}
+
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1}
+\caption{Measurements for Hibernate}
+\label{tab:measurements:hibernate}
+\centering
+\begin{tabular}{|c|ccccccc|}
+\hline
+ &	50	&	60	&	70	&	80	&	90	&	100	&	Previous \\
+\hline
+PR\_U2\_W	&	0.61	&	0.64	&	0.65	&	0.66	&	0.66	&	\cellcolor{LightCyan}0.66	&	0.96	\\
+PR	&	0.61	&	0.64	&	0.65	&	0.66	&	0.66	&	\cellcolor{LightCyan}0.66	&	0.95	\\
+PR\_U	&	0.61	&	0.64	&	0.65	&	0.66	&	0.66	&	\cellcolor{LightCyan}0.66	&	0.95	\\
+CONN\_TOTAL\_W	&	0.61	&	0.64	&	0.65	&	0.66	&	0.66	&	\cellcolor{LightCyan}0.66	&	0.94	\\
+CONN\_TOTAL	&	0.61	&	0.64	&	0.65	&	0.66	&	0.66	&	\cellcolor{LightCyan}0.66	&	0.95	\\
+\hline
+\end{tabular}
+\end{table}
+
+
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1}
+\caption{Measurements for Tomcat Catalina}
+\label{tab:measurements:tomcat}
+\centering
+\begin{tabular}{|c|ccccccccccc|}
+\hline
+ &	10	&	20	&	30	&	40	&	50	&	60	&	70	&	80	&	90	&	100	&	Previous \\
+\hline
+PR\_U2\_W	&	0.70	&	0.63	&	0.63	&	0.71	&	0.74	&	0.77	&	0.79	&	\cellcolor{LightCyan}0.80	&	0.80	&	0.80	&	0.92	\\							
+PR	&	0.67	&	0.62	&	0.63	&	0.71	&	0.74	&	0.77	&	0.79	&	\cellcolor{LightCyan}0.80	&	0.80	&	0.80	&	0.93	\\							
+PR\_U	&	0.67	&	0.62	&	0.63	&	0.71	&	0.74	&	0.77	&	0.79	&	\cellcolor{LightCyan}0.80	&	0.80	&	0.80	&	0.93	\\							
+CONN\_TOTAL\_W	&	0.68	&	0.60	&	0.62	&	0.71	&	0.74	&	0.77	&	0.79	&	\cellcolor{LightCyan}0.80	&	0.80	&	0.80	&	0.93	\\							
+CONN\_TOTAL	&	0.64	&	0.59	&	0.62	&	0.71	&	0.74	&	0.77	&	0.79	&	\cellcolor{LightCyan}0.80	&	0.80	&	0.80	&	0.94	\\							
+\hline
+\end{tabular}
+\end{table}
+
 \section{Comparison of the extracted data with FAN-IN and FAN-OUT metric}
 
 
