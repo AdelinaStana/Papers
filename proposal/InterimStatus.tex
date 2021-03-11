@@ -6,12 +6,12 @@
 \usepackage{booktabs, chemformula}
 \usepackage{titlesec, blindtext, color}
 \usepackage{listings}
-\usepackage{natbib}
 \usepackage{float}
 \usepackage{xcolor} 
 \usepackage{array}
 \usepackage{color, colortbl}
 \usepackage{caption}
+\usepackage{amsmath}
 
 \captionsetup{font=footnotesize}
 
@@ -58,7 +58,7 @@ In order to build structural and logical dependencies we have developed a tool t
 
 A dependency is created by two elements that are in a relationship and indicates that an element of the relationship, in some manner, depends on the other element of the relationship \cite{Booch:2004:OAD:975416}, \cite{Cataldo2009SoftwareDW}.
 
-Structural dependencies can be found by analyzing the source code \cite{Sangal:2005:UDM:1094811.1094824}, \cite{CalloArias2011}. A structural dependency between two classes A and B is given by the fact that A statically depends on B, meaning that A cannot be compiled without knowing about B. In object oriented system, this dependency can be given by many types of relationships between the two classes: A extends B, A implements B, A has attributes of type B, A has methods which have type B in their signature, A uses local variables of type B, A calls methods of B.
+Structural dependencies can be found by analyzing the source code \cite{Sangal:2005:UDM:1094811.1094824}, \cite{CalloArias2011}, \cite{structdep}. A structural dependency between two classes A and B is given by the fact that A statically depends on B, meaning that A cannot be compiled without knowing about B. In object oriented system, this dependency can be given by many types of relationships between the two classes: A extends B, A implements B, A has attributes of type B, A has methods which have type B in their signature, A uses local variables of type B, A calls methods of B.
 
 
  We use an external tool called srcML \cite{2003:XLC:851042.857028},
@@ -527,7 +527,44 @@ Because the extracted logical dependencies from the systems are undirected, from
 
 \subsection{Metrics for results evaluation}
 
+A classification model is a mapping between expected results and predicted results \cite{ROCIntro}, \cite{ROCBRADLEY19971145}. Both results can be labeled as positive or negative, which leads us to the confusion matrix from figure \ref{fig:confusion}. 
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.9]{confusion.png}
+\caption{Confusion matrix}
+\label{fig:confusion}
+\centering
+\end{figure}
+
+The confusion matrix has the following outcomes:
+		\begin{itemize}
+			\item \textit{true positive}, if the expected result is positive and the predicted result is also positive.
+			\item \textit{false positive}, if the expected result is positive but the predicted result is negative.
+			\item \textit{false negative}, if the expected result is negative but the predicted result is positive.
+			\item \textit{true negative}, if the expected result is negative and the predicted result is also negative.
+		\end{itemize}
+
+The true positive rate of a classifier is calculated as the division between the number of true positive results identified and all the positive results identified:
+\[ True\ positive\ rate (TPR)
+  = \dfrac{TP}{TP+FN}
+\]
+
+The false positive rate of a classifier is calculated as the division between the number of false positive results identified and all the negative results identified:
+\[ False\ positive\ rate (FPR)
+  = \dfrac{FP}{FP+TN}
+\]
+
+To calculate the performance of a classification model, the Receiver Operating Characteristic (ROC) graph can be used. The ROC graph is a two-dimensional graph that has on the X-axis plotted the false positive rate and on the Y-axis the true positive rate. By plotting the true positive rate and the false positive rate at thresholds that vary between a minimum and a maximum possible value we obtain the ROC curve. The area under the ROC curve is called Area Under the Curve (AUC).
+
+In multiple related works, the ROC-AUC metric has been used to evaluate the results for finding key classes of software systems \cite{6676885}, \cite{Finding-key-classes}, \cite{rocclasification}, \cite{7551990}.
+
+For a classifier to be considered good, its ROC-AUC metric value should be as close to 1 as possible, when the value is 1 then the classifier is considered to be perfect.
+
 \subsection{Previous measurements}
+
+In the research of I. Sora et al \cite{Finding-key-classes} ris used a tool that takes as an input the source code of the system and applies a ranking strategy to rank the classes according to their importance. To differentiate the important classes from the rest of the classes, a TOP threshold for the top classes found is set. The threshold can vary between 20 and 30 classes.
+
 
 \subsection{Measurements using logical dependencies}
 
@@ -590,8 +627,8 @@ Metrics &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$
 PR\_U2\_W	&	0.912	&	0.915	&	0.922	&	0.923	&	\cellcolor{lightgreen}0.924	&	0.924	&	0.923	&	0.924	&	0.924	&	0.924	&	0.923	\\
 PR	&	0.808	&	0.785	&	0.812	&	0.839	&	0.844	&	0.851	&	0.853	&	\cellcolor{lightorange}0.857	&	0.857	&	0.857	&	0.927	\\
 PR\_U	&	0.912	&	0.920	&	0.931	&	0.932	&	\cellcolor{lightgreen}0.933	&	0.933	&	0.933	&	0.932	&	0.932	&	0.932	&	0.932	\\
-CON\_T\_W	&	0.918	&	0.921	&	0.924	&	\cellcolor{lightgreen}0.926	&	0.926	&	0.926	&	0.926	&	0.926	&	0.926	&	0.926	&	0.926	\\
-CON\_T	&	0.877	&	0.913	&	0.932	&	0.937	&	0.937	&	\cellcolor{lightorange}0.938	&	0.938	&	0.938	&	0.938	&	0.938	&	0.939	\\					
+CONN\_T\_W	&	0.918	&	0.921	&	0.924	&	\cellcolor{lightgreen}0.926	&	0.926	&	0.926	&	0.926	&	0.926	&	0.926	&	0.926	&	0.926	\\
+CONN\_T	&	0.877	&	0.913	&	0.932	&	0.937	&	0.937	&	\cellcolor{lightorange}0.938	&	0.938	&	0.938	&	0.938	&	0.938	&	0.939	\\					
 
 \hline
 \end{tabular}
@@ -615,8 +652,8 @@ Metrics &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$
 PR\_U2\_W	&	0.655	&	0.611	&	0.650	&	0.645	&	0.729	&	0.797	&	0.855	&	0.882	&	0\cellcolor{lightorange}.865	&	0.865	&	0.929	\\
 PR	&	0.655	&	0.611	&	0.650	&	0.645	&	0.729	&	0.797	&	0.855	&	\cellcolor{lightorange}0.882	&	0.865	&	0.865	&	0.855	\\
 PR\_U	&	0.655	&	0.611	&	0.650	&	0.645	&	0.729	&	0.797	&	0.855	&	\cellcolor{lightorange}0.882	&	0.865	&	0.865	&	0.933	\\
-CON\_T\_W	&	0.646	&	0.523	&	0.617	&	0.657	&	0.722	&	0.785	&	0.845	&	\cellcolor{lightorange}0.878	&	0.865	&	0.865	&	0.934	\\
-CON\_T	&	0.646	&	0.523	&	0.617	&	0.657	&	0.722	&	0.785	&	0.845	&	\cellcolor{lightorange}0.878	&	0.865	&	0.865	&	0.942	\\
+CONN\_T\_W	&	0.646	&	0.523	&	0.617	&	0.657	&	0.722	&	0.785	&	0.845	&	\cellcolor{lightorange}0.878	&	0.865	&	0.865	&	0.934	\\
+CONN\_T	&	0.646	&	0.523	&	0.617	&	0.657	&	0.722	&	0.785	&	0.845	&	\cellcolor{lightorange}0.878	&	0.865	&	0.865	&	0.942	\\
 
 \hline
 \end{tabular}
@@ -637,8 +674,8 @@ Metrics &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$
 PR\_U2\_W	&	0.651	&	0.596	&	0.597	&	0.616	&	0.619	&	0.644	&	0.649	&	\cellcolor{lightorange}0.650	&	0.650	&	0.650	&	0.958	\\
 PR	&	0.641	&	0.594	&	0.597	&	0.616	&	0.619	&	0.644	&	0.649	&	\cellcolor{lightorange}0.650	&	0.650	&	0.650	&	0.949	\\
 PR\_U	&	0.641	&	0.595	&	0.597	&	0.616	&	0.619	&	0.644	&	0.649	&	\cellcolor{lightorange}0.650	&	0.650	&	0.650	&	0.951	\\
-CON\_T\_W	&	0.652	&	0.591	&	0.597	&	0.616	&	0.619	&	0.644	&	0.649	&	\cellcolor{lightorange}0.650	&	0.650	&	0.650	&	0.944	\\
-CON\_T	&	0.649	&	0.591	&	0.597	&	0.616	&	0.619	&	0.644	&	0.649	&	\cellcolor{lightorange}0.650	&	0.650	&	0.650	&	0.946	\\
+CONN\_T\_W	&	0.652	&	0.591	&	0.597	&	0.616	&	0.619	&	0.644	&	0.649	&	\cellcolor{lightorange}0.650	&	0.650	&	0.650	&	0.944	\\
+CONN\_T	&	0.649	&	0.591	&	0.597	&	0.616	&	0.619	&	0.644	&	0.649	&	\cellcolor{lightorange}0.650	&	0.650	&	0.650	&	0.946	\\
 
 \hline
 \end{tabular}
@@ -660,8 +697,8 @@ Metrics &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$
 PR\_U2\_W	&	0.702	&	0.627	&	0.627	&	0.712	&	0.741	&	0.775	&	0.786	&	\cellcolor{lightorange}0.796	&	0.796	&	0.796	&	0.923	\\
 PR	&	0.675	&	0.617	&	0.627	&	0.712	&	0.741	&	0.775	&	0.786	&	\cellcolor{lightorange}0.796	&	0.796	&	0.796	&	0.927	\\
 PR\_U	&	0.675	&	0.618	&	0.627	&	0.712	&	0.741	&	0.775	&	0.786	&	\cellcolor{lightorange}0.796	&	0.796	&	0.796	&	0.932	\\
-CON\_T\_W	&	0.676	&	0.597	&	0.624	&	0.712	&	0.741	&	0.775	&	0.786	&	\cellcolor{lightorange}0.796	&	0.796	&	0.796	&	0.926	\\
-CON\_T	&	0.638	&	0.585	&	0.624	&	0.712	&	0.741	&	0.775	&	0.786	&	\cellcolor{lightorange}0.796	&	0.796	&	0.796	&	0.939	\\
+CONN\_T\_W	&	0.676	&	0.597	&	0.624	&	0.712	&	0.741	&	0.775	&	0.786	&	\cellcolor{lightorange}0.796	&	0.796	&	0.796	&	0.926	\\
+CONN\_T	&	0.638	&	0.585	&	0.624	&	0.712	&	0.741	&	0.775	&	0.786	&	\cellcolor{lightorange}0.796	&	0.796	&	0.796	&	0.939	\\
 				
 \hline
 \end{tabular}
@@ -680,7 +717,7 @@ fan in fan out description
 \scalebox{0.8}{
 \begin{tabular}{|c|ccccc|}
 \hline
-Id	&	Classname	&	CONN\_IN	&	CONN\_OUT	&	CONN\_TOTAL	&	LD \\
+Nr.	&	Classname	&	CONN\_IN	&	CONN\_OUT	&	CONN\_TOTAL	&	LD \\
 \hline
 1	&	SessionFactoryImplementor	&	438	&	43	&	481	&	51	\\
 2	&	Type	&	444	&	5	&	449	&	0	\\
@@ -710,7 +747,7 @@ Id	&	Classname	&	CONN\_IN	&	CONN\_OUT	&	CONN\_TOTAL	&	LD \\
 \scalebox{0.8}{
 \begin{tabular}{|c|ccccc|}
 \hline
-Id	&	Classname	&	CONN\_IN	&	CONN\_OUT	&	CONN\_TOTAL	&	LD \\
+Nr.	&	Classname	&	CONN\_IN	&	CONN\_OUT	&	CONN\_TOTAL	&	LD \\
 \hline
 1	&	Context	&	74	&	8	&	82	&	126	\\
 2	&	Request	&	48	&	28	&	76	&	215	\\
@@ -753,7 +790,7 @@ Id	&	Classname	&	CONN\_IN	&	CONN\_OUT	&	CONN\_TOTAL	&	LD \\
 \scalebox{0.8}{
 \begin{tabular}{|c|ccccc|}
 \hline
-Id	&	Classname	&	CONN\_IN	&	CONN\_OUT	&	CONN\_TOTAL	&	LD \\
+Nr.	&	Classname	&	CONN\_IN	&	CONN\_OUT	&	CONN\_TOTAL	&	LD \\
 \hline
 1	&	Project	&	191	&	191	&	214	&	157	\\
 2	&	Target	&	28	&	28	&	34	&	78	\\
@@ -780,7 +817,7 @@ Id	&	Classname	&	CONN\_IN	&	CONN\_OUT	&	CONN\_TOTAL	&	LD \\
 \scalebox{0.8}{
 \begin{tabular}{|c|ccccc|}
 \hline
-Id	&	Classname	&	CONN\_IN	&	CONN\_OUT	&	CONN\_TOTAL	&	LD \\
+Nr.	&	Classname	&	CONN\_IN	&	CONN\_OUT	&	CONN\_TOTAL	&	LD \\
 \hline
 1	&	\cellcolor{lightorange}Project	&	191	&	23	&	214	&	157	\\
 2	&	Project\$AntRefTable	&	1	&	2	&	3	&	157	\\
@@ -805,7 +842,7 @@ Id	&	Classname	&	CONN\_IN	&	CONN\_OUT	&	CONN\_TOTAL	&	LD \\
 \scalebox{0.8}{
 \begin{tabular}{|c|ccccc|}
 \hline
-Id	&	Classname	&	CONN\_IN	&	CONN\_OUT	&	CONN\_TOTAL	&	LD \\
+Nr.	&	Classname	&	CONN\_IN	&	CONN\_OUT	&	CONN\_TOTAL	&	LD \\
 \hline
 1	&	AvailableSettings	&	1	&	0	&	1	&	205	\\
 2	&	AbstractEntityPersister	&	9	&	143	&	152	&	190	\\
@@ -830,7 +867,7 @@ Id	&	Classname	&	CONN\_IN	&	CONN\_OUT	&	CONN\_TOTAL	&	LD \\
 \scalebox{0.8}{
 \begin{tabular}{|c|ccccc|}
 \hline
-Id	&	Classname	&	CONN\_IN	&	CONN\_OUT	&	CONN\_TOTAL	&	LD \\
+Nr.	&	Classname	&	CONN\_IN	&	CONN\_OUT	&	CONN\_TOTAL	&	LD \\
 \hline
 1	&	\cellcolor{lightorange}StandardContext	&	11	&	38	&	49	&	216	\\
 2	&	StandardContext\$ContextFilterMaps	&	0	&	0	&	0	&	216	\\
