@@ -562,11 +562,58 @@ In multiple related works, the ROC-AUC metric has been used to evaluate the resu
 For a classifier to be considered good, its ROC-AUC metric value should be as close to 1 as possible, when the value is 1 then the classifier is considered to be perfect.
 
 \subsection{Previous measurements}
+\label{sec:previous_measurements}
 
-In the research of I. Sora et al \cite{Finding-key-classes} ris used a tool that takes as an input the source code of the system and applies a ranking strategy to rank the classes according to their importance. To differentiate the important classes from the rest of the classes, a TOP threshold for the top classes found is set. The threshold can vary between 20 and 30 classes.
+In the research of I. Sora et al \cite{Finding-key-classes} is used a tool that takes as an input the source code of the system and applies a ranking strategy to rank the classes according to their importance. To differentiate the important classes from the rest of the classes, a TOP threshold for the top classes found is set. The threshold can vary between 20 and 30 classes.
 
+The expected results from the research are based on classes labeled as important classes in the system documentation.
+The true positives (TP) are the classes found in the reference solution and also in the top TOP ranked classes. False positives (FP) are the classes that are not in the reference solution but are in the TOP ranked classes.
+True Negatives (TN) are classes that are found neither in the reference solution nor in the TOP ranked classes. False Negatives (FN) are classes that are found in the reference solution but not found in the TOP ranked classes.
+
+In table \ref{tab:previousresults} are presented the ROC-AUC values for different attributes computed for the systems Ant, Tomcat Catalina, and Hibernate.
+
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1}
+\caption{ROC-AUC metric values extracted. }
+\label{tab:previousresults}
+\centering
+\scalebox{0.9}{
+\begin{tabular}{|c|ccc|}
+\hline
+Metrics &	Ant	&	Tomcat Catalina	&	Hibernate	\\
+\hline
+
+PR\_U2\_W	&	0.95823	&	0.92341	&	0.95823	\\
+PR	&	0.94944	&	0.92670	&	0.94944	\\
+PR\_U	&	0.95060	&	0.93220	&	0.95060	\\
+CONN\_TOTAL\_W	&	0.94437	&	0.92595	&	0.94437	\\
+CONN\_TOTAL	&	0.94630	&	0.93903	&	0.94630	\\
+
+\hline
+\end{tabular}
+}
+\end{table}
 
 \subsection{Measurements using logical dependencies}
+
+
+To evaluate the results obtained using logical dependencies, we used the same tool used in section X. 
+Previously, the tool used only structural dependencies extracted from the source code of the software systems. In this chapter, we intend to add also the logical dependencies from the versioning system to observe if the results could be improved or not.
+
+For this, the logical dependencies used were filtered based on the update percentage of the entities involved. We define a logical dependency as a connection observed via commits in the versioning system between entity A and entity B. The update percentage of entity A with entity B is determined as follows: the percentage from the total commits involving A that contains entity B.
+
+\[ update\ percentage\ for\ A 
+  = \dfrac{100 * commits\ involving\ A\ and\ B}{total\ nr\ of\ commits\ involving\ A}
+\]
+
+\[ update\ percentage\ for\ B 
+  = \dfrac{100 * commits\ involving\ A\ and\ B}{total\ nr\ of\ commits\ involving\ B}
+\]
+
+We calculated the update percentage for each side of the connection (LD) and filtered the connections found based on it. The rule set is that both entities had to have an update percentage greater than the threshold value.
+In tables \ref{tab:measurementscombined:ant}, \ref{tab:measurementscombined:tomcat}, and \ref{tab:measurementscombined:hibernate}, we introduced the logical dependencies among structural dependencies. We started with logical dependencies that have a percentage of update grater then 10\%, which means that in at least 10\% of the commits involving A or B, A and B update together. Then we increased the threshold value by 10 until we remained only with entities that update in all the commits together.
+
+As for the new results obtained, in tables \ref{tab:measurementscombined:ant}, \ref{tab:measurementscombined:tomcat}, and \ref{tab:measurementscombined:hibernate}, highlighted with orange, are the values that are close to the previously registered values but did not surpass them. Highlighted with green are values that are better than the previously registered values.
 
 \begin{table}[!h]
 \renewcommand{\arraystretch}{1}
@@ -584,28 +631,6 @@ PR	&	0.914	&	0.854	&	0.851	&	0.866	&	0.876	&	0.882	&	\cellcolor{lightgreen}0.887
 PR\_U	&	0.910	&	0.930	&	0.933	&	0.933	&	0.935	&	0.934	&	\cellcolor{lightgreen}0.939	&	0.933	&	0.933	&	0.933	&	0.933	\\
 CONN\_T\_W	&	0.924	&	0.928	&	0.931	&	0.932	&	0.933	&	0.934	&	\cellcolor{lightgreen}0.936	&	0.934	&	0.934	&	0.934	&	0.934	\\
 CONN\_T	&	0.840	&	0.886	&	0.904	&	0.909	&	0.915	&	0.923	&	0.932	&	0.935	&	\cellcolor{lightorange}0.936	&	0.936	&	0.942	\\
-
-\hline
-\end{tabular}
-}
-\end{table}
-
-\begin{table}[!h]
-\renewcommand{\arraystretch}{1}
-\caption{Measurements for Hibernate using structural and logical dependencies combined}
-\label{tab:measurementscombined:hibernate}
-\centering
-\scalebox{0.8}{
-\begin{tabular}{|c|cccccccccc|c|}
-\hline
-Metrics &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$		&	Previous \\
-\hline
-
-PR\_U2\_W	&	0.955	&	0.957	&	\cellcolor{lightorange}0.958	&	0.958	&	0.958	&	0.958	&	0.958	&	0.958	&	0.958	&	0.958	&	0.958	\\
-PR	&	0.931	&	0.930	&	0.936	&	0.940	&	0.940	&	\cellcolor{lightorange}0.946	&	0.946	&	0.946	&	0.946	&	0.946	&	0.949	\\
-PR\_U	&	0.942	&	0.946	&	0.948	&	0.949	&	0.949	&	\cellcolor{lightorange}0.950	&	0.950	&	0.950	&	0.950	&	0.950	&	0.951	\\
-CONN\_T\_W	&	0.939	&	0.942	&	0.943	&	\cellcolor{lightgreen}0.944	&	0.944	&	0.944	&	0.945	&	0.945	&	0.945	&	0.945	&	0.944	\\
-CONN\_T	&	0.925	&	0.933	&	0.938	&	0.940	&	0.941	&	\cellcolor{lightorange}0.944	&	0.944	&	0.944	&	0.944	&	0.944	&	0.946	\\
 
 \hline
 \end{tabular}
@@ -636,7 +661,32 @@ CONN\_T	&	0.877	&	0.913	&	0.932	&	0.937	&	0.937	&	\cellcolor{lightorange}0.938	&
 \end{table}
 
 
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1}
+\caption{Measurements for Hibernate using structural and logical dependencies combined}
+\label{tab:measurementscombined:hibernate}
+\centering
+\scalebox{0.8}{
+\begin{tabular}{|c|cccccccccc|c|}
+\hline
+Metrics &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$		&	Previous \\
+\hline
+
+PR\_U2\_W	&	0.955	&	0.957	&	\cellcolor{lightorange}0.958	&	0.958	&	0.958	&	0.958	&	0.958	&	0.958	&	0.958	&	0.958	&	0.958	\\
+PR	&	0.931	&	0.930	&	0.936	&	0.940	&	0.940	&	\cellcolor{lightorange}0.946	&	0.946	&	0.946	&	0.946	&	0.946	&	0.949	\\
+PR\_U	&	0.942	&	0.946	&	0.948	&	0.949	&	0.949	&	\cellcolor{lightorange}0.950	&	0.950	&	0.950	&	0.950	&	0.950	&	0.951	\\
+CONN\_T\_W	&	0.939	&	0.942	&	0.943	&	\cellcolor{lightgreen}0.944	&	0.944	&	0.944	&	0.945	&	0.945	&	0.945	&	0.945	&	0.944	\\
+CONN\_T	&	0.925	&	0.933	&	0.938	&	0.940	&	0.941	&	\cellcolor{lightorange}0.944	&	0.944	&	0.944	&	0.944	&	0.944	&	0.946	\\
+
+\hline
+\end{tabular}
+}
+\end{table}
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+In tables \ref{tab:measurementshistory:ant}, \ref{tab:measurementshistory:tomcat}, and \ref{tab:measurementshistory:hibernate}, we only used logical dependencies.  The measurements obtained by using only logical dependencies are not as good as using both combined or using only structural dependencies. One possible cause is that key classes have a better design than the rest of the classes and this can make them less prone to change. 
 
 \begin{table}[!h]
 \renewcommand{\arraystretch}{1}
@@ -654,28 +704,6 @@ PR	&	0.655	&	0.611	&	0.650	&	0.645	&	0.729	&	0.797	&	0.855	&	\cellcolor{lightora
 PR\_U	&	0.655	&	0.611	&	0.650	&	0.645	&	0.729	&	0.797	&	0.855	&	\cellcolor{lightorange}0.882	&	0.865	&	0.865	&	0.933	\\
 CONN\_T\_W	&	0.646	&	0.523	&	0.617	&	0.657	&	0.722	&	0.785	&	0.845	&	\cellcolor{lightorange}0.878	&	0.865	&	0.865	&	0.934	\\
 CONN\_T	&	0.646	&	0.523	&	0.617	&	0.657	&	0.722	&	0.785	&	0.845	&	\cellcolor{lightorange}0.878	&	0.865	&	0.865	&	0.942	\\
-
-\hline
-\end{tabular}
-}
-\end{table}
-
-\begin{table}[!h]
-\renewcommand{\arraystretch}{1}
-\caption{Measurements for Hibernate using only logical dependencies}
-\label{tab:measurementshistory:hibernate}
-\centering
-\scalebox{0.8}{
-\begin{tabular}{|c|cccccccccc|c|}
-\hline
-Metrics &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$		&	Previous \\
-\hline
-
-PR\_U2\_W	&	0.651	&	0.596	&	0.597	&	0.616	&	0.619	&	0.644	&	0.649	&	\cellcolor{lightorange}0.650	&	0.650	&	0.650	&	0.958	\\
-PR	&	0.641	&	0.594	&	0.597	&	0.616	&	0.619	&	0.644	&	0.649	&	\cellcolor{lightorange}0.650	&	0.650	&	0.650	&	0.949	\\
-PR\_U	&	0.641	&	0.595	&	0.597	&	0.616	&	0.619	&	0.644	&	0.649	&	\cellcolor{lightorange}0.650	&	0.650	&	0.650	&	0.951	\\
-CONN\_T\_W	&	0.652	&	0.591	&	0.597	&	0.616	&	0.619	&	0.644	&	0.649	&	\cellcolor{lightorange}0.650	&	0.650	&	0.650	&	0.944	\\
-CONN\_T	&	0.649	&	0.591	&	0.597	&	0.616	&	0.619	&	0.644	&	0.649	&	\cellcolor{lightorange}0.650	&	0.650	&	0.650	&	0.946	\\
 
 \hline
 \end{tabular}
@@ -705,43 +733,68 @@ CONN\_T	&	0.638	&	0.585	&	0.624	&	0.712	&	0.741	&	0.775	&	0.786	&	\cellcolor{lig
 }
 \end{table}
 
-\section{Comparison of the extracted data with FAN-IN and FAN-OUT metric}
-
-fan in fan out description
 
 \begin{table}[!h]
 \renewcommand{\arraystretch}{1}
-\caption{Measurements for Hibernate FAN\_IN}
-\label{tab:measurementsfan:hibernate}
+\caption{Measurements for Hibernate using only logical dependencies}
+\label{tab:measurementshistory:hibernate}
+\centering
+\scalebox{0.8}{
+\begin{tabular}{|c|cccccccccc|c|}
+\hline
+Metrics &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$		&	Previous \\
+\hline
+
+PR\_U2\_W	&	0.651	&	0.596	&	0.597	&	0.616	&	0.619	&	0.644	&	0.649	&	\cellcolor{lightorange}0.650	&	0.650	&	0.650	&	0.958	\\
+PR	&	0.641	&	0.594	&	0.597	&	0.616	&	0.619	&	0.644	&	0.649	&	\cellcolor{lightorange}0.650	&	0.650	&	0.650	&	0.949	\\
+PR\_U	&	0.641	&	0.595	&	0.597	&	0.616	&	0.619	&	0.644	&	0.649	&	\cellcolor{lightorange}0.650	&	0.650	&	0.650	&	0.951	\\
+CONN\_T\_W	&	0.652	&	0.591	&	0.597	&	0.616	&	0.619	&	0.644	&	0.649	&	\cellcolor{lightorange}0.650	&	0.650	&	0.650	&	0.944	\\
+CONN\_T	&	0.649	&	0.591	&	0.597	&	0.616	&	0.619	&	0.644	&	0.649	&	\cellcolor{lightorange}0.650	&	0.650	&	0.650	&	0.946	\\
+
+\hline
+\end{tabular}
+}
+\end{table}
+
+
+\section{Comparison of the extracted data with fan-in and fan-out metric}
+
+Fan-in and fan-out are coupling metrics. The fan-in of entity A is the total number of modules that call functions of A. The fan-out of A is the total number of entities called by A \cite{5507329}.
+Related to fan-in and fan-out we have extracted CONN\_IN and CONN\_OUT. (aici mai am de explicat)
+
+In tables \ref{tab:measurementsfan:ant}, \ref{tab:measurementsfan:catalina}, and \ref{tab:measurementsfan:hibernate} we can find the metrics detalis for each documented key class.
+
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1}
+\caption{Measurements for Ant key classes}
+\label{tab:measurementsfan:ant}
 \centering
 \scalebox{0.8}{
 \begin{tabular}{|c|ccccc|}
 \hline
 Nr.	&	Classname	&	CONN\_IN	&	CONN\_OUT	&	CONN\_TOTAL	&	LD \\
 \hline
-1	&	SessionFactoryImplementor	&	438	&	43	&	481	&	51	\\
-2	&	Type	&	444	&	5	&	449	&	0	\\
-3	&	Table	&	89	&	29	&	118	&	82	\\
-4	&	SessionImplementor	&	52	&	12	&	64	&	14	\\
-5	&	Criteria	&	45	&	12	&	57	&	15	\\
-6	&	Column	&	46	&	10	&	56	&	20	\\
-7	&	Session	&	31	&	21	&	52	&	52	\\
-8	&	Query	&	12	&	28	&	40	&	0	\\
-9	&	Configuration	&	1	&	38	&	39	&	115	\\
-10	&	SessionFactory	&	24	&	12	&	36	&	33	\\
-11	&	Criterion	&	30	&	3	&	33	&	0	\\
-12	&	Projection	&	11	&	3	&	14	&	0	\\
-13	&	ConnectionProvider	&	12	&	2	&	14	&	0	\\
-14	&	Transaction	&	11	&	1	&	12	&	0	\\
-				
+1	&	Project	&	191	&	191	&	214	&	157	\\
+2	&	Target	&	28	&	28	&	34	&	78	\\
+3	&	UnknownElement	&	17	&	17	&	30	&	90	\\
+4	&	RuntimeConfigurable	&	11	&	11	&	19	&	118	\\
+5	&	IntrospectionHelper	&	18	&	18	&	42	&	143	\\
+6	&	Main	&	1	&	1	&	14	&	82	\\
+7	&	TaskContainer	&	11	&	11	&	12	&	21	\\
+8	&	ProjectHelper2\$ElementHandler	&	1	&	1	&	13	&	30	\\
+9	&	Task	&	110	&	110	&	117	&	88	\\
+10	&	ProjectHelper	&	16	&	16	&	24	&	101	\\
 \hline
 \end{tabular}
 }
 \end{table}
 
+
+
+
 \begin{table}[!h]
 \renewcommand{\arraystretch}{1}
-\caption{Measurements for Tomcat Catalina FAN\_IN}
+\caption{Measurements for Tomcat Catalina key classes.}
 \label{tab:measurementsfan:catalina}
 \centering
 \scalebox{0.8}{
@@ -784,7 +837,7 @@ Nr.	&	Classname	&	CONN\_IN	&	CONN\_OUT	&	CONN\_TOTAL	&	LD \\
 
 \begin{table}[!h]
 \renewcommand{\arraystretch}{1}
-\caption{Measurements for Hibernate FAN\_IN}
+\caption{Measurements for Hibernate key classes.}
 \label{tab:measurementsfan:hibernate}
 \centering
 \scalebox{0.8}{
@@ -792,16 +845,21 @@ Nr.	&	Classname	&	CONN\_IN	&	CONN\_OUT	&	CONN\_TOTAL	&	LD \\
 \hline
 Nr.	&	Classname	&	CONN\_IN	&	CONN\_OUT	&	CONN\_TOTAL	&	LD \\
 \hline
-1	&	Project	&	191	&	191	&	214	&	157	\\
-2	&	Target	&	28	&	28	&	34	&	78	\\
-3	&	UnknownElement	&	17	&	17	&	30	&	90	\\
-4	&	RuntimeConfigurable	&	11	&	11	&	19	&	118	\\
-5	&	IntrospectionHelper	&	18	&	18	&	42	&	143	\\
-6	&	Main	&	1	&	1	&	14	&	82	\\
-7	&	TaskContainer	&	11	&	11	&	12	&	21	\\
-8	&	ProjectHelper2\$ElementHandler	&	1	&	1	&	13	&	30	\\
-9	&	Task	&	110	&	110	&	117	&	88	\\
-10	&	ProjectHelper	&	16	&	16	&	24	&	101	\\
+1	&	SessionFactoryImplementor	&	438	&	43	&	481	&	51	\\
+2	&	Type	&	444	&	5	&	449	&	0	\\
+3	&	Table	&	89	&	29	&	118	&	82	\\
+4	&	SessionImplementor	&	52	&	12	&	64	&	14	\\
+5	&	Criteria	&	45	&	12	&	57	&	15	\\
+6	&	Column	&	46	&	10	&	56	&	20	\\
+7	&	Session	&	31	&	21	&	52	&	52	\\
+8	&	Query	&	12	&	28	&	40	&	0	\\
+9	&	Configuration	&	1	&	38	&	39	&	115	\\
+10	&	SessionFactory	&	24	&	12	&	36	&	33	\\
+11	&	Criterion	&	30	&	3	&	33	&	0	\\
+12	&	Projection	&	11	&	3	&	14	&	0	\\
+13	&	ConnectionProvider	&	12	&	2	&	14	&	0	\\
+14	&	Transaction	&	11	&	1	&	12	&	0	\\
+				
 \hline
 \end{tabular}
 }
@@ -809,9 +867,15 @@ Nr.	&	Classname	&	CONN\_IN	&	CONN\_OUT	&	CONN\_TOTAL	&	LD \\
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+In tables \ref{tab:measurementstop:ant}, \ref{tab:measurementstop:catalina}, and \ref{tab:measurementstop:hibernate} we can find the top 10 'best ranked' logical dependencies. As we can observe, the entities have only few structural connections.
+
+
+Highlighed with orange are the key classes found in top 10.
+To be continued....
+
 \begin{table}[!h]
 \renewcommand{\arraystretch}{1}
-\caption{Top 10 measurements for Ant }
+\caption{Top 10 measurements for Ant. }
 \label{tab:measurementstop:ant}
 \centering
 \scalebox{0.8}{
@@ -836,32 +900,7 @@ Nr.	&	Classname	&	CONN\_IN	&	CONN\_OUT	&	CONN\_TOTAL	&	LD \\
 
 \begin{table}[!h]
 \renewcommand{\arraystretch}{1}
-\caption{Top 10 measurements for Hibernate }
-\label{tab:measurementstop:hibernate}
-\centering
-\scalebox{0.8}{
-\begin{tabular}{|c|ccccc|}
-\hline
-Nr.	&	Classname	&	CONN\_IN	&	CONN\_OUT	&	CONN\_TOTAL	&	LD \\
-\hline
-1	&	AvailableSettings	&	1	&	0	&	1	&	205	\\
-2	&	AbstractEntityPersister	&	9	&	143	&	152	&	190	\\
-3	&	AbstractEntityPersister\$CacheEntryHelper	&	0	&	0	&	0	&	190	\\
-4	&	AbstractEntityPersister\$InclusionChecker	&	0	&	0	&	0	&	190	\\
-5	&	AbstractEntityPersister\$NoopCacheEntryHelper	&	0	&	0	&	0	&	190	\\
-6	&	AbstractEntityPersister\$ReferenceCacheEntryHelper	&	0	&	0	&	0	&	190	\\
-7	&	AbstractEntityPersister\$StandardCacheEntryHelper	&	0	&	0	&	0	&	190	\\
-8	&	AbstractEntityPersister\$StructuredCacheEntryHelper	&	0	&	0	&	0	&	190	\\
-9	&	Dialect	&	265	&	104	&	369	&	176	\\
-10	&	SessionFactoryImpl\$SessionBuilderImpl	&	1	&	25	&	26	&	167	\\
-\hline
-\end{tabular}
-}
-\end{table}
-
-\begin{table}[!h]
-\renewcommand{\arraystretch}{1}
-\caption{Top 10 measurements for Tomcat Catalina }
+\caption{Top 10 measurements for Tomcat Catalina. }
 \label{tab:measurementstop:catalina}
 \centering
 \scalebox{0.8}{
@@ -879,6 +918,32 @@ Nr.	&	Classname	&	CONN\_IN	&	CONN\_OUT	&	CONN\_TOTAL	&	LD \\
 8	&	ContextConfig	&	3	&	26	&	29	&	143	\\
 9	&	ContextConfig\$DefaultWebXmlCacheEntry	&	0	&	0	&	0	&	143	\\
 10	&	ContextConfig\$JavaClassCacheEntry	&	0	&	0	&	0	&	143	\\
+\hline
+\end{tabular}
+}
+\end{table}
+
+
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1}
+\caption{Top 10 measurements for Hibernate. }
+\label{tab:measurementstop:hibernate}
+\centering
+\scalebox{0.8}{
+\begin{tabular}{|c|ccccc|}
+\hline
+Nr.	&	Classname	&	CONN\_IN	&	CONN\_OUT	&	CONN\_TOTAL	&	LD \\
+\hline
+1	&	AvailableSettings	&	1	&	0	&	1	&	205	\\
+2	&	AbstractEntityPersister	&	9	&	143	&	152	&	190	\\
+3	&	AbstractEntityPersister\$CacheEntryHelper	&	0	&	0	&	0	&	190	\\
+4	&	AbstractEntityPersister\$InclusionChecker	&	0	&	0	&	0	&	190	\\
+5	&	AbstractEntityPersister\$NoopCacheEntryHelper	&	0	&	0	&	0	&	190	\\
+6	&	AbstractEntityPersister\$ReferenceCacheEntryHelper	&	0	&	0	&	0	&	190	\\
+7	&	AbstractEntityPersister\$StandardCacheEntryHelper	&	0	&	0	&	0	&	190	\\
+8	&	AbstractEntityPersister\$StructuredCacheEntryHelper	&	0	&	0	&	0	&	190	\\
+9	&	Dialect	&	265	&	104	&	369	&	176	\\
+10	&	SessionFactoryImpl\$SessionBuilderImpl	&	1	&	25	&	26	&	167	\\
 \hline
 \end{tabular}
 }
