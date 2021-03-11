@@ -65,7 +65,7 @@ isbn={978-989-758-375-9},
   bibsource = {dblp computer science bibliography, https://dblp.org}
 }
 
-@inproceedings{struct_dep,
+@inproceedings{structdep,
 author = {Binkley, David},
 year = {2007},
 month = {06},
@@ -285,7 +285,6 @@ url="https://doi.org/10.1007/s10664-006-9000-x"
  author = {Shtern, Mark and Tzerpos, Vassilios},
  title = {Clustering Methodologies for Software Engineering},
  journal = {Adv. Soft. Eng.},
- issue_date = {January 2012},
  volume = {2012},
  month = jan,
  year = {2012},
@@ -355,7 +354,6 @@ by Identifying
    pages     = {122--140},
    year      = {2015},
    publisher = {Springer International Publishing},
-   doi       = {10.1007/978-3-319-30243-0_7},
    timestamp = {Fri, 19 May 2017 01:26:11 +0200},
    biburl    = {https://dblp.org/rec/bib/conf/enase/Sora15a},
    bibsource = {dblp computer science bibliography, https://dblp.org},
@@ -409,7 +407,7 @@ title = {Automatic identification of key classes in a software system using webm
 journal = {Journal of Software Maintenance and Evolution: Research and Practice},
 volume = {20},
 number = {6},
-publisher = {John Wiley & Sons, Ltd.},
+publisher = {John Wiley \& Sons, Ltd.},
 issn = {1532-0618},
 pages = {387--417},
 keywords = {program comprehension, dynamic analysis, webmining, coupling},
@@ -555,7 +553,6 @@ month={May},}
  author = {Yu, Liguo},
  title = {Understanding Component Co-evolution with a Study on Linux},
  journal = {Empirical Softw. Engg.},
- issue_date = {April     2007},
  volume = {12},
  number = {2},
  month = apr,
@@ -638,7 +635,6 @@ doi = {10.1145/336512.336534}
  author = {Lientz, Bennet P. and Swanson, E. Burton},
  title = {Problems in Application Software Maintenance},
  journal = {Commun. ACM},
- issue_date = {Nov. 1981},
  volume = {24},
  number = {11},
  month = nov,
@@ -667,7 +663,6 @@ doi = {10.1145/1297846.1297973}
  author = {Brooks,Jr., Frederick P.},
  title = {No Silver Bullet Essence and Accidents of Software Engineering},
  journal = {Computer},
- issue_date = {April 1987},
  volume = {20},
  number = {4},
  month = apr,
@@ -1173,3 +1168,74 @@ abstract = {Identifying key classes can help developers familiarize with a previ
   volume={10},
   pages={21-25}
 }
+
+
+@article{ROCIntro,
+title = {An introduction to ROC analysis},
+journal = {Pattern Recognition Letters},
+volume = {27},
+number = {8},
+pages = {861-874},
+year = {2006},
+note = {ROC Analysis in Pattern Recognition},
+issn = {0167-8655},
+doi = {https://doi.org/10.1016/j.patrec.2005.10.010},
+url = {https://www.sciencedirect.com/science/article/pii/S016786550500303X},
+author = {Tom Fawcett},
+keywords = {ROC analysis, Classifier evaluation, Evaluation metrics},
+abstract = {Receiver operating characteristics (ROC) graphs are useful for organizing classifiers and visualizing their performance. ROC graphs are commonly used in medical decision making, and in recent years have been used increasingly in machine learning and data mining research. Although ROC graphs are apparently simple, there are some common misconceptions and pitfalls when using them in practice. The purpose of this article is to serve as an introduction to ROC graphs and as a guide for using them in research.}
+}
+
+@article{ROCBRADLEY19971145,
+title = {The use of the area under the ROC curve in the evaluation of machine learning algorithms},
+journal = {Pattern Recognition},
+volume = {30},
+number = {7},
+pages = {1145-1159},
+year = {1997},
+issn = {0031-3203},
+doi = {https://doi.org/10.1016/S0031-3203(96)00142-2},
+url = {https://www.sciencedirect.com/science/article/pii/S0031320396001422},
+author = {Andrew P. Bradley},
+keywords = {The ROC curve, The area under the ROC curve (AUC), Accuracy measures, Cross-validation, Wilcoxon statistic, Standard error},
+abstract = {In this paper we investigate the use of the area under the receiver operating characteristic (ROC) curve (AUC) as a performance measure for machine learning algorithms. As a case study we evaluate six machine learning algorithms (C4.5, Multiscale Classifier, Perceptron, Multi-layer Perceptron, k-Nearest Neighbours, and a Quadratic Discriminant Function) on six “real world” medical diagnostics data sets. We compare and discuss the use of AUC to the more conventional overall accuracy and find that AUC exhibits a number of desirable properties when compared to overall accuracy: increased sensitivity in Analysis of Variance (ANOVA) tests; a standard error that decreased as both AUC and the number of test samples increased; decision threshold independent; and it is invariant to a priori class probabilities. The paper concludes with the recommendation that AUC be used in preference to overall accuracy for “single number” evaluation of machine learning algorithms.}
+}
+
+@INPROCEEDINGS{6676885,
+  author={M. H. {Osman} and M. R. V. {Chaudron} and P. v. d. {Putten}},
+  booktitle={2013 IEEE International Conference on Software Maintenance}, 
+  title={An Analysis of Machine Learning Algorithms for Condensing Reverse Engineered Class Diagrams}, 
+  year={2013},
+  volume={},
+  number={},
+  pages={140-149},
+  doi={10.1109/ICSM.2013.25}}
+
+
+@inproceedings{rocclasification,
+author = {Thung, Ferdian and Lo, David and Osman, Mohd Hafeez and Chaudron, Michel R. V.},
+title = {Condensing Class Diagrams by Analyzing Design and Network Metrics Using Optimistic Classification},
+year = {2014},
+isbn = {9781450328791},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/2597008.2597157},
+doi = {10.1145/2597008.2597157},
+abstract = { A class diagram of a software system enhances our ability to understand software design. However, this diagram is often unavailable. Developers usually reconstruct the diagram by reverse engineering it from source code. Unfortunately, the resultant diagram is often very cluttered; making it difficult to learn anything valuable from it. Thus, it would be very beneficial if we are able to condense the reverse- engineered class diagram to contain only the important classes depicting the overall design of a software system. Such diagram would make program understanding much easier. A class can be important, for example, if its removal would break many connections between classes. In our work, we estimate this kind of importance by using design (e.g., number of attributes, number of dependencies, etc.) and network metrics (e.g., betweenness centrality, closeness centrality, etc.). We use these metrics as features and input their values to our optimistic classifier that will predict if a class is important or not. Different from standard classification, our newly proposed optimistic classification technique deals with data scarcity problem by optimistically assigning labels to some of the unlabeled data and use them for training a better statistical model. We have evaluated our approach to condense reverse-engineered diagrams of 9 software systems and compared our approach with the state-of-the-art work of Osman et al. Our experiments show that our approach can achieve an average Area Under the Receiver Operating Characteristic Curve (AUC) score of 0.825, which is a 9.1% improvement compared to the state-of-the-art approach. },
+booktitle = {Proceedings of the 22nd International Conference on Program Comprehension},
+pages = {110–121},
+numpages = {12},
+keywords = {Important Classes, Network Metrics, Design Metrics, Optimistic Classification},
+location = {Hyderabad, India},
+series = {ICPC 2014}
+}
+
+@INPROCEEDINGS{7551990,
+  author={X. {Yang} and D. {Lo} and X. {Xia} and J. {Sun}},
+  booktitle={2016 IEEE 40th Annual Computer Software and Applications Conference (COMPSAC)}, 
+  title={Condensing Class Diagrams With Minimal Manual Labeling Cost}, 
+  year={2016},
+  volume={1},
+  number={},
+  pages={22-31},
+  doi={10.1109/COMPSAC.2016.83}}
