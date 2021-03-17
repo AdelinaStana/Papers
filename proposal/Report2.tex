@@ -33,7 +33,7 @@
 
 \pagestyle{plain}
 
-
+\chapter{Introduction}
 \chapter{Usage of the extracted dependencies}
 \section{Data set used}
 To extract the key classes based on logical dependencies, we took the same set of data used in another research involving key class detection. The research of I. Sora et al \cite{Finding-key-classes} takes into consideration structural public dependencies that are extracted using static analysis techniques and was performed on the object-oriented systems presented in table \ref{tab:keyclass:overview}.
@@ -120,7 +120,7 @@ Also, other researchers use a similar concept as the one defined by Zaidman but 
 In previous works, the approach for finding key classes is based on ranking the classes with a page ranking algorithm \cite{PagerankENASE}, \cite{enase15}, \cite{Finding-key-classes}, \cite{PagerankSACI} . The page ranking algorithm is a customization of PageRank, the algorithm used to rank web pages \cite{ilprints422}. 
 The PageRank algorithm works based on a recommendation system. If one node has a connection with another node, then it recommends the second node. In previous works, connections are established based on structural dependencies extracted from static code analysis. If A has a structural dependency with B, then A recommends B, and also B recommends A. 
 
-\subsection{Metrics for key classes detection}
+\subsection{Attributes for key classes detection}
 In order to identify the key classes of an object-oriented system, we have to determine what metrics can be used in order to get a good overview of the system and its most important classes \cite{Ding2016AnIA}, \cite{ZaidmanJurnal}, \cite{PAN2018188} . 
 The metrics used in previous research can be grouped into the following categories: 
 
@@ -183,7 +183,7 @@ In multiple related works, the ROC-AUC metric has been used to evaluate the resu
 
 For a classifier to be considered good, its ROC-AUC metric value should be as close to 1 as possible, when the value is 1 then the classifier is considered to be perfect.
 
-\subsection{Previous measurements}
+\subsection{Results obtained by the baseline approach}
 \label{sec:previous_measurements}
 
 In the research of I. Sora et al \cite{Finding-key-classes} is used a tool that takes as an input the source code of the system and applies a ranking strategy to rank the classes according to their importance. To differentiate the important classes from the rest of the classes, a TOP threshold for the top classes found is set. The threshold can vary between 20 and 30 classes.
@@ -573,7 +573,7 @@ Nr.	&	Classname	&	CONN\_IN	&	CONN\_OUT	&	CONN\_TOTAL	&	LD \\
 }
 \end{table}
 
-
+\chapter{Conclusions}
 
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
