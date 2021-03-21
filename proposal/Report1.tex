@@ -48,9 +48,7 @@ Each filtering section (\ref{sec:filtercommit}, \ref{sec:filterocc}, and \ref{se
 
 Section \ref{sec:overlaps} focuses on the overlappings between the extracted information from the code and filtered information from the versioning systems. 
 
-The conclusions and observations of performed measurements are presented in chapter \ref{conclusions}.
-
-
+The conclusions and observations based on the performed measurements are presented in chapter \ref{conclusions}.
 
 
 
@@ -61,17 +59,41 @@ The conclusions and observations of performed measurements are presented in chap
 \section{Tool for measuring software dependencies}
 \label{sec:tool}
 
-In order to build structural and logical dependencies we have developed a tool that takes as input the source code repository and builds the required software dependencies \cite{DepSACI}. The workflow can be delimited by three major steps as it follows (Figure \ref{fig:fig3}):\\ \\
-\textit{\textbf{Step 1:} Extracting structural dependencies.}\\
-\textit{\textbf{Step 2:} Extracting logical dependencies.}\\
-\textit{\textbf{Step 3:} Processing the information extracted.}
+To establish structural and logical dependencies, we developed a tool that takes as input the source code repository URL of a given system and extracts from it the software dependencies \cite{DepSACI}. 
+From a workflow point of view, we can identify 3 major types of activities that the tool does: downloads the required data from the git repository, extracts from the source code the structural dependencies and, extracts and filters the co-changing pairs from the repository's commit history. Figure \ref{fig:figworkflow} represents the activities mentioned above. Each block represents a different activity. 
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{fig3.png}
-\caption{Processing phases}
-\label{fig:fig3}
+\includegraphics[width=\textwidth]{tool_workflow.png}
+\caption{Tool workflow and major activities.}
+\label{fig:figworkflow}
 \end{figure}
+
+
+\textbf{Download git data.}
+The source code repository provides us all the needed information to extract both types of dependencies. It holds the code of the system but also the change history of the system. We use the source code for structural dependencies extraction \ref{sec:sd_extraction} and the change history for co-changing pairs extraction \ref{sec:copairs_extraction}.
+To get the source code files and the change history, we first need to know the repository URL from GitHub (GitHub is a Git repository cloud-based hosting service). With the GitHub URL and a series of Git commands, the tool can download all the necessary data for dependencies extraction.
+
+As we can see in figure \ref{fig:figgitdata}, the \textit{"clone"} command will download a Git repository to your local computer, including the source code files. The \textit{"diff"} command will get the differences between two existing commits in the Git repository. 
+The tool gets the Git repository and the source code files by executing the "clone" command. Afterward, it gets all the existing commits within the Git repository. The commits are ordered by date, beginning with the oldest one and ending with the most recent one. The tool executes the "diff" command between each commit and its parent (the previous commit). The "diff" command generates a text file that contains the differences between the two commits: code differences, the number of files changed and changed file names.
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{gitdata.png}
+\caption{Commands used to download the required data from GitHub.}
+\label{fig:figgitdata}
+\end{figure}
+
+\textbf{Extract structural dependencies.}
+
+To extract the structural dependencies from the source code files the tool converts each source code file into srcML format using an open-source tool called srcML. The srcML format is an XML representation for source code. Each markup tag identifies elements of the abstract syntax for the language \cite{srcML}. 
+After conversion, the tool parses each file and identifies all the defined entities (class, interface, enum, struct) within the file. It also identifies all the entities that are used by the entities defined.  The connection between both types of entities mentioned above constitutes a structural dependency.
+
+\textbf{Extract and filter co-changing pairs.}
+As presented in sections \ref{sec:filtercommit}, \ref{sec:filterocc}, and \ref{sec:filterstrength}, not every co-changing pair extracted is a logical dependency. For a co-changing pair to be labeled as a logical dependency, it has to meet some criteria.  Each criterion constitutes a filter that a co-changing pair has to pass in order to be called logical dependency. 
+The filters are implemented in the tool and can be combined. The input for each filter is the set of co-changing pairs extracted, and the output is the remaining co-changing pairs that respect the filter criterion. 
+
 
 
 
