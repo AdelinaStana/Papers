@@ -35,10 +35,25 @@
 
 
 \chapter{Introduction}
-The domain of the proposed thesis is Automated Software Engineering. The thesis will develop methods for the analysis of legacy software systems, focusing on using historical information describing the evolution of the systems extracted from the versioning systems. 
-The methods for analysis will integrate techniques based on computational algorithms as well as data-mining. As proof-of-concept, tool prototypes will implement the proposed methods and validate them by extensive experimentation on several cases of real-life systems.\\
 
-In Chapter \ref{extraction} is presented the state of the art for determining logical and structural dependencies and a series of applications of software dependencies. In Chapter \ref{sec:tool} is presented a tool that is build to extract logical and structural dependencies from a set of open-source systems and a set of factors that can be used to filter the recordings of class co-changes such that valid logical dependencies can be identified. 
+
+This report presents the results obtained so far on the proposed thesis. The goal of the thesis is to develop methods for analyzing legacy software systems, focusing on using historical information describing the evolution of the systems extracted from the versioning systems.
+
+We have developed a tool that extracts and processes the needed information from a software system. The tool workflow and technologies used are presented in section \ref{sec:tool}. The primary information extracted by the tool is described in sections \ref{sec:sd_extraction} and \ref{sec:copairs_extraction}. The filtering methods selected to be applied to the extracted information are presented in sections \ref{sec:filtercommit}, \ref{sec:filterocc}, and \ref{sec:filterstrength}.
+
+To perform measurements based on our assumptions, we have selected a set of 27 object-oriented software systems presented in section \ref{sec:dataset}. 
+For each listed software system, the tool extracts, filters, and collects the information needed.
+
+Each filtering section (\ref{sec:filtercommit}, \ref{sec:filterocc}, and \ref{sec:filterstrength}) contains the detailed results obtained after analyzing all the software systems and conclusions based on the results. 
+
+Section \ref{sec:overlaps} focuses on the overlappings between the extracted information from the code and filtered information from the versioning systems. 
+
+The conclusions and observations of performed measurements are presented in chapter \ref{conclusions}.
+
+
+
+
+
 
 \chapter{Extracting software dependencies}
 \label{extraction}
@@ -59,8 +74,9 @@ In order to build structural and logical dependencies we have developed a tool t
 \end{figure}
 
 
-\section{Extracting structural dependencies}
 
+\section{Extracting structural dependencies}
+\label{sec:sd_extraction}
 A dependency is created by two elements that are in a relationship and indicates that an element of the relationship, in some manner, depends on the other element of the relationship \cite{Booch:2004:OAD:975416}, \cite{Cataldo2009SoftwareDW}.
 
 Structural dependencies can be found by analyzing the source code \cite{Sangal:2005:UDM:1094811.1094824}, \cite{CalloArias2011}, \cite{structdep}. A structural dependency between two classes A and B is given by the fact that A statically depends on B, meaning that A cannot be compiled without knowing about B. In object oriented system, this dependency can be given by many types of relationships between the two classes: A extends B, A implements B, A has attributes of type B, A has methods which have type B in their signature, A uses local variables of type B, A calls methods of B.
@@ -69,8 +85,10 @@ Structural dependencies can be found by analyzing the source code \cite{Sangal:2
  We use an external tool called srcML \cite{2003:XLC:851042.857028},
 \cite{Collard:2011:LTF:2067850.2068011} to convert all source code files from the current release into XML files. All the information about classes, methods, calls to other classes are afterwards extracted by our tool parsing the XML files and building a dependencies data structure. We have chosen to rely on srcML as a preprocessing tool because it reduces a significant number of syntactic differences from different programming languages and can make easier the parsing of source code written in different programming languages such as Java, C++ and C\#.    
 
-\section{Extracting co-changing pairs}
 
+
+\section{Extracting co-changing pairs}
+\label{sec:copairs_extraction}
 \textit{Logical dependencies} (a.k.a logical coupling) can be found by software history analysis and can reveal relationships that are not always present in the source code (structural dependencies).  
 
 Software engineering practice has shown that sometimes modules which do not present structural dependencies still appear to be related. Co-evolution represents the phenomenon when one component changes in response to a change in another component \cite{Yu:2007:UCC:1231330.1231370}, \cite{5166450}. Those changes can be found in the software history maintained by the versioning system. Gall \cite{Gall:1998:DLC:850947.853338}, \cite{Gall:2003:CRH:942803.943741} identified as logical coupling between two modules the fact that these modules  \textit{repeatedly} change together during the historical evolution of the software system \cite{6606615}.
@@ -79,10 +97,14 @@ The versioning system contains the long-term change history of every file. Each 
 
 The tool looks through the main branch of the project and gets all the existing commits. For each commit a diff against the parent will be made and stored. Here we have the option to ignore commits that contain more files than a threshold value for commit size. Also, we have the option to check whether the differences are in actual code or if they affect only parts of source files that are only comments.  Finally after all the difference files are stored, all the files are parsed and logical dependencies are build. For a group of files that are committed together, logical dependencies are added between all pairs formed by members of the group. Adding a logical dependency increases an occurrence counter for the logical link. \\
 
+
+
+
+
 \chapter {Filtering extracted co-changing pairs}
 
 \section{Data set used}
-
+\label{sec:dataset}
 We have analyzed a set of open-source projects found on GitHub\footnote{http://github.com/} \cite{Kalliamvakou2016} in order to extract the structural and logical dependencies between classes. Table \ref{table:1} enumerates all the systems studied. The 1st column assigns the projects IDs; 2nd column shows the project name; 3rd column shows the number of entities(classes and interfaces) extracted; 4th column shows the number of most recent commits analyzed from the active branch of each project and the 5th shows the language in which the project was developed.
 \begin{table}[H]
 \caption{Summary of open source projects studied.}
@@ -126,7 +148,7 @@ We have analyzed a set of open-source projects found on GitHub\footnote{http://g
 
 
 \section{Filtering based on size of commit transactions}
-
+\label{sec:filtercommit}
 A big commit transaction can indicate that a merge with another branch or that a renaming has been made.
 In this case, a series of irrelevant logical dependencies can be introduced since not all the files are updated in the same time for a development reason. Different works have chosen fixed threshold values for the maximum number of files accepted in a commit. Cappiluppi and Ajienka, in their works \cite{DBLP:journals/jss/AjienkaC17}, \cite{DBLP:journals/ese/AjienkaCC18} only take into consideration commits with less then 10 source code files changed in building the logical dependencies.
 
@@ -162,6 +184,7 @@ So filtering 10\% of the total amount of commit transactions can indeed lead to 
 
 
 \section{Filtering based on number of occurrences}
+\label{sec:filterocc}
 One occurrence of a co-change between two software entities can be a valid logical dependency, but can also be a coincidence. Taking into consideration only co-changes with multiple occurrences as valid dependencies can lead to more accurate logical dependencies and more accurate results. On the other hand, if the project studied has a relatively small amount of commits, the probability to find multiple updates of the same classes in the same time can be small, so filtering after the number of occurrences can lead to filtering all the logical dependencies extracted. Giving the fact that we will study multiple projects of different sizes and number of commits, we will analyze also the impact of this filtering on different projects.
 
 We have performed a series of analysis on the test systems, incrementing the threshold value occ from 1 to 4. In each of the cases the extracted logical dependencies from commit transaction with less or equal to 10 changed source code files were also filtered by the minimum number of occurrences established and all the logical dependencies that did not exceeded the minimum number of occurrences were discarded. 
@@ -263,9 +286,18 @@ We stopped the minimum occurrences threshold to 4 because we observed that for s
 If we try to go higher with the occurrences threshold we will risk to filter all the existing logical dependencies for some of the systems.
 So, filtering with a threshold of 4 for the minimum number of occurrences will indeed filter the logical dependencies but for some of the systems the remaining number of logical dependencies will still be significantly higher compared to the number of structural dependencies.
 
+
+
+
 \section{Filtering based on connection strenght}
+\label{sec:filterstrength}
+
+
+
+
 
 \section{Overlaps between structural and logical dependencies}
+\label{sec:overlaps}
 A logical dependency can be also a structural dependency and vice-versa, so studying the overlapping between logical and structural dependencies while filtering is important since the intention is to introduce those logical dependencies among with structural dependencies in architectural reconstruction systems. Current studies have shown a relatively small percentage of overlapping between them with and without any kind of filtering \cite{DBLP:journals/jss/AjienkaC17}. This means that a lot of non related entities update together in the versioning system, the goal here is to establish the factors that determine such a small percentage of overlapping \cite{enase19}.
 
 
@@ -419,7 +451,7 @@ From Tables \ref{tab:percLD:comm} and \ref{tab:percLD:nocomm} we notice that the
  
 
 \chapter{Conclusions}
-
+\label{conclusions}
 
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
