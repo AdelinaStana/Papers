@@ -131,7 +131,7 @@ Software engineering practice has shown that sometimes modules which do not pres
 The versioning system contains the long-term change history of every file. Each project change made by an individual at a certain point of time is contained into a commit \cite{7471284}. All the commits are stored in the versioning system chronologically and each commit has a parent. The parent commit is the baseline from which development began, the only exception to this rule is the first commit which has no parent \cite{svn}. 
 
 
-Currently there is no set of rules or best practices that can be applied to the extracted class co-changes and can guarantee their filtering into a set of valid logical dependencies.
+Currently there is no set of rules or best practices that can be applied to the extracted class co-changes and can guarantee their filtering into a set of logical dependencies.
 
 
 This is mainly because not all the updates made in the versioning system are code related. For example a commit that has as participants a big number of files can indicate that a merge with another branch or a folder renaming has been made. In this case, a series of irrelevant co-changing pairs of entities can be introduced. So, in order to exclude this kind of situations the information extracted from the versioning system has to be filtered first and then used. Surveys also show that historical information is rarely used due to the size of the extracted information \cite{Shtern:2012:CMS:2332427.2332428}, \cite{sar}.
@@ -166,72 +166,125 @@ We have analyzed a set of open-source projects found on GitHub\footnote{http://g
    ID  & Project    & Nr. of & Nr. of& Type\\
      &     & entites & commits & \\
 \hline
-1	&	bluecove	&	586	&	894	&	java	\\
-2	&	aima-java	&	987	&	818	&	java	\\
-3	&	powermock	&	1084	&	893	&	java	\\
-4	&	restfb	&	783	&	1188	&	java	\\
-5	&	rxjava	&	2673	&	2468	&	java	\\
-6	&	metro-jax-ws	&	1103	&	2222	&	java	\\
-7	&	mockito	&	1409	&	1572	&	java	\\
-8	&	grizzly	&	1592	&	3122	&	java	\\
-9	&	shipkit	&	242	&	1483	&	java	\\
-10	&	OpenClinica	&	1653	&	3749	&	java	\\
-11	&	robolectric	&	2050	&	5029	&	java	\\
-12	&	aeron	&	541	&	5101	&	java	\\
-13	&	antlr4	&	1381	&	3449	&	java	\\
-14	&	mcidasv	&	805	&	3668	&	java	\\
-15	&	ShareX	&	919	&	2505	&	csharp	\\
-16	&	aspnetboilerplate	&	2353	&	1615	&	csharp	\\
-17	&	orleans	&	3485	&	3353	&	csharp	\\
-18	&	cli	&	767	&	2397	&	csharp	\\
-19	&	cake	&	2250	&	1853	&	csharp	\\
-20	&	Avalonia	&	1677	&	2445	&	csharp	\\
-21	&	EntityFramework	&	7107	&	2443	&	csharp	\\
-22	&	jellyfin	&	2179	&	4065	&	csharp	\\
-23	&	PowerShell	&	861	&	2033	&	csharp	\\
-24	&	WeiXinMPSDK	&	2029	&	2723	&	csharp	\\
-25	&	ArchiSteamFarm	&	117	&	2181	&	csharp	\\
-26	&	VisualStudio	&	1016	&	4417	&	csharp	\\
-27	&	CppSharp	&	259	&	4882	&	csharp	\\
+1	&	bluecove	&	2685	&	894	&	java	\\
+2	&	aima-java	&	5232	&	1006	&	java	\\
+3	&	powermock	&	2801	&	949	&	java	\\
+4	&	restfb	&	3350	&	1391	&	java	\\
+5	&	rxjava	&	21097	&	4398	&	java	\\
+6	&	metro-jax-ws	&	6482	&	2927	&	java	\\
+7	&	mockito	&	5189	&	3330	&	java	\\
+8	&	grizzly	&	10687	&	3113	&	java	\\
+9	&	shipkit	&	639	&	1563	&	java	\\
+10	&	OpenClinica	&	9655	&	3276	&	java	\\
+11	&	robolectric	&	8922	&	5912	&	java	\\
+12	&	aeron	&	4159	&	5977	&	java	\\
+13	&	antlr4	&	4747	&	4431	&	java	\\
+14	&	mcidasv	&	3272	&	4136	&	java	\\
+15	&	ShareX	&	4289	&	5485	&	csharp	\\
+16	&	aspnetboilerplate	&	9712	&	4323	&	csharp	\\
+17	&	orleans	&	16963	&	3995	&	csharp	\\
+18	&	cli	&	2063	&	4488	&	csharp	\\
+19	&	cake	&	12260	&	2518	&	csharp	\\
+20	&	Avalonia	&	16732	&	5264	&	csharp	\\
+21	&	EntityFrameworkCore	&	50179	&	5210	&	csharp	\\
+22	&	jellyfin	&	8764	&	5433	&	csharp	\\
+23	&	PowerShell	&	2405	&	3250	&	csharp	\\
+24	&	WeiXinMPSDK	&	7075	&	5729	&	csharp	\\
+25	&	ArchiSteamFarm	&	702	&	2497	&	csharp	\\
+26	&	VisualStudio	&	4869	&	5039	&	csharp	\\
+27	&	CppSharp	&	17060	&	4522	&	csharp	\\
+
 \hline
 \end{tabular}
 }
 \end{table}
 
 
+
 \section{Filtering based on size of commit transactions}
 \label{sec:filtercommit}
-A big commit transaction can indicate that a merge with another branch or that a renaming has been made.
-In this case, a series of irrelevant logical dependencies can be introduced since not all the files are updated in the same time for a development reason. Different works have chosen fixed threshold values for the maximum number of files accepted in a commit. Cappiluppi and Ajienka, in their works \cite{DBLP:journals/jss/AjienkaC17}, \cite{DBLP:journals/ese/AjienkaCC18} only take into consideration commits with less then 10 source code files changed in building the logical dependencies.
+
+As presented in section \ref{sec:copairs_extraction}, according to surveys,  co-changing pairs are not used because of their size. One system can have millions of co-changing pairs.
+Whit this filtering type, we not only want to decrease the total size of the extracted co-changing pairs. But also to be one step closer to the identification of the logical dependencies among the co-changing pairs.
+In this step, we want to filter the co-changing pairs extracted after commit size (cs). This means that the co-changing pairs are extracted only from commits that involve fewer files than an establised threshold number. 
+
+Different works have chosen fixed threshold values for the maximum number of files accepted in a commit. Cappiluppi and Ajienka, in their works \cite{DBLP:journals/jss/AjienkaC17}, \cite{DBLP:journals/ese/AjienkaCC18} only take into consideration commits with less then 10 source code files changed in building the logical dependencies.
 
 The research of Beck et al \cite{Beck:2011:CMC:2025113.2025162} only takes in consideration transactions with up to 25 files. The research \cite{Oliva:2011:ISL:2067853.2068086} provided also a quantitative analysis of the number of files per revision; Based on the analysis of 40,518 revisions, the mean value obtained for the number of files in a revision is 6 files. However, standard deviation value shows that the dispersion is high. 
 
-We analyzed the overall transaction size trend for 27 open-source cpp and java systems. The results are presented in Figure \ref{fig:fig_cs}, based on them we can say that 90\% of the total commit transactions made are with less than 10 source code files changed. This percent allows us to say that setting a threshold of 10 files for the maximum size of the commit transactions will not affect so much the total number of commit transactions from the systems since it will still remain 90\% of the commit transactions from where we can extract logical dependencies \cite{DepSACI}.
+We analyzed the overall transaction size trend for 27 open-source csharp and java systems with a total of 74 332 commits. The results are presented in Figure \ref{fig:fig_cs} and in table \ref{table:cs_values}, based on them we can say that 90\% of the total commit transactions made are with less than 10 source code files changed. This percent allows us to say that setting a threshold of 10 files for the maximum size of the commit transactions will not affect so much the total number of commit transactions from the systems since it will still remain 90\% of the commit transactions from where we can extract co-changing pairs \cite{DepSACI}.
 
 
-\begin{figure}[h]
+\begin{figure}[!h]
 \centering
-\includegraphics{fig_cs.png}
-\caption{Commit transaction size(cs) trend in percentages}
+\includegraphics[width=\textwidth]{commit_distribution.png}
+\caption{Commit transaction size(cs) trend in percentages.}
 \label{fig:fig_cs}
 \centering
 \end{figure}
 
 
-\begin{figure}[h]
+\begin{figure}[!h]
 \centering
-\includegraphics[scale=0.9]{fig_ld_ts.png}
-\caption{Percentages of LD extracted from each commit transaction size(cs) group}
-\label{fig:fig_ld_ts}
+\includegraphics[width=\textwidth]{ld_distribution.png}
+\caption{Percentages of LD extracted from each commit transaction size(cs) group.}
+\label{fig:fig_ld_cs}
 \centering
 \end{figure}
 
-As we can see in Figure \ref{fig:fig_ld_ts} even though only 5\% of the commit transactions have more than 20 files changed ($20<cs<inf$) they generate in average 80\% of the total amount of logical dependencies extracted from the systems.
-The high number of logical dependencies extracted from such a small number of commit transactions is caused by big commit transactions. 
-One single big commit transaction can lead to a large amount of logical dependencies. For example in RxJava we have a very few commit transactions with 1030 source code files, this means that those files can generate 
+As we can see in Figure \ref{fig:fig_ld_cs} even though only 5\% of the commit transactions have more than 20 files changed ($20<cs<inf$) they generate in average 80\% of the total amount of co-changing pairs extracted from the systems.
+The high number of co-changing pairs extracted from such a small number of commit transactions is caused by big commit transactions. 
+
+One single big commit transaction can lead to a large amount of logical dependencies. For example in RxJava we have commit transactions with 1030 source code files, this means that those files can generate 
 $\Comb{n}{k}=\frac{n!}{k!(n-k)!} = \frac{1030!}{2!(1028)!} = 529 935$ logical dependencies. By setting a threshold on the commit transaction size we can avoid the introduction of those logical dependencies into the system.
 
-So filtering 10\% of the total amount of commit transactions can indeed lead to a significant decrease of the amount of logical dependencies and that is why we choose the value of 10 files as our fixed threshold for the maximum size of a commit transaction \cite{DepSACI}.
+So filtering 10\% of the total amount of commit transactions can lead to a significant decrease of the amount of logical dependencies and that is why we choose the value of 10 files as our fixed threshold for the maximum size of a commit transaction \cite{DepSACI}.
+
+
+
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1}
+\caption{Commit transaction size(cs) trend and average per system.}
+\label{table:cs_values}
+\centering
+\scalebox{0.9}{
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+Nr.	  & Project    &	$cs\leq 5$	&	$cs\leq 10$	&	$cs\leq 20$	&	$cs<\infty$ & Avg	\\ 
+\hline
+1	&	bluecove	&	738	&	97	&	37	&	22	&	4.9	\\
+2	&	aima-java	&	733	&	134	&	74	&	65	&	7.24	\\
+3	&	powermock	&	685	&	128	&	66	&	70	&	9.61	\\
+4	&	restfb	&	1160	&	127	&	44	&	60	&	9.9	\\
+5	&	rxjava	&	3395	&	447	&	253	&	303	&	8.46	\\
+6	&	metro-jax-ws	&	2583	&	198	&	78	&	68	&	4.33	\\
+7	&	mockito	&	2522	&	433	&	222	&	153	&	6.33	\\
+8	&	grizzly	&	2487	&	302	&	180	&	144	&	5.28	\\
+9	&	shipkit	&	1311	&	151	&	64	&	37	&	4.26	\\
+10	&	OpenClinica	&	2837	&	250	&	119	&	70	&	3.31	\\
+11	&	robolectric	&	4827	&	503	&	264	&	318	&	7.43	\\
+12	&	aeron	&	4844	&	684	&	300	&	149	&	4.6	\\
+13	&	antlr4	&	3426	&	437	&	304	&	264	&	8.5	\\
+14	&	mcidasv	&	3996	&	81	&	35	&	24	&	2.47	\\
+15	&	ShareX	&	4731	&	529	&	145	&	80	&	4.69	\\
+16	&	aspnetboilerplate	&	3208	&	569	&	321	&	225	&	6.61	\\
+17	&	orleans	&	2780	&	518	&	369	&	328	&	8.95	\\
+18	&	cli	&	3377	&	551	&	308	&	252	&	6.43	\\
+19	&	cake	&	1785	&	359	&	174	&	200	&	9.89	\\
+20	&	Avalonia	&	3806	&	641	&	371	&	446	&	8.43	\\
+21	&	EntityFrameworkCore	&	2866	&	878	&	644	&	822	&	15.38	\\
+22	&	jellyfin	&	4007	&	662	&	419	&	345	&	6.25	\\
+23	&	PowerShell	&	2702	&	224	&	133	&	191	&	7.33	\\
+24	&	WeiXinMPSDK	&	4604	&	526	&	296	&	303	&	9.01	\\
+25	&	ArchiSteamFarm	&	2357	&	92	&	28	&	20	&	2.24	\\
+26	&	VisualStudio	&	3902	&	521	&	295	&	321	&	6.71	\\
+27	&	CppSharp	&	3870	&	390	&	203	&	59	&	3.28	\\
+\hline
+\end{tabular}
+}
+\end{table}
+
+
 
 
 
@@ -245,10 +298,12 @@ The results of the analysis are presented in Table \ref{table:sd_percentages} as
 
 
 
-\begin{table}[H]
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1}
 \caption{Percentage of LD that are also SD}
 \label{table:sd_percentages}
 \centering
+\scalebox{0.9}{
 \begin{tabular}{|c|c|c|c|c|}
 \hline
     ID  & $occ\geq 1$ & $occ\geq 2$ & $occ\geq 3$ & $occ\geq 4$  \\
@@ -284,13 +339,16 @@ The results of the analysis are presented in Table \ref{table:sd_percentages} as
 Avg	&	8,93	&	11,88	&	14,23	&	15,55	\\
 \hline
 \end{tabular}
+}
 \end{table}
 
 
-\begin{table}[H]
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1}
 \caption{Ratio of number of LD to number of SD}
 \label{table:ld_ratio}
 \centering
+\scalebox{0.9}{
 \begin{tabular}{|c|c|c|c|c|}
 \hline
     ID  & $occ\geq 1$ & $occ\geq 2$ & $occ\geq 3$ & $occ\geq 4$  \\
@@ -326,6 +384,7 @@ Avg	&	8,93	&	11,88	&	14,23	&	15,55	\\
 Avg	&	5,67	&	3,43	&	2,51	&	2,15	\\
 \hline
 \end{tabular}
+}
 \end{table}
 
 
