@@ -126,7 +126,10 @@ Structural dependencies can be found by analyzing the source code \cite{Sangal:2
 
 \textit{Logical dependencies} (a.k.a logical coupling) can be found by software history analysis and can reveal relationships that are not always present in the source code (structural dependencies).  
 
+The concepts of logical coupling and logical dependencies were first used in different analysis tasks, all related to changes: for software change impact analysis \cite{1553643}, for identifying the potential ripple effects caused by software changes during software maintenance and evolution \cite{DBLP:conf/issre/OlivaG15}, \cite{Oliva:2011:ISL:2067853.2068086}, \cite{Poshyvanyk2009}, \cite{posh2010} or for their link to deffects \cite{wiese}, \cite{Zimmermann:2004:MVH:998675.999460}.
+
 Software engineering practice has shown that sometimes modules which do not present structural dependencies still can be related \cite{articleEvolution}. Co-evolution represents the phenomenon when one component changes in response to a change in another component \cite{Yu:2007:UCC:1231330.1231370}, \cite{5166450}. Those changes can be found in the software change history from the versioning system. Gall \cite{Gall:1998:DLC:850947.853338}, \cite{Gall:2003:CRH:942803.943741} identified as logical coupling between two modules the fact that these modules \textit{repeatedly} change together during the historical evolution of the software system \cite{6606615}.
+
 
 The versioning system contains the long-term change history of every file. Each project change made by an individual at a certain point of time is contained into a commit \cite{7471284}. All the commits are stored in the versioning system chronologically and each commit has a parent. The parent commit is the baseline from which development began, the only exception to this rule is the first commit which has no parent \cite{svn}. 
 
@@ -136,7 +139,7 @@ Currently there is no set of rules or best practices that can be applied to the 
 
 This is mainly because not all the updates made in the versioning system are code related. For example a commit that has as participants a big number of files can indicate that a merge with another branch or a folder renaming has been made. In this case, a series of irrelevant co-changing pairs of entities can be introduced. So, in order to exclude this kind of situations the information extracted from the versioning system has to be filtered first and then used. Surveys also show that historical information is rarely used due to the size of the extracted information \cite{Shtern:2012:CMS:2332427.2332428}, \cite{sar}.
 
-Other works have tried to filter co-changes \cite{Oliva:2011:ISL:2067853.2068086}, \cite{DBLP:journals/jss/AjienkaC17}. One of the used co-changes filter is the commit size.The commit size is the number of code files changed in that particular commit. 
+Other works have tried to filter co-changes \cite{Oliva:2011:ISL:2067853.2068086}, \cite{DBLP:journals/jss/AjienkaC17}, \cite{DBLP:conf/issre/OlivaG15}. One of the used co-changes filter is the commit size.The commit size is the number of code files changed in that particular commit. 
 Ajienka and Capiluppi established a threshold of 10 for the maximum accepted size for a commit \cite{DBLP:journals/jss/AjienkaC17}. This means that all the commits that had more than 10 code files changed where discarded from the research. But setting a harcoded threshold for the commit size is debatable because in order to say that a commit is big or small you have to look first at the size of the system and at the trends from the versioning system. Even thought the best practices encourage small and often commits, the developers culture is the one that influences the most the trending size of commits from one system.
 
 Filtering only after commit size is not enough, this type of filtering can indeed have an impact on the total number of extracted co-changes, but will only shrink the number of co-changes extracted without actually guaranteeing that the remaining ones have more relevancy and are more linked.
@@ -206,7 +209,7 @@ We have analyzed a set of open-source projects found on GitHub\footnote{http://g
 
 As presented in section \ref{sec:copairs_extraction}, according to surveys,  co-changing pairs are not used because of their size. One system can have millions of co-changing pairs.
 Whit this filtering type, we not only want to decrease the total size of the extracted co-changing pairs. But also to be one step closer to the identification of the logical dependencies among the co-changing pairs.
-In this step, we want to filter the co-changing pairs extracted after commit size (cs). This means that the co-changing pairs are extracted only from commits that involve fewer files than an establised threshold number. 
+In this step, we want to filter the co-changing pairs extracted after commit size (cs). This means that the co-changing pairs are extracted only from commits that involve fewer files than an established threshold number. 
 
 Different works have chosen fixed threshold values for the maximum number of files accepted in a commit. Cappiluppi and Ajienka, in their works \cite{DBLP:journals/jss/AjienkaC17}, \cite{DBLP:journals/ese/AjienkaCC18} only take into consideration commits with less then 10 source code files changed in building the logical dependencies.
 
@@ -233,12 +236,12 @@ We analyzed the overall transaction size trend for 27 open-source csharp and jav
 \end{figure}
 
 As we can see in Figure \ref{fig:fig_ld_cs} even though only 5\% of the commit transactions have more than 20 files changed ($20<cs<inf$) they generate in average 80\% of the total amount of co-changing pairs extracted from the systems.
-The high number of co-changing pairs extracted from such a small number of commit transactions is caused by big commit transactions. 
+The high number of co-changing pairs extracted from such a small number of commit transactions is caused by the number of files involved in those commit transactions. 
 
-One single big commit transaction can lead to a large amount of logical dependencies. For example in RxJava we have commit transactions with 1030 source code files, this means that those files can generate 
-$\Comb{n}{k}=\frac{n!}{k!(n-k)!} = \frac{1030!}{2!(1028)!} = 529 935$ logical dependencies. By setting a threshold on the commit transaction size we can avoid the introduction of those logical dependencies into the system.
+One single commit transaction can lead to a large amount of co-changing pairs. For example in RxJava we have commit transactions with 1030 source code files, this means that those commits can generate 
+$\Comb{n}{k}=\frac{n!}{k!(n-k)!} = \frac{1030!}{2!(1028)!} = 529 935$ logical dependencies. By setting a threshold on the commit transaction size we can avoid the introduction of those co-changing pairs into the system.
 
-So filtering 10\% of the total amount of commit transactions can lead to a significant decrease of the amount of logical dependencies and that is why we choose the value of 10 files as our fixed threshold for the maximum size of a commit transaction \cite{DepSACI}.
+So filtering 10\% of the total amount of commit transactions can lead to a significant decrease of the amount of co-changing pairs and that is why we choose the value of 10 files as our fixed threshold for the maximum size of a commit transaction \cite{DepSACI}.
 
 
 
@@ -290,17 +293,21 @@ Nr.	  & Project    &	$cs\leq 5$	&	$cs\leq 10$	&	$cs\leq 20$	&	$cs<\infty$ & Avg	
 
 \section{Filtering based on number of occurrences}
 \label{sec:filterocc}
-One occurrence of a co-change between two software entities can be a valid logical dependency, but can also be a coincidence. Taking into consideration only co-changes with multiple occurrences as valid dependencies can lead to more accurate logical dependencies and more accurate results. On the other hand, if the project studied has a relatively small amount of commits, the probability to find multiple updates of the same classes in the same time can be small, so filtering after the number of occurrences can lead to filtering all the logical dependencies extracted. Giving the fact that we will study multiple projects of different sizes and number of commits, we will analyze also the impact of this filtering on different projects.
 
-We have performed a series of analysis on the test systems, incrementing the threshold value occ from 1 to 4. In each of the cases the extracted logical dependencies from commit transaction with less or equal to 10 changed source code files were also filtered by the minimum number of occurrences established and all the logical dependencies that did not exceeded the minimum number of occurrences were discarded. 
+In the previous section, we filtered the co-changing pairs based on the commit size. Even though the number of extracted co-changing pairs was reduced, this type of filtering will not guarantee that the remaining co-changing pairs can pass as logical dependencies. 
+One occurrence of a co-change pair can be a valid logical dependency, but can also be a coincidence. 
 
-The results of the analysis are presented in Table \ref{table:sd_percentages} as percentages of logical dependencies (LD) that are also structural dependencies and Table \ref{table:ld_ratio} as ratio of the number of logical dependencies (LD) to the number of structural dependencies (SD).
+Taking into consideration only co-changing pairs with multiple occurrences as valid dependencies can lead to more accurate results. But, if the project studied has a relatively small amount of commits, the probability to find multiple updates of the same classes at the same time is less likely to happen, so filtering after the number of occurrences can lead to filtering all the co-changes extracted.
+
+We have performed a series of analyses on the test systems, incrementing the threshold value occurrence (occ) from 1 to 4. The co-changing pairs are extracted only for commits with the commit transaction size less or equal to 10. For each threshold mentioned above, the extracted co-changing pairs are filtered again by the occurrence threshold established. All the co-changing pairs that do not exceed the minimum number of occurrences are discarded.
+
+The results of the analysis are presented in Table \ref{table:sd_percentages} as percentages of co-changing pairs that are also structural dependencies and Table \ref{table:ld_ratio} as ratio of the number of co-changing pairs to the number of structural dependencies (SD).
 
 
 
 \begin{table}[!h]
 \renewcommand{\arraystretch}{1}
-\caption{Percentage of LD that are also SD}
+\caption{Percentage of co-changing pairs that are also structural dependencies.}
 \label{table:sd_percentages}
 \centering
 \scalebox{0.9}{
@@ -345,7 +352,7 @@ Avg	&	8,93	&	11,88	&	14,23	&	15,55	\\
 
 \begin{table}[!h]
 \renewcommand{\arraystretch}{1}
-\caption{Ratio of number of LD to number of SD}
+\caption{Ratio of number of co-changing pairs to number of structural dependencies. }
 \label{table:ld_ratio}
 \centering
 \scalebox{0.9}{
@@ -387,22 +394,34 @@ Avg	&	5,67	&	3,43	&	2,51	&	2,15	\\
 }
 \end{table}
 
+Based on Table \ref{table:sd_percentages} we can say that only a small percentage of the extracted co-changing pairs are also structural dependencies. This is consistent with the findings of related works \cite{DBLP:journals/jss/AjienkaC17}, \cite{DBLP:journals/ese/AjienkaCC18}. 
+The percentage of co-changing pairs that are also structural dependencies increases with the minimum number of occurrences because the number of co-changing pairs from the systems decreases with the minimum number of occurrences. 
+We calculate the overlapping between co-changing pairs and structural dependencies not only because we want to get an idea of how many structural dependencies are reflected in the versioning system through co-changing pairs, but also because we want to eliminate co-changing pairs that are structural dependencies since they don't bring any new information about the system.
 
+We stopped the minimum occurrences threshold to 4 because we observed that for systems with ID 2, 6, 10, and 16 from Table \ref{table:ld_ratio} the ratio number is lower than 1, which means that the number of structural dependencies is higher than the number of co-changing pairs. On the other hand, for systems with ID 4, 11, 25, 27, the threshold of 4 for a minimum number of occurrences does not change the discrepancy between the number of co-changing pairs and structural dependencies.
 
-
-Based on Table \ref{table:sd_percentages} we can say that only a small percentage of the extracted logical dependencies are also structural dependencies. This is consistent with the findings of related works \cite{DBLP:journals/jss/AjienkaC17}, \cite{DBLP:journals/ese/AjienkaCC18}. The percentage of LD which are also SD  increases with the minimum number of occurrences because the number of logical dependencies from the systems decreases with the minimum number of occurrences. 
-We calculate the overlapping between logical and structural dependencies not only because we want to get an idea of how many structural dependencies are reflected in the versioning system through logical dependencies but also because we want to eliminate logical dependencies that are also structural dependencies since they don't bring any new information to the systems.
-
-We stopped the minimum occurrences threshold to 4 because we observed that for systems with ID 2, 6, 10 and 16 from Table \ref{table:ld_ratio} the ratio number is lower than 1 which means that the number of SD is higher than the number of LD. On the other hand for systems with ID 4, 11, 25, 27 the threshold of 4 for minimum number of occurrences does not change the discrepancy between the number of logical and structural dependencies.
-If we try to go higher with the occurrences threshold we will risk to filter all the existing logical dependencies for some of the systems.
-So, filtering with a threshold of 4 for the minimum number of occurrences will indeed filter the logical dependencies but for some of the systems the remaining number of logical dependencies will still be significantly higher compared to the number of structural dependencies.
-
-
+If we try to go higher with the occurrences threshold, we will risk filtering all the existing co-changing pairs for some systems.
+So, filtering with a threshold of 4 for the minimum number of occurrences will indeed filter the logical dependencies, but for some of the systems, the remaining number of co-changing pairs will still be significantly higher compared to the number of structural dependencies.
 
 
 \section{Filtering based on connection strenght}
 \label{sec:filterstrength}
 
+To evaluate the results obtained using logical dependencies, we used the same tool used in section X. 
+Previously, the tool used only structural dependencies extracted from the source code of the software systems. In this chapter, we intend to add also the logical dependencies from the versioning system to observe if the results could be improved or not.
+
+For this, the logical dependencies used were filtered based on the update percentage of the entities involved. We define a logical dependency as a connection observed via commits in the versioning system between entity A and entity B. The update percentage of entity A with entity B is determined as follows: the percentage from the total commits involving A that contains entity B.
+
+\[ update\ percentage\ for\ A 
+  = \dfrac{100 * commits\ involving\ A\ and\ B}{total\ nr\ of\ commits\ involving\ A}
+\]
+
+\[ update\ percentage\ for\ B 
+  = \dfrac{100 * commits\ involving\ A\ and\ B}{total\ nr\ of\ commits\ involving\ B}
+\]
+
+We calculated the update percentage for each side of the connection (LD) and filtered the connections found based on it. The rule set is that both entities had to have an update percentage with each other greater than the threshold value.
+In tables \ref{tab:measurementscombined:ant}, \ref{tab:measurementscombined:tomcat}, and \ref{tab:measurementscombined:hibernate}, we introduced the logical dependencies among structural dependencies. We started with logical dependencies that have a percentage of update grater then 10\%, which means that in at least 10\% of the commits involving A or B, A and B update together. Then we increased the threshold value by 10 until we remained only with entities that update in all the commits together.
 
 
 
@@ -563,6 +582,12 @@ From Tables \ref{tab:percLD:comm} and \ref{tab:percLD:nocomm} we notice that the
 
 \chapter{Conclusions}
 \label{conclusions}
+
+Different applications based on dependency analysis could be improved if, beyond structural dependencies, they also take into account the hidden non-structural dependencies. For example, works  which investigate different methods for architectural reconstruction \cite{SoraConti}, \cite{SoraSem13}, \cite{PagerankENASE},  all of them based on the information provided by structural dependencies, could enrich their dependency models by taking into account also logical dependencies. However, a thorough survey \cite{sar} shows that historical information has been rarely used in architectural reconstruction. 
+The software architecture is important in order to understand and maintain a system. Often code updates are made without checking or updating the architecture. This kind of updates cause the architecture to drift from the reality of the code over time \cite{sar}.
+So reconstructing the architecture and verifying if still matches the reality is important \cite{Kalliamvakou2016}. 
+
+Surveys also show that architectural reconstruction is mainly made based on structural dependencies \cite{Shtern:2012:CMS:2332427.2332428}, \cite{sar}, the main reason why historical information is rarely used in architectural reconstruction is the size of the extracted information.
 
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
