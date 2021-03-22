@@ -71,6 +71,7 @@ From a workflow point of view, we can identify 3 major types of activities that 
 
 
 \textbf{Download git data.}
+
 The source code repository provides us all the needed information to extract both types of dependencies. It holds the code of the system but also the change history of the system. We use the source code for structural dependencies extraction \ref{sec:sd_extraction} and the change history for co-changing pairs extraction \ref{sec:copairs_extraction}.
 To get the source code files and the change history, we first need to know the repository URL from GitHub (GitHub is a Git repository cloud-based hosting service). With the GitHub URL and a series of Git commands, the tool can download all the necessary data for dependencies extraction.
 
@@ -91,10 +92,22 @@ To extract the structural dependencies from the source code files the tool conve
 After conversion, the tool parses each file and identifies all the defined entities (class, interface, enum, struct) within the file. It also identifies all the entities that are used by the entities defined.  The connection between both types of entities mentioned above constitutes a structural dependency.
 
 \textbf{Extract and filter co-changing pairs.}
-As presented in sections \ref{sec:filtercommit}, \ref{sec:filterocc}, and \ref{sec:filterstrength}, not every co-changing pair extracted is a logical dependency. For a co-changing pair to be labeled as a logical dependency, it has to meet some criteria.  Each criterion constitutes a filter that a co-changing pair has to pass in order to be called logical dependency. 
-The filters are implemented in the tool and can be combined. The input for each filter is the set of co-changing pairs extracted, and the output is the remaining co-changing pairs that respect the filter criterion. 
+
+The process of extracting and filtering the co-changing pairs is represented in figure \ref{fig:figfiltering}.
+For co-changing pairs extraction, the tool parses each generated diff file.
+For each file, the tool gets the number of changed files and the name of the files. 
+After structural dependencies extraction, the tool knows all the software entities contained in a file. Two entities from two changed files form a co-changing pair. After all the co-changing pairs of one diff file are extracted, the tool moves to the next diff file and extracts the set of co-changing pairs.
+
+As presented in sections \ref{sec:filtercommit}, \ref{sec:filterocc}, and \ref{sec:filterstrength}, not every co-changing pair extracted is a logical dependency. For a co-changing pair to be labeled as a logical dependency, it has to meet some criteria. Each criterion constitutes a filter that a co-changing pair has to pass in order to be called logical dependency.
+The filters are implemented in the tool and can be combined. The input for each filter is the set of co-changing pairs extracted, and the output is the remaining co-changing pairs that respect the filter criterion.
 
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{pairs_filtering.png}
+\caption{Co-changing pairs extraction and filtering.}
+\label{fig:figfiltering}
+\end{figure}
 
 
 \section{Extracting structural dependencies}
