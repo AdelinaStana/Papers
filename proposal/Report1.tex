@@ -433,12 +433,9 @@ The co-changing pairs are filtered out based on two scenarios:
 	\item factor A or factor B $\geq threshold \%$ 
 \end{itemize}
 
-In table \ref{tab:commitstrengthAND} we have on the number of co-changing pairs that resulted after filtering out pairs that have at least one factor below the specified threshold in the column header. 
-In table \ref{tab:commitstrengthOR} we have on the number of co-changing pairs that resulted after filtering out pairs that have both factors below the specified threshold in the column header.
-
 \begin{table}[!h]
 \renewcommand{\arraystretch}{1}
-\caption{Commit strength AND}
+\caption{Ratio of number of filtered co-changing pairs to number of SD, when factor A and factor B $\geq threshold \%$ }
 \label{tab:commitstrengthAND}
 \centering
 \scalebox{0.8}{
@@ -446,33 +443,33 @@ In table \ref{tab:commitstrengthOR} we have on the number of co-changing pairs t
 \hline
 Project &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$	 \\
 \hline
-bluecove	&	3561	&	1768	&	1163	&	1077	&	656	&	535	&	523	&	58	&	30	&	30	\\
-aima-java	&	1392	&	716	&	365	&	231	&	190	&	102	&	24	&	20	&	18	&	18	\\
-powermock	&	1415	&	680	&	411	&	240	&	172	&	88	&	87	&	87	&	87	&	87	\\
-restfb	&	2755	&	546	&	152	&	58	&	36	&	7	&	3	&	3	&	3	&	3	\\
-rxjava	&	4940	&	2510	&	1145	&	774	&	718	&	370	&	265	&	228	&	154	&	154	\\
-metro-jax-ws	&	1474	&	1007	&	657	&	501	&	455	&	231	&	118	&	112	&	106	&	106	\\
-mockito	&	8252	&	4171	&	1853	&	1496	&	1116	&	458	&	269	&	189	&	168	&	168	\\
-grizzly	&	22158	&	3136	&	1815	&	1189	&	996	&	537	&	416	&	360	&	229	&	76	\\
-shipkit	&	955	&	306	&	173	&	91	&	69	&	38	&	30	&	7	&	5	&	5	\\
-OpenClinica	&	2444	&	1306	&	894	&	749	&	600	&	405	&	232	&	185	&	182	&	167	\\
-robolectric	&	1018	&	771	&	575	&	330	&	242	&	220	&	10	&	4	&	4	&	4	\\
-aeron	&	1153	&	566	&	352	&	287	&	219	&	189	&	164	&	61	&	28	&	15	\\
-antlr4	&	53939	&	3424	&	145	&	47	&	31	&	17	&	1	&	1	&	1	&	1	\\
-mcidasv	&	10553	&	2635	&	2159	&	1744	&	1614	&	1484	&	1264	&	1165	&	16	&	16	\\
-ShareX	&	26150	&	3109	&	2843	&	2417	&	2143	&	1038	&	755	&	728	&	4	&	4	\\
-aspnetboilerplate	&	12648	&	3232	&	2129	&	1422	&	917	&	441	&	133	&	78	&	64	&	64	\\
-orleans	&	13850	&	10852	&	9348	&	8527	&	8410	&	3324	&	2693	&	2577	&	2404	&	2404	\\
-cli	&	3458	&	480	&	329	&	243	&	210	&	128	&	119	&	60	&	53	&	53	\\
-cake	&	28621	&	9227	&	7526	&	4132	&	922	&	263	&	80	&	46	&	45	&	45	\\
-Avalonia	&	14147	&	1952	&	1648	&	304	&	212	&	38	&	14	&	11	&	11	&	11	\\
-EntityFrameworkCore	&	169462	&	84850	&	80670	&	79479	&	79087	&	65752	&	41	&	35	&	32	&	32	\\
-jellyfin	&	1160	&	53	&	25	&	20	&	14	&	2	&	1	&	1	&	1	&	1	\\
-PowerShell	&	4166	&	3124	&	381	&	128	&	17	&	3	&	0	&	0	&	0	&	0	\\
-WeiXinMPSDK	&	23312	&	2364	&	1327	&	431	&	120	&	39	&	20	&	4	&	1	&	1	\\
-ArchiSteamFarm	&	630	&	336	&	301	&	297	&	289	&	283	&	238	&	6	&	1	&	0	\\
-VisualStudio	&	6235	&	436	&	259	&	137	&	95	&	64	&	27	&	4	&	3	&	3	\\
-CppSharp	&	1697954	&	17399	&	16929	&	16721	&	16579	&	15812	&	1329	&	1283	&	1249	&	1221	\\
+bluecove	&	1.326	&	0.658	&	0.433	&	0.401	&	0.244	&	0.199	&	0.195	&	0.022	&	0.011	&	0.011	\\
+aima-java	&	0.266	&	0.137	&	0.070	&	0.044	&	0.036	&	0.019	&	0.005	&	0.004	&	0.003	&	0.003	\\
+powermock	&	0.505	&	0.243	&	0.147	&	0.086	&	0.061	&	0.031	&	0.031	&	0.031	&	0.031	&	0.031	\\
+restfb	&	0.822	&	0.163	&	0.045	&	0.017	&	0.011	&	0.002	&	0.001	&	0.001	&	0.001	&	0.001	\\
+rxjava	&	0.234	&	0.119	&	0.054	&	0.037	&	0.034	&	0.018	&	0.013	&	0.011	&	0.007	&	0.007	\\
+metro-jax-ws	&	0.227	&	0.155	&	0.101	&	0.077	&	0.070	&	0.036	&	0.018	&	0.017	&	0.016	&	0.016	\\
+mockito	&	1.590	&	0.804	&	0.357	&	0.288	&	0.215	&	0.088	&	0.052	&	0.036	&	0.032	&	0.032	\\
+grizzly	&	2.073	&	0.293	&	0.170	&	0.111	&	0.093	&	0.050	&	0.039	&	0.034	&	0.021	&	0.007	\\
+shipkit	&	1.495	&	0.479	&	0.271	&	0.142	&	0.108	&	0.059	&	0.047	&	0.011	&	0.008	&	0.008	\\
+OpenClinica	&	0.253	&	0.135	&	0.093	&	0.078	&	0.062	&	0.042	&	0.024	&	0.019	&	0.019	&	0.017	\\
+robolectric	&	0.114	&	0.086	&	0.064	&	0.037	&	0.027	&	0.025	&	0.001	&	0.000	&	0.000	&	0.000	\\
+aeron	&	0.277	&	0.136	&	0.085	&	0.069	&	0.053	&	0.045	&	0.039	&	0.015	&	0.007	&	0.004	\\
+antlr4	&	11.363	&	0.721	&	0.031	&	0.010	&	0.007	&	0.004	&	0.000	&	0.000	&	0.000	&	0.000	\\
+mcidasv	&	3.225	&	0.805	&	0.660	&	0.533	&	0.493	&	0.454	&	0.386	&	0.356	&	0.005	&	0.005	\\
+ShareX	&	6.097	&	0.725	&	0.663	&	0.564	&	0.500	&	0.242	&	0.176	&	0.170	&	0.001	&	0.001	\\
+aspnetboilerplate	&	1.302	&	0.333	&	0.219	&	0.146	&	0.094	&	0.045	&	0.014	&	0.008	&	0.007	&	0.007	\\
+orleans	&	0.816	&	0.640	&	0.551	&	0.503	&	0.496	&	0.196	&	0.159	&	0.152	&	0.142	&	0.142	\\
+cli	&	1.676	&	0.233	&	0.159	&	0.118	&	0.102	&	0.062	&	0.058	&	0.029	&	0.026	&	0.026	\\
+cake	&	2.335	&	0.753	&	0.614	&	0.337	&	0.075	&	0.021	&	0.007	&	0.004	&	0.004	&	0.004	\\
+Avalonia	&	0.846	&	0.117	&	0.098	&	0.018	&	0.013	&	0.002	&	0.001	&	0.001	&	0.001	&	0.001	\\
+EntityFrameworkCore	&	3.377	&	1.691	&	1.608	&	1.584	&	1.576	&	1.310	&	0.001	&	0.001	&	0.001	&	0.001	\\
+jellyfin	&	0.132	&	0.006	&	0.003	&	0.002	&	0.002	&	0.000	&	0.000	&	0.000	&	0.000	&	0.000	\\
+PowerShell	&	1.732	&	1.299	&	0.158	&	0.053	&	0.007	&	0.001	&	0.000	&	0.000	&	0.000	&	0.000	\\
+WeiXinMPSDK	&	3.295	&	0.334	&	0.188	&	0.061	&	0.017	&	0.006	&	0.003	&	0.001	&	0.000	&	0.000	\\
+ArchiSteamFarm	&	0.897	&	0.479	&	0.429	&	0.423	&	0.412	&	0.403	&	0.339	&	0.009	&	0.001	&	0.000	\\
+VisualStudio	&	1.281	&	0.090	&	0.053	&	0.028	&	0.020	&	0.013	&	0.006	&	0.001	&	0.001	&	0.001	\\
+CppSharp	&	99.528	&	1.020	&	0.992	&	0.980	&	0.972	&	0.927	&	0.078	&	0.075	&	0.073	&	0.072	\\
 
 \hline
 \end{tabular}
@@ -482,7 +479,8 @@ CppSharp	&	1697954	&	17399	&	16929	&	16721	&	16579	&	15812	&	1329	&	1283	&	1249	
 
 \begin{table}[!h]
 \renewcommand{\arraystretch}{1}
-\caption{Commit strength OR}
+\caption{Ratio of number of filtered co-changing pairs to number of SD,
+ when factor A or factor B $\geq threshold \%$ }
 \label{tab:commitstrengthOR}
 \centering
 \scalebox{0.8}{
@@ -490,33 +488,34 @@ CppSharp	&	1697954	&	17399	&	16929	&	16721	&	16579	&	15812	&	1329	&	1283	&	1249	
 \hline
 Project &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$	 \\
 \hline
-bluecove	&	3524	&	3170	&	1880	&	1608	&	1125	&	631	&	587	&	124	&	120	&	120	\\
-aima-java	&	2251	&	1466	&	920	&	617	&	541	&	292	&	117	&	107	&	103	&	103	\\
-powermock	&	1422	&	918	&	656	&	500	&	421	&	257	&	255	&	254	&	254	&	254	\\
-restfb	&	2219	&	1124	&	410	&	223	&	196	&	53	&	49	&	49	&	49	&	49	\\
-rxjava	&	5887	&	4353	&	3056	&	2103	&	2089	&	1001	&	925	&	818	&	724	&	724	\\
-metro-jax-ws	&	1754	&	1691	&	1322	&	1118	&	1038	&	687	&	530	&	524	&	518	&	518	\\
-mockito	&	12873	&	7895	&	4691	&	3231	&	2135	&	1034	&	662	&	557	&	524	&	524	\\
-grizzly	&	14237	&	8953	&	5503	&	3421	&	3077	&	1519	&	1246	&	1136	&	961	&	808	\\
-shipkit	&	879	&	692	&	463	&	329	&	271	&	122	&	95	&	67	&	60	&	60	\\
-OpenClinica	&	8012	&	4190	&	3033	&	2474	&	2094	&	1251	&	902	&	788	&	773	&	698	\\
-robolectric	&	3262	&	1092	&	781	&	410	&	280	&	241	&	25	&	19	&	19	&	19	\\
-aeron	&	3248	&	1866	&	1102	&	791	&	664	&	399	&	258	&	127	&	88	&	74	\\
-antlr4	&	53939	&	3789	&	261	&	103	&	53	&	31	&	11	&	10	&	10	&	10	\\
-mcidasv	&	6320	&	3935	&	2807	&	2230	&	1893	&	1549	&	1296	&	1193	&	44	&	44	\\
-ShareX	&	11499	&	5541	&	3930	&	3129	&	2544	&	1229	&	899	&	860	&	73	&	72	\\
-aspnetboilerplate	&	10242	&	7367	&	4790	&	3534	&	2647	&	1267	&	646	&	486	&	446	&	445	\\
-orleans	&	19006	&	16322	&	14409	&	12728	&	12615	&	9482	&	8173	&	8074	&	7901	&	7901	\\
-cli	&	3458	&	1573	&	1156	&	896	&	773	&	554	&	489	&	307	&	293	&	293	\\
-cake	&	23081	&	14674	&	12270	&	6629	&	2274	&	1257	&	237	&	165	&	159	&	159	\\
-Avalonia	&	8538	&	3752	&	2310	&	624	&	470	&	179	&	95	&	52	&	48	&	48	\\
-EntityFrameworkCore	&	132251	&	94750	&	85042	&	81458	&	80668	&	66064	&	296	&	287	&	284	&	284	\\
-jellyfin	&	1160	&	263	&	139	&	93	&	74	&	24	&	19	&	19	&	16	&	16	\\
-PowerShell	&	8308	&	3963	&	558	&	195	&	50	&	10	&	7	&	7	&	7	&	7	\\
-WeiXinMPSDK	&	9498	&	4264	&	2316	&	1016	&	568	&	332	&	105	&	59	&	53	&	53	\\
-ArchiSteamFarm	&	3841	&	994	&	583	&	475	&	404	&	316	&	248	&	16	&	11	&	10	\\
-VisualStudio	&	6235	&	1148	&	693	&	447	&	290	&	193	&	149	&	97	&	93	&	93	\\
-CppSharp	&	938951	&	22909	&	18871	&	17810	&	17568	&	16765	&	7668	&	7556	&	7519	&	7489	\\
+bluecove	&	1.312	&	1.181	&	0.700	&	0.599	&	0.419	&	0.235	&	0.219	&	0.046	&	0.045	&	0.045	\\
+aima-java	&	0.430	&	0.280	&	0.176	&	0.118	&	0.103	&	0.056	&	0.022	&	0.020	&	0.020	&	0.020	\\
+powermock	&	0.508	&	0.328	&	0.234	&	0.179	&	0.150	&	0.092	&	0.091	&	0.091	&	0.091	&	0.091	\\
+restfb	&	0.662	&	0.336	&	0.122	&	0.067	&	0.059	&	0.016	&	0.015	&	0.015	&	0.015	&	0.015	\\
+rxjava	&	0.279	&	0.206	&	0.145	&	0.100	&	0.099	&	0.047	&	0.044	&	0.039	&	0.034	&	0.034	\\
+metro-jax-ws	&	0.271	&	0.261	&	0.204	&	0.172	&	0.160	&	0.106	&	0.082	&	0.081	&	0.080	&	0.080	\\
+mockito	&	2.481	&	1.521	&	0.904	&	0.623	&	0.411	&	0.199	&	0.128	&	0.107	&	0.101	&	0.101	\\
+grizzly	&	1.332	&	0.838	&	0.515	&	0.320	&	0.288	&	0.142	&	0.117	&	0.106	&	0.090	&	0.076	\\
+shipkit	&	1.376	&	1.083	&	0.725	&	0.515	&	0.424	&	0.191	&	0.149	&	0.105	&	0.094	&	0.094	\\
+OpenClinica	&	0.830	&	0.434	&	0.314	&	0.256	&	0.217	&	0.130	&	0.093	&	0.082	&	0.080	&	0.072	\\
+robolectric	&	0.366	&	0.122	&	0.088	&	0.046	&	0.031	&	0.027	&	0.003	&	0.002	&	0.002	&	0.002	\\
+aeron	&	0.781	&	0.449	&	0.265	&	0.190	&	0.160	&	0.096	&	0.062	&	0.031	&	0.021	&	0.018	\\
+antlr4	&	11.363	&	0.798	&	0.055	&	0.022	&	0.011	&	0.007	&	0.002	&	0.002	&	0.002	&	0.002	\\
+mcidasv	&	1.932	&	1.203	&	0.858	&	0.682	&	0.579	&	0.473	&	0.396	&	0.365	&	0.013	&	0.013	\\
+ShareX	&	2.681	&	1.292	&	0.916	&	0.730	&	0.593	&	0.287	&	0.210	&	0.201	&	0.017	&	0.017	\\
+aspnetboilerplate	&	1.055	&	0.759	&	0.493	&	0.364	&	0.273	&	0.130	&	0.067	&	0.050	&	0.046	&	0.046	\\
+orleans	&	1.120	&	0.962	&	0.849	&	0.750	&	0.744	&	0.559	&	0.482	&	0.476	&	0.466	&	0.466	\\
+cli	&	1.676	&	0.762	&	0.560	&	0.434	&	0.375	&	0.269	&	0.237	&	0.149	&	0.142	&	0.142	\\
+cake	&	1.883	&	1.197	&	1.001	&	0.541	&	0.185	&	0.103	&	0.019	&	0.013	&	0.013	&	0.013	\\
+Avalonia	&	0.510	&	0.224	&	0.138	&	0.037	&	0.028	&	0.011	&	0.006	&	0.003	&	0.003	&	0.003	\\
+EntityFrameworkCore	&	2.636	&	1.888	&	1.695	&	1.623	&	1.608	&	1.317	&	0.006	&	0.006	&	0.006	&	0.006	\\
+jellyfin	&	0.132	&	0.030	&	0.016	&	0.011	&	0.008	&	0.003	&	0.002	&	0.002	&	0.002	&	0.002	\\
+PowerShell	&	3.454	&	1.648	&	0.232	&	0.081	&	0.021	&	0.004	&	0.003	&	0.003	&	0.003	&	0.003	\\
+WeiXinMPSDK	&	1.342	&	0.603	&	0.327	&	0.144	&	0.080	&	0.047	&	0.015	&	0.008	&	0.007	&	0.007	\\
+ArchiSteamFarm	&	5.472	&	1.416	&	0.830	&	0.677	&	0.575	&	0.450	&	0.353	&	0.023	&	0.016	&	0.014	\\
+VisualStudio	&	1.281	&	0.236	&	0.142	&	0.092	&	0.060	&	0.040	&	0.031	&	0.020	&	0.019	&	0.019	\\
+CppSharp	&	55.038	&	1.343	&	1.106	&	1.044	&	1.030	&	0.983	&	0.449	&	0.443	&	0.441	&	0.439	\\
+
 
 \hline
 \end{tabular}
@@ -524,32 +523,45 @@ CppSharp	&	938951	&	22909	&	18871	&	17810	&	17568	&	16765	&	7668	&	7556	&	7519	&
 \end{table}
 
 
+In table \ref{tab:commitstrengthAND} we have on the columns the ratio between the number of structural dependencies and the number of co-changing pairs that resulted after filtering out pairs that have at least one factor below the specified threshold in the column header.
+In table \ref{tab:commitstrengthOR} we have on the columns the ratio between the number of structural dependencies and the number of co-changing pairs that resulted after filtering out pairs that have both factors below the specified threshold in the column header.
 
-\section{Overlaps between structural and logical dependencies}
+We calculate the ratio number between the co-changing pairs and the structural dependencies because we want to evaluate the size of the extracted co-changing pairs compared to the size of the structural dependencies from the system. 
+According to surveys \cite{Shtern:2012:CMS:2332427.2332428}, \cite{sar}, the main reason why logical dependencies (a.k.a filtered co-changes) are not used together with structural dependencies is because of their size. So, it is important to us to get at each filtering step an overview regarding the ratio between co-changes size and structural dependencies size.
+
+From the results presented in tables \ref{tab:commitstrengthAND} and \ref{tab:commitstrengthOR} we conclude that the number of co-changing pairs is drastically reduced. In most cases, the number of structural dependencies surpasses the number of co-changing pairs that remain after filtering. But, we do the filtering not only to reduce the size of the co-changing pairs extracted. We do the filtering of co-changing pairs extracted to make sure that the remaining co-changing pairs are indeed logically dependent.
+
+If we filter out all the co-changing pairs that do not update at least half of the time together (actor A and factor B $\geq threshold \%$ ) we remain with a decent quantity of co-changing pairs. Given the size of the output and the connection strength of the co-changing pairs, the remaining co-changing pairs can be considered, at this point, to be logically dependent. 
+
+
+
+
+\section{Overlaps between structural and co-changing pairs}
 \label{sec:overlaps}
+
 A logical dependency can be also a structural dependency and vice-versa, so studying the overlapping between logical and structural dependencies while filtering is important since the intention is to introduce those logical dependencies among with structural dependencies in architectural reconstruction systems. Current studies have shown a relatively small percentage of overlapping between them with and without any kind of filtering \cite{DBLP:journals/jss/AjienkaC17}. This means that a lot of non related entities update together in the versioning system, the goal here is to establish the factors that determine such a small percentage of overlapping \cite{enase19}.
 
-
-In the main series of experiments, for each system, we extracted the structural dependencies and the logical dependencies and determined the overlap between the two dependencies sets, in various experimental conditions. 
+Since we are first extracting co-changing pairs and only after various filters we call the remaining co-changing pairs logically dependent, we will be studying the overlapping between the remaining co-changing pairs after each filtering stage and the structural dependencies. 
+For each system, we extracted the structural dependencies and the co-changing pairs and determined the overlap between the two dependencies sets, in various experimental conditions. 
 
 One variable experimental condition is whether changes located in comments contribute towards logical dependencies. This condition distinguishes between two different cases: 
 \begin{itemize}
-	\item with comments: a change in source code files is counted towards a logical dependency, even if the change is inside comments in all files
-	\item without comments: commits that changed source code files only by editing comments are ignored as logical dependencies
+	\item with comments: a change in source code files is counted as a co-changing pair, even if the change is inside comments in all files
+	\item without comments: commits that changed source code files only by editing comments are ignored
 \end{itemize}
 
 In all cases, we varied the following threshold values: 
  \begin{itemize}
-	\item commit size ($cs$): the maximum size of commit transactions which are accepted to generate logical dependencies. The values for this threshold were 5, 10, 20 and no threshold (infinity).  
+	\item commit size ($cs$): the maximum size of commit transactions which are accepted to generate co-changes. The values for this threshold were 5, 10, 20 and no threshold (infinity).  
 	\item number of occurrences ($occ$): the minimum number of repeated occurrences for a co-change to be counted as logical dependency. The values for this threshold were 1, 2, 3 and 4.  
 \end{itemize}
 
 The six tables below present the synthesis of our experiments. 
 We have computed the following  values:
 \begin{itemize}
-	\item the mean ratio of the number of logical dependencies  (LD) to the number of structural dependencies (SD)
-   \item the mean percentage of structural dependencies that are also logical dependencies (calculated from the number of overlaps divided to the number of structural dependencies)	
-		\item the mean percentage of logical dependencies that are also structural dependencies (calculated from the number of overlaps divided to the number of logical dependencies)
+	\item the mean ratio of the number of co-changes to the number of structural dependencies (SD)
+   	\item the mean percentage of structural dependencies that are also co-changes (calculated from the number of overlaps divided to the number of structural dependencies)	
+	\item the mean percentage of co-changes that are also structural dependencies (calculated from the number of overlaps divided to the number of co-changes)
 \end{itemize}
 
 In all the six tables, \ref{tab:ratio:comm}, \ref{tab:ratio:nocomm}, \ref{tab:percSD:comm}, \ref{tab:percSD:nocomm},
@@ -558,7 +570,7 @@ In all the six tables, \ref{tab:ratio:comm}, \ref{tab:ratio:nocomm}, \ref{tab:pe
 \begin{table}[!h]
 %% increase table row spacing, adjust to taste
 \renewcommand{\arraystretch}{1}
-\caption{Ratio of number of LD to number of SD, case with comments}
+\caption{Ratio of number of co-changes to number of SD, case with comments}
 \label{tab:ratio:comm}
 \centering
 
@@ -577,7 +589,7 @@ $occ\geq 4$	&	0,90	&	2,16	&	2,88	&	33,47	\\
 \begin{table}[!h]
 %% increase table row spacing, adjust to taste
 \renewcommand{\arraystretch}{1}
-\caption{Ratio of number of LD to number of SD, case without comments}
+\caption{Ratio of number of co-changes to number of SD, case without comments}
 \label{tab:ratio:nocomm}
 \centering
 
@@ -596,7 +608,7 @@ $occ\geq 4$	&	0,43	&	1,26	&	1,93	&	22,15	\\
 \begin{table}[!h]
 %% increase table row spacing, adjust to taste
 \renewcommand{\arraystretch}{1}
-\caption{Percentage of SD that are also LD, case with comments}
+\caption{Percentage of SD that are also co-changes, case with comments}
 \label{tab:percSD:comm}
 \centering
 
@@ -615,7 +627,7 @@ $occ\geq 4$	&	6,58	&	10,95	&	15,76	&	47,12	\\
 \begin{table}[!h]
 %% increase table row spacing, adjust to taste
 \renewcommand{\arraystretch}{1}
-\caption{Percentage of SD that are also LD, case without comments}
+\caption{Percentage of SD that are also co-changes, case without comments}
 \label{tab:percSD:nocomm}
 \centering
 
@@ -634,7 +646,7 @@ $occ\geq 4$	&	5,85	&	9,94	&	14,27	&	39,07	\\
 \begin{table}[!h]
 %% increase table row spacing, adjust to taste
 \renewcommand{\arraystretch}{1}
-\caption{Percentage of LD that are also SD, case with comments}
+\caption{Percentage of co-changes that are also SD, case with comments}
 \label{tab:percLD:comm}
 \centering
 
@@ -653,7 +665,7 @@ $occ\geq 4$	&	18,96	&	15,28	&	12,94	&	3,67	\\
 \begin{table}[!h]
 %% increase table row spacing, adjust to taste
 \renewcommand{\arraystretch}{1}
-\caption{Percentage of LD that are also SD, case without comments}
+\caption{Percentage of co-changes that are also SD, case without comments}
 \label{tab:percLD:nocomm}
 \centering
 \begin{tabular}{|c|c|c|c|c|}
@@ -668,16 +680,57 @@ $occ\geq 4$	&	19,22	&	15,59	&	13,30	&	4,21	\\
 \end{tabular}
 \end{table}
 
+
+
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1}
+\caption{Percentage of SD that are also co-changing pairs after connection strength filtering. }
+\label{tab:percSDstrength}
+\centering
+\scalebox{0.8}{
+\begin{tabular}{|c|cccccccccc|c|}
+\hline
+Condition &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$	 \\
+\hline
+							
+factor A and factor B	&	11.20	&	6.80		&	4.44	&	3.25	&	2.58	&	1.74		&	1.16	&	0.57	&	0.35	&	0.33	\\
+factor A or factor B	&	15.94	&	11.02	&	7.56	&	5.59		&	4.52	&	2.90	&	2.00	&	1.33	&	1.04	&	1.02	\\
+								
+\hline
+\end{tabular}
+}
+\end{table}
+
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1}
+\caption{Percentage of co-changing pairs that are SD after connection strength filtering. }
+\label{tab:percLDtrength}
+\centering
+\scalebox{0.8}{
+\begin{tabular}{|c|cccccccccc|c|}
+\hline
+Condition &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$	 \\
+\hline
+factor A and factor B	&	10.95	&	20.61	&	23.73	&	26.75	&	28.57	&	33.31	&	33.43	&	38.34	&	42.52	&	39.41	\\
+factor A or factor B		&	12.19	&   16.85	&	19.41	&	20.70	&	21.63	&	22.84	&	21.86	&	23.08	&	24.00	&	22.73	\\						
+
+\hline
+\end{tabular}
+}
+\end{table}
+
 In order to assess the influence of comments, we compare pairwise Tables \ref{tab:ratio:comm} and \ref{tab:ratio:nocomm},  
 Tables \ref{tab:percSD:comm} and \ref{tab:percSD:nocomm} and Tables \ref{tab:percLD:comm} and \ref{tab:percLD:nocomm}. 
 We observe that, although there are some differences between pairs of measurements done in similar conditions with and without comments, the differences are not significant.
 
-On the other hand, the overlap between structural and logical dependencies is given by the number of pairs of classes that have both structural and logical dependencies. We evaluate this overlap as a percentage relative to the number of structural dependencies in Tables \ref{tab:percSD:comm} and \ref{tab:percSD:nocomm}, respectively as  a percentage relative to the number of logical dependencies in Tables \ref{tab:percLD:comm} and \ref{tab:percLD:nocomm}.
+On the other hand, the overlap between structural and co-changes is given by the number of pairs of classes that have both structural and co-change dependencies. We evaluate this overlap as a percentage relative to the number of structural dependencies in Tables \ref{tab:percSD:comm},\ref{tab:percSD:nocomm} and \ref{tab:percSDstrength}, respectively as a percentage relative to the number of co-changes in Tables \ref{tab:percLD:comm},\ref{tab:percLD:nocomm}, \ref{tab:percLDtrength}.
 
-A first observation from Tables \ref{tab:percSD:comm} and \ref{tab:percSD:nocomm} is that not all pairs of classes with structural dependencies co-change. The biggest value for the percentage of structural dependencies that are also logical dependencies is 76.5\% obtained in the case when no filterings are done.
+A first observation from Tables \ref{tab:percSD:comm}, \ref{tab:percSD:nocomm}, and \ref{tab:percSDstrength} is that not all pairs of classes with structural dependencies co-change. The biggest value for the percentage of structural dependencies that are also co-changes is 76.5\% obtained in the case when no filterings are done.
 
-From Tables \ref{tab:percLD:comm} and \ref{tab:percLD:nocomm} we notice that the percentage of logical dependencies which are also structural is always low to very low. This means that most co-changes are recorded between classes that have no structural dependencies to each other \cite{enase19}.   
+From Tables \ref{tab:percLD:comm}, \ref{tab:percLD:nocomm}, and \ref{tab:percLDtrength} we notice that the percentage of co-changes which are also structural is always low to very low. This means that most co-changes are recorded between classes that have no structural dependencies to each other \cite{enase19}.   
  
+
+
 
 \chapter{Conclusions}
 \label{conclusions}
