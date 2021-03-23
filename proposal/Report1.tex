@@ -735,11 +735,18 @@ From Tables \ref{tab:percLD:comm}, \ref{tab:percLD:nocomm}, and \ref{tab:percLDt
 \chapter{Conclusions}
 \label{conclusions}
 
-Different applications based on dependency analysis could be improved if, beyond structural dependencies, they also take into account the hidden non-structural dependencies. For example, works  which investigate different methods for architectural reconstruction \cite{SoraConti}, \cite{SoraSem13}, \cite{PagerankENASE},  all of them based on the information provided by structural dependencies, could enrich their dependency models by taking into account also logical dependencies. However, a thorough survey \cite{sar} shows that historical information has been rarely used in architectural reconstruction. 
-The software architecture is important in order to understand and maintain a system. Often code updates are made without checking or updating the architecture. This kind of updates cause the architecture to drift from the reality of the code over time \cite{sar}.
-So reconstructing the architecture and verifying if still matches the reality is important \cite{Kalliamvakou2016}. 
+In order to obtain logical dependencies, we have to filter the co-changes extracted from the versioning system.
+The filtering will increase the confidence that the remaining co-changing pairs are indeed logically coupled.
+And also, will help to reduce the size of the co-changes extracted. This is an important aspect since surveys show that architectural reconstruction is mainly made based on structural dependencies \cite{Shtern:2012:CMS:2332427.2332428}, \cite{sar}, the main reason why historical information is not used in architectural reconstruction is the size of the extracted information.
 
-Surveys also show that architectural reconstruction is mainly made based on structural dependencies \cite{Shtern:2012:CMS:2332427.2332428}, \cite{sar}, the main reason why historical information is rarely used in architectural reconstruction is the size of the extracted information.
+Different applications based on dependency analysis could be improved if, beyond structural dependencies, they also take into account the hidden non-structural dependencies. For example, works  which investigate different methods for architectural reconstruction \cite{SoraConti}, \cite{SoraSem13}, \cite{PagerankENASE}, all of them based on the information provided by structural dependencies, could enrich their dependency models by taking into account also logical dependencies.  
+
+The software architecture is important in order to understand and maintain a system. Often code updates are made without checking or updating the architecture. This kind of updates cause the architecture to drift from the reality of the code over time \cite{sar}.
+So reconstructing the architecture and verifying if still matches the reality is important \cite{Kalliamvakou2016}. An increased knowledge of the software system help activities such as bug correction, enhancement, reuse and documentation \cite{Comprehension}, \cite{1199197}, \cite{2003:XLC:851042.857028}.
+
+The usage of logical dependencies could have an impact also in fields like software comprehension \cite{article-cognitive-processes}, fault location \cite{fault-localization}, \cite{program-failures} and error proneness \cite{67595}, \cite{1702015}.
+
+
 
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
