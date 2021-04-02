@@ -43,14 +43,21 @@
 \chapter{Introduction}
 
 
-This report presents the results obtained so far on the proposed thesis. The goal of the thesis is to develop methods for analyzing legacy software systems, focusing on using historical information describing the evolution of the systems extracted from the versioning systems.
+\hspace{5mm} The goal of the thesis is to develop methods for analyzing legacy software systems by using historical information extracted from the versioning systems.
 
-We have developed a tool that extracts and processes the needed information from a software system. The tool workflow and technologies used are presented in section \ref{sec:tool}. The primary information extracted by the tool is described in sections \ref{sec:sd_extraction} and \ref{sec:copairs_extraction}. The filtering methods selected to be applied to the extracted information are presented in sections \ref{sec:filtercommit}, \ref{sec:filterocc}, and \ref{sec:filterstrength}.
+This first report presents the experiments conducted so far and the results obtained in filtering the extracted information from the versioning system. 
+
+The information extracted from the versioning system is under the form of pairs of classes that record co-changes (co-changing pairs). 
+We filter the co-changing pairs to increase their veridicality and to decrease the size of the extracted information. 
+We want to decrease the size of the extracted information because other researchers identified that one possible explanation why historical information is rarely used is the size of the extracted information \cite{Shtern:2012:CMS:2332427.2332428}, \cite{sar}.
+
+ Also, by increasing the veridicality, we mean to increase the confidence that a co-changing pair is truly related and not just an update coincidence in the versioning system. That is why at the end of the filtering process, we are calling the remaining co-changing pairs logical dependencies.  The filtering process revolves around the commit size and the occurrence of the co-changing pairs in the versioning system history and is presented in sections \ref{sec:filtercommit}, \ref{sec:filterocc}, and \ref{sec:filterstrength}. Each filtering section contains the detailed results obtained after analyzing all the software systems and conclusions based on the results. 
+
+
+In order to do the operations described above,  we have developed a tool that extracts and processes the needed information from a software system. The tool workflow and technologies used are presented in section \ref{sec:tool}. The primary information extracted by the tool is described in sections \ref{sec:sd_extraction} and \ref{sec:copairs_extraction}. 
 
 To perform measurements based on our assumptions, we have selected a set of 27 object-oriented software systems presented in section \ref{sec:dataset}. 
 For each listed software system, the tool extracts, filters, and collects the information needed.
-
-Each filtering section (\ref{sec:filtercommit}, \ref{sec:filterocc}, and \ref{sec:filterstrength}) contains the detailed results obtained after analyzing all the software systems and conclusions based on the results. 
 
 Section \ref{sec:overlaps} focuses on the overlappings between the extracted information from the code and filtered information from the versioning systems. 
 
