@@ -51,7 +51,7 @@ The information extracted from the versioning system is under the form of pairs 
 We filter the co-changing pairs to increase their veridicality and to decrease the size of the extracted information. 
 We want to decrease the size of the extracted information because other researchers identified that one possible explanation why historical information is rarely used is the size of the extracted information \cite{Shtern:2012:CMS:2332427.2332428}, \cite{sar}.
 
- Also, by increasing the veridicality, we mean to increase the confidence that a co-changing pair is truly related and not just an update coincidence in the versioning system. That is why at the end of the filtering process, we are calling the remaining co-changing pairs logical dependencies.  The filtering process revolves around the commit size and the occurrence of the co-changing pairs in the versioning system history and is presented in sections \ref{sec:filtercommit}, \ref{sec:filterocc}, and \ref{sec:filterstrength}. Each filtering section contains the detailed results obtained after analyzing all the software systems and conclusions based on the results. 
+ Also, by increasing the veridicality, we mean to increase the confidence that a co-changing pair is truly related and not just an update coincidence in the versioning system. That is why at the end of the filtering process, we are calling the remaining co-changing pairs logical dependencies.  The filtering process revolves around the commit size and the occurrence of the co-changing pairs in the versioning system history. The filtering based on commit size is presented in section \ref{sec:filtercommit} and filtering based on co-changing pairs occurrence is presented in sections \ref{sec:filterocc}, and \ref{sec:filterstrength}. Each filtering section contains the detailed results obtained and conclusions based on the results. 
 
 
 In order to do the operations described above,  we have developed a tool that extracts and processes the needed information from a software system. The tool workflow and technologies used are presented in section \ref{sec:tool}. The primary information extracted by the tool is described in sections \ref{sec:sd_extraction} and \ref{sec:copairs_extraction}. 
@@ -59,7 +59,7 @@ In order to do the operations described above,  we have developed a tool that ex
 To perform measurements based on our assumptions, we have selected a set of 27 object-oriented software systems presented in section \ref{sec:dataset}. 
 For each listed software system, the tool extracts, filters, and collects the information needed.
 
-Section \ref{sec:overlaps} focuses on the overlappings between the extracted information from the code and filtered information from the versioning systems. 
+Section \ref{sec:overlaps} focuses on the overlappings between the extracted information from the code and the filtered information from the versioning systems. 
 
 The conclusions and observations based on the performed measurements are presented in chapter \ref{conclusions}.
 
@@ -213,7 +213,7 @@ We have analyzed a set of open-source projects found on GitHub\footnote{http://g
 
 
 
-\section{Filtering based on size of commit transactions}
+\section{Filtering based on the size of commit transactions}
 \label{sec:filtercommit}
 
 As presented in section \ref{sec:copairs_extraction}, according to surveys,  co-changing pairs are not used because of their size. One system can have millions of co-changing pairs.
@@ -414,7 +414,7 @@ So, filtering with a threshold of 4 for the minimum number of occurrences will i
 
 
 
-\section{Filtering based on connection strenght}
+\section{Filtering based on connection strength}
 \label{sec:filterstrength}
 
 In section \ref{sec:filtercommit} we filtered the co-changing pairs extracted from the versioning system history based on the commit size. Based on the results obtained, we decided to filter out all co-changing pairs extracted from commits with more than 10 files changed. 
@@ -543,7 +543,7 @@ According to surveys \cite{Shtern:2012:CMS:2332427.2332428}, \cite{sar}, the mai
 
 From the results presented in tables \ref{tab:commitstrengthAND} and \ref{tab:commitstrengthOR} we conclude that the number of co-changing pairs is drastically reduced. In most cases, the number of structural dependencies surpasses the number of co-changing pairs that remain after filtering. But, we do the filtering not only to reduce the size of the co-changing pairs extracted. We do the filtering of co-changing pairs extracted to make sure that the remaining co-changing pairs are indeed logically dependent.
 
-If we filter out all the co-changing pairs that do not update at least half of the time together (actor A and factor B $\geq threshold \%$ ) we remain with a decent quantity of co-changing pairs. Given the size of the output and the connection strength of the co-changing pairs, the remaining co-changing pairs can be considered, at this point, to be logically dependent. 
+If we filter out all the co-changing pairs that do not update at least half of the time together (factor A and factor B $\geq 50 \%$ ) we remain with a decent quantity of co-changing pairs. Given the size of the output and the connection strength of the co-changing pairs, the remaining co-changing pairs can be considered, at this point, to be logically dependent. 
 
 
 
@@ -749,15 +749,27 @@ From Tables \ref{tab:percLD:comm}, \ref{tab:percLD:nocomm}, and \ref{tab:percLDt
 
 In order to obtain logical dependencies, we have to filter the co-changes extracted from the versioning system.
 The filtering will increase the confidence that the remaining co-changing pairs are indeed logically coupled.
-And also, will help to reduce the size of the co-changes extracted. This is an important aspect since surveys show that architectural reconstruction is mainly made based on structural dependencies \cite{Shtern:2012:CMS:2332427.2332428}, \cite{sar}, the main reason why historical information is not used in architectural reconstruction is the size of the extracted information.
+And also will help to reduce the size of the co-changes extracted. 
 
-Different applications based on dependency analysis could be improved if, beyond structural dependencies, they also take into account the hidden non-structural dependencies. For example, works  which investigate different methods for architectural reconstruction \cite{SoraConti}, \cite{SoraSem13}, \cite{PagerankENASE}, all of them based on the information provided by structural dependencies, could enrich their dependency models by taking into account also logical dependencies.  
+We defined 3 methods for filtering the co-changing pairs into logical dependencies. For each method, we analyzed the extracted information from the history of the systems defined in section \ref{sec:dataset}, and we drew the conclusions presented below.
 
-The software architecture is important in order to understand and maintain a system. Often code updates are made without checking or updating the architecture. This kind of updates cause the architecture to drift from the reality of the code over time \cite{sar}.
-So reconstructing the architecture and verifying if still matches the reality is important \cite{Kalliamvakou2016}. An increased knowledge of the software system help activities such as bug correction, enhancement, reuse and documentation \cite{Comprehension}, \cite{1199197}, \cite{2003:XLC:851042.857028}.
+\textbf{Filtering based on the size of commit transactions. }
+For this, we filter out each commit transaction that has more files changed than an established threshold.
+This type of filtering will significantly reduce the amount of co-changing pairs extracted. Big commit transactions (more than 10 files) are rather related to refactoring of names, spellchecks, or file reformating and not to actual code changes. Less than 10\% of the total commits are commits with more than 10 files. So filtering out every commit that has more than 10 files changed will not impact so much the size of the studied information from the versioning system. After filtering we are remaining with 90\% of commits from which we can extract co-changing pairs.
 
-The usage of logical dependencies could have an impact also in fields like software comprehension \cite{article-cognitive-processes}, fault location \cite{fault-localization}, \cite{program-failures} and error proneness \cite{67595}, \cite{1702015}.
 
+\textbf{Filtering based on the number of occurrences. }
+In this step, we filter out each co-changing pair that does not occur in the versioning system more than an established threshold.
+This type of filtering is meant to increase the confidence that the extracted co-changing pairs are logically coupled.
+We decided not to go any further with this type of filtering. Mainly because in our experiments, we observed that if we try to go higher with the occurrences threshold, we risk filtering all the existing co-changing pairs for some small systems.
+From this filtering method, we concluded that we need to consider the system size and the occurrence trends for each system in particular, rather than setting a "hard" threshold for all the studied systems.
+
+\textbf{Filtering based on connection strength. }
+The connection strength is calculated based on the connection factors of both entities that form a co-changing pair. For a co-changing pair formed by entities A and B, the connection factor of entity A with entity B is the percentage from the total commits involving A that contains entity B, the same applies for B with A.
+This filter type is meant to establish how important, to one another, the entities that form a co-changing pair are. 
+If we filter out all the co-changing pairs that do not update at least half of the time together (factor A and factor B $\geq 50 \%$ ) we remain with a decent quantity of co-changing pairs. And at this point, we can say that the remaining co-changing pairs are logical dependencies.
+
+Based on all the conclusions described above, further in our research, we will use the filter based on commit transaction size ( filter out commits that have more than 10 files changed) and the filter based on connection strength. 
 
 
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
