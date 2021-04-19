@@ -38,34 +38,28 @@
 
 \chapter{Introduction}
 
-In order to obtain logical dependencies, we have to filter the co-changes extracted from the versioning system.
-The filtering will increase the confidence that the remaining co-changing pairs are indeed logically coupled.
-And also will help to reduce the size of the co-changes extracted. 
+\hspace{5mm} The goal of the thesis is to develop methods for analyzing legacy software systems by using historical information extracted from the versioning systems.
 
-We defined 3 methods for filtering the co-changing pairs into logical dependencies. For each method, we analyzed the extracted information from the history of the systems defined in section \ref{sec:dataset}, and we drew the conclusions presented below.
+This second report presents results obtained by using the extracted logical dependencies.
 
-\textbf{Filtering based on the size of commit transactions. }
-For this, we filter out each commit transaction that has more files changed than an established threshold.
-This type of filtering will significantly reduce the amount of co-changing pairs extracted. Big commit transactions (more than 10 files) are rather related to refactoring of names, spellchecks, or file reformating and not to actual code changes. Less than 10\% of the total commits are commits with more than 10 files. So filtering out every commit that has more than 10 files changed will not impact so much the size of the studied information from the versioning system. After filtering we are remaining with 90\% of commits from which we can extract co-changing pairs.
+In the first report, we presented the filtering process of co-changing pairs into logical dependencies. 
+The co-changing pairs are pairs of classes that record co-changes in the versioning system. The logical dependencies are those co-changing pairs that remain after filtering. We filter the co-changing pairs to increase their veridicality and to decrease the size of the extracted information. 
+Based on the results obtained in the first report, we decided to work with the following filters: the filter based on commit size (cs) and the filter based on connection strength. 
+With the filter based on commit size, we filter out each commit transaction with more than 10 files changed.
+This type of filtering will reduce the amount of co-changing pairs extracted. Big commit transactions (more than 10 files) can be related to refactoring of names, spellchecks, or file reformating and not to actual code changes.
 
+With the filter based on connection strength, we filter out co-changing pairs that are not strongly connected in the versioning system. For this filter, we did not previously establish a hard threshold value. Mainly because we want to check how different values of the threshold will impact the results obtained after using the extracted logical dependencies. 
 
-\textbf{Filtering based on the number of occurrences. }
-In this step, we filter out each co-changing pair that does not occur in the versioning system more than an established threshold.
-This type of filtering is meant to increase the confidence that the extracted co-changing pairs are logically coupled.
-We decided not to go any further with this type of filtering. Mainly because in our experiments, we observed that if we try to go higher with the occurrences threshold, we risk filtering all the existing co-changing pairs for some small systems.
-From this filtering method, we concluded that we need to consider the system size and the occurrence trends for each system in particular, rather than setting a "hard" threshold for all the studied systems.
+This second report mainly focuses on using the logical dependencies extracted in identifying key (important) classes in a software system.
+The identification of key classes was previously researched solely by using software dependencies. Our approach is to take previously researched software systems and results obtained based on those systems as a baseline. In addition to the baseline approach, we will add the logical dependencies extracted and export the results. 
+The results obtained 
 
-\textbf{Filtering based on connection strength. }
-The connection strength is calculated based on the connection factors of both entities that form a co-changing pair. For a co-changing pair formed by entities A and B, the connection factor of entity A with entity B is the percentage from the total commits involving A that contains entity B, the same applies for B with A.
-This filter type is meant to establish how important, to one another, the entities that form a co-changing pair are. 
-If we filter out all the co-changing pairs that do not update at least half of the time together (factor A and factor B $\geq 50 \%$ ) we remain with a decent quantity of co-changing pairs. And at this point, we can say that the remaining co-changing pairs are logical dependencies.
-
-Based on all the conclusions described above, further in our research, we will use the filter based on commit transaction size ( filter out commits that have more than 10 files changed) and the filter based on connection strength. 
+ But we also perform comparisons between the number of logical dependencies and other defined software metrics. 
 
 
-
-\chapter{Usage of the extracted dependencies}
+\chapter{Usage of the extracted logical dependencies}
 \section{Data set used}
+\label{dataset}
 To extract the key classes based on logical dependencies, we took the same set of data used in another research involving key class detection. The research of I. Sora et al \cite{Finding-key-classes} takes into consideration structural public dependencies that are extracted using static analysis techniques and was performed on the object-oriented systems presented in table \ref{tab:keyclass:overview}.
 
 The requirements for a system to qualify as suited for investigations using logical dependencies are: has to be on GitHub, has to have release tags to identify the version, and also has to have an increased number of commits. 
