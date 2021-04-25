@@ -221,7 +221,7 @@ The expected results from the research are based on classes labeled as important
 The true positives (TP) are the classes found in the reference solution and also in the top TOP ranked classes. False positives (FP) are the classes that are not in the reference solution but are in the TOP ranked classes.
 True Negatives (TN) are classes that are found neither in the reference solution nor in the TOP ranked classes. False Negatives (FN) are classes that are found in the reference solution but not found in the TOP ranked classes.
 
-In table \ref{tab:previousresults} are presented the ROC-AUC values for different attributes computed for the systems Ant, Tomcat Catalina, and Hibernate.
+In table \ref{tab:previousresults} are presented the ROC-AUC values for different attributes computed for the systems Ant, Tomcat Catalina, and Hibernate. We intend to compare these values with the new values obtained by using also logical dependencies in key class detection.
 
 \begin{table}[!h]
 \renewcommand{\arraystretch}{1}
@@ -245,24 +245,42 @@ CONN\_TOTAL	&	0.94630	&	0.93903	&	0.94630	\\
 }
 \end{table}
 
+
+
 \subsection{Measurements using logical dependencies}
 \label{sec:current_measurements}
 
-To evaluate the results obtained using logical dependencies, we used the same tool used in section X. 
-Previously, the tool used only structural dependencies extracted from the source code of the software systems. In this chapter, we intend to add also the logical dependencies from the versioning system to observe if the results could be improved or not.
+The logical dependencies are those co-changing pairs extracted from the versioning system history that remain after filtering. The filtering part consists of applying two filters: the filter based on commit size and the filter based on connection strength. 
 
-For this, the logical dependencies used were filtered based on the update percentage of the entities involved. We define a logical dependency as a connection observed via commits in the versioning system between entity A and entity B. The update percentage of entity A with entity B is determined as follows: the percentage from the total commits involving A that contains entity B.
 
-\[ update\ percentage\ for\ A 
+To determine the connection strength of a pair, we first need to calculate the connection factors for both entities that form a co-changing pair.
+Assuming that we have a co-changing pair formed by entities A and B, the connection factor of entity A with entity B is the percentage from the total commits involving A that contains entity B. The connection factor of entity B with entity A is the percentage from the total commits involving B that contain also entity A.
+
+\[ connection\ factor\ for\ A 
   = \dfrac{100 * commits\ involving\ A\ and\ B}{total\ nr\ of\ commits\ involving\ A}
 \]
 
-\[ update\ percentage\ for\ B 
+\[ connection\ factor\ for\ B 
   = \dfrac{100 * commits\ involving\ A\ and\ B}{total\ nr\ of\ commits\ involving\ B}
 \]
 
-We calculated the update percentage for each side of the connection (LD) and filtered the connections found based on it. The rule set is that both entities had to have an update percentage with each other greater than the threshold value.
-In tables \ref{tab:measurementscombined:ant}, \ref{tab:measurementscombined:tomcat}, and \ref{tab:measurementscombined:hibernate}, we introduced the logical dependencies among structural dependencies. We started with logical dependencies that have a percentage of update grater then 10\%, which means that in at least 10\% of the commits involving A or B, A and B update together. Then we increased the threshold value by 10 until we remained only with entities that update in all the commits together.
+We calculated the connection factor for each entity involved in a co-changing pair and filtered the co-changing pairs based on it. The rule set is that both entities had to have a connection factor with each other greater than the threshold value.
+
+After the filtering part, the remaining co-changing pairs, now called logical dependencies, are exported in CSV files.
+
+To evaluate the results obtained using logical dependencies, we used the same tool used in the previous research presented in section \ref{sec:previous_measurements}.
+Previously, the tool used only structural dependencies extracted from the source code of the software systems. In this section, we intend to add also the logical dependencies from the versioning system in order to observe if the results can be improved or not. The workflow is presented in figure \ref{fig:workflow_key}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{key_class_workflow.png}
+\caption{Workflow}
+\label{fig:workflow_key}
+\centering
+\end{figure}
+
+
+In tables \ref{tab:measurementscombined:ant}, \ref{tab:measurementscombined:tomcat}, and \ref{tab:measurementscombined:hibernate}, we introduced the logical dependencies among structural dependencies. We started with logical dependencies that have a connection strength grater then 10\%, which means that in at least 10\% of the commits involving A or B, A and B update together. Then we increased the threshold value by 10 until we remained only with entities that update in all the commits together.
 
 As for the new results obtained, in tables \ref{tab:measurementscombined:ant}, \ref{tab:measurementscombined:tomcat}, and \ref{tab:measurementscombined:hibernate}, highlighted with orange, are the values that are close to the previously registered values but did not surpass them. Highlighted with green are values that are better than the previously registered values.
 
@@ -274,7 +292,7 @@ As for the new results obtained, in tables \ref{tab:measurementscombined:ant}, \
 \scalebox{0.8}{
 \begin{tabular}{|c|cccccccccc|c|}
 \hline
-Metrics &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$		&	Previous \\
+Metrics &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$		&	Baseline \\
 \hline
 
 PR\_U2\_W	&	0.924	&	0.925	&	0.926	&	0.927	&	0.927	&	0.927	&	\cellcolor{lightgreen}0.929	&	0.928	&	0.928	&	0.928	&	0.929	\\
@@ -297,7 +315,7 @@ CON\_T	&	0.840	&	0.886	&	0.904	&	0.909	&	0.915	&	0.923	&	0.932	&	0.935	&	\cellco
 \scalebox{0.8}{
 \begin{tabular}{|c|cccccccccc|c|}
 \hline
-Metrics &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$		&	Previous \\
+Metrics &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$		&	Baseline \\
 \hline
 
 PR\_U2\_W	&	0.910	&	0.917	&	0.923	&	\cellcolor{lightgreen}0.924	&	\cellcolor{lightgreen}0.924	&	\cellcolor{lightgreen}0.924	&	\cellcolor{lightgreen}0.924	&	\cellcolor{lightgreen}0.924	&	\cellcolor{lightgreen}0.924	&	\cellcolor{lightgreen}0.924	&	0.923	\\
@@ -321,7 +339,7 @@ CON\_T	&	0.868	&	0.906	&	0.930	&	0.936	&	0.937	&	\cellcolor{lightorange}0.938	&	
 \scalebox{0.8}{
 \begin{tabular}{|c|cccccccccc|c|}
 \hline
-Metrics &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$		&	Previous \\
+Metrics &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$		&	Baseline \\
 \hline
 
 PR\_U2\_W	&	0.954	&	0.957	&	\cellcolor{lightorange}0.958	&	0.958	&	0.958	&	0.958	&	0.958	&	0.958	&	0.958	&	0.958	&	0.958	\\
@@ -351,7 +369,7 @@ The central classes may have a better design than the rest of the classes, which
 \scalebox{0.8}{
 \begin{tabular}{|c|cccccccccc|c|}
 \hline
-Metrics &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$		&	Previous \\
+Metrics &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$		&	Baseline \\
 \hline
 
 PR\_U2\_W	&	0.720	&	0.627	&	0.718	&	0.703	&	0.732	&	0.824	&	0.852	&	\cellcolor{lightorange}0.881	&	0.876	&	0.876	&	0.929	\\
@@ -398,7 +416,7 @@ CON\_T	&	0.654	&	0.611	&	0.636	&	0.697	&	0.754	&	0.776	&	0.786	&	\cellcolor{ligh
 \scalebox{0.8}{
 \begin{tabular}{|c|cccccccccc|c|}
 \hline
-Metrics &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$		&	Previous \\
+Metrics &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$		&	Baseline \\
 \hline
 
 PR\_U2\_W	&	0.657	&	0.564	&	0.601	&	0.619	&	0.622	&	0.650	&	0.653	&	\cellcolor{lightorange}0.654	&	0.654	&	0.654	&	0.958	\\
