@@ -45,21 +45,25 @@ This second report presents results obtained by using the extracted logical depe
 In the first report, we presented the filtering process of co-changing pairs into logical dependencies. 
 The co-changing pairs are pairs of classes that record co-changes in the versioning system. The logical dependencies are those co-changing pairs that remain after filtering. We filter the co-changing pairs to increase their veridicality and to decrease the size of the extracted information. 
 Based on the results obtained in the first report, we decided to work with the following filters: the filter based on commit size (cs) and the filter based on connection strength. 
-With the filter based on commit size, we filter out each commit transaction with more than 10 files changed.
-This type of filtering will reduce the amount of co-changing pairs extracted. Big commit transactions (more than 10 files) can be related to refactoring of names, spellchecks, or file reformating and not to actual code changes.
+With the filter based on commit size, we filter out each commit transaction with more than 10 files changed. Big commit transactions (more than 10 files) can be related to refactoring of names, spellchecks, or file reformating and not to actual code changes.
+This filter will reduce the amount of co-changing pairs extracted. 
 
-With the filter based on connection strength, we filter out co-changing pairs that are not strongly connected in the versioning system. For this filter, we did not previously establish a hard threshold value. Mainly because we want to check how different values of the threshold will impact the results obtained after using the extracted logical dependencies. 
+With the filter based on connection strength, we filter out co-changing pairs that are not strongly connected in the versioning system. For this filter, we did not previously establish a hard threshold value because we want to check how different values of the threshold will impact the results obtained after using the extracted logical dependencies.
+
 
 This second report mainly focuses on using the logical dependencies extracted in identifying key (important) classes in a software system.
-The identification of key classes was previously researched solely by using software dependencies. Our approach is to take previously researched software systems and results obtained based on those systems as a baseline. In addition to the baseline approach, we will add the logical dependencies extracted and export the results. 
-The results obtained 
+The identification of key classes was previously researched solely by using software dependencies. Our approach is to take previously researched software systems and the results obtained based on those systems as a baseline. In addition to the baseline approach of using only structural dependencies, we will add the logical dependencies extracted, export the results, and compare them with the baseline results. 
 
- But we also perform comparisons between the number of logical dependencies and other defined software metrics. 
+
+Additionally, in this report, we will compare the number of logical dependencies with other software metrics. With this comparison, we mainly want to observe if the number of logical dependencies can be connected to other metrics or if is complementary with other metrics.
+
+The report is structured as follows: in section \ref{sec:definition} we present the current state of research in identifying key classes. The dataset used in the baseline research and the software systems from that dataset that we have been able to work with is presented in section \ref{sec:dataset}.  The results obtained by the baseline research are presented in section \ref{sec:previous_measurements}, section \ref{sec:current_measurements} presents the new results obtained by adding logical dependencies.
+Finally, in section \ref{sec:metrics} the comparison between logical dependencies number and other software metrics is discussed. 
 
 
 \chapter{Usage of the extracted logical dependencies}
 \section{Data set used}
-\label{dataset}
+\label{sec:dataset}
 To extract the key classes based on logical dependencies, we took the same set of data used in another research involving key class detection. The research of I. Sora et al \cite{Finding-key-classes} takes into consideration structural public dependencies that are extracted using static analysis techniques and was performed on the object-oriented systems presented in table \ref{tab:keyclass:overview}.
 
 The requirements for a system to qualify as suited for investigations using logical dependencies are: has to be on GitHub, has to have release tags to identify the version, and also has to have an increased number of commits. 
@@ -136,6 +140,7 @@ S15	&	Wro4J	&	1.6.3	&	v1.6.3	&	2871	\\
 
 \section{Identifying key classes using logical dependencies}
 \subsection{Definition and previous work}
+\label{sec:definition}
 Zaidman et al \cite{ZaidmanJurnal} were the first to introduce the concept of key classes and it refers to classes that can be found in documents written to provide an architectural overview of the system or an introduction to the system structure. 
 Tahvildari and Kontogiannis have a more detailed definition regarding key classes concept: “Usually, the most important concepts of a system are implemented by very few key classes which can be characterized by the specific properties. These classes, which we refer to as key classes, manage many other classes or use them in order to implement their functionality. The key classes are tightly coupled with other parts of the system. Additionally, they tend to be rather complex, since they implement much of the legacy system’s functionality” \cite{Tahvildari2004ImprovingDQ}.
 Also, other researchers use a similar concept as the one defined by Zaidman but under different terms like important classes  \cite{Meyer2014IdentifyingIC} or central software classes \cite{CentralClassesSteidl}.
@@ -241,7 +246,7 @@ CONN\_TOTAL	&	0.94630	&	0.93903	&	0.94630	\\
 \end{table}
 
 \subsection{Measurements using logical dependencies}
-
+\label{sec:current_measurements}
 
 To evaluate the results obtained using logical dependencies, we used the same tool used in section X. 
 Previously, the tool used only structural dependencies extracted from the source code of the software systems. In this chapter, we intend to add also the logical dependencies from the versioning system to observe if the results could be improved or not.
@@ -408,8 +413,14 @@ CON\_T	&	0.644	&	0.564	&	0.601	&	0.619	&	0.622	&	0.650	&	0.653	&	\cellcolor{ligh
 }
 \end{table}
 
+\subsection{Logical and structural dependencies overlapping}
+\label{sec:overlapping}
+
+
+
 
 \section{Comparison of the extracted data with fan-in and fan-out metric}
+\label{sec:metrics}
 
 Fan-in and fan-out are coupling metrics. The fan-in of entity A is the total number of modules that call functions of A. The fan-out of A is the total number of entities called by A \cite{5507329}.
 Related to fan-in and fan-out we have extracted CONN\_IN and CONN\_OUT. 
