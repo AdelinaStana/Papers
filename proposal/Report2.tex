@@ -252,7 +252,6 @@ CONN\_TOTAL	&	0.94630	&	0.93903	&	0.94630	\\
 
 The logical dependencies are those co-changing pairs extracted from the versioning system history that remain after filtering. The filtering part consists of applying two filters: the filter based on commit size and the filter based on connection strength. 
 
-
 To determine the connection strength of a pair, we first need to calculate the connection factors for both entities that form a co-changing pair.
 Assuming that we have a co-changing pair formed by entities A and B, the connection factor of entity A with entity B is the percentage from the total commits involving A that contains entity B. The connection factor of entity B with entity A is the percentage from the total commits involving B that contain also entity A.
 
@@ -268,8 +267,10 @@ We calculated the connection factor for each entity involved in a co-changing pa
 
 After the filtering part, the remaining co-changing pairs, now called logical dependencies, are exported in CSV files.
 
-To evaluate the results obtained using logical dependencies, we used the same tool used in the previous research presented in section \ref{sec:previous_measurements}.
-Previously, the tool used only structural dependencies extracted from the source code of the software systems. In this section, we intend to add also the logical dependencies from the versioning system in order to observe if the results can be improved or not. The workflow is presented in figure \ref{fig:workflow_key}
+The entire process of extracting co-changing pairs from the versioning system, filter them, and export the remaining ones into CSV files is done with a tool written in Python.
+
+The next step is to use the exported logical dependencies for key classes detection. In order to do that we used the same key class detection tool used in the previous research presented in section \ref{sec:previous_measurements}. We adapted the tool to be able to process also logical dependencies because previously the tool used only structural dependencies extracted from the source code of the software systems. 
+The workflow is presented in figure \ref{fig:workflow_key}
 
 \begin{figure}[H]
 \centering
@@ -280,9 +281,19 @@ Previously, the tool used only structural dependencies extracted from the source
 \end{figure}
 
 
-In tables \ref{tab:measurementscombined:ant}, \ref{tab:measurementscombined:tomcat}, and \ref{tab:measurementscombined:hibernate}, we introduced the logical dependencies among structural dependencies. We started with logical dependencies that have a connection strength grater then 10\%, which means that in at least 10\% of the commits involving A or B, A and B update together. Then we increased the threshold value by 10 until we remained only with entities that update in all the commits together.
+As we mentioned in the beginning whole purpose is to check if the logical dependencies can improve key class detection. Previously the tool that detects key classes worked only with structural dependencies and now it can also work with logical dependencies. When we introduced the logical dependencies we thought of two use case scenarios for them:
 
-As for the new results obtained, in tables \ref{tab:measurementscombined:ant}, \ref{tab:measurementscombined:tomcat}, and \ref{tab:measurementscombined:hibernate}, highlighted with orange, are the values that are close to the previously registered values but did not surpass them. Highlighted with green are values that are better than the previously registered values.
+\begin{itemize}
+	\item use logical dependencies together with structural dependencies 
+	\item use only logical dependencies
+\end{itemize}
+
+Based on the two scenarios mentioned above we performed key classes detection. Additionally, the tool evaluates the solution produced, the goal is to have ROC-AUC (Receiver Operating Characteristic - Area Under the Curve) metric value as close to 1 as possible.
+
+In tables \ref{tab:measurementscombined:ant}, \ref{tab:measurementscombined:tomcat}, and \ref{tab:measurementscombined:hibernate}, we used the logical dependencies together with structural dependencies. On each line, we have the metric that is calculated and on each column, we have the connection strength threshold that was applied to the logical dependencies used in identifying the key classes.
+We started with logical dependencies that have a connection strength greater than 10\%, which means that in at least 10\% of the commits involving A or B, A and B update together. Then we increased the threshold value by 10 until we remained only with entities that update in all the commits together. The last column contains the results obtained previously by the tool by only using structural dependencies.
+
+As for the new results obtained by combining structural and logical dependencies, highlighted with orange are the values that are close to the previously registered values but did not surpass them. Highlighted with green are values that are better than the previously registered values. At this step, we can also observe that for all three systems measured in tables \ref{tab:measurementscombined:ant}, \ref{tab:measurementscombined:tomcat}, and \ref{tab:measurementscombined:hibernate}, the best values obtained are for connection strength between 40-70\%.
 
 \begin{table}[!h]
 \renewcommand{\arraystretch}{1}
@@ -357,9 +368,9 @@ CON\_T	&	0.924	&	0.933	&	0.938	&	0.941	&	0.941	&	0.944	&	\cellcolor{lightorange}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-In tables \ref{tab:measurementshistory:ant}, \ref{tab:measurementshistory:tomcat}, and \ref{tab:measurementshistory:hibernate}, we only used logical dependencies. The measurements obtained by using only logical dependencies are not as good as using logical and structural dependencies combined or using only structural dependencies.
-As mentioned in section \ref{sec:evalmetrics}, a classifier is good if it has the ROC-AUC value as close to 1 as possible. Our classifier identifies the key classes of a software system, classes that are also called central classes. 
-The central classes may have a better design than the rest of the classes, which means that are less prone to change. If the key classes are less prone to change, this implies that the number of dependencies extracted from the versioning system can be less than for other classes. 
+In tables \ref{tab:measurementshistory:ant}, \ref{tab:measurementshistory:tomcat}, and \ref{tab:measurementshistory:hibernate}, we only used logical dependencies to detect key classes. The measurements obtained by using only logical dependencies are not as good as using logical and structural dependencies combined or using only structural dependencies.
+As mentioned in section \ref{sec:evalmetrics}, a classifier is good if it has the ROC-AUC value as close to 1 as possible. 
+One possible explanation for the less performing results is that the key classes may have a better design than the rest of the classes, which means that are less prone to change. If the key classes are less prone to change, this implies that the number of dependencies extracted from the versioning system can be less than for other classes.
 
 \begin{table}[!h]
 \renewcommand{\arraystretch}{1}
