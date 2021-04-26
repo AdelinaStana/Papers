@@ -712,12 +712,13 @@ Nr.	&	Classname	&	FAN\_IN	&	FAN\_OUT	&	FAN\_TOTAL	&	LD\_NR \\
 The purpose of this second report was to use the extracted logical dependencies from the versioning system history.
 The logical dependencies are filtered co-changing pairs extracted from the versioning system history. The filters applied to the co-changing pairs are the following: the filter based on commit size and the filter based on connection strength.
 
-In our experiments the filter based on commit size had a hard threshold of 10 files, meaning that we use co-changing pairs only from commits with at most 10 files changed. The filter based on connection strength had a variable threshold, starting with 10\% and ending with 100\%, meaning that for 100\% in all commits the two entities that form a co-changing pair are together. 
+In our experiments the filter based on commit size had a hard threshold of 10 files, meaning that we use co-changing pairs only from commits with at most 10 files changed. The filter based on connection strength had a variable threshold, starting with 10\% and ending with 100\%. We used a variable threshold for connection strength because we wanted to observe how this threshold will impact the key classes detection.
 
-In section \ref{sec:current_measurements} we used logical dependencies together with structural dependencies in order to detect key classes. We also used only logical dependencies to detect key classes.
+In section \ref{sec:current_measurements} we used logical dependencies together with structural dependencies in order to detect key classes. But, we also used only logical dependencies to detect key classes.
 
-Based on the results obtained we did saw an improvement in key classes detection when both logical and structural dependencies were used together. When we used only logical dependencies to detect key classes the results were not bad but were less performing than using only structural or structural and logical dependencies combined. 
+Based on the results obtained we did saw an improvement in key classes detection when both logical and structural dependencies were used together, the best results were obtained with a connection strength threshold of 40-70\%. When we used only logical dependencies to detect key classes the results were not bad but were less performing than using only structural or structural and logical dependencies combined. 
 
+Also, in section \ref{sec:metrics} we compared the number of logical dependencies of an entity with the number of entities that call functions of the entity (fan-in metric) and the number of entities called by the entity (fan-out metric). We did not find any direct connection between fan-in, fan-out, and logical dependencies number but we believe that the logical dependencies number can be used complementary together with fan-in and fan-out metric. 
 
 
 \bibliographystyle{plain}
