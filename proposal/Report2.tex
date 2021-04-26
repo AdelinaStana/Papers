@@ -510,10 +510,13 @@ Hibernate	&	1.037	&	6.391	&	10.037	&	14.947	&	18.940	&	54.248	&	83.442	&	111.704
 \section{Comparison of the extracted data with fan-in and fan-out metric}
 \label{sec:metrics}
 
-Fan-in and fan-out are coupling metrics. The fan-in of entity A is the total number of modules that call functions of A. The fan-out of A is the total number of entities called by A \cite{5507329}.
-Related to fan-in and fan-out we have extracted CONN\_IN and CONN\_OUT. 
+Fan-in and fan-out are coupling metrics. The fan-in of entity A is the total number of entities that call functions of A. The fan-out of A is the total number of entities called by A \cite{5507329}.
 
-In tables \ref{tab:measurementsfan:ant}, \ref{tab:measurementsfan:catalina}, and \ref{tab:measurementsfan:hibernate} we can find the metrics detalis for each documented key class.
+
+In tables \ref{tab:measurementsfan:ant}, \ref{tab:measurementsfan:catalina}, and \ref{tab:measurementsfan:hibernate} we can find the metrics detalis for each documented key class of each system.
+The first column represents the name of each key class, the second column represents the fan\_in values for each key class, the third column represents the fan\_out values, the fourth column represents the number of entities that call functions of that key class plus the number of entities that are called by the key class (fan\_in and fan\_out combined), and the fifth column represents the number of logical dependencies in which an entity is involved. 
+
+For Ant, we can see in table \ref{tab:measurementsfan:ant} that all the key classes have logical dependencies with other classes. The LD\_NUMBER means the number of logical dependencies of an entity. The key classes with the most LD number are Project and IntrospectionHelper, these two entities can be found also in table \ref{tab:measurementstop:ant} in which we did a top 10 entities that have a logical dependency with other entities. This means that some key classes are involved in software change quite often and can be observed via system history.
 
 \begin{table}[!h]
 \renewcommand{\arraystretch}{1}
@@ -523,24 +526,27 @@ In tables \ref{tab:measurementsfan:ant}, \ref{tab:measurementsfan:catalina}, and
 \scalebox{0.8}{
 \begin{tabular}{|c|ccccc|}
 \hline
-Nr.	&	Classname	&	CONN\_IN	&	CONN\_OUT	&	CONN\_TOTAL	&	LD \\
+Nr.	&	Classname	&	FAN\_IN	&	FAN\_OUT	&	FAN\_TOTAL	&	LD\_NUMBER\\
 \hline
-1	&	Project	&	191	&	191	&	214	&	157	\\
-2	&	Target	&	28	&	28	&	34	&	78	\\
-3	&	UnknownElement	&	17	&	17	&	30	&	90	\\
-4	&	RuntimeConfigurable	&	11	&	11	&	19	&	118	\\
-5	&	IntrospectionHelper	&	18	&	18	&	42	&	143	\\
-6	&	Main	&	1	&	1	&	14	&	82	\\
-7	&	TaskContainer	&	11	&	11	&	12	&	21	\\
-8	&	ProjectHelper2\$ElementHandler	&	1	&	1	&	13	&	30	\\
-9	&	Task	&	110	&	110	&	117	&	88	\\
-10	&	ProjectHelper	&	16	&	16	&	24	&	101	\\
+1	&	Project	&	191	&	23	&	214	&	157	\\
+2	&	Target	&	28	&	6	&	34	&	78	\\
+3	&	UnknownElement	&	17	&	13	&	30	&	90	\\
+4	&	RuntimeConfigurable	&	17	&	13	&	30	&	118	\\
+5	&	IntrospectionHelper	&	18	&	24	&	42	&	143	\\
+6	&	Main	&	1	&	13	&	14	&	82	\\
+7	&	TaskContainer	&	11	&	1	&	12	&	21	\\
+8	&	ProjectHelper2\$ElementHandler	&	1	&	12	&	13	&	30	\\
+9	&	Task	&	110	&	7	&	117	&	88	\\
+10	&	ProjectHelper	&	16	&	8	&	24	&	101	\\
 \hline
 \end{tabular}
 }
 \end{table}
 
 
+For Tomcat Catalina, same as for Ant, we can see in table \ref{tab:measurementsfan:catalina} that all the key classes have logical dependencies.  The key classes with the most LD number are StandardContext and Request, these two entities can also be found in table \ref{tab:measurementstop:catalina} in which we did a top 10 entities that have the most logical dependencies with other entities for Tomcat Catalina.
+
+For Hibernate things are a little bit different, as we can see in table \ref{tab:measurementsfan:hibernate},  key classes like Criterion, Projection, or Transaction have 0 logical dependencies, meaning that those key classes are not involved in any software change. One possible explanation for this is that for Hibernate the architecture is designed in such way that the core is not often touched by change. 
 
 
 \begin{table}[!h]
@@ -551,14 +557,14 @@ Nr.	&	Classname	&	CONN\_IN	&	CONN\_OUT	&	CONN\_TOTAL	&	LD \\
 \scalebox{0.8}{
 \begin{tabular}{|c|ccccc|}
 \hline
-Nr.	&	Classname	&	CONN\_IN	&	CONN\_OUT	&	CONN\_TOTAL	&	LD \\
+Nr.	&	Classname	&	FAN\_IN	&	FAN\_OUT	&	FAN\_TOTAL	&	LD\_NUMBER \\
 \hline
 1	&	Context	&	74	&	8	&	82	&	126	\\
 2	&	Request	&	48	&	28	&	76	&	215	\\
 3	&	Container	&	51	&	8	&	59	&	64	\\
 4	&	Response	&	38	&	12	&	50	&	90	\\
 5	&	StandardContext	&	11	&	38	&	49	&	216	\\
-6	&	Connector	&	23	&	9	&	32	&	89	\\
+6	&	FANector	&	23	&	9	&	32	&	89	\\
 7	&	Session	&	29	&	2	&	31	&	28	\\
 8	&	Valve	&	29	&	2	&	31	&	19	\\
 9	&	Wrapper	&	29	&	1	&	30	&	36	\\
@@ -594,7 +600,7 @@ Nr.	&	Classname	&	CONN\_IN	&	CONN\_OUT	&	CONN\_TOTAL	&	LD \\
 \scalebox{0.8}{
 \begin{tabular}{|c|ccccc|}
 \hline
-Nr.	&	Classname	&	CONN\_IN	&	CONN\_OUT	&	CONN\_TOTAL	&	LD \\
+Nr.	&	Classname	&	FAN\_IN	&	FAN\_OUT	&	FAN\_TOTAL	&	LD\_NUMBER \\
 \hline
 1	&	SessionFactoryImplementor	&	438	&	43	&	481	&	51	\\
 2	&	Type	&	444	&	5	&	449	&	0	\\
@@ -608,7 +614,7 @@ Nr.	&	Classname	&	CONN\_IN	&	CONN\_OUT	&	CONN\_TOTAL	&	LD \\
 10	&	SessionFactory	&	24	&	12	&	36	&	33	\\
 11	&	Criterion	&	30	&	3	&	33	&	0	\\
 12	&	Projection	&	11	&	3	&	14	&	0	\\
-13	&	ConnectionProvider	&	12	&	2	&	14	&	0	\\
+13	&	FANectionProvider	&	12	&	2	&	14	&	0	\\
 14	&	Transaction	&	11	&	1	&	12	&	0	\\
 				
 \hline
@@ -618,12 +624,12 @@ Nr.	&	Classname	&	CONN\_IN	&	CONN\_OUT	&	CONN\_TOTAL	&	LD \\
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-In tables \ref{tab:measurementstop:ant}, \ref{tab:measurementstop:catalina}, and \ref{tab:measurementstop:hibernate} we can find the top 10 'best ranked' logical dependencies. As we can observe, the entities have only few structural connections.
+In tables \ref{tab:measurementstop:ant}, \ref{tab:measurementstop:catalina}, and \ref{tab:measurementstop:hibernate} we can find the top 10 entities with logical dependencies. The first column represents the name of each top 10 entity, the second column represents the fan\_in values, the third column represents the fan\_out values, the fourth column represents the fan\_in and fan\_out combined, and the fifth column represents the number of logical dependencies in which the entity is involved.
 
 
-Highlighed with orange are the key classes found in top 10.
-To be continued....
+We did these top 10 tables to offer an overview of the highest registered numbers for LD for each system. As we mentioned before, some of the key classes are also present in these tables, but not all of them.
 
+In table \ref{tab:measurementstop:hibernate} we can find the top 10 measurements for Hibernate, most of the table is occupied by inner classes of AbstractEntityPersister. This is expected behavior since class AbstractEntityPersister is also present. This behavior is caused by the impossibility to separate the updates done for a class from its inner classes in the versioning system. So, each time AbstractEntityPersister records a change, also the inner classes are considered to have changed.
 \begin{table}[!h]
 \renewcommand{\arraystretch}{1}
 \caption{Top 10 measurements for Ant. }
@@ -632,7 +638,7 @@ To be continued....
 \scalebox{0.8}{
 \begin{tabular}{|c|ccccc|}
 \hline
-Nr.	&	Classname	&	CONN\_IN	&	CONN\_OUT	&	CONN\_TOTAL	&	LD \\
+Nr.	&	Classname	&	FAN\_IN	&	FAN\_OUT	&	FAN\_TOTAL	&	LD\_NUMBER \\
 \hline
 1	&	\cellcolor{lightorange}Project	&	191	&	23	&	214	&	157	\\
 2	&	Project\$AntRefTable	&	1	&	2	&	3	&	157	\\
@@ -657,7 +663,7 @@ Nr.	&	Classname	&	CONN\_IN	&	CONN\_OUT	&	CONN\_TOTAL	&	LD \\
 \scalebox{0.8}{
 \begin{tabular}{|c|ccccc|}
 \hline
-Nr.	&	Classname	&	CONN\_IN	&	CONN\_OUT	&	CONN\_TOTAL	&	LD \\
+Nr.	&	Classname	&	FAN\_IN	&	FAN\_OUT	&	FAN\_TOTAL	&	LD\_NUMBER \\
 \hline
 1	&	\cellcolor{lightorange}StandardContext	&	11	&	38	&	49	&	216	\\
 2	&	StandardContext\$ContextFilterMaps	&	0	&	0	&	0	&	216	\\
@@ -683,7 +689,7 @@ Nr.	&	Classname	&	CONN\_IN	&	CONN\_OUT	&	CONN\_TOTAL	&	LD \\
 \scalebox{0.8}{
 \begin{tabular}{|c|ccccc|}
 \hline
-Nr.	&	Classname	&	CONN\_IN	&	CONN\_OUT	&	CONN\_TOTAL	&	LD \\
+Nr.	&	Classname	&	FAN\_IN	&	FAN\_OUT	&	FAN\_TOTAL	&	LD\_NR \\
 \hline
 1	&	AvailableSettings	&	1	&	0	&	1	&	205	\\
 2	&	AbstractEntityPersister	&	9	&	143	&	152	&	190	\\
@@ -700,9 +706,18 @@ Nr.	&	Classname	&	CONN\_IN	&	CONN\_OUT	&	CONN\_TOTAL	&	LD \\
 }
 \end{table}
 
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Conclusions}
 
- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The purpose of this second report was to use the extracted logical dependencies from the versioning system history.
+The logical dependencies are filtered co-changing pairs extracted from the versioning system history. The filters applied to the co-changing pairs are the following: the filter based on commit size and the filter based on connection strength.
+
+In our experiments the filter based on commit size had a hard threshold of 10 files, meaning that we use co-changing pairs only from commits with at most 10 files changed. The filter based on connection strength had a variable threshold, starting with 10\% and ending with 100\%, meaning that for 100\% in all commits the two entities that form a co-changing pair are together. 
+
+In section \ref{sec:current_measurements} we used logical dependencies together with structural dependencies in order to detect key classes. We also used only logical dependencies to detect key classes.
+
+Based on the results obtained we did saw an improvement in key classes detection when both logical and structural dependencies were used together. When we used only logical dependencies to detect key classes the results were not bad but were less performing than using only structural or structural and logical dependencies combined. 
+
 
 
 \bibliographystyle{plain}
