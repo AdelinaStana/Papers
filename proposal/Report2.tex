@@ -62,7 +62,83 @@ Finally, in section \ref{sec:metrics} the comparison between logical dependencie
 
 
 \chapter{Usage of the extracted logical dependencies}
-\section{Data set used}
+
+\section{Identifying key classes using logical dependencies}
+\subsection{Definition and state of the art}
+\label{sec:definition}
+Zaidman et al \cite{ZaidmanJurnal} were the first to introduce the concept of key classes and it refers to classes that can be found in documents written to provide an architectural overview of the system or an introduction to the system structure. 
+Tahvildari and Kontogiannis have a more detailed definition regarding key classes concept: “Usually, the most important concepts of a system are implemented by very few key classes which can be characterized by the specific properties. These classes, which we refer to as key classes, manage many other classes or use them in order to implement their functionality. The key classes are tightly coupled with other parts of the system. Additionally, they tend to be rather complex, since they implement much of the legacy system’s functionality” \cite{Tahvildari2004ImprovingDQ}.
+Also, other researchers use a similar concept as the one defined by Zaidman but under different terms like important classes  \cite{Meyer2014IdentifyingIC} or central software classes \cite{CentralClassesSteidl}.
+
+
+In previous works, the approach for finding key classes is based on ranking the classes with a page ranking algorithm \cite{PagerankENASE}, \cite{enase15}, \cite{Finding-key-classes}, \cite{PagerankSACI} . The page ranking algorithm is a customization of PageRank, the algorithm used to rank web pages \cite{ilprints422}. 
+The PageRank algorithm works based on a recommendation system. If one node has a connection with another node, then it recommends the second node. In previous works, connections are established based on structural dependencies extracted from static code analysis. If A has a structural dependency with B, then A recommends B, and also B recommends A. 
+
+
+\subsection{Baseline approach}
+\label{sec:previous_measurements}
+
+In the research of I. Sora et al \cite{Finding-key-classes} is used a tool that takes as an input the source code of the system and applies a ranking strategy to rank the classes according to their importance. To differentiate the important classes from the rest of the classes, a TOP threshold for the top classes found is set. The threshold can vary between 20 and 30 classes.
+
+The expected results from the research are based on classes labeled as important classes in the system documentation.
+The true positives (TP) are the classes found in the reference solution and also in the top TOP ranked classes. False positives (FP) are the classes that are not in the reference solution but are in the TOP ranked classes.
+True Negatives (TN) are classes that are found neither in the reference solution nor in the TOP ranked classes. False Negatives (FN) are classes that are found in the reference solution but not found in the TOP ranked classes.
+
+In table \ref{tab:previousresults} are presented the ROC-AUC values for different attributes computed for the systems Ant, Tomcat Catalina, and Hibernate. We intend to compare these values with the new values obtained by using also logical dependencies in key class detection.
+
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1}
+\caption{ROC-AUC metric values extracted. }
+\label{tab:previousresults}
+\centering
+\scalebox{0.9}{
+\begin{tabular}{|c|ccc|}
+\hline
+Metrics &	Ant	&	Tomcat Catalina	&	Hibernate	\\
+\hline
+
+PR\_U2\_W	&	0.95823	&	0.92341	&	0.95823	\\
+PR	&	0.94944	&	0.92670	&	0.94944	\\
+PR\_U	&	0.95060	&	0.93220	&	0.95060	\\
+CONN\_TOTAL\_W	&	0.94437	&	0.92595	&	0.94437	\\
+CONN\_TOTAL	&	0.94630	&	0.93903	&	0.94630	\\
+
+\hline
+\end{tabular}
+}
+\end{table}
+
+
+\subsubsection{Attributes for key class detection}
+In order to identify the key classes of an object-oriented system, we have to determine what metrics can be used in order to get a good overview of the system and its most important classes \cite{Ding2016AnIA}, \cite{ZaidmanJurnal}, \cite{PAN2018188} . 
+The metrics used in previous research can be grouped into the following categories: 
+
+\begin{itemize}
+	\item class size metrics: number of fields (NoF),  number of methods (NoM), global size (Size = NoF+NoM).
+	\item class connection metrics, any structural dependency between two classes:
+		\begin{itemize}
+			\item CONN-IN, the number of distinct classes that use a class;
+			\item CONN-OUT, the total number of distinct classes that are used by a class;
+			\item CONN-TOTAL, the total number of distinct classes that a class uses or are used by a class (CONN-IN + CONN-OUT).
+			\item CONN-IN-W, the total weight of distinct classes that use a class. 
+			\item CONN-OUT-W, the total weight of distinct classes that are used by a class. 
+			\item CONN-TOTAL-W, the total weight of all connections of the class (CONN-IN-W + CONN-OUT-W) \cite{Finding-key-classes}.
+		\end{itemize}
+	\item class pagerank values, previous research use pagerank values computed on both directed and undirected, weighted and unweighted graphs:
+		\begin{itemize}
+			\item PR - value computed on the directed and unweighted graph;
+			\item PR-W - value computed on the directed and weighted graph;
+			\item PR-U - value computed on the undirected and unweighted graph;
+			\item PR-U-W - value computed on the undirected and weighted graph;
+			\item PR-U2-W - value computed on the weighted graph with back-recommendations \cite{PagerankENASE}, \cite{enase15}, \cite{Finding-key-classes}, \cite{PagerankSACI}.
+		\end{itemize}
+\end{itemize}
+
+Because the extracted logical dependencies from the systems are undirected, from the mentioned metrics, we can use the following ones:  CONN-TOTAL, CONN-TOTAL-W, PR-U, PR-U-W and PR-U2-W.
+
+
+
+\subsection{Data set used}
 \label{sec:dataset}
 To extract the key classes based on logical dependencies, we took the same set of data used in another research involving key class detection. The research of I. Sora et al \cite{Finding-key-classes} takes into consideration structural public dependencies that are extracted using static analysis techniques and was performed on the object-oriented systems presented in table \ref{tab:keyclass:overview}.
 
@@ -132,114 +208,6 @@ S13	&	Neuroph	&	2.2.0	&	not found	&	0	\\
 \rowcolor{lightgreen}
 S14	&	Tomcat Catalina	&	9.0.4	&	9.0.4	&	19108	\\
 S15	&	Wro4J	&	1.6.3	&	v1.6.3	&	2871	\\
-\hline
-\end{tabular}
-}
-\end{table}
-
-
-\section{Identifying key classes using logical dependencies}
-\subsection{Definition and previous work}
-\label{sec:definition}
-Zaidman et al \cite{ZaidmanJurnal} were the first to introduce the concept of key classes and it refers to classes that can be found in documents written to provide an architectural overview of the system or an introduction to the system structure. 
-Tahvildari and Kontogiannis have a more detailed definition regarding key classes concept: “Usually, the most important concepts of a system are implemented by very few key classes which can be characterized by the specific properties. These classes, which we refer to as key classes, manage many other classes or use them in order to implement their functionality. The key classes are tightly coupled with other parts of the system. Additionally, they tend to be rather complex, since they implement much of the legacy system’s functionality” \cite{Tahvildari2004ImprovingDQ}.
-Also, other researchers use a similar concept as the one defined by Zaidman but under different terms like important classes  \cite{Meyer2014IdentifyingIC} or central software classes \cite{CentralClassesSteidl}.
-
-
-In previous works, the approach for finding key classes is based on ranking the classes with a page ranking algorithm \cite{PagerankENASE}, \cite{enase15}, \cite{Finding-key-classes}, \cite{PagerankSACI} . The page ranking algorithm is a customization of PageRank, the algorithm used to rank web pages \cite{ilprints422}. 
-The PageRank algorithm works based on a recommendation system. If one node has a connection with another node, then it recommends the second node. In previous works, connections are established based on structural dependencies extracted from static code analysis. If A has a structural dependency with B, then A recommends B, and also B recommends A. 
-
-\subsection{Attributes for key classes detection}
-In order to identify the key classes of an object-oriented system, we have to determine what metrics can be used in order to get a good overview of the system and its most important classes \cite{Ding2016AnIA}, \cite{ZaidmanJurnal}, \cite{PAN2018188} . 
-The metrics used in previous research can be grouped into the following categories: 
-
-\begin{itemize}
-	\item class size metrics: number of fields (NoF),  number of methods (NoM), global size (Size = NoF+NoM).
-	\item class connection metrics, any structural dependency between two classes:
-		\begin{itemize}
-			\item CONN-IN, the number of distinct classes that use a class;
-			\item CONN-OUT, the total number of distinct classes that are used by a class;
-			\item CONN-TOTAL, the total number of distinct classes that a class uses or are used by a class (CONN-IN + CONN-OUT).
-			\item CONN-IN-W, the total weight of distinct classes that use a class. 
-			\item CONN-OUT-W, the total weight of distinct classes that are used by a class. 
-			\item CONN-TOTAL-W, the total weight of all connections of the class (CONN-IN-W + CONN-OUT-W) \cite{Finding-key-classes}.
-		\end{itemize}
-	\item class pagerank values, previous research use pagerank values computed on both directed and undirected, weighted and unweighted graphs:
-		\begin{itemize}
-			\item PR - value computed on the directed and unweighted graph;
-			\item PR-W - value computed on the directed and weighted graph;
-			\item PR-U - value computed on the undirected and unweighted graph;
-			\item PR-U-W - value computed on the undirected and weighted graph;
-			\item PR-U2-W - value computed on the weighted graph with back-recommendations \cite{PagerankENASE}, \cite{enase15}, \cite{Finding-key-classes}, \cite{PagerankSACI}.
-		\end{itemize}
-\end{itemize}
-
-Because the extracted logical dependencies from the systems are undirected, from the mentioned metrics, we can use the following ones:  CONN-TOTAL, CONN-TOTAL-W, PR-U, PR-U-W and PR-U2-W.
-
-\subsection{Metrics for results evaluation}
-\label{sec:evalmetrics}
-A classification model is a mapping between expected results and predicted results \cite{ROCIntro}, \cite{ROCBRADLEY19971145}. Both results can be labeled as positive or negative, which leads us to the confusion matrix from figure \ref{fig:confusion}. 
-
-\begin{figure}[h]
-\centering
-\includegraphics[scale=0.9]{confusion.png}
-\caption{Confusion matrix}
-\label{fig:confusion}
-\centering
-\end{figure}
-
-The confusion matrix has the following outcomes:
-		\begin{itemize}
-			\item \textit{true positive}, if the expected result is positive and the predicted result is also positive.
-			\item \textit{false positive}, if the expected result is positive but the predicted result is negative.
-			\item \textit{false negative}, if the expected result is negative but the predicted result is positive.
-			\item \textit{true negative}, if the expected result is negative and the predicted result is also negative.
-		\end{itemize}
-
-The true positive rate of a classifier is calculated as the division between the number of true positive results identified and all the positive results identified:
-\[ True\ positive\ rate (TPR)
-  = \dfrac{TP}{TP+FN}
-\]
-
-The false positive rate of a classifier is calculated as the division between the number of false positive results identified and all the negative results identified:
-\[ False\ positive\ rate (FPR)
-  = \dfrac{FP}{FP+TN}
-\]
-
-To calculate the performance of a classification model, the Receiver Operating Characteristic (ROC) graph can be used. The ROC graph is a two-dimensional graph that has on the X-axis plotted the false positive rate and on the Y-axis the true positive rate. By plotting the true positive rate and the false positive rate at thresholds that vary between a minimum and a maximum possible value we obtain the ROC curve. The area under the ROC curve is called Area Under the Curve (AUC).
-
-In multiple related works, the ROC-AUC metric has been used to evaluate the results for finding key classes of software systems \cite{6676885}, \cite{Finding-key-classes}, \cite{rocclasification}, \cite{7551990}.
-
-For a classifier to be considered good, its ROC-AUC metric value should be as close to 1 as possible, when the value is 1 then the classifier is considered to be perfect.
-
-\subsection{Results obtained by the baseline approach}
-\label{sec:previous_measurements}
-
-In the research of I. Sora et al \cite{Finding-key-classes} is used a tool that takes as an input the source code of the system and applies a ranking strategy to rank the classes according to their importance. To differentiate the important classes from the rest of the classes, a TOP threshold for the top classes found is set. The threshold can vary between 20 and 30 classes.
-
-The expected results from the research are based on classes labeled as important classes in the system documentation.
-The true positives (TP) are the classes found in the reference solution and also in the top TOP ranked classes. False positives (FP) are the classes that are not in the reference solution but are in the TOP ranked classes.
-True Negatives (TN) are classes that are found neither in the reference solution nor in the TOP ranked classes. False Negatives (FN) are classes that are found in the reference solution but not found in the TOP ranked classes.
-
-In table \ref{tab:previousresults} are presented the ROC-AUC values for different attributes computed for the systems Ant, Tomcat Catalina, and Hibernate. We intend to compare these values with the new values obtained by using also logical dependencies in key class detection.
-
-\begin{table}[!h]
-\renewcommand{\arraystretch}{1}
-\caption{ROC-AUC metric values extracted. }
-\label{tab:previousresults}
-\centering
-\scalebox{0.9}{
-\begin{tabular}{|c|ccc|}
-\hline
-Metrics &	Ant	&	Tomcat Catalina	&	Hibernate	\\
-\hline
-
-PR\_U2\_W	&	0.95823	&	0.92341	&	0.95823	\\
-PR	&	0.94944	&	0.92670	&	0.94944	\\
-PR\_U	&	0.95060	&	0.93220	&	0.95060	\\
-CONN\_TOTAL\_W	&	0.94437	&	0.92595	&	0.94437	\\
-CONN\_TOTAL	&	0.94630	&	0.93903	&	0.94630	\\
-
 \hline
 \end{tabular}
 }
@@ -442,7 +410,7 @@ CON\_T	&	0.644	&	0.564	&	0.601	&	0.619	&	0.622	&	0.650	&	0.653	&	\cellcolor{ligh
 }
 \end{table}
 
-\subsection{Logical and structural dependencies overlapping}
+\subsection{Corelation between details of the systems and results}
 \label{sec:overlapping}
 
 In this section, we discuss about overlappings between structural and logical dependencies. 
