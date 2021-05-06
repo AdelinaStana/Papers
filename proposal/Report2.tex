@@ -74,6 +74,37 @@ Also, other researchers use a similar concept as the one defined by Zaidman but 
 In previous works, the approach for finding key classes is based on ranking the classes with a page ranking algorithm \cite{PagerankENASE}, \cite{enase15}, \cite{Finding-key-classes}, \cite{PagerankSACI} . The page ranking algorithm is a customization of PageRank, the algorithm used to rank web pages \cite{ilprints422}. 
 The PageRank algorithm works based on a recommendation system. If one node has a connection with another node, then it recommends the second node. In previous works, connections are established based on structural dependencies extracted from static code analysis. If A has a structural dependency with B, then A recommends B, and also B recommends A. 
 
+\subsection{Metrics for results evaluation}
+\label{sec:evalmetrics}
+A classification model is a mapping between expected results and predicted results \cite{ROCIntro}, \cite{ROCBRADLEY19971145}. Both results can be labeled as positive or negative, which leads us to the confusion matrix from figure \ref{fig:confusion}. 
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.9]{confusion.png}
+\caption{Confusion matrix}
+\label{fig:confusion}
+\centering
+\end{figure}
+The confusion matrix has the following outcomes:
+		\begin{itemize}
+			\item \textit{true positive}, if the expected result is positive and the predicted result is also positive.
+			\item \textit{false positive}, if the expected result is positive but the predicted result is negative.
+			\item \textit{false negative}, if the expected result is negative but the predicted result is positive.
+			\item \textit{true negative}, if the expected result is negative and the predicted result is also negative.
+		\end{itemize}
+
+The true positive rate of a classifier is calculated as the division between the number of true positive results identified and all the positive results identified:
+\[ True\ positive\ rate (TPR)
+  = \dfrac{TP}{TP+FN}
+\]
+The false positive rate of a classifier is calculated as the division between the number of false positive results identified and all the negative results identified:
+\[ False\ positive\ rate (FPR)
+  = \dfrac{FP}{FP+TN}
+\]
+To calculate the performance of a classification model, the Receiver Operating Characteristic (ROC) graph can be used. The ROC graph is a two-dimensional graph that has on the X-axis plotted the false positive rate and on the Y-axis the true positive rate. By plotting the true positive rate and the false positive rate at thresholds that vary between a minimum and a maximum possible value we obtain the ROC curve. The area under the ROC curve is called Area Under the Curve (AUC).
+
+In multiple related works, the ROC-AUC metric has been used to evaluate the results for finding key classes of software systems \cite{6676885}, \cite{Finding-key-classes}, \cite{rocclasification}, \cite{7551990}.
+For a classifier to be considered good, its ROC-AUC metric value should be as close to 1 as possible, when the value is 1 then the classifier is considered to be perfect.
+
 
 \subsection{Baseline approach}
 \label{sec:previous_measurements}
@@ -109,7 +140,7 @@ CONN\_TOTAL	&	0.94630	&	0.93903	&	0.94630	\\
 \end{table}
 
 
-\subsubsection{Attributes for key class detection}
+\subsubsection{Class attributes that characterize key classes}
 In order to identify the key classes of an object-oriented system, we have to determine what metrics can be used in order to get a good overview of the system and its most important classes \cite{Ding2016AnIA}, \cite{ZaidmanJurnal}, \cite{PAN2018188} . 
 The metrics used in previous research can be grouped into the following categories: 
 
