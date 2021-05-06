@@ -74,9 +74,21 @@ Also, other researchers use a similar concept as the one defined by Zaidman but 
 In previous works, the approach for finding key classes is based on ranking the classes with a page ranking algorithm \cite{PagerankENASE}, \cite{enase15}, \cite{Finding-key-classes}, \cite{PagerankSACI} . The page ranking algorithm is a customization of PageRank, the algorithm used to rank web pages \cite{ilprints422}. 
 The PageRank algorithm works based on a recommendation system. If one node has a connection with another node, then it recommends the second node. In previous works, connections are established based on structural dependencies extracted from static code analysis. If A has a structural dependency with B, then A recommends B, and also B recommends A. 
 
+The ranking algorithm ranks all the classes from the source code of the system analyzed according to their importance. To identify the important classes from the rest of the classes a threshold for TOP classes from the top of the ranking is set. The TOP threshold value can go from 1 to the total number of classes found in the system. 
+
+Some researchers \cite{ZaidmanJurnal}, \cite{Ding2016AnIA}, \cite{PAN2018188} consider that 15\% of the total number of classes of the system is a suited value for the TOP threshold. Other researchers \cite{Finding-key-classes} consider that 15\% of the total number of classes is a too high value for the TOP threshold and suggest that a value in the range of 20–30 is better.
+
+
 \subsection{Metrics for results evaluation}
 \label{sec:evalmetrics}
-A classification model is a mapping between expected results and predicted results \cite{ROCIntro}, \cite{ROCBRADLEY19971145}. Both results can be labeled as positive or negative, which leads us to the confusion matrix from figure \ref{fig:confusion}. 
+To evaluate the quality of the key classes ranking algorithm and solution produced, the key classes found by the algorithm are compared with a reference solution.
+
+The reference solution is extracted from the developer documentation.  Classes mentioned in the documentation are considered key classes and form the reference solution (ground truth) used for validation \cite{7551990}. 
+
+
+For the comparison between both solutions, is used a classification model. The quality of the solution produced is evaluated by using metrics that evaluate the performance of the classification model, such as Precision-Recall and Receiver Operating Characteristic Area Under Curve (ROC-AUC).
+
+A classification model (or "classifier") is a mapping between expected results and predicted results \cite{ROCIntro}, \cite{ROCBRADLEY19971145}. Both results can be labeled as positive or negative, which leads us to the confusion matrix from figure \ref{fig:confusion}. 
 \begin{figure}[h]
 \centering
 \includegraphics[scale=0.9]{confusion.png}
@@ -92,6 +104,29 @@ The confusion matrix has the following outcomes:
 			\item \textit{true negative}, if the expected result is negative and the predicted result is also negative.
 		\end{itemize}
 
+
+\textit{Precision-recall}
+
+
+Precision is the ratio of True Positives to all the positives of the result set.
+\[ precision
+  = \dfrac{TP}{TP+FN}
+\]
+The recall is the ratio of True Positives to all the positives of the reference set.
+
+\[ recall
+  = \dfrac{TP}{TP+FP}
+\]
+
+As mentioned in section \ref{sec:definition}, to distinguish the key classes from the rest of the classes a TOP threshold is used. Some researchers consider that 15\% of the total classes is the best value for the TOP threshold and others consider that the value should be in the range of 20-30. 
+
+The precision-recall metric is suited if the threshold value is fixed. If the threshold value variable, then metrics that capture the behavior over all possible values must be used. Such metric is the Receiver Operating Characteristic metric.
+
+\textit{Receiver Operating Characteristic Area Under Curve}
+
+
+The ROC graph is a two-dimensional graph that has on the X-axis plotted the false positive rate and on the Y-axis the true positive rate. By plotting the true positive rate and the false positive rate at thresholds that vary between a minimum and a maximum possible value we obtain the ROC curve. The area under the ROC curve is called Area Under the Curve (AUC).
+
 The true positive rate of a classifier is calculated as the division between the number of true positive results identified and all the positive results identified:
 \[ True\ positive\ rate (TPR)
   = \dfrac{TP}{TP+FN}
@@ -100,7 +135,7 @@ The false positive rate of a classifier is calculated as the division between th
 \[ False\ positive\ rate (FPR)
   = \dfrac{FP}{FP+TN}
 \]
-To calculate the performance of a classification model, the Receiver Operating Characteristic (ROC) graph can be used. The ROC graph is a two-dimensional graph that has on the X-axis plotted the false positive rate and on the Y-axis the true positive rate. By plotting the true positive rate and the false positive rate at thresholds that vary between a minimum and a maximum possible value we obtain the ROC curve. The area under the ROC curve is called Area Under the Curve (AUC).
+
 
 In multiple related works, the ROC-AUC metric has been used to evaluate the results for finding key classes of software systems \cite{6676885}, \cite{Finding-key-classes}, \cite{rocclasification}, \cite{7551990}.
 For a classifier to be considered good, its ROC-AUC metric value should be as close to 1 as possible, when the value is 1 then the classifier is considered to be perfect.
