@@ -120,7 +120,7 @@ The recall is the ratio of True Positives to all the positives of the reference 
 
 As mentioned in section \ref{sec:definition}, to distinguish the key classes from the rest of the classes a TOP threshold is used. Some researchers consider that 15\% of the total classes is the best value for the TOP threshold and others consider that the value should be in the range of 20-30. 
 
-The precision-recall metric is suited if the threshold value is fixed. If the threshold value variable, then metrics that capture the behavior over all possible values must be used. Such metric is the Receiver Operating Characteristic metric.
+The precision-recall metric is suited if the threshold value is fixed. If the threshold value is variable, then metrics that capture the behavior over all possible values must be used. Such metric is the Receiver Operating Characteristic metric.
 
 \textit{Receiver Operating Characteristic Area Under Curve}
 
@@ -144,40 +144,15 @@ For a classifier to be considered good, its ROC-AUC metric value should be as cl
 \subsection{Baseline approach}
 \label{sec:previous_measurements}
 
-In the research of I. Sora et al \cite{Finding-key-classes} is used a tool that takes as an input the source code of the system and applies a ranking strategy to rank the classes according to their importance. To differentiate the important classes from the rest of the classes, a TOP threshold for the top classes found is set. The threshold can vary between 20 and 30 classes.
+We use the research of I. Sora et al \cite{Finding-key-classes} as a baseline for our research involving the usage of logical dependencies to find key classes. 
+The baseline approach uses a tool that takes as an input the source code of the system and applies ranking strategies to rank the classes according to their importance. 
 
-The expected results from the research are based on classes labeled as important classes in the system documentation.
-The true positives (TP) are the classes found in the reference solution and also in the top TOP ranked classes. False positives (FP) are the classes that are not in the reference solution but are in the TOP ranked classes.
-True Negatives (TN) are classes that are found neither in the reference solution nor in the TOP ranked classes. False Negatives (FN) are classes that are found in the reference solution but not found in the TOP ranked classes.
+In order to rank the classes according to their importance, different class metrics are used \cite{Ding2016AnIA}, \cite{ZaidmanJurnal}, \cite{PAN2018188}. Below are presented some of the class metrics used in the baseline approach in order to rank the classes according to their importance.
 
-In table \ref{tab:previousresults} are presented the ROC-AUC values for different attributes computed for the systems Ant, Tomcat Catalina, and Hibernate. We intend to compare these values with the new values obtained by using also logical dependencies in key class detection.
-
-\begin{table}[!h]
-\renewcommand{\arraystretch}{1}
-\caption{ROC-AUC metric values extracted. }
-\label{tab:previousresults}
-\centering
-\scalebox{0.9}{
-\begin{tabular}{|c|ccc|}
-\hline
-Metrics &	Ant	&	Tomcat Catalina	&	Hibernate	\\
-\hline
-
-PR\_U2\_W	&	0.95823	&	0.92341	&	0.95823	\\
-PR	&	0.94944	&	0.92670	&	0.94944	\\
-PR\_U	&	0.95060	&	0.93220	&	0.95060	\\
-CONN\_TOTAL\_W	&	0.94437	&	0.92595	&	0.94437	\\
-CONN\_TOTAL	&	0.94630	&	0.93903	&	0.94630	\\
-
-\hline
-\end{tabular}
-}
-\end{table}
 
 
 \subsubsection{Class attributes that characterize key classes}
-In order to identify the key classes of an object-oriented system, we have to determine what metrics can be used in order to get a good overview of the system and its most important classes \cite{Ding2016AnIA}, \cite{ZaidmanJurnal}, \cite{PAN2018188} . 
-The metrics used in previous research can be grouped into the following categories: 
+The metrics used in the baseline research can be grouped into the following categories: 
 
 \begin{itemize}
 	\item class size metrics: number of fields (NoF),  number of methods (NoM), global size (Size = NoF+NoM).
@@ -200,13 +175,40 @@ The metrics used in previous research can be grouped into the following categori
 		\end{itemize}
 \end{itemize}
 
-Because the extracted logical dependencies from the systems are undirected, from the mentioned metrics, we can use the following ones:  CONN-TOTAL, CONN-TOTAL-W, PR-U, PR-U-W and PR-U2-W.
+
+Based on the class attributes presented, all the classes of the system are ranked. To differentiate the important (key) classes from the rest of the classes, a TOP threshold for the top classes found is set. 
+The threshold vary between 20 and 30 classes.
+
+
+
+The baseline approach not only identifies the key classes but also evaluates the performance of the solution produced. 
+The same approach as the one presented in section \ref{sec:evalmetrics} is used for the evaluation of the results. The key classes found by the ranking algorithm are compared with a reference solution that is extracted from the developer documentation by using a classification model.
+
+The true positives (TP) are the classes found in the reference solution and also in the top TOP ranked classes. False positives (FP) are the classes that are not in the reference solution but are in the TOP ranked classes.
+True Negatives (TN) are classes that are found neither in the reference solution nor in the TOP ranked classes. False Negatives (FN) are classes that are found in the reference solution but not found in the TOP ranked classes.
+
+
+Due to the fact that the TOP threshold is varied, the Receiver Operating Characteristic Area Under Curve metric is used for the evaluation of the results.
+
+The entire workflow of the baseline approach that was presented above is also presented in figure \ref{fig:baseline_approach}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{baseline_approach.PNG}
+\caption{Overview of the baseline approach. Reprinted from “Finding key classes in object-oriented
+software systems by techniques based on static analysis.” by Ioana Sora and Ciprian-Bogdan Chirila, 2019, Information and Software Technology, 116:106176. Reprinted with permission. }
+\label{fig:baseline_approach}
+\centering
+\end{figure}
 
 
 
 \subsection{Data set used}
 \label{sec:dataset}
-To extract the key classes based on logical dependencies, we took the same set of data used in another research involving key class detection. The research of I. Sora et al \cite{Finding-key-classes} takes into consideration structural public dependencies that are extracted using static analysis techniques and was performed on the object-oriented systems presented in table \ref{tab:keyclass:overview}.
+In this section, we will look over all the systems studied in the baseline research presented in section \ref{sec:previous_measurements}, and we will try to identify the systems that could be used also in our current research involving logical dependencies.
+
+
+The research of I. Sora et al \cite{Finding-key-classes} takes into consideration structural public dependencies that are extracted using static analysis techniques and was performed on the object-oriented systems presented in table \ref{tab:keyclass:overview}.
 
 The requirements for a system to qualify as suited for investigations using logical dependencies are: has to be on GitHub, has to have release tags to identify the version, and also has to have an increased number of commits. 
 From the total of 14 object-oriented systems listed in the paper \cite{Finding-key-classes}, 13 of them have repositories in Github \ref{tab:gitfoundsystems}. And from the found repositories we identified only 6 repositories that have the same release tag as the specified version from table \ref{tab:keyclass:overview}. It is important to identify the correct release tag for each repository to limit the commits further analyzed by date. Only commits that were made until the specified release are considered and analyzed.
@@ -314,6 +316,37 @@ The workflow is presented in figure \ref{fig:workflow_key}
 \centering
 \end{figure}
 
+
+%%%%%%%%%%%%%%
+Because the extracted logical dependencies from the systems are undirected, from the mentioned metrics, we can use the following ones:  CONN-TOTAL, CONN-TOTAL-W, PR-U, PR-U-W and PR-U2-W.
+
+
+In table \ref{tab:previousresults} are presented the ROC-AUC values for different attributes computed for the systems Ant, Tomcat Catalina, and Hibernate. We intend to compare these values with the new values obtained by using also logical dependencies in key class detection.
+
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1}
+\caption{ROC-AUC metric values extracted. }
+\label{tab:previousresults}
+\centering
+\scalebox{0.9}{
+\begin{tabular}{|c|ccc|}
+\hline
+Metrics &	Ant	&	Tomcat Catalina	&	Hibernate	\\
+\hline
+
+PR\_U2\_W	&	0.95823	&	0.92341	&	0.95823	\\
+PR	&	0.94944	&	0.92670	&	0.94944	\\
+PR\_U	&	0.95060	&	0.93220	&	0.95060	\\
+CONN\_TOTAL\_W	&	0.94437	&	0.92595	&	0.94437	\\
+CONN\_TOTAL	&	0.94630	&	0.93903	&	0.94630	\\
+
+\hline
+\end{tabular}
+}
+\end{table}
+
+
+%%%%%%%%%%%%%%%%
 
 As we mentioned in the beginning whole purpose is to check if the logical dependencies can improve key class detection. Previously the tool that detects key classes worked only with structural dependencies and now it can also work with logical dependencies. When we introduced the logical dependencies we thought of two use case scenarios for them:
 
