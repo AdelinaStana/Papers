@@ -61,10 +61,10 @@ The report is structured as follows: in section \ref{sec:definition} we present 
 Finally, in section \ref{sec:metrics} the comparison between logical dependencies number and other software metrics is discussed. 
 
 
-\chapter{Usage of the extracted logical dependencies}
+\chapter{State of the art in key classes detection and results evaluation}
 
-\section{Identifying key classes using logical dependencies}
-\subsection{Definition and state of the art}
+
+\section{Definition}
 \label{sec:definition}
 Zaidman et al \cite{ZaidmanJurnal} were the first to introduce the concept of key classes and it refers to classes that can be found in documents written to provide an architectural overview of the system or an introduction to the system structure. 
 Tahvildari and Kontogiannis have a more detailed definition regarding key classes concept: “Usually, the most important concepts of a system are implemented by very few key classes which can be characterized by the specific properties. These classes, which we refer to as key classes, manage many other classes or use them in order to implement their functionality. The key classes are tightly coupled with other parts of the system. Additionally, they tend to be rather complex, since they implement much of the legacy system’s functionality” \cite{Tahvildari2004ImprovingDQ}.
@@ -79,7 +79,7 @@ The ranking algorithm ranks all the classes from the source code of the system a
 Some researchers \cite{ZaidmanJurnal}, \cite{Ding2016AnIA}, \cite{PAN2018188} consider that 15\% of the total number of classes of the system is a suited value for the TOP threshold. Other researchers \cite{Finding-key-classes} consider that 15\% of the total number of classes is a too high value for the TOP threshold and suggest that a value in the range of 20–30 is better.
 
 
-\subsection{Metrics for results evaluation}
+\section{Metrics for results evaluation}
 \label{sec:evalmetrics}
 To evaluate the quality of the key classes ranking algorithm and solution produced, the key classes found by the algorithm are compared with a reference solution.
 
@@ -141,7 +141,7 @@ In multiple related works, the ROC-AUC metric has been used to evaluate the resu
 For a classifier to be considered good, its ROC-AUC metric value should be as close to 1 as possible, when the value is 1 then the classifier is considered to be perfect.
 
 
-\subsection{Baseline approach}
+\section{Baseline approach}
 \label{sec:previous_measurements}
 
 We use the research of I. Sora et al \cite{Finding-key-classes} as a baseline for our research involving the usage of logical dependencies to find key classes. 
@@ -202,8 +202,8 @@ software systems by techniques based on static analysis.” by Ioana Sora and Ci
 \end{figure}
 
 
-
-\subsection{Data set used}
+\chapter{Key classes detection using logical dependencies}
+\section{Data set used}
 \label{sec:dataset}
 In this section, we will look over all the systems studied in the baseline research presented in section \ref{sec:previous_measurements}, and we will try to identify the systems that could be used also in our current research involving logical dependencies.
 
@@ -283,7 +283,7 @@ S15	&	Wro4J	&	1.6.3	&	v1.6.3	&	2871	\\
 
 
 
-\subsection{Measurements using logical dependencies}
+\section{Measurements using logical dependencies}
 \label{sec:current_measurements}
 
 As we mentioned in the beginning the purpose is to check if the logical dependencies can improve key class detection. 
@@ -296,7 +296,7 @@ The new results are separated into two categories, the results obtained by using
 
 
 
-\subsubsection{Comparison with the baseline approach}
+\subsection{Comparison with the baseline approach}
 The baseline approach uses a tool that takes as input the source code of the system to identify the key classes and the reference solution to evaluate the quality of the solution. 
 We modified the tool such that it can also take as input the logical dependencies. 
 
@@ -313,7 +313,7 @@ We did not change the rest of the workflow of the tool. Meaning that the TOP thr
 \centering
 \end{figure}
 
-\subsubsection{Logical dependencies collection and current workflow used}
+\subsection{Logical dependencies collection and current workflow used}
 
 The logical dependencies are those co-changing pairs extracted from the versioning system history that remain after filtering. The filtering part consists of applying two filters: the filter based on commit size and the filter based on connection strength. 
 
@@ -346,7 +346,7 @@ The workflow is presented in figure \ref{fig:workflow_key}
 \end{figure}
 
 
-\subsubsection{Measurements using only the baseline approach}
+\subsection{Measurements using only the baseline approach}
 
 
 In table \ref{tab:previousresults} are presented the ROC-AUC values for different attributes computed for the systems Ant, Tomcat Catalina, and Hibernate by using the baseline approach. We intend to compare these values with the new values obtained by using also logical dependencies in key class detection.
@@ -377,7 +377,7 @@ CONN\_TOTAL	&	0.94630	&	0.93903	&	0.94630	\\
 
 
 
-\subsubsection{Measurements using combined structural and logical dependencies}
+\subsection{Measurements using combined structural and logical dependencies}
 
 
 
@@ -460,7 +460,7 @@ CON\_T	&	0.924	&	0.933	&	0.938	&	0.941	&	0.941	&	0.944	&	\cellcolor{lightorange}
 
 
 
-\subsubsection{Measurements using only logical dependencies}
+\subsection{Measurements using only logical dependencies}
 
 In tables \ref{tab:measurementshistory:ant}, \ref{tab:measurementshistory:tomcat}, and \ref{tab:measurementshistory:hibernate}, we only used logical dependencies to detect key classes. The measurements obtained by using only logical dependencies are not as good as using logical and structural dependencies combined or using only structural dependencies. But, all the values obtained are above 0.5, which means that a good part of the key classes is detected by only using logical dependencies.  As mentioned in section \ref{sec:evalmetrics}, a classifier is good if it has the ROC-AUC value as close to 1 as possible. 
 
@@ -537,7 +537,7 @@ CON\_T	&	0.644	&	0.564	&	0.601	&	0.619	&	0.622	&	0.650	&	0.653	&	\cellcolor{ligh
 }
 \end{table}
 
-\subsection{Correlation between details of the systems and results}
+\section{Correlation between details of the systems and results}
 \label{sec:overlapping}
 
 In this section, we discuss about the correlation between the details of the systems and the results obtained in section \ref{sec:current_measurements}.
