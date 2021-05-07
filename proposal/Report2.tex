@@ -286,6 +286,35 @@ S15	&	Wro4J	&	1.6.3	&	v1.6.3	&	2871	\\
 \subsection{Measurements using logical dependencies}
 \label{sec:current_measurements}
 
+As we mentioned in the beginning the purpose is to check if the logical dependencies can improve key class detection. 
+
+As presented in section \ref{sec:previous_measurements}, and section \ref{sec:definition} the key class detection was done by using structural dependencies of the system. 
+In this section, we will use the same tool used in the baseline approach presented in section \ref{sec:previous_measurements}, and we will add a new input to it, the logical dependencies. 
+
+Below is a comparison between the new approach and baseline approach, how we collect the logical dependencies, the results obtained previously, and the new results obtained. 
+The new results are separated into two categories, the results obtained by using structural and logical dependencies and the results obtained by using only logical dependencies. 
+
+
+
+\subsubsection{Comparison with the baseline approach}
+The baseline approach uses a tool that takes as input the source code of the system to identify the key classes and the reference solution to evaluate the quality of the solution. 
+We modified the tool such that it can also take as input the logical dependencies. 
+
+In order to rank the classes according to their importance, the tool uses different class metrics. The list of the metrics used in the baseline approach is presented in section \ref{sec:previous_measurements}.  
+The difference in the metrics used compared with the baseline approach is that we use a subset of those metrics. The reason why we are not using all the metrics is that the extracted logical dependencies are undirected. The metrics used by the current approach are CONN-TOTAL, CONN-TOTAL-W, PR-U, PR-U-W, and PR-U2-W.
+
+We did not change the rest of the workflow of the tool. Meaning that the TOP threshold is varied between 20 and 30 and the resulting solution is evaluated by using the ROC-AUC metric. The goal being a ROC-AUC (Receiver Operating Characteristic - Area Under the Curve) metric value as close to 1 as possible.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{baseline_comparison.png}
+\caption{ Comparison between the new approach and the baseline }
+\label{fig:baseline_comparison}
+\centering
+\end{figure}
+
+\subsubsection{Logical dependencies collection and workflow used}
+
 The logical dependencies are those co-changing pairs extracted from the versioning system history that remain after filtering. The filtering part consists of applying two filters: the filter based on commit size and the filter based on connection strength. 
 
 To determine the connection strength of a pair, we first need to calculate the connection factors for both entities that form a co-changing pair.
@@ -317,8 +346,7 @@ The workflow is presented in figure \ref{fig:workflow_key}
 \end{figure}
 
 
-%%%%%%%%%%%%%%
-Because the extracted logical dependencies from the systems are undirected, from the mentioned metrics, we can use the following ones:  CONN-TOTAL, CONN-TOTAL-W, PR-U, PR-U-W and PR-U2-W.
+\subsubsection{Measurements using only the baseline approach}
 
 
 In table \ref{tab:previousresults} are presented the ROC-AUC values for different attributes computed for the systems Ant, Tomcat Catalina, and Hibernate. We intend to compare these values with the new values obtained by using also logical dependencies in key class detection.
@@ -346,16 +374,12 @@ CONN\_TOTAL	&	0.94630	&	0.93903	&	0.94630	\\
 \end{table}
 
 
-%%%%%%%%%%%%%%%%
 
-As we mentioned in the beginning whole purpose is to check if the logical dependencies can improve key class detection. Previously the tool that detects key classes worked only with structural dependencies and now it can also work with logical dependencies. When we introduced the logical dependencies we thought of two use case scenarios for them:
 
-\begin{itemize}
-	\item use logical dependencies together with structural dependencies 
-	\item use only logical dependencies
-\end{itemize}
 
-Based on the two scenarios mentioned above we performed key classes detection. Additionally, the tool evaluates the solution produced, the goal is to have ROC-AUC (Receiver Operating Characteristic - Area Under the Curve) metric value as close to 1 as possible.
+\subsubsection{Measurements using combined structural and logical dependencies}
+
+
 
 In tables \ref{tab:measurementscombined:ant}, \ref{tab:measurementscombined:tomcat}, and \ref{tab:measurementscombined:hibernate}, we used the logical dependencies together with structural dependencies. On each line, we have the metric that is calculated and on each column, we have the connection strength threshold that was applied to the logical dependencies used in identifying the key classes.
 We started with logical dependencies that have a connection strength greater than 10\%, which means that in at least 10\% of the commits involving A or B, A and B update together. Then we increased the threshold value by 10 until we remained only with entities that update in all the commits together. The last column contains the results obtained previously by the tool by only using structural dependencies.
@@ -433,7 +457,10 @@ CON\_T	&	0.924	&	0.933	&	0.938	&	0.941	&	0.941	&	0.944	&	\cellcolor{lightorange}
 \end{table}
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\subsubsection{Measurements using only logical dependencies}
 
 In tables \ref{tab:measurementshistory:ant}, \ref{tab:measurementshistory:tomcat}, and \ref{tab:measurementshistory:hibernate}, we only used logical dependencies to detect key classes. The measurements obtained by using only logical dependencies are not as good as using logical and structural dependencies combined or using only structural dependencies.
 As mentioned in section \ref{sec:evalmetrics}, a classifier is good if it has the ROC-AUC value as close to 1 as possible. 
