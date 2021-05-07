@@ -313,7 +313,7 @@ We did not change the rest of the workflow of the tool. Meaning that the TOP thr
 \centering
 \end{figure}
 
-\subsubsection{Logical dependencies collection and workflow used}
+\subsubsection{Logical dependencies collection and current workflow used}
 
 The logical dependencies are those co-changing pairs extracted from the versioning system history that remain after filtering. The filtering part consists of applying two filters: the filter based on commit size and the filter based on connection strength. 
 
@@ -349,7 +349,7 @@ The workflow is presented in figure \ref{fig:workflow_key}
 \subsubsection{Measurements using only the baseline approach}
 
 
-In table \ref{tab:previousresults} are presented the ROC-AUC values for different attributes computed for the systems Ant, Tomcat Catalina, and Hibernate. We intend to compare these values with the new values obtained by using also logical dependencies in key class detection.
+In table \ref{tab:previousresults} are presented the ROC-AUC values for different attributes computed for the systems Ant, Tomcat Catalina, and Hibernate by using the baseline approach. We intend to compare these values with the new values obtained by using also logical dependencies in key class detection.
 
 \begin{table}[!h]
 \renewcommand{\arraystretch}{1}
@@ -462,8 +462,9 @@ CON\_T	&	0.924	&	0.933	&	0.938	&	0.941	&	0.941	&	0.944	&	\cellcolor{lightorange}
 
 \subsubsection{Measurements using only logical dependencies}
 
-In tables \ref{tab:measurementshistory:ant}, \ref{tab:measurementshistory:tomcat}, and \ref{tab:measurementshistory:hibernate}, we only used logical dependencies to detect key classes. The measurements obtained by using only logical dependencies are not as good as using logical and structural dependencies combined or using only structural dependencies.
-As mentioned in section \ref{sec:evalmetrics}, a classifier is good if it has the ROC-AUC value as close to 1 as possible. 
+In tables \ref{tab:measurementshistory:ant}, \ref{tab:measurementshistory:tomcat}, and \ref{tab:measurementshistory:hibernate}, we only used logical dependencies to detect key classes. The measurements obtained by using only logical dependencies are not as good as using logical and structural dependencies combined or using only structural dependencies. But, all the values obtained are above 0.5, which means that a good part of the key classes is detected by only using logical dependencies.  As mentioned in section \ref{sec:evalmetrics}, a classifier is good if it has the ROC-AUC value as close to 1 as possible. 
+
+
 One possible explanation for the less performing results is that the key classes may have a better design than the rest of the classes, which means that are less prone to change. If the key classes are less prone to change, this implies that the number of dependencies extracted from the versioning system can be less than for other classes.
 
 \begin{table}[!h]
@@ -542,13 +543,60 @@ CON\_T	&	0.644	&	0.564	&	0.601	&	0.619	&	0.622	&	0.650	&	0.653	&	\cellcolor{ligh
 In this section, we discuss about overlappings between structural and logical dependencies. 
 The structural dependencies are relationships between two elements and indicate that an element of the relationship, in some manner, depends on the other element of the relationship \cite{Booch:2004:OAD:975416}, \cite{Cataldo2009SoftwareDW}.
 
-Structural dependencies can be found by analyzing the source code of the system \cite{Sangal:2005:UDM:1094811.1094824}, \cite{CalloArias2011}, \cite{structdep}. 
 
-Logical dependencies are also relationships between two elements of a  software system, but in contrast to structural dependencies, the logical dependencies can be found by analyzing the versioning system history.
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{ant_SD_LD.PNG}
+\caption{ Plot representation of the measurements for Ant using structural and logical dependencies combined }
+\label{fig:plot_sd_ld_ant}
+\centering
+\end{figure}
 
-It can be the case that a structural dependency is also a logical dependency. This means that the relationship between two elements can be detected via code analysis but also via versioning system analysis. 
 
-The reason why we are studying the overlappings between logical and structural dependencies is because we want to see how connected are these two types of dependencies.
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{tomcat_SD_LD.PNG}
+\caption{ Plot representation of the measurements for Tomcat using structural and logical dependencies combined }
+\label{fig:plot_sd_ld_tomcat}
+\centering
+\end{figure}
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{hibernate_SD_LD.PNG}
+\caption{ Plot representation of the measurements for Hibernate using structural and logical dependencies combined }
+\label{fig:plot_sd_ld_hibernate}
+\centering
+\end{figure}
+
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{ant_LD.PNG}
+\caption{ Plot representation of the measurements for Ant using only logical dependencies }
+\label{fig:plot_ld_ant}
+\centering
+\end{figure}
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{tomcat_LD.PNG}
+\caption{ Plot representation of the measurements for Tomcat using only logical dependencies }
+\label{fig:plot_ld_tomcat}
+\centering
+\end{figure}
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{hibernate_LD.PNG}
+\caption{ Plot representation of the measurements for Hibernate using only logical dependencies }
+\label{fig:plot_ld_hibernate}
+\centering
+\end{figure}
 
 In table \ref{tab:overlap} are the overlappings between structural and logical dependencies expressed in percentages for each system mentioned in section \ref{sec:current_measurements}. Each column represents the percentage of logical dependencies that are also structural, for each column the logical dependencies are obtained by applying a different connection strength filter. The connection strength filter begins at 10, meaning that in at least 10 \% of the total commits involving two entities, the entities update together. We increase the connection strength filter by 10 up until we reach 100, meaning that in all the commits that involve one entity, the other entity is present also.
 
