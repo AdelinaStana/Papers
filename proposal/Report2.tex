@@ -56,15 +56,13 @@ With the filter based on connection strength, we filter out co-changing pairs th
 This second report mainly focuses on using the logical dependencies extracted in identifying key (important) classes in a software system.
 The identification of key classes was previously researched solely by using software dependencies. Our approach is to take previously researched software systems and the results obtained based on those systems as a baseline. In addition to the baseline approach of using only structural dependencies, we will add the logical dependencies extracted, export the results, and compare them with the baseline results. 
 
-
 Additionally, in this report, we will compare the number of logical dependencies with other software metrics. With this comparison, we mainly want to observe if the number of logical dependencies can be connected to other metrics or if is complementary with other metrics.
 
-The report is structured as follows: in section \ref{sec:definition} we present the current state of research in identifying key classes. The dataset used in the baseline research and the software systems from that dataset that we have been able to work with is presented in section \ref{sec:dataset}.  The results obtained by the baseline research are presented in section \ref{sec:previous_measurements}, section \ref{sec:current_measurements} presents the new results obtained by adding logical dependencies.
-Finally, in section \ref{sec:metrics} the comparison between logical dependencies number and other software metrics is discussed. 
+The report is structured in two main chapters, in chapter \ref{cap:state_of_art} is presented the state-of-the-art in key classes detection, how the results obtained are evaluated, and the baseline approach for our research. In chapter \ref{cap:usage} is presented the key classes detection by using logical dependencies and the evaluation of the new results obtained. 
 
 
 \chapter{State of the art in key classes detection and results evaluation}
-
+\label{cap:state_of_art}
 
 \section{Definition}
 \label{sec:definition}
@@ -205,6 +203,8 @@ software systems by techniques based on static analysis.” by Ioana Sora and Ci
 
 
 \chapter{Key classes detection using logical dependencies}
+\label{cap:usage}
+
 \section{Data set used}
 \label{sec:dataset}
 In this section, we will look over all the systems studied in the baseline research presented in section \ref{sec:previous_measurements}, and we will try to identify the systems that could be used also in our current research involving logical dependencies.
