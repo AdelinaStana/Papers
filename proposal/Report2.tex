@@ -305,6 +305,8 @@ The new results are separated into two categories, the results obtained by using
 
 
 \subsection{Comparison with the baseline approach}
+\label{sec:comparison}
+
 The baseline approach uses a tool that takes as input the source code of the system to identify the key classes and the reference solution to evaluate the quality of the solution. 
 We modified the tool such that it can also take as input the logical dependencies. 
 
@@ -387,9 +389,13 @@ CONN\_TOTAL	&	0.94630	&	0.93903	&	0.94630	\\
 
 \subsection{Measurements using combined structural and logical dependencies}
 
+The tool used in the baseline approach runs a graph-ranking algorithm. 
+The graph used contains the structural dependencies extracted from static source code analysis.
+Each edge in the graph represents a dependency, the entities that form a structural dependency are represented as vertices in the graph. 
+As mentioned in section \ref{sec:comparison}, we modified the tool to read also logical dependencies and add them to the graph. 
+In this section, we add in the graph the logical dependencies together with the structural dependencies. 
 
-
-In tables \ref{tab:measurementscombined:ant}, \ref{tab:measurementscombined:tomcat}, and \ref{tab:measurementscombined:hibernate}, we used the logical dependencies together with structural dependencies. On each line, we have the metric that is calculated and on each column, we have the connection strength threshold that was applied to the logical dependencies used in identifying the key classes.
+In tables \ref{tab:measurementscombined:ant}, \ref{tab:measurementscombined:tomcat}, and \ref{tab:measurementscombined:hibernate}, on each line, we have the metric that is calculated and on each column, we have the connection strength threshold that was applied to the logical dependencies used in identifying the key classes.
 We started with logical dependencies that have a connection strength greater than 10\%, which means that in at least 10\% of the commits involving A or B, A and B update together. Then we increased the threshold value by 10 until we remained only with entities that update in all the commits together. The last column contains the results obtained previously by the tool by only using structural dependencies.
 
 As for the new results obtained by combining structural and logical dependencies, highlighted with orange are the values that are close to the previously registered values but did not surpass them. Highlighted with green are values that are better than the previously registered values. At this step, we can also observe that for all three systems measured in tables \ref{tab:measurementscombined:ant}, \ref{tab:measurementscombined:tomcat}, and \ref{tab:measurementscombined:hibernate}, the best values obtained are for connection strength between 40-70\%.
@@ -469,8 +475,9 @@ CON\_T	&	0.924	&	0.933	&	0.938	&	0.941	&	0.941	&	0.944	&	\cellcolor{lightorange}
 
 
 \subsection{Measurements using only logical dependencies}
+In the previous section, we added in the graph based on which the ranking algorithm works the logical and structural dependencies. In the current section, we will add only the logical dependencies to the graph.
 
-In tables \ref{tab:measurementshistory:ant}, \ref{tab:measurementshistory:tomcat}, and \ref{tab:measurementshistory:hibernate}, we only used logical dependencies to detect key classes. The measurements obtained by using only logical dependencies are not as good as using logical and structural dependencies combined or using only structural dependencies. But, all the values obtained are above 0.5, which means that a good part of the key classes is detected by only using logical dependencies.  As mentioned in section \ref{sec:evalmetrics}, a classifier is good if it has the ROC-AUC value as close to 1 as possible. 
+In tables \ref{tab:measurementshistory:ant}, \ref{tab:measurementshistory:tomcat}, and \ref{tab:measurementshistory:hibernate}, are presented the results obtained by using only logical dependencies to detect key classes. The measurements obtained are not as good as using logical and structural dependencies combined or using only structural dependencies. But, all the values obtained are above 0.5, which means that a good part of the key classes is detected by only using logical dependencies.  As mentioned in section \ref{sec:evalmetrics}, a classifier is good if it has the ROC-AUC value as close to 1 as possible. 
 
 
 One possible explanation for the less performing results is that the key classes may have a better design than the rest of the classes, which means that are less prone to change. If the key classes are less prone to change, this implies that the number of dependencies extracted from the versioning system can be less than for other classes.
@@ -560,7 +567,7 @@ The results obtained are presented in figures \ref{fig:plot_sd_ld_ant} - \ref{fi
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{ant_SD_LD.PNG}
-\caption{ Plot representation of the measurements for Ant using structural and logical dependencies combined }
+\caption{Variation of AUC score when varying connection strength threshold for Ant. Results for structural and logical dependencies combined. }
 \label{fig:plot_sd_ld_ant}
 \centering
 \end{figure}
@@ -569,7 +576,7 @@ The results obtained are presented in figures \ref{fig:plot_sd_ld_ant} - \ref{fi
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{tomcat_SD_LD.PNG}
-\caption{ Plot representation of the measurements for Tomcat using structural and logical dependencies combined }
+\caption{Variation of AUC score when varying connection strength threshold for Tomcat. Results for structural and logical dependencies combined. }
 \label{fig:plot_sd_ld_tomcat}
 \centering
 \end{figure}
@@ -578,7 +585,7 @@ The results obtained are presented in figures \ref{fig:plot_sd_ld_ant} - \ref{fi
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{hibernate_SD_LD.PNG}
-\caption{ Plot representation of the measurements for Hibernate using structural and logical dependencies combined }
+\caption{Variation of AUC score when varying connection strength threshold for Hibernate. Results for structural and logical dependencies combined. }
 \label{fig:plot_sd_ld_hibernate}
 \centering
 \end{figure}
@@ -588,7 +595,7 @@ The results obtained are presented in figures \ref{fig:plot_sd_ld_ant} - \ref{fi
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{ant_LD.PNG}
-\caption{ Plot representation of the measurements for Ant using only logical dependencies }
+\caption{Variation of AUC score when varying connection strength threshold for Ant. Results for logical dependencies only. }
 \label{fig:plot_ld_ant}
 \centering
 \end{figure}
@@ -597,7 +604,7 @@ The results obtained are presented in figures \ref{fig:plot_sd_ld_ant} - \ref{fi
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{tomcat_LD.PNG}
-\caption{ Plot representation of the measurements for Tomcat using only logical dependencies }
+\caption{Variation of AUC score when varying connection strength threshold for Tomcat. Results for logical dependencies only. }
 \label{fig:plot_ld_tomcat}
 \centering
 \end{figure}
@@ -606,7 +613,7 @@ The results obtained are presented in figures \ref{fig:plot_sd_ld_ant} - \ref{fi
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{hibernate_LD.PNG}
-\caption{ Plot representation of the measurements for Hibernate using only logical dependencies }
+\caption{Variation of AUC score when varying connection strength threshold for Hibernate. Results for logical dependencies only.}
 \label{fig:plot_ld_hibernate}
 \centering
 \end{figure}
