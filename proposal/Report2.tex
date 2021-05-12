@@ -71,8 +71,13 @@ Tahvildari and Kontogiannis have a more detailed definition regarding key classe
 Also, other researchers use a similar concept as the one defined by Zaidman but under different terms like important classes  \cite{Meyer2014IdentifyingIC} or central software classes \cite{CentralClassesSteidl}.
 
 
-In previous works, the approach for finding key classes is based on ranking the classes with a page ranking algorithm \cite{PagerankENASE}, \cite{enase15}, \cite{Finding-key-classes}, \cite{PagerankSACI} . The page ranking algorithm is a customization of PageRank, the algorithm used to rank web pages \cite{ilprints422}. 
-The PageRank algorithm works based on a recommendation system. If one node has a connection with another node, then it recommends the second node. In previous works, connections are established based on structural dependencies extracted from static code analysis. If A has a structural dependency with B, then A recommends B, and also B recommends A. 
+The key class identification can be done by using different algorithms with different inputs. In the research of Osman et al., the key class identification is made by using a machine learning algorithm and class diagrams as input for the algorithm \cite{6676885}. Thung et al. builds on top of Osman et al.’s approach and adds network metrics and optimistic classification in order to detect key classes \cite{rocclasification}.  
+
+Zaidman et al. use a webmining algorithm and dynamic analysis of the source code to identify the key classes \cite{ZaidmanJurnal}.
+
+Sora et al. use a page ranking algorithm for finding key classes and static analysis of the source code \cite{PagerankENASE}, \cite{enase15}, \cite{SoraSpringer}, \cite{PagerankSACI}. In \cite{Finding-key-classes} the authors use in addition to the previous research also other class attributes to identify important classes.
+The page ranking algorithm is a customization of PageRank, the algorithm used to rank web pages \cite{ilprints422}.
+The PageRank algorithm works based on a recommendation system. If one node has a connection with another node, then it recommends the second node. In previous works, connections are established based on structural dependencies extracted from static code analysis. If A has a structural dependency with B, then A recommends B, and also B recommends A.
 
 The ranking algorithm ranks all the classes from the source code of the system analyzed according to their importance. To identify the important classes from the rest of the classes a threshold for TOP classes from the top of the ranking is set. The TOP threshold value can go from 1 to the total number of classes found in the system. 
 
@@ -137,9 +142,10 @@ The false positive rate of a classifier is calculated as the division between th
 \]
 
 
-In multiple related works, the ROC-AUC metric has been used to evaluate the results for finding key classes of software systems \cite{6676885}, \cite{Finding-key-classes}, \cite{rocclasification}, \cite{7551990}.
+In multiple related works, the ROC-AUC metric has been used to evaluate the results for finding key classes of software systems.
 For a classifier to be considered good, its ROC-AUC metric value should be as close to 1 as possible, when the value is 1 then the classifier is considered to be perfect.
 
+Osman et al. obtained in their research an average Area Under the Receiver Operating Characteristic Curve (ROC-AUC) score of 0.750 \cite{6676885}. Thung et al. obtained an average ROC-AUC score of 0.825 \cite{rocclasification}  and Sora et al. obtained an average ROC-AUC score of 0.894 \cite{Finding-key-classes}.
 
 \section{Baseline approach}
 \label{sec:previous_measurements}
