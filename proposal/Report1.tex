@@ -25,6 +25,7 @@
 
 \newcommand*{\Comb}[2]{{}^{#1}C_{#2}}%
 
+
 \pagestyle{plain}
 
 \usepackage{caption}
@@ -38,6 +39,12 @@
 \input{cover_report1}
 
 \tableofcontents
+
+\listoffigures
+
+\listoftables
+
+
 
 \pagestyle{plain}
 
@@ -124,7 +131,7 @@ From a workflow point of view, we can identify 3 major types of activities that 
 
 \textbf{Download git data.}
 
-The source code repository provides us all the needed information to extract both types of dependencies. It holds the code of the system but also the change history of the system. We use the source code for structural dependencies extraction \ref{sec:sd_extraction} and the change history for co-changing pairs extraction \ref{sec:copairs_extraction}.
+The source code repository provides us all the needed information to extract both types of dependencies. It holds the code of the system but also the change history of the system. We use the source code for structural dependencies extraction and the change history for co-changing pairs extraction.
 To get the source code files and the change history, we first need to know the repository URL from GitHub (GitHub is a Git repository cloud-based hosting service). With the GitHub URL and a series of Git commands, the tool can download all the necessary data for dependencies extraction.
 
 As we can see in figure \ref{fig:figgitdata}, the \textit{"clone"} command will download a Git repository to your local computer, including the source code files. The \textit{"diff"} command will get the differences between two existing commits in the Git repository. 
@@ -150,7 +157,7 @@ For co-changing pairs extraction, the tool parses each generated diff file.
 For each file, the tool gets the number of changed files and the name of the files. 
 After structural dependencies extraction, the tool knows all the software entities contained in a file. Two entities from two changed files form a co-changing pair. After all the co-changing pairs of one diff file are extracted, the tool moves to the next diff file and extracts the set of co-changing pairs.
 
-As presented in sections \ref{sec:filtercommit}, \ref{sec:filterocc}, and \ref{sec:filterstrength}, not every co-changing pair extracted is a logical dependency. For a co-changing pair to be labeled as a logical dependency, it has to meet some criteria. Each criterion constitutes a filter that a co-changing pair has to pass in order to be called logical dependency.
+As will be presented in more details in sections \ref{sec:filtercommit}, \ref{sec:filterocc}, and \ref{sec:filterstrength}, not every co-changing pair extracted is a logical dependency. For a co-changing pair to be labeled as a logical dependency, it has to meet some criteria. Each criterion constitutes a filter that a co-changing pair has to pass in order to be called logical dependency.
 The filters are implemented in the tool and can be combined. The input for each filter is the set of co-changing pairs extracted, and the output is the remaining co-changing pairs that respect the filter criterion.
 
 
@@ -429,13 +436,13 @@ This filter focuses on the connection strength of a co-changing pair. In this se
 To determine the connection strength of a pair, we first need to calculate the connection factors for both entities that form a co-changing pair.
 Assuming that we have a co-changing pair formed by entities A and B, the connection factor of entity A with entity B is the percentage from the total commits involving A that contains entity B. The connection factor of entity B with entity A is the percentage from the total commits involving B that contain also entity A.
 
-\[ connection\ factor\ for\ A 
-  = \dfrac{100 * commits\ involving\ A\ and\ B}{total\ nr\ of\ commits\ involving\ A}
-\]
+\begin{equation}
+ connection\ factor\ for\ A = \frac{100 * commits\ involving\ A\ and\ B}{total\ nr\ of\ commits\ involving\ A}
+\end{equation}
 
-\[ connection\ factor\ for\ B 
-  = \dfrac{100 * commits\ involving\ A\ and\ B}{total\ nr\ of\ commits\ involving\ B}
-\]
+\begin{equation}
+ connection\ factor\ for\ B = \frac{100 * commits\ involving\ A\ and\ B}{total\ nr\ of\ commits\ involving\ B}
+\end{equation}
 
 As a practical example, if the pair formed by A and B update together 7 times and the total number of commits involving A is 20 and involving B is 7. The factor for A is 35 and for B is 100. The factor of 100 is the maximum factor that you can have and means that in all the commits involving B, also A is present.
 
@@ -779,5 +786,6 @@ Based on all the conclusions described above, further in our research, we will u
 
 \bibliographystyle{plain}
 \bibliography{logicaldepd}
+\addcontentsline{toc}{chapter}{Bibliography}
 \end{document}
 

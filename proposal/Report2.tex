@@ -894,9 +894,7 @@ In our experiments the filter based on commit size had a hard threshold of 10 fi
 
 In section \ref{sec:metrics} we compared the number of logical dependencies of an entity with the number of entities that call functions of the entity (fan-in metric) and the number of entities called by the entity (fan-out metric). We did not find any direct connection between fan-in, fan-out, and logical dependencies number but we believe that the logical dependencies number can be used complementary together with fan-in and fan-out metric. 
 
-In section \ref{sec:current_measurements} we approached two scenarios to detect key classes by using logical dependencies. In the first scenario, we used logical dependencies together with structural dependencies and in the second, we used only logical dependencies to detect the key classes.
-
-We modified the tool used in the baseline approach to use also logical dependencies, and then we performed the key class identification using that tool. 
+In section \ref{sec:current_measurements} we approached two scenarios to detect key classes by using logical dependencies. In the first scenario, we used logical dependencies together with structural dependencies and in the second, we used only logical dependencies to detect the key classes. We modified the tool used in the baseline approach to use also logical dependencies, and then we performed the key class identification using that tool. 
 The quality of the results obtained was evaluated with the same tool, the metric used to evaluate the results is Area Under the Receiver Operating Characteristic Curve (ROC-AUC). We then compared the evaluation results with the results obtained by the baseline approach. 
 
 Based on the results obtained, compared with the baseline results, we did saw a slight improvement in key class detection when both logical and structural dependencies were used together, the best results were obtained with a connection strength threshold of 40-70\%. When we used only logical dependencies to detect key classes, the results were less performing than using only structural or structural and logical dependencies combined.
@@ -906,8 +904,7 @@ Osman et al. obtained in their research an average Area Under the Receiver Opera
 
 In the current research, we obtained an average ROC-AUC score of 0.926 when using logical and structural dependencies combined and a score of 0.747 when using only logical dependencies to detect key classes.
 
-In conclusion, by using both dependencies combined, we can obtain a better ROC-AUC score than the one obtained by the baseline approach. And, by using only logical dependencies we don't obtain a better score than the baseline approach but compared with the results obtained by other researchers \cite{6676885}, the score obtained by only using logical dependencies in key class detection is better. 
-
+In conclusion, by using both dependencies combined, we can obtain a slightly better ROC-AUC score than the one obtained by the baseline approach. And, by using only logical dependencies we don't obtain a better score than the baseline approach but compared with the results obtained by other researchers \cite{6676885}, the score obtained is almost equal. The advantage of using only logical dependencies in key class detection is that it only uses data extracted from the versioning system and can be generalized to various programming languages.
 
 
 
