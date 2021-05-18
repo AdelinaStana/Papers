@@ -11,6 +11,7 @@
 \usepackage{color, colortbl}
 \usepackage{caption}
 \usepackage{amsmath}
+\usepackage[nottoc,numbib]{tocbibind}
 
 \graphicspath{ {./images/} }
 
@@ -36,13 +37,17 @@
 
 \tableofcontents
 
+\listoffigures
+
+\listoftables
+
 \pagestyle{plain}
 
 \chapter{Introduction}
 
 \hspace{5mm} The goal of the thesis is to develop methods for analyzing legacy software systems by using historical information extracted from the versioning systems.
 
-This second report presents results obtained by using the extracted logical dependencies.
+We divided our work into two main parts, the first part covers the historical information collection and filtering and was presented in the first report. And the second part covers the usage of the collected information and will be presented in this second report.
 
 In the first report, we presented the filtering process of co-changing pairs into logical dependencies. 
 The co-changing pairs are pairs of classes that record co-changes in the versioning system. The logical dependencies are those co-changing pairs that remain after filtering. We filter the co-changing pairs to increase their veridicality and to decrease the size of the extracted information. 
@@ -114,14 +119,15 @@ The confusion matrix has the following outcomes:
 
 
 Precision is the ratio of True Positives to all the positives of the result set.
-\[ precision
-  = \dfrac{TP}{TP+FN}
-\]
+
+\begin{equation}
+ precision = \frac{TP}{TP+FN}
+\end{equation}
 The recall is the ratio of True Positives to all the positives of the reference set.
 
-\[ recall
-  = \dfrac{TP}{TP+FP}
-\]
+\begin{equation}
+ recall = \frac{TP}{TP+FP}
+\end{equation}
 
 As mentioned in section \ref{sec:definition}, to distinguish the key classes from the rest of the classes a TOP threshold is used. Some researchers consider that 15\% of the total classes is the best value for the TOP threshold and others consider that the value should be in the range of 20-30. 
 
@@ -133,13 +139,15 @@ The precision-recall metric is suited if the threshold value is fixed. If the th
 The ROC graph is a two-dimensional graph that has on the X-axis plotted the false positive rate and on the Y-axis the true positive rate. By plotting the true positive rate and the false positive rate at thresholds that vary between a minimum and a maximum possible value we obtain the ROC curve. The area under the ROC curve is called Area Under the Curve (AUC).
 
 The true positive rate of a classifier is calculated as the division between the number of true positive results identified and all the positive results identified:
-\[ True\ positive\ rate (TPR)
-  = \dfrac{TP}{TP+FN}
-\]
+
+\begin{equation}
+ True\ positive\ rate (TPR) = \frac{TP}{TP+FN}
+\end{equation}
 The false positive rate of a classifier is calculated as the division between the number of false positive results identified and all the negative results identified:
-\[ False\ positive\ rate (FPR)
-  = \dfrac{FP}{FP+TN}
-\]
+
+\begin{equation}
+ False\ positive\ rate (FPR) = \frac{FP}{FP+TN}
+\end{equation}
 
 
 In multiple related works, the ROC-AUC metric has been used to evaluate the results for finding key classes of software systems.
@@ -330,13 +338,13 @@ The logical dependencies are those co-changing pairs extracted from the versioni
 To determine the connection strength of a pair, we first need to calculate the connection factors for both entities that form a co-changing pair.
 Assuming that we have a co-changing pair formed by entities A and B, the connection factor of entity A with entity B is the percentage from the total commits involving A that contains entity B. The connection factor of entity B with entity A is the percentage from the total commits involving B that contain also entity A.
 
-\[ connection\ factor\ for\ A 
-  = \dfrac{100 * commits\ involving\ A\ and\ B}{total\ nr\ of\ commits\ involving\ A}
-\]
+\begin{equation}
+ connection\ factor\ for\ A = \frac{100 * commits\ involving\ A\ and\ B}{total\ nr\ of\ commits\ involving\ A}
+\end{equation}
 
-\[ connection\ factor\ for\ B 
-  = \dfrac{100 * commits\ involving\ A\ and\ B}{total\ nr\ of\ commits\ involving\ B}
-\]
+\begin{equation}
+ connection\ factor\ for\ B = \frac{100 * commits\ involving\ A\ and\ B}{total\ nr\ of\ commits\ involving\ B}
+\end{equation}
 
 We calculated the connection factor for each entity involved in a co-changing pair and filtered the co-changing pairs based on it. The rule set is that both entities had to have a connection factor with each other greater than the threshold value.
 
