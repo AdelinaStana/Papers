@@ -24,8 +24,8 @@
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
-\newcommand*{\Comb}[2]{{}^{#1}C_{#2}}%
-
+\newcommand*{\Comb}[2]{{}C^{#1}_{#2}}%
+\hyphenation{analysis}
 
 \pagestyle{plain}
 
@@ -110,7 +110,7 @@ The versioning system contains the long-term change history of every file. Each 
 
 
 Currently there is no set of rules or best practices that can be applied to the extracted class co-changes and can guarantee their filtering into a set of logical dependencies.
-This is mainly because not all the updates made in the versioning system are code related. For example a commit that has as participants a big number of files can indicate that a merge with another branch or a folder renaming has been made. In this case, a series of irrelevant co-changing pairs of entities can be introduced. So, in order to exclude this kind of situations the information extracted from the versioning system has to be filtered first and then used. Surveys also show that historical information is rarely used due to the size of the extracted information \cite{Shtern:2012:CMS:2332427.2332428}, \cite{sar}.
+This is mainly because not all the updates made in the versioning system are code related. For example, a commit that has as participants a big number of files can indicate that a merge with another branch or a folder renaming has been made. In this case, a series of irrelevant co-changing pairs of entities can be introduced. So, in order to exclude this kind of situations the information extracted from the versioning system has to be filtered first and then used. Surveys also show that historical information is rarely used due to the size of the extracted information \cite{Shtern:2012:CMS:2332427.2332428}, \cite{sar}.
 
 Other works have tried to filter co-changes \cite{Oliva:2011:ISL:2067853.2068086}, \cite{DBLP:journals/jss/AjienkaC17}, \cite{DBLP:conf/issre/OlivaG15}. One of the used co-changes filter is the commit size.The commit size is the number of code files changed in that particular commit. 
 Ajienka and Capiluppi established a threshold of 10 for the maximum accepted size for a commit \cite{DBLP:journals/jss/AjienkaC17}. This means that all the commits that had more than 10 code files changed where discarded from the research. But setting a harcoded threshold for the commit size is debatable because in order to say that a commit is big or small you have to look first at the size of the system and at the trends from the versioning system. Even thought the best practices encourage small and often commits, the developers culture is the one that influences the most the trending size of commits from one system.
@@ -232,7 +232,7 @@ We have analyzed a set of open-source projects found on GitHub\footnote{http://g
 \label{sec:filtercommit}
 
 As presented in section \ref{sec:copairs_extraction}, according to surveys,  co-changing pairs are not used because of their size. One system can have millions of co-changing pairs.
-Whit this filtering type, we not only want to decrease the total size of the extracted co-changing pairs. But also to be one step closer to the identification of the logical dependencies among the co-changing pairs.
+With this filtering type, we not only want to decrease the total size of the extracted co-changing pairs. But also to be one step closer to the identification of the logical dependencies among the co-changing pairs.
 In this step, we want to filter the co-changing pairs extracted after commit size (cs). This means that the co-changing pairs are extracted only from commits that involve fewer files than an established threshold number. 
 
 Different works have chosen fixed threshold values for the maximum number of files accepted in a commit. Cappiluppi and Ajienka, in their works \cite{DBLP:journals/jss/AjienkaC17}, \cite{DBLP:journals/ese/AjienkaCC18} only take into consideration commits with less then 10 source code files changed in building the logical dependencies.
@@ -264,6 +264,8 @@ The high number of co-changing pairs extracted from such a small number of commi
 
 One single commit transaction can lead to a large amount of co-changing pairs. For example in RxJava we have commit transactions with 1030 source code files, this means that those commits can generate 
 $\Comb{n}{k}=\frac{n!}{k!(n-k)!} = \frac{1030!}{2!(1028)!} = 529 935$ logical dependencies. By setting a threshold on the commit transaction size we can avoid the introduction of those co-changing pairs into the system.
+
+
 
 So filtering 10\% of the total amount of commit transactions can lead to a significant decrease of the amount of co-changing pairs and that is why we choose the value of 10 files as our fixed threshold for the maximum size of a commit transaction \cite{DepSACI}.
 
