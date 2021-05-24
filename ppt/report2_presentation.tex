@@ -94,14 +94,20 @@ We divided our work into two main parts
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
  \begin{frame}
-\frametitle{Metrics for results evaluation}
+\frametitle{Results evaluation}
  To evaluate the quality of the approach and solution produced,
 the key classes found are compared with a reference solution.
 \textit{The reference solution is extracted from the developer's documentation.}
-\vskip 0.3cm
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+ \begin{frame}
+\frametitle{Metrics for results evaluation}
 For the comparison between both solutions is used a classification model and the Receiver Operating Characteristic Area Under Curve (ROC-AUC) metric to evaluate the performance.
 \vskip 0.3cm
-For a classifier to be considered good, its ROC-AUC metric value should be as close to 1 as possible.
+ This tool presents the result as
+a number between 0 and 1. For a classifier to be considered good, its ROC-AUC metric value should be as close to 1 as possible.
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -236,6 +242,36 @@ CONN\_TOTAL	&	0.94630	&	0.93903	&	0.94630	\\
 
  \begin{frame}
 \frametitle{Measurements using combined SD and LD}
+The tool used by the baseline approach builds a graph that contains the structural dependencies extracted from static source code analysis.
+We modified the tool to read also logical dependencies and add them to the graph. 
+
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1}
+\caption{Measurements for Ant using structural and logical dependencies combined}
+\label{tab:measurementscombined:ant}
+\centering
+\scalebox{0.6}{
+\begin{tabular}{|c|cccccccccc|c|}
+\hline
+Metrics &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$		&	Baseline \\
+\hline
+
+PR\_U2\_W	&	0.924	&	0.925	&	0.926	&	0.927	&	0.927	&	0.927	&	\cellcolor{lightgreen}0.929	&	0.928	&	0.928	&	0.928	&	0.929	\\
+PR	&	0.914	&	0.854	&	0.851	&	\cellcolor{lightgreen}0.866	&	\cellcolor{lightgreen}0.876	&	\cellcolor{lightgreen}0.882	&	\cellcolor{lightgreen}0.887	&	0.854	&	0.852	&	0.852	&	0.855	\\
+PR\_U	&	0.910	&	0.930	&	0.933	&	0.933	&	\cellcolor{lightgreen}0.935	&	\cellcolor{lightgreen}0.934	&	\cellcolor{lightgreen}0.939	&	0.933	&	0.933	&	0.933	&	0.933	\\
+CON\_T\_W	&	0.924	&	0.928	&	0.931	&	0.932	&	0.933	&	0.934	&	\cellcolor{lightgreen}0.936	&	0.934	&	0.934	&	0.934	&	0.934	\\
+CON\_T	&	0.840	&	0.886	&	0.904	&	0.909	&	0.915	&	0.923	&	0.932	&	0.935	&	\cellcolor{lightorange}0.936	&	\cellcolor{lightorange}0.936	&	0.942	\\
+
+\hline
+\end{tabular}
+}
+\end{table}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+ \begin{frame}
+\frametitle{Measurements using combined SD and LD (cont.)}
  \begin{center}
      \begin{figure}
 	\includegraphics[width=\textwidth]{ld_st_measurements.png}
@@ -243,6 +279,38 @@ CONN\_TOTAL	&	0.94630	&	0.93903	&	0.94630	\\
 \end{center}
 
 \end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+ \begin{frame}
+\frametitle{Measurements using only logical dependencies}
+For this type of measurement, we add only the logical dependencies to the graph.
+
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1}
+\caption{Measurements for Ant using only logical dependencies}
+\label{tab:measurementshistory:ant}
+\centering
+\scalebox{0.6}{
+\begin{tabular}{|c|cccccccccc|c|}
+\hline
+Metrics &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$		&	Baseline \\
+\hline
+
+PR\_U2\_W	&	0.720	&	0.627	&	0.718	&	0.703	&	0.732	&	0.824	&	0.852	&	\cellcolor{lightorange}0.881	&	0.876	&	0.876	&	0.929	\\
+PR	&	0.720	&	0.627	&	0.718	&	0.703	&	0.732	&	0.824	&	0.852	&	\cellcolor{lightorange}0.881	&	0.876	&	0.876	&	0.855	\\
+PR\_U	&	0.720	&	0.627	&	0.718	&	0.703	&	0.732	&	0.824	&	0.852	&	\cellcolor{lightorange}0.881	&	0.876	&	0.876	&	0.933	\\
+CON\_T\_W	&	0.722	&	0.581	&	0.644	&	0.676	&	0.727	&	0.819	&	0.842	&	0.874	&	\cellcolor{lightorange}0.876	&	0.876	&	0.934	\\
+CON\_T	&	0.722	&	0.581	&	0.644	&	0.676	&	0.727	&	0.819	&	0.842	&	0.874	&	\cellcolor{lightorange}0.876	&	0.876	&	0.942	\\
+
+\hline
+\end{tabular}
+}
+\end{table}
+
+\end{frame}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
