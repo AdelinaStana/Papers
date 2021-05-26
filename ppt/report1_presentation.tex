@@ -247,7 +247,7 @@ We also analyzed the number of co-changing pairs extracted from each commit tran
 One single commit transaction can lead to a large amount of co-changing pairs. 
  \vskip 0.3cm 
 For example in RxJava we have commit transactions with 1030 source code files, this means that those commits can generate 
-$\Comb{n}{k}=\frac{n!}{k!(n-k)!} = \frac{1030!}{2!(1028)!} = 529 935$ logical dependencies.
+$\Comb{k}{n}=\frac{n!}{k!(n-k)!} = \frac{1030!}{2!(1028)!} = 529 935$ logical dependencies.
  \vskip 0.3cm 
 
  By setting a threshold on the commit transaction size we can avoid the introduction of those co-changing pairs into the system.

@@ -36,7 +36,7 @@
 \graphicspath{ {./images} }
 
 
-\newcommand*{\Comb}[2]{{}^{#1}C_{#2}}%
+\newcommand*{\Comb}[2]{{}^{#2}C_{#1}}%
 
 \title[Pres]{Methods and Tools for the Analysis of Legacy Software
 Systems\\
@@ -83,7 +83,7 @@ We divided our work into two main parts
 \frametitle{State of the art in key classes detection (cont.)}
  The key class identification can be done by using different algorithms:
 \begin{itemize}
-\item Osman et al., used a machine learning algorithm and class diagrams  \cite{6676885}
+\item Osman et al. used a machine learning algorithm and class diagrams  \cite{6676885}
 \item Thung et al. builds on top of Osman et al.’s approach and adds network metrics and optimistic classification \cite{rocclasification}
 \item Zaidman et al. use a webmining algorithm and dynamic analysis of the source code \cite{ZaidmanJurnal}
 \item Sora et al. use static analysis of the source code and a page ranking algorithm together with other class attributes \cite{Finding-key-classes}
