@@ -16,14 +16,14 @@
 %%%%% NEW PACKAGES 
 \usepackage{graphicx}
 \usepackage{color, colortbl}
-\graphicspath{ {./images/} }
+\graphicspath{ {./figures/} }
 
 \definecolor{lightgreen}{rgb}{0.82, 0.94, 0.75}
 \definecolor{lightorange}{rgb}{0.98, 0.84, 0.65}
 
 %%%%%%%
 
-\title{The Long Title of Your Computer Science\\and Information Systems Paper%
+\title{Logical dependencies: extraction from the versioning system and usage%
 \footnote{If this is an extended version of a conference paper, it should be clearly stated here.}}
 
 %% Use this if the title is too long for the running heads
@@ -34,13 +34,13 @@
 %% Use this the list of authors is too long for the running heads
 %\authorrunning{First Author et al.}
 
-\institute{Institute of the First Author\\
+\institute{Stana Adelina Diana\\
   Address\\
-  \email{author1@institute.org}
+  \email{stana.adelina.diana@gmail.com}
   \and
-  Faculty of the Second Author\\
+  Sora Ioana\\
   Address\\
-  \email{author2@faculty.edu}}
+  \email{ioana.sora@cs.upt.ro}}
 
 \begin{document}
 
@@ -49,7 +49,7 @@
 \begin{abstract}
 The abstract goes here, and keywords in a new paragraph.
 
-\vspace{6pt}\textbf{Keywords:} keyword1, keyword2.
+\vspace{6pt}\textbf{Keywords:} logica ldependencies, versioning system, key classes.
 \end{abstract}
 
 \section{Introduction}
@@ -103,13 +103,15 @@ The reference solution is extracted from the developer documentation.  Classes m
 For the comparison between both solutions, is used a classification model. The quality of the solution produced is evaluated by using metrics that evaluate the performance of the classification model, such as Precision-Recall and Receiver Operating Characteristic Area Under Curve (ROC-AUC).
 
 A classification model (or "classifier") is a mapping between expected results and predicted results \cite{ROCIntro}, \cite{ROCBRADLEY19971145}. Both results can be labeled as positive or negative, which leads us to the confusion matrix from figure \ref{fig:confusion}. 
+
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{confusion}
+\includegraphics[width=\textwidth]{confusion.png}
 \caption{Confusion matrix}
 \label{fig:confusion}
 \centering
 \end{figure}
+
 The confusion matrix has the following outcomes:
 		\begin{itemize}
 			\item \textit{true positive}, if the expected result is positive and the predicted result is also positive.
