@@ -426,7 +426,6 @@ CON\_T	&	0.840	&	0.886	&	0.904	&	0.909	&	0.915	&	0.923	&	0.932	&	0.935	&	\cellco
 \caption{Measurements for Tomcat using structural and logical dependencies combined}
 \label{tab:measurementscombined:tomcat}
 \centering
-\scalebox{0.8}{
 \begin{tabular}{|c|cccccccccc|c|}
 \hline
 Metrics &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$		&	Baseline \\
@@ -441,7 +440,6 @@ CON\_T	&	0.868	&	0.906	&	0.930	&	0.936	&	0.937	&	\cellcolor{lightorange}0.938	&	
 
 \hline
 \end{tabular}
-}
 \end{table}
 
 
@@ -450,7 +448,6 @@ CON\_T	&	0.868	&	0.906	&	0.930	&	0.936	&	0.937	&	\cellcolor{lightorange}0.938	&	
 \caption{Measurements for Hibernate using structural and logical dependencies combined}
 \label{tab:measurementscombined:hibernate}
 \centering
-\scalebox{0.8}{
 \begin{tabular}{|c|cccccccccc|c|}
 \hline
 Metrics &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$		&	Baseline \\
@@ -465,7 +462,6 @@ CON\_T	&	0.924	&	0.933	&	0.938	&	0.941	&	0.941	&	0.944	&	\cellcolor{lightorange}
 
 \hline
 \end{tabular}
-}
 \end{table}
 
 \subsection{Measurements using only logical dependencies}
@@ -481,7 +477,6 @@ One possible explanation for the less performing results is that the key classes
 \caption{Measurements for Ant using only logical dependencies}
 \label{tab:measurementshistory:ant}
 \centering
-\scalebox{0.8}{
 \begin{tabular}{|c|cccccccccc|c|}
 \hline
 Metrics &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$		&	Baseline \\
@@ -495,7 +490,6 @@ CON\_T	&	0.722	&	0.581	&	0.644	&	0.676	&	0.727	&	0.819	&	0.842	&	0.874	&	\cellco
 
 \hline
 \end{tabular}
-}
 \end{table}
 
 
@@ -504,7 +498,6 @@ CON\_T	&	0.722	&	0.581	&	0.644	&	0.676	&	0.727	&	0.819	&	0.842	&	0.874	&	\cellco
 \caption{Measurements for Tomcat using only logical dependencies}
 \label{tab:measurementshistory:tomcat}
 \centering
-\scalebox{0.8}{
 \begin{tabular}{|c|cccccccccc|c|}
 \hline
 Metrics &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$		&	Previous \\
@@ -519,7 +512,7 @@ CON\_T	&	0.654	&	0.611	&	0.636	&	0.697	&	0.754	&	0.776	&	0.786	&	\cellcolor{ligh
 				
 \hline
 \end{tabular}
-}
+
 \end{table}
 
 
@@ -528,7 +521,6 @@ CON\_T	&	0.654	&	0.611	&	0.636	&	0.697	&	0.754	&	0.776	&	0.786	&	\cellcolor{ligh
 \caption{Measurements for Hibernate using only logical dependencies}
 \label{tab:measurementshistory:hibernate}
 \centering
-\scalebox{0.8}{
 \begin{tabular}{|c|cccccccccc|c|}
 \hline
 Metrics &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$		&	Baseline \\
@@ -543,7 +535,6 @@ CON\_T	&	0.644	&	0.564	&	0.601	&	0.619	&	0.622	&	0.650	&	0.653	&	\cellcolor{ligh
 
 \hline
 \end{tabular}
-}
 \end{table}
 
 \section{Correlation between details of the systems and results}
@@ -674,207 +665,6 @@ Initially, we expected to see a Gaussian curve, but instead, we see a bell curve
 Some of the key classes are strongly connected in the versioning system, and even for higher threshold values don't get filtered out. Meanwhile, the rest of the classes that are not key classes get filtered out for higher threshold values which leads to better performing measurements when the threshold value are above 60\%. 
 
 
-\section{Comparison of the extracted data with fan-in and fan-out metric}
-\label{sec:metrics}
-
-Fan-in and fan-out are coupling metrics. The fan-in of entity A is the total number of entities that call functions of A. The fan-out of A is the total number of entities called by A \cite{5507329}.
-
-
-In tables \ref{tab:measurementsfan:ant}, \ref{tab:measurementsfan:catalina}, and \ref{tab:measurementsfan:hibernate} we can find the metrics detalis for each documented key class of each system.
-The first column represents the name of each key class, the second column represents the fan\_in values for each key class, the third column represents the fan\_out values, the fourth column represents the number of entities that call functions of that key class plus the number of entities that are called by the key class (fan\_in and fan\_out combined), and the fifth column represents the number of logical dependencies in which an entity is involved. 
-
-For Ant, we can see in table \ref{tab:measurementsfan:ant} that all the key classes have logical dependencies with other classes. The LD\_NUMBER means the number of logical dependencies of an entity. The key classes with the most LD number are Project and IntrospectionHelper, these two entities can be found also in table \ref{tab:measurementstop:ant} in which we did a top 10 entities that have a logical dependency with other entities. This means that some key classes are involved in software change quite often and can be observed via system history.
-
-\begin{table}[!h]
-\renewcommand{\arraystretch}{1}
-\caption{Measurements for Ant key classes}
-\label{tab:measurementsfan:ant}
-\centering
-\scalebox{0.8}{
-\begin{tabular}{|c|ccccc|}
-\hline
-Nr.	&	Classname	&	FAN\_IN	&	FAN\_OUT	&	FAN\_TOTAL	&	LD\_NUMBER\\
-\hline
-1	&	Project	&	191	&	23	&	214	&	157	\\
-2	&	Target	&	28	&	6	&	34	&	78	\\
-3	&	UnknownElement	&	17	&	13	&	30	&	90	\\
-4	&	RuntimeConfigurable	&	17	&	13	&	30	&	118	\\
-5	&	IntrospectionHelper	&	18	&	24	&	42	&	143	\\
-6	&	Main	&	1	&	13	&	14	&	82	\\
-7	&	TaskContainer	&	11	&	1	&	12	&	21	\\
-8	&	ProjectHelper2\$ElementHandler	&	1	&	12	&	13	&	30	\\
-9	&	Task	&	110	&	7	&	117	&	88	\\
-10	&	ProjectHelper	&	16	&	8	&	24	&	101	\\
-\hline
-\end{tabular}
-}
-\end{table}
-
-
-For Tomcat Catalina, same as for Ant, we can see in table \ref{tab:measurementsfan:catalina} that all the key classes have logical dependencies.  The key classes with the most LD number are StandardContext and Request, these two entities can also be found in table \ref{tab:measurementstop:catalina} in which we did a top 10 entities that have the most logical dependencies with other entities for Tomcat Catalina.
-
-For Hibernate things are a little bit different, as we can see in table \ref{tab:measurementsfan:hibernate},  key classes like Criterion, Projection, or Transaction have 0 logical dependencies, meaning that those key classes are not involved in any software change. One possible explanation for this is that for Hibernate the architecture is designed in such way that the core is not often touched by change. 
-
-
-\begin{table}[!h]
-\renewcommand{\arraystretch}{1}
-\caption{Measurements for Tomcat Catalina key classes.}
-\label{tab:measurementsfan:catalina}
-\centering
-\scalebox{0.8}{
-\begin{tabular}{|c|ccccc|}
-\hline
-Nr.	&	Classname	&	FAN\_IN	&	FAN\_OUT	&	FAN\_TOTAL	&	LD\_NUMBER \\
-\hline
-1	&	Context	&	74	&	8	&	82	&	126	\\
-2	&	Request	&	48	&	28	&	76	&	215	\\
-3	&	Container	&	51	&	8	&	59	&	64	\\
-4	&	Response	&	38	&	12	&	50	&	90	\\
-5	&	StandardContext	&	11	&	38	&	49	&	216	\\
-6	&	FANector	&	23	&	9	&	32	&	89	\\
-7	&	Session	&	29	&	2	&	31	&	28	\\
-8	&	Valve	&	29	&	2	&	31	&	19	\\
-9	&	Wrapper	&	29	&	1	&	30	&	36	\\
-10	&	Manager	&	25	&	3	&	28	&	31	\\
-11	&	Host	&	26	&	1	&	27	&	44	\\
-12	&	Service	&	20	&	6	&	26	&	51	\\
-13	&	Engine	&	23	&	2	&	25	&	1	\\
-14	&	Realm	&	18	&	6	&	24	&	21	\\
-15	&	CoyoteAdapter	&	1	&	22	&	23	&	140	\\
-16	&	StandardHost	&	8	&	15	&	23	&	88	\\
-17	&	LifecycleListener	&	21	&	1	&	22	&	3	\\
-18	&    StandardEngine	&	2	&	19	&	21	&	57	\\
-19	&	Pipeline	&	19	&	2	&	21	&	20	\\
-20	&	Server	&	16	&	4	&	20	&	49	\\
-21	&	HostConfig	&	3	&	15	&	18	&	79	\\
-22	&	StandardWrapper	&	5	&	13	&	18	&	92	\\
-23	&	StandardService	&	3	&	12	&	15	&	81	\\
-24	&	Catalina	&	2	&	13	&	15	&	94	\\
-25	&	Loader	&	14	&	1	&	15	&	18	\\
-26	&	StandardServer	&	2	&	12	&	14	&	94	\\
-27	&	StandardPipeline	&	1	&	10	&	11	&	62	\\
-28	&	Bootstrap	&	3	&	3	&	6	&	41	\\	
-\hline
-\end{tabular}
-}
-\end{table}
-
-\begin{table}[!h]
-\renewcommand{\arraystretch}{1}
-\caption{Measurements for Hibernate key classes.}
-\label{tab:measurementsfan:hibernate}
-\centering
-\scalebox{0.8}{
-\begin{tabular}{|c|ccccc|}
-\hline
-Nr.	&	Classname	&	FAN\_IN	&	FAN\_OUT	&	FAN\_TOTAL	&	LD\_NUMBER \\
-\hline
-1	&	SessionFactoryImplementor	&	438	&	43	&	481	&	51	\\
-2	&	Type	&	444	&	5	&	449	&	0	\\
-3	&	Table	&	89	&	29	&	118	&	82	\\
-4	&	SessionImplementor	&	52	&	12	&	64	&	14	\\
-5	&	Criteria	&	45	&	12	&	57	&	15	\\
-6	&	Column	&	46	&	10	&	56	&	20	\\
-7	&	Session	&	31	&	21	&	52	&	52	\\
-8	&	Query	&	12	&	28	&	40	&	0	\\
-9	&	Configuration	&	1	&	38	&	39	&	115	\\
-10	&	SessionFactory	&	24	&	12	&	36	&	33	\\
-11	&	Criterion	&	30	&	3	&	33	&	0	\\
-12	&	Projection	&	11	&	3	&	14	&	0	\\
-13	&	FANectionProvider	&	12	&	2	&	14	&	0	\\
-14	&	Transaction	&	11	&	1	&	12	&	0	\\
-				
-\hline
-\end{tabular}
-}
-\end{table}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-In tables \ref{tab:measurementstop:ant}, \ref{tab:measurementstop:catalina}, and \ref{tab:measurementstop:hibernate} we can find the top 10 entities with logical dependencies. The first column represents the name of each top 10 entity, the second column represents the fan\_in values, the third column represents the fan\_out values, the fourth column represents the fan\_in and fan\_out combined, and the fifth column represents the number of logical dependencies in which the entity is involved.
-
-
-We did these top 10 tables to offer an overview of the highest registered numbers for LD for each system. As we mentioned before, some of the key classes are also present in these tables, but not all of them.
-
-In table \ref{tab:measurementstop:hibernate} we can find the top 10 measurements for Hibernate, most of the table is occupied by inner classes of AbstractEntityPersister. This is expected behavior since class AbstractEntityPersister is also present. This behavior is caused by the impossibility to separate the updates done for a class from its inner classes in the versioning system. So, each time AbstractEntityPersister records a change, also the inner classes are considered to have changed.
-\begin{table}[!h]
-\renewcommand{\arraystretch}{1}
-\caption{Top 10 measurements for Ant. }
-\label{tab:measurementstop:ant}
-\centering
-\scalebox{0.8}{
-\begin{tabular}{|c|ccccc|}
-\hline
-Nr.	&	Classname	&	FAN\_IN	&	FAN\_OUT	&	FAN\_TOTAL	&	LD\_NUMBER \\
-\hline
-1	&	\cellcolor{lightorange}Project	&	191	&	23	&	214	&	157	\\
-2	&	Project\$AntRefTable	&	1	&	2	&	3	&	157	\\
-3	&	Path	&	39	&	13	&	52	&	147	\\
-4	&	Path\$PathElement	&	3	&	2	&	5	&	147	\\
-5	&	\cellcolor{lightorange}IntrospectionHelper	&	18	&	24	&	42	&	143	\\
-6	&	IntrospectionHelper\$AttributeSetter	&	8	&	1	&	9	&	143	\\
-7	&	IntrospectionHelper\$Creator	&	3	&	5	&	8	&	143	\\
-8	&	IntrospectionHelper\$NestedCreator	&	7	&	1	&	8	&	143	\\
-9	&	Ant	&	2	&	15	&	17	&	136	\\
-10	&	Ant\$Reference	&	3	&	1	&	4	&	136	\\
-\hline
-\end{tabular}
-}
-\end{table}
-
-\begin{table}[!h]
-\renewcommand{\arraystretch}{1}
-\caption{Top 10 measurements for Tomcat Catalina. }
-\label{tab:measurementstop:catalina}
-\centering
-\scalebox{0.8}{
-\begin{tabular}{|c|ccccc|}
-\hline
-Nr.	&	Classname	&	FAN\_IN	&	FAN\_OUT	&	FAN\_TOTAL	&	LD\_NUMBER \\
-\hline
-1	&	\cellcolor{lightorange}StandardContext	&	11	&	38	&	49	&	216	\\
-2	&	StandardContext\$ContextFilterMaps	&	0	&	0	&	0	&	216	\\
-3	&	StandardContext\$NoPluggabilityServletContext	&	0	&	0	&	0	&	216	\\
-4	&	\cellcolor{lightorange}Request	&	48	&	28	&	76	&	215	\\
-5	&	Request\$SpecialAttributeAdapter	&	0	&	0	&	0	&	215	\\
-6	&	ApplicationContext	&	3	&	22	&	25	&	158	\\
-7	&	ApplicationContext\$DispatchData	&	0	&	0	&	0	&	158	\\
-8	&	ContextConfig	&	3	&	26	&	29	&	143	\\
-9	&	ContextConfig\$DefaultWebXmlCacheEntry	&	0	&	0	&	0	&	143	\\
-10	&	ContextConfig\$JavaClassCacheEntry	&	0	&	0	&	0	&	143	\\
-\hline
-\end{tabular}
-}
-\end{table}
-
-
-\begin{table}[!h]
-\renewcommand{\arraystretch}{1}
-\caption{Top 10 measurements for Hibernate. }
-\label{tab:measurementstop:hibernate}
-\centering
-\scalebox{0.8}{
-\begin{tabular}{|c|ccccc|}
-\hline
-Nr.	&	Classname	&	FAN\_IN	&	FAN\_OUT	&	FAN\_TOTAL	&	LD\_NR \\
-\hline
-1	&	AvailableSettings	&	1	&	0	&	1	&	205	\\
-2	&	AbstractEntityPersister	&	9	&	143	&	152	&	190	\\
-3	&	AbstractEntityPersister\$CacheEntryHelper	&	0	&	0	&	0	&	190	\\
-4	&	AbstractEntityPersister\$InclusionChecker	&	0	&	0	&	0	&	190	\\
-5	&	AbstractEntityPersister\$NoopCacheEntryHelper	&	0	&	0	&	0	&	190	\\
-6	&	AbstractEntityPersister\$ReferenceCacheEntryHelper	&	0	&	0	&	0	&	190	\\
-7	&	AbstractEntityPersister\$StandardCacheEntryHelper	&	0	&	0	&	0	&	190	\\
-8	&	AbstractEntityPersister\$StructuredCacheEntryHelper	&	0	&	0	&	0	&	190	\\
-9	&	Dialect	&	265	&	104	&	369	&	176	\\
-10	&	SessionFactoryImpl\$SessionBuilderImpl	&	1	&	25	&	26	&	167	\\
-\hline
-\end{tabular}
-}
-\end{table}
-
-Overall, by looking at the comparisons between FAN\_IN, FAN\_OUT, FAN\_TOTAL, and the logical dependencies in which a class is involved we could not determine a direct connection between them. Nither we can say that one influences the other.  We consider that even though the metrics are not related directly, they could be all used together to get a better view of the system connections.
 
 
 \bibliographystyle{splncs03}
