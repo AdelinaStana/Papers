@@ -74,7 +74,7 @@ Additionally, in this report, we will compare the number of logical dependencies
 
 The report is structured in two main chapters, in chapter \ref{cap:state_of_art} is presented the state-of-the-art in key classes detection, how the results obtained are evaluated, and the baseline approach for our research. In chapter \ref{cap:usage} is presented the key classes detection by using logical dependencies and the evaluation of the new results obtained.
 
-\section{Definition}
+\section{The concept of key classes}
 \label{sec:definition}
 Zaidman et al \cite{ZaidmanJurnal} were the first to introduce the concept of key classes and it refers to classes that can be found in documents written to provide an architectural overview of the system or an introduction to the system structure. 
 Tahvildari and Kontogiannis have a more detailed definition regarding key classes concept: “Usually, the most important concepts of a system are implemented by very few key classes which can be characterized by the specific properties. These classes, which we refer to as key classes, manage many other classes or use them in order to implement their functionality. The key classes are tightly coupled with other parts of the system. Additionally, they tend to be rather complex, since they implement much of the legacy system’s functionality” \cite{Tahvildari2004ImprovingDQ}.
@@ -106,7 +106,7 @@ A classification model (or "classifier") is a mapping between expected results a
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{confusion.png}
+\includegraphics[width=25em]{confusion.png}
 \caption{Confusion matrix}
 \label{fig:confusion}
 \centering
@@ -665,6 +665,26 @@ When the threshold begins to be more restrictive and the total number of logical
 In figures \ref{fig:plot_ld_ant}, \ref{fig:plot_ld_tomcat} and \ref{fig:plot_ld_hibernate} are the measurements obtained by using only logical dependencies.
 Initially, we expected to see a Gaussian curve, but instead, we see a bell curve.  We think that in the beginning, we use a high number of logical dependencies in key class detection, among those logical dependencies is an important number of key classes and also an important number of other classes. But the number of other classes does not influence the key classes detection. When we start to increase the value of the threshold and filter more the logical dependencies, we also filter some of the initial detected key classes and remain with a significant number of other classes. In this case, the other classes that remain influence the measurements, causing the worst-performing solutions. 
 Some of the key classes are strongly connected in the versioning system, and even for higher threshold values don't get filtered out. Meanwhile, the rest of the classes that are not key classes get filtered out for higher threshold values which leads to better performing measurements when the threshold value are above 60\%. 
+
+\section{Conclusions}
+\label{sec:conclusion}
+
+
+The logical dependencies are filtered co-changing pairs extracted from the versioning system history. The filters applied to the co-changing pairs are the following: the filter based on commit size and the filter based on connection strength.
+
+In our experiments the filter based on commit size had a hard threshold of 10 files, meaning that we use co-changing pairs only from commits with at most 10 files changed. The filter based on connection strength had a variable threshold, starting with 10\% and ending with 100\%. We used a variable threshold for connection strength because we wanted to observe how this threshold will impact the key classes detection.
+
+In section \ref{sec:current_measurements} we approached two scenarios to detect key classes by using logical dependencies. In the first scenario, we used logical dependencies together with structural dependencies and in the second, we used only logical dependencies to detect the key classes. We modified the tool used in the baseline approach to use also logical dependencies, and then we performed the key class identification using that tool. 
+The quality of the results obtained was evaluated with the same tool, the metric used to evaluate the results is Area Under the Receiver Operating Characteristic Curve (ROC-AUC). We then compared the evaluation results with the results obtained by the baseline approach. 
+
+Based on the results obtained, compared with the baseline results, we did saw a slight improvement in key class detection when both logical and structural dependencies were used together, the best results were obtained with a connection strength threshold of 40-70\%. When we used only logical dependencies to detect key classes, the results were less performing than using only structural or structural and logical dependencies combined.
+
+As we mentioned in section \ref{sec:definition}, also other researchers tried to identify the key classes, and even though the approaches are not the same, most of them have used the ROC-AUC metric to evaluate the quality of the results. 
+Osman et al. obtained in their research an average Area Under the Receiver Operating Characteristic Curve (ROC-AUC) score of 0.750 \cite{6676885}. Thung et al. obtained an average ROC-AUC score of 0.825 \cite{rocclasification}  and Sora et al. (the baseline approach) obtained an average ROC-AUC score of 0.894 \cite{Finding-key-classes}.
+
+In the current research, we obtained an average ROC-AUC score of 0.926 when using logical and structural dependencies combined and a score of 0.747 when using only logical dependencies to detect key classes.
+
+In conclusion, by using both dependencies combined, we can obtain a slightly better ROC-AUC score than the one obtained by the baseline approach. And, by using only logical dependencies we don't obtain a better score than the baseline approach but compared with the results obtained by other researchers \cite{6676885}, the score obtained is almost equal. The advantage of using only logical dependencies in key class detection is that it only uses data extracted from the versioning system and can be generalized to various programming languages.
 
 
 
