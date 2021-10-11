@@ -23,7 +23,7 @@
 
 %%%%%%%
 
-\title{Logical dependencies: extraction from the versioning system and usage%
+\title{Logical dependencies: extraction from the versioning system and usage
 \footnote{If this is an extended version of a conference paper, it should be clearly stated here.}}
 
 %% Use this if the title is too long for the running heads
@@ -47,32 +47,45 @@
 \maketitle
 
 \begin{abstract}
-The abstract goes here, and keywords in a new paragraph.
+One of the biggest problems when it comes to legacy software systems is the lack of modernization. A legacy software system is an obsolete system that might still be in use and satisfy the organization's needs but due to the lack of modernization, it has a high maintenance cost. One solution is to modernize or refactor the system and to do that the developers must have a good understanding of the system. Here comes one other problem of the legacy software systems, the lack of up-to-date documentation or the lack of documentation. The solution for this problem is to analyze the legacy software system in order to gain more knowledge about the system and how the system works. Our approach is to analyze the legacy software system by using historical information extracted from the versioning systems.
 
 \vspace{6pt}\textbf{Keywords:} logica ldependencies, versioning system, key classes.
 \end{abstract}
 
-\section{Introduction}
+\section{Logical dependencies definition, extraction and filtering}
 
-\hspace{5mm} The goal of the thesis is to develop methods for analyzing legacy software systems by using historical information extracted from the versioning systems.
+The logical dependencies are those co-changing pairs extracted from the versioning system history that remain after filtering. The filtering part consists of applying two filters: the filter based on commit size and the filter based on connection strength. 
 
-We divided our work into two main parts, the first part covers the historical information collection and filtering and was presented in the first report. And the second part covers the usage of the collected information and will be presented in this second report.
+To determine the connection strength of a pair, we first need to calculate the connection factors for both entities that form a co-changing pair.
+Assuming that we have a co-changing pair formed by entities A and B, the connection factor of entity A with entity B is the percentage from the total commits involving A that contains entity B. The connection factor of entity B with entity A is the percentage from the total commits involving B that contain also entity A.
 
-In the first report, we presented the filtering process of co-changing pairs into logical dependencies. 
-The co-changing pairs are pairs of classes that record co-changes in the versioning system. The logical dependencies are those co-changing pairs that remain after filtering. We filter the co-changing pairs to increase their veridicality and to decrease the size of the extracted information. 
-Based on the results obtained in the first report, we decided to work with the following filters: the filter based on commit size (cs) and the filter based on connection strength. 
-With the filter based on commit size, we filter out each commit transaction with more than 10 files changed. Big commit transactions (more than 10 files) can be related to refactoring of names, spellchecks, or file reformating and not to actual code changes.
-This filter will reduce the amount of co-changing pairs extracted. 
+\begin{equation}
+ connection\ factor\ for\ A = \frac{100 * commits\ involving\ A\ and\ B}{total\ nr\ of\ commits\ involving\ A}
+\end{equation}
 
-With the filter based on connection strength, we filter out co-changing pairs that are not strongly connected in the versioning system. For this filter, we did not previously establish a hard threshold value because we want to check how different values of the threshold will impact the results obtained after using the extracted logical dependencies.
+\begin{equation}
+ connection\ factor\ for\ B = \frac{100 * commits\ involving\ A\ and\ B}{total\ nr\ of\ commits\ involving\ B}
+\end{equation}
+
+We calculated the connection factor for each entity involved in a co-changing pair and filtered the co-changing pairs based on it. The rule set is that both entities had to have a connection factor with each other greater than the threshold value.
+
+After the filtering part, the remaining co-changing pairs, now called logical dependencies, are exported in CSV files.
+
+The entire process of extracting co-changing pairs from the versioning system, filter them, and export the remaining ones into CSV files is done with a tool written in Python.
 
 
-This second report mainly focuses on using the logical dependencies extracted in identifying key (important) classes in a software system.
-The identification of key classes was previously researched solely by using software dependencies. Our approach is to take previously researched software systems and the results obtained based on those systems as a baseline. In addition to the baseline approach of using only structural dependencies, we will add the logical dependencies extracted, export the results, and compare them with the baseline results. 
+The workflow is presented in figure \ref{fig:ld_workflow}
 
-Additionally, in this report, we will compare the number of logical dependencies with other software metrics. With this comparison, we mainly want to observe if the number of logical dependencies can be connected to other metrics or if is complementary with other metrics.
+TODO: more details here, but first check against old conf. papers 
 
-The report is structured in two main chapters, in chapter \ref{cap:state_of_art} is presented the state-of-the-art in key classes detection, how the results obtained are evaluated, and the baseline approach for our research. In chapter \ref{cap:usage} is presented the key classes detection by using logical dependencies and the evaluation of the new results obtained.
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{key_class_workflow.png}
+\caption{Workflow for logical dependencies detection}
+\label{fig:workflow_key}
+\centering
+\end{figure}
+
 
 \section{The concept of key classes}
 \label{sec:definition}
@@ -234,37 +247,6 @@ The commits number found on the remaining 6 repositories varies from 19108 commi
 
 \begin{table}
 \renewcommand{\arraystretch}{1}
-\caption{Analyzed software systems in previous research paper.}
-\label{tab:keyclass:overview}
-\centering
-\setlength\tabcolsep{0.5em}
-\begin{tabular}{llll}
-\hline
-ID	&	System	&	Description	&	Version	\\
-\hline
-Sl	&	Apache Ant	&	Java library and command line tool that drive the build processes as targets and extension points depending upon each other	&	1.6.1	\\
-S2	&	Argo UML	&	UML modelling tool with support for all UML diagrams.	&	0.9.5	\\
-S3	&	GWT Portlets	&	Open source web framework for building GWT (Google Web Toolkit) Applications.	&	0.9.5 beta	\\
-S4	&	Hibernate 	&	Persistence framework for Java.	&	5.2.12	\\
-S5	&	javaclient	&	Java distributed application for playing with robots	&	2.0.0	\\
-S6	&	jEdit	&	Java mature text editor for programmers.	&	5.1.0	\\
-S7	&	JGAP	&	Genetic Algorithms and Genetic Programming Java library.	&	3.6.3	\\
-S8	&	JHotDraw	&	JHotDraw is a two-dimensional graphics framework for structured drawing editors that is written in Java.	&	6.0b.1	\\
-S9	&	JMeter	&	JMeter is a Java application designed to load test functional behavior and measure performance	&	2.0.1	\\
-S10	&	Log4j	&	Logging Service	&	2.10.0	\\
-S11	&	Mars	&	The Mars Simulation Project is a Java project that models and simulates human settlements on Mars planet	&	3.06.0	\\
-S12	&	Maze	&	The Maze-solver project simulates an artificial intelligence algorithm on a maze	&	1.0.0	\\
-S13	&	Neuroph	&	Neuroph is a Java neural network framework.	&	2.2.0	\\
-S14	&	Tomcat Catalina	&	The Apache Tomcat project is an open-source implementation of JavaServlet and JavaServerPages technologies	&	9.0.4	\\
-S15	&	Wro4J	&	The Wro4J is a web resource (JS and CSS) optimizer for Java.	&	1.6.3	\\
-\hline
-\end{tabular}
-\end{table}
-
-
-
-\begin{table}
-\renewcommand{\arraystretch}{1}
 \caption{Found systems and versions of the systems in GitHub. }
 \label{tab:gitfoundsystems}
 \centering
@@ -290,6 +272,7 @@ S15	&	Wro4J	&	1.6.3	&	v1.6.3	&	2871	\\
 \hline
 \end{tabular}
 \end{table}
+
 
 
 
@@ -325,37 +308,7 @@ We did not change the rest of the workflow of the tool. Meaning that the TOP thr
 \centering
 \end{figure}
 
-\subsection{Logical dependencies collection and current workflow used}
 
-The logical dependencies are those co-changing pairs extracted from the versioning system history that remain after filtering. The filtering part consists of applying two filters: the filter based on commit size and the filter based on connection strength. 
-
-To determine the connection strength of a pair, we first need to calculate the connection factors for both entities that form a co-changing pair.
-Assuming that we have a co-changing pair formed by entities A and B, the connection factor of entity A with entity B is the percentage from the total commits involving A that contains entity B. The connection factor of entity B with entity A is the percentage from the total commits involving B that contain also entity A.
-
-\begin{equation}
- connection\ factor\ for\ A = \frac{100 * commits\ involving\ A\ and\ B}{total\ nr\ of\ commits\ involving\ A}
-\end{equation}
-
-\begin{equation}
- connection\ factor\ for\ B = \frac{100 * commits\ involving\ A\ and\ B}{total\ nr\ of\ commits\ involving\ B}
-\end{equation}
-
-We calculated the connection factor for each entity involved in a co-changing pair and filtered the co-changing pairs based on it. The rule set is that both entities had to have a connection factor with each other greater than the threshold value.
-
-After the filtering part, the remaining co-changing pairs, now called logical dependencies, are exported in CSV files.
-
-The entire process of extracting co-changing pairs from the versioning system, filter them, and export the remaining ones into CSV files is done with a tool written in Python.
-
-The next step is to use the exported logical dependencies for key classes detection. In order to do that we used the same key class detection tool used in the previous research presented in section \ref{sec:previous_measurements}. We adapted the tool to be able to process also logical dependencies because previously the tool used only structural dependencies extracted from the source code of the software systems. 
-The workflow is presented in figure \ref{fig:workflow_key}
-
-\begin{figure}
-\centering
-\includegraphics[width=\textwidth]{key_class_workflow.png}
-\caption{Workflow for key classes detection}
-\label{fig:workflow_key}
-\centering
-\end{figure}
 
 
 \subsection{Measurements using only the baseline approach}
