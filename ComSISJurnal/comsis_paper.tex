@@ -66,12 +66,15 @@ The logical dependencies are those co-changing pairs that remain after the filte
 
 Our journey to obtain reliable logical dependencies from co-changing pairs filtering started with the same workflow as this paper's, but with different types of filters \cite{saci19}, \cite{enase19}. The main disadvantage of some of the filters used in our previous works is that they did not work well for systems with few commits.
 
-Currently, we aim to refine the filtering method with a new filter that can be applied for all sorts of commit history sizes. 
-From the filtering methods previously explored, we choose to keep the commit size filter \cite{enase19}, and in addition, we added a new filter called the connection strength filter.
+Currently, we aim to refine the filtering method with a new filter that can be applied for all sorts of commit history sizes. This new filter will be used together with a filter previously explored, the commit size filter \cite{enase19}.
 
+\subsection{Commit size filter}
 
-The commit size filter filters out all co-changing pairs relating to commits with more than 10 files changed. Our previous works state that commits with more than 10 files changed tend to be code unrelated; in addition, only a tiny percent of the total commits have more than 10 files changed; so, the filtering will take out only a few commits.
+The commit size filter filters out all co-changing pairs from commits with more than 10 files changed. We consider that commits with more than 10 files changed tend to be code unrelated; we studied the commit size trend from serval git open-source repositories, and we concluded that most of the commits contain less than ten files. On average, only 10 \% of the total commits have more than ten files changed. 
 
+This filter will also prevent the volume of data processed from going out of proportion. In some of the repositories studied, we found commits with more than 1000 files; these commits could generate over half a million co-changing pairs if the commit size filter is not applied. 
+
+\subsection{Connection strength filter}
 After applying the commit size filtering, we apply the filtering based on connection strength. To determine the connection strength, we first need to calculate the connection factors for both entities that form a co-changing pair.
 
 Assuming that we have a co-changing pair formed by entities A and B, the connection factor of entity A with entity B is the percentage from the total commits involving A that contains entity B. The connection factor of entity B with entity A is the percentage from the total commits involving B that contain also entity A.
@@ -90,7 +93,7 @@ After the filtering part, the remaining co-changing pairs, now called logical de
 
 The entire process of extracting co-changing pairs from the versioning system, filter them, and export the remaining ones into files is done with a tool written in Python.
 
-The tool workflow is presented in figure \ref{fig:workflow_key}
+The workflow is presented in figure \ref{fig:workflow_key}
 
 \begin{figure}
 \centering
