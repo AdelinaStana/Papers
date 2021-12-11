@@ -128,81 +128,29 @@ After this step, we will continue our research by using the logical dependencies
 
 
 
-\section{The concept of key classes}
-\label{sec:definition}
+\section{Key classes: baseline versus current approach}
+\label{sec:baseline_approach}
 
 Zaidman et al \cite{ZaidmanJurnal} were the first to introduce the concept of key classes and it refers to classes that can be found in documents written to provide an architectural overview of the system or an introduction to the system structure. 
 Tahvildari and Kontogiannis have a more detailed definition regarding key classes concept: “Usually, the most important concepts of a system are implemented by very few key classes which can be characterized by the specific properties. These classes, which we refer to as key classes, manage many other classes or use them in order to implement their functionality. The key classes are tightly coupled with other parts of the system. Additionally, they tend to be rather complex, since they implement much of the legacy system’s functionality” \cite{Tahvildari2004ImprovingDQ}.
-Also, other researchers use a similar concept as the one defined by Zaidman but under different terms like important classes  \cite{Meyer2014IdentifyingIC} or central software classes \cite{CentralClassesSteidl}.
 
 
 The key class identification can be done by using different algorithms with different inputs. In the research of Osman et al., the key class identification is made by using a machine learning algorithm and class diagrams as input for the algorithm \cite{6676885}. Thung et al. builds on top of Osman et al.’s approach and adds network metrics and optimistic classification in order to detect key classes \cite{rocclasification}.  
 
 Zaidman et al. use a webmining algorithm and dynamic analysis of the source code to identify the key classes \cite{ZaidmanJurnal}.
 
-Sora et al. use a page ranking algorithm for finding key classes and static analysis of the source code \cite{PagerankENASE}, \cite{enase15}, \cite{SoraSpringer}, \cite{PagerankSACI}. In \cite{Finding-key-classes} the authors use in addition to the previous research also other class attributes to identify important classes.
-The page ranking algorithm is a customization of PageRank, the algorithm used to rank web pages \cite{ilprints422}.
-The PageRank algorithm works based on a recommendation system. If one node has a connection with another node, then it recommends the second node. In previous works, connections are established based on structural dependencies extracted from static code analysis. If A has a structural dependency with B, then A recommends B, and also B recommends A.
+\subsection{Baseline approach}
+We use the research of I. Sora et al \cite{Finding-key-classes} as a baseline for our research involving the usage of logical dependencies to find key classes. 
+
+Sora et al. use the static analysis of the source code, a page ranking algorithm and other class attributes to finding key classes \cite{PagerankENASE}, \cite{enase15}, \cite{SoraSpringer}, \cite{PagerankSACI},\cite{Finding-key-classes}.
+The page ranking algorithm is a customization of PageRank, the algorithm used to rank web pages \cite{ilprints422} and works based on a recommendation system. If one node has a connection with another node, then it recommends the second node. In previous works, connections are established based on structural dependencies extracted from static code analysis. If A has a structural dependency with B, then A recommends B, and also B recommends A.
 
 The ranking algorithm ranks all the classes from the source code of the system analyzed according to their importance. To identify the important classes from the rest of the classes a threshold for TOP classes from the top of the ranking is set. The TOP threshold value can go from 1 to the total number of classes found in the system. 
 
-Some researchers \cite{ZaidmanJurnal}, \cite{Ding2016AnIA}, \cite{PAN2018188} consider that 15\% of the total number of classes of the system is a suited value for the TOP threshold. Other researchers \cite{Finding-key-classes} consider that 15\% of the total number of classes is a too high value for the TOP threshold and suggest that a value in the range of 20–30 is better.
 
+%%%%
+\subsection{Current approach}
 
-
-
-\section{Metrics for results evaluation}
-\label{sec:evalmetrics}
-To evaluate the quality of the key classes ranking algorithm and solution produced, the key classes found by the algorithm are compared with a reference solution.
-
-The reference solution is extracted from the developer documentation.  Classes mentioned in the documentation are considered key classes and form the reference solution (ground truth) used for validation \cite{7551990}. 
-
-
-For the comparison between both solutions, a classification model is used. The quality of the solution produced is evaluated by using metrics that evaluate the performance of the classification model, such as Precision-Recall and Receiver Operating Characteristic Area Under Curve (ROC-AUC).
-
-A classification model (or "classifier") is a mapping between expected results and predicted results \cite{ROCIntro}, \cite{ROCBRADLEY19971145}. 
-
-Precision is the ratio of True Positives to all the positives of the result set.
-
-\begin{equation}
- precision = \frac{TP}{TP+FN}
-\end{equation}
-The recall is the ratio of True Positives to all the positives of the reference set.
-
-\begin{equation}
- recall = \frac{TP}{TP+FP}
-\end{equation}
-
-As mentioned in section \ref{sec:definition}, to distinguish the key classes from the rest of the classes a TOP threshold is used. Some researchers consider that 15\% of the total classes is the best value for the TOP threshold and others consider that the value should be in the range of 20-30. 
-
-The precision-recall metric is suited if the threshold value is fixed. If the threshold value is variable, then metrics that capture the behavior over all possible values must be used. Such metric is the Receiver Operating Characteristic metric.
-
-\textit{Receiver Operating Characteristic Area Under Curve}
-
-
-The ROC graph is a two-dimensional graph that has on the X-axis plotted the false positive rate and on the Y-axis the true positive rate. By plotting the true positive rate and the false positive rate at thresholds that vary between a minimum and a maximum possible value we obtain the ROC curve. The area under the ROC curve is called Area Under the Curve (AUC).
-
-The true positive rate of a classifier is calculated as the division between the number of true positive results identified and all the positive results identified:
-
-\begin{equation}
- True\ positive\ rate (TPR) = \frac{TP}{TP+FN}
-\end{equation}
-The false positive rate of a classifier is calculated as the division between the number of false positive results identified and all the negative results identified:
-
-\begin{equation}
- False\ positive\ rate (FPR) = \frac{FP}{FP+TN}
-\end{equation}
-
-
-In multiple related works, the ROC-AUC metric has been used to evaluate the results for finding key classes of software systems.
-For a classifier to be considered good, its ROC-AUC metric value should be as close to 1 as possible, when the value is 1 then the classifier is considered to be perfect.
-
-Osman et al. obtained in their research an average Area Under the Receiver Operating Characteristic Curve (ROC-AUC) score of 0.750 \cite{6676885}. Thung et al. obtained an average ROC-AUC score of 0.825 \cite{rocclasification}  and Sora et al. obtained an average ROC-AUC score of 0.894 \cite{Finding-key-classes}.
-
-\section{Baseline versus current approach }
-\label{sec:baseline_approach}
-
-We use the research of I. Sora et al \cite{Finding-key-classes} as a baseline for our research involving the usage of logical dependencies to find key classes. 
 The baseline approach uses a tool that takes as an input the source code of the system and applies ranking strategies to rank the classes according to their importance. 
 
 In order to rank the classes according to their importance, different class metrics are used \cite{Ding2016AnIA}, \cite{ZaidmanJurnal}, \cite{PAN2018188}. Below are some of the class metrics used in the baseline approach and our current research to rank the classes according to their importance. We use only a subset of the metrics used in previous research because the extracted logical dependencies are undirected.
@@ -211,7 +159,6 @@ The class metrics used can be separated into two categories: class connection me
 The class connection metrics are CONN-TOTAL-W, which is the total weight of all connections of the class, and CONN-TOTAL, the total number of distinct classes that a class uses or are used by a class \cite{Finding-key-classes}.
 
 Previous research used PageRank values computed on both directed and undirected, weighted and unweighted graphs. In the current research, we used the PR, which is the PageRank value computed on the directed and unweighted graph. The PR-U, which is the value computed on the undirected and unweighted graph, and PR-U2-W, the value computed on the weighted graph with back-recommendations \cite{PagerankENASE}, \cite{enase15}, \cite{Finding-key-classes}, \cite{PagerankSACI}.
-
 
 
 Based on the class attributes presented, all the classes of the system are ranked. To differentiate the important (key) classes from the rest of the classes, a TOP threshold for the top classes found is set. 
@@ -236,6 +183,36 @@ We modified the tool to take the logical dependencies as input; the rest of the 
 \label{fig:baseline_approach}
 \centering
 \end{figure}
+%%%
+
+\section{Metrics for results evaluation}
+\label{sec:evalmetrics}
+To evaluate the quality of the key classes ranking algorithm and solution produced, the key classes found by the algorithm are compared with a reference solution. The reference solution is extracted from the developer documentation.  Classes mentioned in the documentation are considered key classes and form the reference solution (ground truth) used for validation \cite{7551990}. 
+
+
+For the comparison between both solutions, a classification model is used. The quality of the solution produced is evaluated by using the Receiver Operating Characteristic Area Under Curve (ROC-AUC) metric, a metric that evaluates the performance of a classification model.
+
+\textit{Receiver Operating Characteristic Area Under Curve}
+
+
+The ROC graph is a two-dimensional graph that has on the X-axis plotted the false positive rate and on the Y-axis the true positive rate. By plotting the true positive rate and the false positive rate at thresholds that vary between a minimum and a maximum possible value we obtain the ROC curve. The area under the ROC curve is called Area Under the Curve (AUC).
+
+The true positive rate of a classifier is calculated as the division between the number of true positive results identified and all the positive results identified:
+
+\begin{equation}
+ True\ positive\ rate (TPR) = \frac{TP}{TP+FN}
+\end{equation}
+The false positive rate of a classifier is calculated as the division between the number of false positive results identified and all the negative results identified:
+
+\begin{equation}
+ False\ positive\ rate (FPR) = \frac{FP}{FP+TN}
+\end{equation}
+
+
+In multiple related works, the ROC-AUC metric has been used to evaluate the results for finding key classes of software systems.
+For a classifier to be considered good, its ROC-AUC metric value should be as close to 1 as possible, when the value is 1 then the classifier is considered to be perfect.
+
+Osman et al. obtained in their research an average Area Under the Receiver Operating Characteristic Curve (ROC-AUC) score of 0.750 \cite{6676885}. Thung et al. obtained an average ROC-AUC score of 0.825 \cite{rocclasification}  and Sora et al. obtained an average ROC-AUC score of 0.894 \cite{Finding-key-classes}.
 
 
 \section{Data set used}
