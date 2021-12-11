@@ -75,9 +75,14 @@ The commit size filter filters out all co-changing pairs from commits with more 
 This filter will also prevent the volume of data processed from going out of proportion. In some of the repositories studied, we found commits with more than 1000 files; these commits could generate over half a million co-changing pairs if the commit size filter is not applied. 
 
 \subsection{Connection strength filter}
-After applying the commit size filtering, we apply the filtering based on connection strength. To determine the connection strength, we first need to calculate the connection factors for both entities that form a co-changing pair.
 
-Assuming that we have a co-changing pair formed by entities A and B, the connection factor of entity A with entity B is the percentage from the total commits involving A that contains entity B. The connection factor of entity B with entity A is the percentage from the total commits involving B that contain also entity A.
+This filter is new for our research regarding logical dependencies and is based on the experience with other filters applied unsuccessfully. 
+
+One important conclusion drawn from other types of filtering that we tried over time is that setting a hard threshold for a filter is not always a good idea. A certain threshold can work well with a medium/large-sized system but, when applied to a small-sized system, can reduce the co-changes filtered to 0. This made us realize that we need a filter that is computed according to the system's specifications. 
+
+We will call this filter, the connection strength filter and, it is applied after the commit size filter. To determine the connection strength, we first need to calculate the connection factors of both entities that form a co-changing pair.
+
+Assuming that we have a co-changing pair formed by entities A and B, the connection factor of entity A with entity B is the percentage from the total commits involving A that contains entity B. The connection factor of entity B with entity A is the percentage from the total commits involving B also containing entity A.
 
 \begin{equation}
  connection\ factor\ for\ A = \frac{100 * commits\ involving\ A\ and\ B}{total\ nr\ of\ commits\ involving\ A}
@@ -87,21 +92,40 @@ Assuming that we have a co-changing pair formed by entities A and B, the connect
  connection\ factor\ for\ B = \frac{100 * commits\ involving\ A\ and\ B}{total\ nr\ of\ commits\ involving\ B}
 \end{equation}
 
-We calculated the connection factor for each entity involved in a co-changing pair and filtered the co-changing pairs based on it. The rule set is that both entities had to have a connection factor with each other greater than the threshold value.
+We calculated the connection factor for each entity involved in a co-changing pair and filtered the co-changing pairs based on it. The rule set is that both entities that form a co-changing pair had to have a connection factor with each other greater than a threshold value.
 
-After the filtering part, the remaining co-changing pairs, now called logical dependencies, are exported.
+As a practical example, if the pair formed by A and B update together 7 times and the total number of commits involving A is 20 and involving B is 7, then the factor for A is 35 and for B is 100. If the connection strength threshold is set to 50, that means that this co-changing pair will be filtered out because the factor of A is smaller than the threshold. 
 
-The entire process of extracting co-changing pairs from the versioning system, filter them, and export the remaining ones into files is done with a tool written in Python.
+Since the factors can vary from 0 to 100, for this filter, we started with a threshold value of 10 and incremented it by 10 until we reached 100. And we want to see how the threshold value affects the number of co-changing pairs left. 
 
-The workflow is presented in figure \ref{fig:workflow_key}
+In figure \ref{fig:strength_overview} we plot the number of structural dependencies, co-changing pairs before filtering, and co-changing pairs after filtering with different threshold values for two systems, one small-sized and one medium-sized. As can be observed, with this filter, the small-sized system didn't lose all the co-changing pairs once with the filtering. 
+
+We compare the number of remaining co-changing pairs with the number of structural dependencies because according to surveys \cite{Shtern:2012:CMS:2332427.2332428}, \cite{sar}, the main reason why logical dependencies (a.k.a filtered co-changes) are not used together with structural dependencies is because of their size. So, it is essential to get an overview of the comparison between the co-changing pairs number and the structural dependencies number at each filtering step.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{strength_overview.PNG}
+\caption{Overview of the impact of connection strength filtering on the number of co-changing pairs. }
+\label{fig:strength_overview}
+\centering
+\end{figure}
+
+The co-changing pairs that remain after filtering, can be called logical dependencies. The entire process of extracting co-changing pairs from the versioning system, filter them, and export the remaining ones is done with a tool written in Python. The tool's workflow is presented in figure \ref{fig:workflow_key}.
+
+After this step, we will continue our research by using the logical dependencies obtained with different threshold values and see which threshold value performs the best. Up until now, we only looked at the size of the logical dependencies and decided if a filter is good or not. But now, we can also look at the results obtained by using the logical dependencies and decide.
+
 
 \begin{figure}
 \centering
 \includegraphics[width=\textwidth]{ld_workflow.png}
-\caption{Workflow for logical dependencies detection}
+\caption{Workflow for logical dependencies extraction.}
 \label{fig:workflow_key}
 \centering
 \end{figure}
+
+
+
+
 
 
 \section{The concept of key classes}
