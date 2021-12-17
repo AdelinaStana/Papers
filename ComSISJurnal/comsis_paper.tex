@@ -47,9 +47,9 @@
 \maketitle
 
 \begin{abstract}
-One of the biggest problems when it comes to legacy software systems is the lack of modernization. A legacy software system is an obsolete system that might still be in use and satisfy the organization's needs but due to the lack of modernization, it has a high maintenance cost. One solution is to modernize or refactor the system and to do that the developers must have a good understanding of the systedm. Here comes one other problem of the legacy software systems, the lack of up-to-date documentation or the lack of documentation. The solution for this problem is to analyze the legacy software system in order to gain more knowledge about the system and how the system works. Our approach is to analyze the legacy software system by using historical information extracted from the versioning systems.
+One of the biggest problems when it comes to legacy software systems is the lack of modernization. A legacy software system is an obsolete system that might still be in use and satisfy the organization's needs but due to the lack of modernization, it has a high maintenance cost. One solution is to modernize or refactor the system and to do that the developers must have a good understanding of the system. Here comes one other problem of the legacy software systems, the lack of up-to-date documentation or the lack of documentation. The solution for this problem is to analyze the legacy software system in order to gain more knowledge about the system and how the system works. Our approach is to analyze the legacy software system by using historical information extracted from the versioning systems.
 
-\vspace{6pt}\textbf{Keywords:} logica ldependencies, versioning system, key classes.
+\vspace{6pt}\textbf{Keywords:} logical dependencies, versioning system, key classes.
 \end{abstract}
 
 
@@ -523,7 +523,6 @@ In table \ref{tab:ratio_sd_ld} are the ratio numbers between structural dependen
 \caption{Percentage of logical dependencies that are also structural dependencies}
 \label{tab:overlap}
 \centering
-\scalebox{0.8}{
 \begin{tabular}{|c|cccccccccc|}
 \hline
 System &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$ \\
@@ -533,7 +532,6 @@ Tomcat Catalina	&	4.059	&	22.089	&	25.000	&	25.758	&	25.926	&	37.525	&	47.368	&	
 Hibernate	&	6.546	&	26.607	&	29.565	&	32.374	&	32.543	&	45.170	&	44.980	&	42.473	&	42.473	&	42.473	\\
 \hline
 \end{tabular}
-}
 \end{table}
 
 
@@ -543,7 +541,6 @@ Hibernate	&	6.546	&	26.607	&	29.565	&	32.374	&	32.543	&	45.170	&	44.980	&	42.473
 \caption{Ratio between structural and logical dependencies (SD/LD)}
 \label{tab:ratio_sd_ld}
 \centering
-\scalebox{0.8}{
 \begin{tabular}{|c|cccccccccc|}
 \hline
 System &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$ \\
@@ -554,7 +551,6 @@ Hibernate	&	1.037	&	6.391	&	10.037	&	14.947	&	18.940	&	54.248	&	83.442	&	111.704
 
 \hline
 \end{tabular}
-}
 \end{table}
 
 In figures \ref{fig:plot_sd_ld_ant}, \ref{fig:plot_sd_ld_tomcat} and \ref{fig:plot_sd_ld_hibernate} are the measurements obtained by using structural and logical dependencies combined. 
