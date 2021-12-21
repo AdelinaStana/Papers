@@ -11,6 +11,7 @@
 \usepackage{hyperref}
 \usepackage{verbatim}
 \usepackage{graphicx}
+\usepackage[normalem]{ulem}
 
 
 %%%%% NEW PACKAGES 
@@ -64,7 +65,7 @@ To define the logical dependencies, we have first to define the co-changing pair
 
 After extraction, some co-changing pairs are removed by passing them through various filters (filtering phase). The \textit{logical dependencies} are those co-changing pairs that remain after the filtering phase. Another reason for the filtering is to decrease the size of processed data; a commit with 1030 entities will produce over half a million co-changing pairs. These kinds of commits are, in most cases, not code-related, so the co-changing pairs extracted from this kind of commit have nothing to do with the code.
 
-Previously, we tried to obtain reliable logical dependencies from co-changing pairs by applying different types of filters like the occurrence filter and commit size filter \cite{saci19}, \cite{enase19}. The main disadvantage of the occurrence filter was that it did not work well for systems with few commits.
+Previously, we tried to obtain reliable logical dependencies from co-changing pairs by applying different types of filters like the occurrence filter and commit size filter \cite{saci19}, \cite{enase19}. The main disadvantage of the occurrence filter is that it does not work well for systems with few commits.
 
 Currently, we aim to refine the filtering method with a new filter that can be applied for all sorts of commit history sizes. This new filter will be used together with a filter previously explored, the commit size filter \cite{enase19}.
 
@@ -76,9 +77,7 @@ This filter will also prevent the volume of data processed from going out of pro
 
 \subsection{Connection strength filter}
 
-This filter is new for our research regarding logical dependencies and is based on the experience with other filters applied unsuccessfully. 
-
-One important conclusion drawn from other types of filtering that we tried over time is that setting a hard threshold for a filter is not always a good idea. A certain threshold can work well with a medium/large-sized system but, when applied to a small-sized system, can reduce the co-changes filtered to 0. This made us realize that we need a filter that is computed according to the system's specifications. 
+This filter is new for our research regarding logical dependencies and is based on the experience with the occurrence filter.  One important conclusion drawn from the measurements with the occurrence filter is that setting a hard threshold for a filter is not always a good idea. A certain threshold can work well with a medium/large-sized system but, when applied to a small-sized system, can reduce the co-changes filtered to 0. This made us realize that we need a filter that is computed according to the system's specifications. 
 
 We will call this filter, the connection strength filter and, it is applied after the commit size filter. To determine the connection strength, we first need to calculate the connection factors of both entities that form a co-changing pair.
 
@@ -150,7 +149,15 @@ The ranking algorithm ranks all the classes from the source code of the system a
 
 \subsection{Current approach}
 
-The baseline approach uses a tool that takes as an input the source code of the system and applies ranking strategies to rank the classes according to their importance. 
+The baseline approach uses a tool that takes as an input the source code of the system and applies ranking strategies to rank the classes according to their importance. We modified the tool used by the baseline approach to take also the logical dependencies as input; the rest of the workflow is the same as in the baseline approach ( figure \ref{fig:baseline_approach} ).
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{current_approach.PNG}
+\caption{Overview of the current approach.}
+\label{fig:baseline_approach}
+\centering
+\end{figure}
 
 In order to rank the classes according to their importance, different class metrics are used \cite{Ding2016AnIA}, \cite{ZaidmanJurnal}, \cite{PAN2018188}. Below are some of the class metrics used in the baseline approach and our current research to rank the classes according to their importance. We use only a subset of the metrics used in previous research because the extracted logical dependencies are undirected.
 
@@ -161,17 +168,6 @@ The class connection metrics are CONN-TOTAL-W, which is the total weight of all 
 Previous research used PageRank values computed on both directed and undirected, weighted and unweighted graphs. In the current research, we used the PR, which is the PageRank value computed on the directed and unweighted graph. The PR-U, which is the value computed on the undirected and unweighted graph, and PR-U2-W, the value computed on the weighted graph with back-recommendations \cite{PagerankENASE}, \cite{enase15}, \cite{Finding-key-classes}, \cite{PagerankSACI}.
 
 
-Based on the class attributes presented, all the classes of the system are ranked. 
-
-We modified the tool used by the baseline approach to take also the logical dependencies as input; the rest of the workflow remained the same as the baseline approach. The entire workflow is presented in figure \ref{fig:baseline_approach}.
-
-\begin{figure}
-\centering
-\includegraphics[width=\textwidth]{current_approach.PNG}
-\caption{Overview of the current approach.}
-\label{fig:baseline_approach}
-\centering
-\end{figure}
 %%%
 
 \section{Metrics for results evaluation}
@@ -197,12 +193,8 @@ The false positive rate of a classifier is calculated as the division between th
  False\ positive\ rate (FPR) = \frac{FP}{FP+TN}
 \end{equation}
 
-The baseline approach not only identifies the key classes but also evaluates the performance of the solution produced. To differentiate the important (key) classes from the rest of the classes, a TOP threshold for the top classes found is set. The threshold vary between 20 and 30 classes.
-
 The true positives (TP) are the classes found in the reference solution and also in the top TOP ranked classes. False positives (FP) are the classes that are not in the reference solution but are in the TOP ranked classes.
 True Negatives (TN) are classes that are found neither in the reference solution nor in the TOP ranked classes. False Negatives (FN) are classes that are found in the reference solution but not found in the TOP ranked classes.
-
-
 
 In multiple related works, the ROC-AUC metric has been used to evaluate the results for finding key classes of software systems.
 For a classifier to be considered good, its ROC-AUC metric value should be as close to 1 as possible, when the value is 1 then the classifier is considered to be perfect.
@@ -322,7 +314,7 @@ PR\_U2\_W	&	0.924	&	0.925	&	0.926	&	0.927	&	0.927	&	0.927	&	\cellcolor{lightgree
 PR	&	0.914	&	0.854	&	0.851	&	\cellcolor{lightgreen}0.866	&	\cellcolor{lightgreen}0.876	&	\cellcolor{lightgreen}0.882	&	\cellcolor{lightgreen}0.887	&	0.854	&	0.852	&	0.852	&	0.855	\\
 PR\_U	&	0.910	&	0.930	&	0.933	&	0.933	&	\cellcolor{lightgreen}0.935	&	\cellcolor{lightgreen}0.934	&	\cellcolor{lightgreen}0.939	&	0.933	&	0.933	&	0.933	&	0.933	\\
 CON\_T\_W	&	0.924	&	0.928	&	0.931	&	0.932	&	0.933	&	0.934	&	\cellcolor{lightgreen}0.936	&	0.934	&	0.934	&	0.934	&	0.934	\\
-CON\_T	&	0.840	&	0.886	&	0.904	&	0.909	&	0.915	&	0.923	&	0.932	&	0.935	&	\cellcolor{lightorange}0.936	&	\cellcolor{lightorange}0.936	&	0.942	\\
+CON\_T	&	0.840	&	0.886	&	0.904	&	0.909	&	0.915	&	0.923	&	0.932	&	0.935	&	\uline{0.936}	&	\uline{0.936}	&	0.942	\\
 
 \hline
 \end{tabular}
@@ -342,8 +334,8 @@ Metrics &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$
 PR\_U2\_W	&	0.910	&	0.917	&	0.923	&	\cellcolor{lightgreen}0.924	&	\cellcolor{lightgreen}0.924	&	\cellcolor{lightgreen}0.924	&	\cellcolor{lightgreen}0.924	&	\cellcolor{lightgreen}0.924	&	\cellcolor{lightgreen}0.924	&	\cellcolor{lightgreen}0.924	&	0.923	\\
 PR	&	0.811	&	0.800	&	0.815	&	0.834	&	0.847	&	0.852	&	0.853	&	0.858	&	0.858	&	0.858	&	0.927	\\
 PR\_U	&	0.910	&	0.921	&	0.931	&	\cellcolor{lightgreen}0.933	&	\cellcolor{lightgreen}0.933	&	0.932	&	\cellcolor{lightgreen}0.933	&	0.932	&	0.932	&	0.932	&	0.932	\\
-CON\_T\_W	&	0.914	&	0.920	&	0.924	&	\cellcolor{lightorange}0.926	&	0.926	&	0.926	&	0.926	&	0.926	&	0.926	&	0.926	&	0.926	\\
-CON\_T	&	0.868	&	0.906	&	0.930	&	0.936	&	0.937	&	\cellcolor{lightorange}0.938	&	0.938	&	0.938	&	0.938	&	0.938	&	0.939	\\
+CON\_T\_W	&	0.914	&	0.920	&	0.924	&	\uline{0.926}	&	0.926	&	0.926	&	0.926	&	0.926	&	0.926	&	0.926	&	0.926	\\
+CON\_T	&	0.868	&	0.906	&	0.930	&	0.936	&	0.937	&	\uline{0.938}	&	0.938	&	0.938	&	0.938	&	0.938	&	0.939	\\
 																												
 
 \hline
@@ -361,11 +353,11 @@ CON\_T	&	0.868	&	0.906	&	0.930	&	0.936	&	0.937	&	\cellcolor{lightorange}0.938	&	
 Metrics &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$		&	Baseline \\
 \hline
 
-PR\_U2\_W	&	0.954	&	0.957	&	\cellcolor{lightorange}0.958	&	0.958	&	0.958	&	0.958	&	0.958	&	0.958	&	0.958	&	0.958	&	0.958	\\
-PR	&	0.929	&	0.929	&	0.933	&	0.939	&	0.939	&	0.946	&	\cellcolor{lightorange}0.947	&	0.947	&	0.947	&	0.947	&	0.949	\\
-PR\_U	&	0.942	&	0.947	&	0.948	&	0.949	&	0.949	&	\cellcolor{lightorange}0.950	&	0.950	&	0.950	&	0.950	&	0.950	&	0.951	\\
+PR\_U2\_W	&	0.954	&	0.957	&	\uline{0.958}	&	0.958	&	0.958	&	0.958	&	0.958	&	0.958	&	0.958	&	0.958	&	0.958	\\
+PR	&	0.929	&	0.929	&	0.933	&	0.939	&	0.939	&	0.946	&	\uline{0.947}	&	0.947	&	0.947	&	0.947	&	0.949	\\
+PR\_U	&	0.942	&	0.947	&	0.948	&	0.949	&	0.949	&	\uline{0.950}	&	0.950	&	0.950	&	0.950	&	0.950	&	0.951	\\
 CON\_T\_W	&	0.939	&	0.942	&	0.943	&	0.944	&	0.944	&	\cellcolor{lightgreen}0.945	&	\cellcolor{lightgreen}0.945	&	\cellcolor{lightgreen}0.945	&	\cellcolor{lightgreen}0.945	&	\cellcolor{lightgreen}0.945	&	0.944	\\
-CON\_T	&	0.924	&	0.933	&	0.938	&	0.941	&	0.941	&	0.944	&	\cellcolor{lightorange}0.945	&	0.945	&	0.945	&	0.945	&	0.946	\\
+CON\_T	&	0.924	&	0.933	&	0.938	&	0.941	&	0.941	&	0.944	&	\uline{0.945}	&	0.945	&	0.945	&	0.945	&	0.946	\\
 
 
 \hline
@@ -390,11 +382,11 @@ One possible explanation for the less performing results is that the key classes
 Metrics &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$		&	Baseline \\
 \hline
 
-PR\_U2\_W	&	0.720	&	0.627	&	0.718	&	0.703	&	0.732	&	0.824	&	0.852	&	\cellcolor{lightorange}0.881	&	0.876	&	0.876	&	0.929	\\
-PR	&	0.720	&	0.627	&	0.718	&	0.703	&	0.732	&	0.824	&	0.852	&	\cellcolor{lightorange}0.881	&	0.876	&	0.876	&	0.855	\\
-PR\_U	&	0.720	&	0.627	&	0.718	&	0.703	&	0.732	&	0.824	&	0.852	&	\cellcolor{lightorange}0.881	&	0.876	&	0.876	&	0.933	\\
-CON\_T\_W	&	0.722	&	0.581	&	0.644	&	0.676	&	0.727	&	0.819	&	0.842	&	0.874	&	\cellcolor{lightorange}0.876	&	0.876	&	0.934	\\
-CON\_T	&	0.722	&	0.581	&	0.644	&	0.676	&	0.727	&	0.819	&	0.842	&	0.874	&	\cellcolor{lightorange}0.876	&	0.876	&	0.942	\\
+PR\_U2\_W	&	0.720	&	0.627	&	0.718	&	0.703	&	0.732	&	0.824	&	0.852	&	\uline{0.881}	&	0.876	&	0.876	&	0.929	\\
+PR	&	0.720	&	0.627	&	0.718	&	0.703	&	0.732	&	0.824	&	0.852	&	\uline{0.881}	&	0.876	&	0.876	&	0.855	\\
+PR\_U	&	0.720	&	0.627	&	0.718	&	0.703	&	0.732	&	0.824	&	0.852	&	\uline{0.881}	&	0.876	&	0.876	&	0.933	\\
+CON\_T\_W	&	0.722	&	0.581	&	0.644	&	0.676	&	0.727	&	0.819	&	0.842	&	0.874	&	\uline{0.876}	&	0.876	&	0.934	\\
+CON\_T	&	0.722	&	0.581	&	0.644	&	0.676	&	0.727	&	0.819	&	0.842	&	0.874	&	\uline{0.876}	&	0.876	&	0.942	\\
 
 \hline
 \end{tabular}
@@ -411,11 +403,11 @@ CON\_T	&	0.722	&	0.581	&	0.644	&	0.676	&	0.727	&	0.819	&	0.842	&	0.874	&	\cellco
 Metrics &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$		&	Previous \\
 \hline
 
-PR\_U2\_W	&	0.672	&	0.656	&	0.645	&	0.697	&	0.754	&	0.776	&	0.786	&	\cellcolor{lightorange}0.799	&	0.799	&	0.799	&	0.923	\\
-PR	&	0.685	&	0.643	&	0.642	&	0.697	&	0.754	&	0.776	&	0.786	&	\cellcolor{lightorange}0.799	&	0.799	&	0.799	&	0.927	\\
-PR\_U	&	0.685	&	0.643	&	0.644	&	0.697	&	0.754	&	0.776	&	0.786	&	\cellcolor{lightorange}0.799	&	0.799	&	0.799	&	0.932	\\
-CON\_T\_W	&	0.694	&	0.636	&	0.636	&	0.697	&	0.754	&	0.776	&	0.786	&	\cellcolor{lightorange}0.799	&	0.799	&	0.799	&	0.926	\\
-CON\_T	&	0.654	&	0.611	&	0.636	&	0.697	&	0.754	&	0.776	&	0.786	&	\cellcolor{lightorange}0.799	&	0.799	&	0.799	&	0.939	\\
+PR\_U2\_W	&	0.672	&	0.656	&	0.645	&	0.697	&	0.754	&	0.776	&	0.786	&	\uline{0.799}	&	0.799	&	0.799	&	0.923	\\
+PR	&	0.685	&	0.643	&	0.642	&	0.697	&	0.754	&	0.776	&	0.786	&	\uline{0.799}	&	0.799	&	0.799	&	0.927	\\
+PR\_U	&	0.685	&	0.643	&	0.644	&	0.697	&	0.754	&	0.776	&	0.786	&	\uline{0.799}	&	0.799	&	0.799	&	0.932	\\
+CON\_T\_W	&	0.694	&	0.636	&	0.636	&	0.697	&	0.754	&	0.776	&	0.786	&	\uline{0.799}	&	0.799	&	0.799	&	0.926	\\
+CON\_T	&	0.654	&	0.611	&	0.636	&	0.697	&	0.754	&	0.776	&	0.786	&	\uline{0.799}	&	0.799	&	0.799	&	0.939	\\
 
 				
 \hline
@@ -434,11 +426,11 @@ CON\_T	&	0.654	&	0.611	&	0.636	&	0.697	&	0.754	&	0.776	&	0.786	&	\cellcolor{ligh
 Metrics &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$		&	Baseline \\
 \hline
 
-PR\_U2\_W	&	0.657	&	0.564	&	0.601	&	0.619	&	0.622	&	0.650	&	0.653	&	\cellcolor{lightorange}0.654	&	0.654	&	0.654	&	0.958	\\
-PR	&	0.644	&	0.564	&	0.601	&	0.619	&	0.622	&	0.650	&	0.653	&	\cellcolor{lightorange}0.654	&	0.654	&	0.654	&	0.949	\\
-PR\_U	&	0.644	&	0.564	&	0.601	&	0.619	&	0.622	&	0.650	&	0.653	&	\cellcolor{lightorange}0.654	&	0.654	&	0.654	&	0.951	\\
-CON\_T\_W	&	0.649	&	0.564	&	0.601	&	0.619	&	0.622	&	0.650	&	0.653	&	\cellcolor{lightorange}0.654	&	0.654	&	0.654	&	0.944	\\
-CON\_T	&	0.644	&	0.564	&	0.601	&	0.619	&	0.622	&	0.650	&	0.653	&	\cellcolor{lightorange}0.654	&	0.654	&	0.654	&	0.946	\\
+PR\_U2\_W	&	0.657	&	0.564	&	0.601	&	0.619	&	0.622	&	0.650	&	0.653	&	\uline{0.654}	&	0.654	&	0.654	&	0.958	\\
+PR	&	0.644	&	0.564	&	0.601	&	0.619	&	0.622	&	0.650	&	0.653	&	\uline{0.654}	&	0.654	&	0.654	&	0.949	\\
+PR\_U	&	0.644	&	0.564	&	0.601	&	0.619	&	0.622	&	0.650	&	0.653	&	\uline{0.654}	&	0.654	&	0.654	&	0.951	\\
+CON\_T\_W	&	0.649	&	0.564	&	0.601	&	0.619	&	0.622	&	0.650	&	0.653	&	\uline{0.654}	&	0.654	&	0.654	&	0.944	\\
+CON\_T	&	0.644	&	0.564	&	0.601	&	0.619	&	0.622	&	0.650	&	0.653	&	\uline{0.654}	&	0.654	&	0.654	&	0.946	\\
 
 
 \hline
