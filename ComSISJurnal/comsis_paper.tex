@@ -55,16 +55,16 @@ One of the biggest problems when it comes to legacy software systems is the lack
 
 \section{The concept of logical dependencies}
 
-A \textit{logical dependency} between two software entities (classes, modules, interfaces, etc. ) signals that those entities in some way depend on one another. 
+A logical dependency between two software entities (classes, modules, interfaces, etc. ) signals that those entities in some way depend on one another. 
 
 The concept of logical coupling (dependency) was first introduced by Gall \cite{Gall:1998:DLC:850947.853338}. They defined the logical coupling between two modules as the fact that the modules repeatedly change together during the historical evolution of the software system.
 
 To define the logical dependencies, we have first to define the co-changing pairs. A \textit{co-changing pair} are two software entities that update together in the same commit. For example, a commit that contains seven entities will generate 21 co-changing pairs ($\Comb{n}{k}=\frac{n!}{k!(n-k)!} = \frac{7!}{2!(5)!} = 21$).
 
 
-The logical dependencies are those co-changing pairs that remain after the filtering phase. The filtering phase aims to increase the confidence that the remaining co-changing pairs could be related. Another reason for the filtering is to decrease the size of processed data; a commit with 1030 entities will produce over half a million co-changing pairs. These kinds of commits are, in most cases, not code-related, so the co-changing pairs extracted from this kind of commit have nothing to do with the code.
+After extraction, some co-changing pairs are removed by passing them through various filters (filtering phase). The \textit{logical dependencies} are those co-changing pairs that remain after the filtering phase. Another reason for the filtering is to decrease the size of processed data; a commit with 1030 entities will produce over half a million co-changing pairs. These kinds of commits are, in most cases, not code-related, so the co-changing pairs extracted from this kind of commit have nothing to do with the code.
 
-Our journey to obtain reliable logical dependencies from co-changing pairs filtering started with the same workflow as this paper's, but with different types of filters \cite{saci19}, \cite{enase19}. The main disadvantage of some of the filters used in our previous works is that they did not work well for systems with few commits.
+Previously, we tried to obtain reliable logical dependencies from co-changing pairs by applying different types of filters like the occurrence filter and commit size filter \cite{saci19}, \cite{enase19}. The main disadvantage of the occurrence filter was that it did not work well for systems with few commits.
 
 Currently, we aim to refine the filtering method with a new filter that can be applied for all sorts of commit history sizes. This new filter will be used together with a filter previously explored, the commit size filter \cite{enase19}.
 
