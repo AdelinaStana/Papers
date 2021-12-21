@@ -168,7 +168,7 @@ The class connection metrics are CONN-TOTAL-W, which is the total weight of all 
 Previous research used PageRank values computed on both directed and undirected, weighted and unweighted graphs. In the current research, we used the PR, which is the PageRank value computed on the directed and unweighted graph. The PR-U, which is the value computed on the undirected and unweighted graph, and PR-U2-W, the value computed on the weighted graph with back-recommendations \cite{PagerankENASE}, \cite{enase15}, \cite{Finding-key-classes}, \cite{PagerankSACI}.
 
 
-%%%
+
 
 \section{Metrics for results evaluation}
 \label{sec:evalmetrics}
@@ -298,7 +298,7 @@ In this section, we add in the graph the logical dependencies together with the 
 In tables \ref{tab:measurementscombined:ant}, \ref{tab:measurementscombined:tomcat}, and \ref{tab:measurementscombined:hibernate}, on each line, we have the metric that is calculated and on each column, we have the connection strength threshold that was applied to the logical dependencies used in identifying the key classes.
 We started with logical dependencies that have a connection strength greater than 10\%, which means that in at least 10\% of the commits involving A or B, A and B update together. Then we increased the threshold value by 10 until we remained only with entities that update in all the commits together. The last column contains the results obtained previously by the tool by only using structural dependencies.
 
-As for the new results obtained by combining structural and logical dependencies, highlighted with orange are the values that are close to the previously registered values but did not surpass them. Highlighted with green are values that are better than the previously registered values. At this step, we can also observe that for all three systems measured in tables \ref{tab:measurementscombined:ant}, \ref{tab:measurementscombined:tomcat}, and \ref{tab:measurementscombined:hibernate}, the best values obtained are for connection strength between 40-70\%.
+As for the new results obtained by combining structural and logical dependencies, the values close to the previously registered values, but did not surpass them, are underlined with one line. And, with two lines, are underlined the values that are better than the previously registered values. At this step, we can also observe that for all three systems measured in tables \ref{tab:measurementscombined:ant}, \ref{tab:measurementscombined:tomcat}, and \ref{tab:measurementscombined:hibernate}, the best values obtained are for connection strength between 40-70\%.
 
 \begin{table}[!h]
 \renewcommand{\arraystretch}{1}
@@ -310,10 +310,10 @@ As for the new results obtained by combining structural and logical dependencies
 Metrics &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$		&	Baseline \\
 \hline
 
-PR\_U2\_W	&	0.924	&	0.925	&	0.926	&	0.927	&	0.927	&	0.927	&	\textbf{0.929}	&	0.928	&	0.928	&	0.928	&	0.929	\\
-PR	&	0.914	&	0.854	&	0.851	&	\textbf{0.866}	&	\textbf{0.876}	&	\textbf{0.882}	&	\textbf{0.887}	&	0.854	&	0.852	&	0.852	&	0.855	\\
-PR\_U	&	0.910	&	0.930	&	0.933	&	0.933	&	\textbf{0.935}	&	\textbf{0.934}	&	\textbf{0.939}	&	0.933	&	0.933	&	0.933	&	0.933	\\
-CON\_T\_W	&	0.924	&	0.928	&	0.931	&	0.932	&	0.933	&	0.934	&	\textbf{0.936}	&	0.934	&	0.934	&	0.934	&	0.934	\\
+PR\_U2\_W	&	0.924	&	0.925	&	0.926	&	0.927	&	0.927	&	0.927	&	\uline{\uline{0.929}}	&	0.928	&	0.928	&	0.928	&	0.929	\\
+PR	&	0.914	&	0.854	&	0.851	&	\uline{\uline{0.866}}	&	\uline{\uline{0.876}}	&	\uline{\uline{0.882}}	&	\uline{\uline{0.887}}	&	0.854	&	0.852	&	0.852	&	0.855	\\
+PR\_U	&	0.910	&	0.930	&	0.933	&	0.933	&	\uline{\uline{0.935}}	&	\uline{\uline{0.934}}	&	\uline{\uline{0.939}}	&	0.933	&	0.933	&	0.933	&	0.933	\\
+CON\_T\_W	&	0.924	&	0.928	&	0.931	&	0.932	&	0.933	&	0.934	&	\uline{\uline{0.936}}	&	0.934	&	0.934	&	0.934	&	0.934	\\
 CON\_T	&	0.840	&	0.886	&	0.904	&	0.909	&	0.915	&	0.923	&	0.932	&	0.935	&	\uline{0.936}	&	\uline{0.936}	&	0.942	\\
 
 \hline
@@ -331,9 +331,9 @@ CON\_T	&	0.840	&	0.886	&	0.904	&	0.909	&	0.915	&	0.923	&	0.932	&	0.935	&	\uline{
 Metrics &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$		&	Baseline \\
 \hline
 
-PR\_U2\_W	&	0.910	&	0.917	&	0.923	&	\textbf{0.924}	&	\textbf{0.924}	&	\textbf{0.924}	&	\textbf{0.924}	&	\textbf{0.924}	&	\textbf{0.924}	&	\textbf{0.924}	&	0.923	\\
+PR\_U2\_W	&	0.910	&	0.917	&	0.923	&	\uline{\uline{0.924}}	&	\uline{\uline{0.924}}	&	\uline{\uline{0.924}}	&	\uline{\uline{0.924}}	&	\uline{\uline{0.924}}	&	\uline{\uline{0.924}}	&	\uline{\uline{0.924}}	&	0.923	\\
 PR	&	0.811	&	0.800	&	0.815	&	0.834	&	0.847	&	0.852	&	0.853	&	0.858	&	0.858	&	0.858	&	0.927	\\
-PR\_U	&	0.910	&	0.921	&	0.931	&	\textbf{0.933}	&	\textbf{0.933}	&	0.932	&	\textbf{0.933}	&	0.932	&	0.932	&	0.932	&	0.932	\\
+PR\_U	&	0.910	&	0.921	&	0.931	&	\uline{\uline{0.933}}	&	\uline{\uline{0.933}}	&	0.932	&	\uline{\uline{0.933}}	&	0.932	&	0.932	&	0.932	&	0.932	\\
 CON\_T\_W	&	0.914	&	0.920	&	0.924	&	\uline{0.926}	&	\uline{0.926}	&	\uline{0.926}	&	\uline{0.926}	&	\uline{0.926}	&	\uline{0.926}	&	\uline{0.926}	&	\uline{0.926}	\\
 CON\_T	&	0.868	&	0.906	&	0.930	&	0.936	&	0.937	&	\uline{0.938}	&	\uline{0.938}	&	\uline{0.938}	&	\uline{0.938}	&	\uline{0.938}	&	0.939	\\
 																												
@@ -352,17 +352,70 @@ CON\_T	&	0.868	&	0.906	&	0.930	&	0.936	&	0.937	&	\uline{0.938}	&	\uline{0.938}	&
 \hline
 Metrics &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$		&	Baseline \\
 \hline
-
 PR\_U2\_W	&	0.954	&	0.957	&	\uline{0.958}	&	0.958	&	0.958	&	0.958	&	0.958	&	0.958	&	0.958	&	0.958	&	0.958	\\
 PR	&	0.929	&	0.929	&	0.933	&	0.939	&	0.939	&	0.946	&	\uline{0.947}	&	0.947	&	0.947	&	0.947	&	0.949	\\
 PR\_U	&	0.942	&	0.947	&	0.948	&	0.949	&	0.949	&	\uline{0.950}	&	0.950	&	0.950	&	0.950	&	0.950	&	0.951	\\
-CON\_T\_W	&	0.939	&	0.942	&	0.943	&	0.944	&	0.944	&	\textbf{0.945}	&	\textbf{0.945}	&	\textbf{0.945}	&	\textbf{0.945}	&	\textbf{0.945}	&	0.944	\\
+CON\_T\_W	&	0.939	&	0.942	&	0.943	&	0.944	&	0.944	&	\uline{\uline{0.945}}	&	\uline{\uline{0.945}}	&	\uline{\uline{0.945}}	&	\uline{\uline{0.945}}	&	\uline{\uline{0.945}}	&	0.944	\\
 CON\_T	&	0.924	&	0.933	&	0.938	&	0.941	&	0.941	&	0.944	&	\uline{0.945}	&	\uline{0.945}	&	\uline{0.945}	&	\uline{0.945}	&	0.946	\\
-
 
 \hline
 \end{tabular}
 \end{table}
+
+
+The details of the systems are presented in two tables.  In table \ref{tab:overlap} are the overlappings between structural and logical dependencies expressed in percentages. Each column represents the percentage of logical dependencies that are also structural, for each column the logical dependencies are obtained by applying a different connection strength filter. The connection strength filter begins at 10, meaning that in at least 10 \% of the total commits involving two entities, the entities update together. We increase the connection strength filter by 10 up until we reach 100, meaning that in all the commits that involve one entity, the other entity is present also.
+
+
+In table \ref{tab:ratio_sd_ld} are the ratio numbers between structural dependencies and logical dependencies. We added this table in order to highlight how different the total number of both dependencies is.
+
+
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1}
+\caption{Percentage of logical dependencies that are also structural dependencies}
+\label{tab:overlap}
+\centering
+\begin{tabular}{|c|cccccccccc|}
+\hline
+System &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$ \\
+\hline
+Ant	&	25.202	&	34.419	&	36.385	&	34.656	&	33.528	&	33.333	&	28.659	&	33.333	&	35.294	&	35.294	\\
+Tomcat Catalina	&	4.059	&	22.089	&	25.000	&	25.758	&	25.926	&	37.525	&	47.368	&	55.285	&	75.000	&	76.923	\\
+Hibernate	&	6.546	&	26.607	&	29.565	&	32.374	&	32.543	&	45.170	&	44.980	&	42.473	&	42.473	&	42.473	\\
+\hline
+\end{tabular}
+\end{table}
+
+
+
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1}
+\caption{Ratio between structural and logical dependencies (SD/LD)}
+\label{tab:ratio_sd_ld}
+\centering
+\begin{tabular}{|c|cccccccccc|}
+\hline
+System &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$ \\
+\hline
+Ant	&	1.315	&	3.284	&	4.972	&	5.603	&	6.175	&	10.697	&	12.915	&	27.154	&	41.529	&	41.529	\\
+Tomcat Catalina	&	0.120	&	0.923	&	1.313	&	1.531	&	1.619	&	3.177	&	7.092	&	13.146	&	67.375	&	124.385	\\
+Hibernate	&	1.037	&	6.391	&	10.037	&	14.947	&	18.940	&	54.248	&	83.442	&	111.704	&	111.704	&	111.704	\\
+
+\hline
+\end{tabular}
+\end{table}
+
+
+In tables \ref{tab:measurementscombined:ant}, \ref{tab:measurementscombined:tomcat}, and \ref{tab:measurementscombined:hibernate} we can also observe that the measurements at the beginning are smaller than the rest. Once with the increasing of the threshold value also the measurements begin to increase. Meaning that better results for key class detection are found. 
+The best measurements are when the threshold value is between 40 and 60, after that, the measurements tend to decrease a little bit and stay at that fixed value. 
+
+A possible explanation of the results fluctuation and then capping is that if we are looking at table \ref{tab:ratio_sd_ld} we can see that at the beginning, the total number of logical dependencies used is close to the number of existing structural dependencies. The high volume of logical dependencies introduced might cause an erroneous detection of the key classes, in consequence, smaller measurements. 
+When the threshold begins to be more restrictive and the total number of logical dependencies used begins to decrease, the key classes detection starts to improve. This improvement stops after the threshold value reaches 60\%. If we look again at table \ref{tab:ratio_sd_ld} we can see that after 60\% the number of structural dependencies outnumbers the number of logical dependencies up to 124 times in some cases. In addition, if we look at table \ref{tab:overlap} we can see that the remaining logical dependencies overlap a lot with the structural dependencies, so we are not introducing too much new information.
+
+ So, the number of logical dependencies used is so small that it doesn't influence the key class identification. Since the structural dependencies used don't change, we obtain the same results for different threshold values. 
+
+
+
+%%%
 
 \subsection{Measurements using only logical dependencies}
 In the previous section, we added in the graph based on which the ranking algorithm works the logical and structural dependencies. In the current section, we will add only the logical dependencies to the graph.
@@ -371,6 +424,10 @@ In tables \ref{tab:measurementshistory:ant}, \ref{tab:measurementshistory:tomcat
 
 
 One possible explanation for the less performing results is that the key classes may have a better design than the rest of the classes, which means that are less prone to change. If the key classes are less prone to change, this implies that the number of dependencies extracted from the versioning system can be less than for other classes.
+
+
+Initially, we expected to see a Gaussian curve, but instead, we see a bell curve.  We think that in the beginning, we use a high number of logical dependencies in key class detection, among those logical dependencies is an important number of key classes and also an important number of other classes. But the number of other classes does not influence the key classes detection. When we start to increase the value of the threshold and filter more the logical dependencies, we also filter some of the initial detected key classes and remain with a significant number of other classes. In this case, the other classes that remain influence the measurements, causing the worst-performing solutions. 
+Some of the key classes are strongly connected in the versioning system, and even for higher threshold values don't get filtered out. Meanwhile, the rest of the classes that are not key classes get filtered out for higher threshold values which leads to better performing measurements when the threshold value are above 60\%. 
 
 \begin{table}[!h]
 \renewcommand{\arraystretch}{1}
@@ -437,128 +494,7 @@ CON\_T	&	0.644	&	0.564	&	0.601	&	0.619	&	0.622	&	0.650	&	0.653	&	\uline{0.654}	&
 \end{tabular}
 \end{table}
 
-\section{Correlation between details of the systems and results}
-\label{sec:overlapping}
 
-In this section, we discuss about the correlation between the details of the systems and the results obtained in section \ref{sec:current_measurements}.
-
-The reason why we are doing this correlation is to find if there are some links between the details of the systems and the results obtained. 
-
-The results obtained are presented in figures \ref{fig:plot_sd_ld_ant} - \ref{fig:plot_ld_hibernate}. We are using plots to display the results obtained to have a clearer view of how the results fluctuate over different thresholds values.
-
-
-
-
-\begin{figure}
-\centering
-\includegraphics[width=\textwidth]{ant_SD_LD.PNG}
-\caption{Variation of AUC score when varying connection strength threshold for Ant. Results for structural and logical dependencies combined. }
-\label{fig:plot_sd_ld_ant}
-\centering
-\end{figure}
-
-
-\begin{figure}
-\centering
-\includegraphics[width=\textwidth]{tomcat_SD_LD.PNG}
-\caption{Variation of AUC score when varying connection strength threshold for Tomcat. Results for structural and logical dependencies combined. }
-\label{fig:plot_sd_ld_tomcat}
-\centering
-\end{figure}
-
-
-\begin{figure}
-\centering
-\includegraphics[width=\textwidth]{hibernate_SD_LD.PNG}
-\caption{Variation of AUC score when varying connection strength threshold for Hibernate. Results for structural and logical dependencies combined. }
-\label{fig:plot_sd_ld_hibernate}
-\centering
-\end{figure}
-
-
-
-\begin{figure}
-\centering
-\includegraphics[width=\textwidth]{ant_LD.PNG}
-\caption{Variation of AUC score when varying connection strength threshold for Ant. Results for logical dependencies only. }
-\label{fig:plot_ld_ant}
-\centering
-\end{figure}
-
-
-\begin{figure}
-\centering
-\includegraphics[width=\textwidth]{tomcat_LD.PNG}
-\caption{Variation of AUC score when varying connection strength threshold for Tomcat. Results for logical dependencies only. }
-\label{fig:plot_ld_tomcat}
-\centering
-\end{figure}
-
-
-\begin{figure}
-\centering
-\includegraphics[width=\textwidth]{hibernate_LD.PNG}
-\caption{Variation of AUC score when varying connection strength threshold for Hibernate. Results for logical dependencies only.}
-\label{fig:plot_ld_hibernate}
-\centering
-\end{figure}
-
-
-The details of the systems are presented in two tables.  In table \ref{tab:overlap} are the overlappings between structural and logical dependencies expressed in percentages. Each column represents the percentage of logical dependencies that are also structural, for each column the logical dependencies are obtained by applying a different connection strength filter. The connection strength filter begins at 10, meaning that in at least 10 \% of the total commits involving two entities, the entities update together. We increase the connection strength filter by 10 up until we reach 100, meaning that in all the commits that involve one entity, the other entity is present also.
-
-
-In table \ref{tab:ratio_sd_ld} are the ratio numbers between structural dependencies and logical dependencies. We added this table in order to highlight how different the total number of both dependencies is.
-
-
-\begin{table}[!h]
-\renewcommand{\arraystretch}{1}
-\caption{Percentage of logical dependencies that are also structural dependencies}
-\label{tab:overlap}
-\centering
-\begin{tabular}{|c|cccccccccc|}
-\hline
-System &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$ \\
-\hline
-Ant	&	25.202	&	34.419	&	36.385	&	34.656	&	33.528	&	33.333	&	28.659	&	33.333	&	35.294	&	35.294	\\
-Tomcat Catalina	&	4.059	&	22.089	&	25.000	&	25.758	&	25.926	&	37.525	&	47.368	&	55.285	&	75.000	&	76.923	\\
-Hibernate	&	6.546	&	26.607	&	29.565	&	32.374	&	32.543	&	45.170	&	44.980	&	42.473	&	42.473	&	42.473	\\
-\hline
-\end{tabular}
-\end{table}
-
-
-
-\begin{table}[!h]
-\renewcommand{\arraystretch}{1}
-\caption{Ratio between structural and logical dependencies (SD/LD)}
-\label{tab:ratio_sd_ld}
-\centering
-\begin{tabular}{|c|cccccccccc|}
-\hline
-System &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$ \\
-\hline
-Ant	&	1.315	&	3.284	&	4.972	&	5.603	&	6.175	&	10.697	&	12.915	&	27.154	&	41.529	&	41.529	\\
-Tomcat Catalina	&	0.120	&	0.923	&	1.313	&	1.531	&	1.619	&	3.177	&	7.092	&	13.146	&	67.375	&	124.385	\\
-Hibernate	&	1.037	&	6.391	&	10.037	&	14.947	&	18.940	&	54.248	&	83.442	&	111.704	&	111.704	&	111.704	\\
-
-\hline
-\end{tabular}
-\end{table}
-
-In figures \ref{fig:plot_sd_ld_ant}, \ref{fig:plot_sd_ld_tomcat} and \ref{fig:plot_sd_ld_hibernate} are the measurements obtained by using structural and logical dependencies combined. 
-In all three figures, the measurements at the beginning are smaller than the rest. Once with the increasing of the threshold value also the measurements begin to increase. Meaning that better results for key class detection are found. 
-The best measurements are when the threshold value is between 40 and 60, after that, the measurements tend to decrease a little bit and stay at that fixed value. 
-
-A possible explanation of the results fluctuation and then capping is that if we are looking at table \ref{tab:ratio_sd_ld} we can see that at the beginning, the total number of logical dependencies used is close to the number of existing structural dependencies. The high volume of logical dependencies introduced might cause an erroneous detection of the key classes, in consequence, smaller measurements. 
-When the threshold begins to be more restrictive and the total number of logical dependencies used begins to decrease, the key classes detection starts to improve. This improvement stops after the threshold value reaches 60\%. If we look again at table \ref{tab:ratio_sd_ld} we can see that after 60\% the number of structural dependencies outnumbers the number of logical dependencies up to 124 times in some cases. In addition, if we look at table \ref{tab:overlap} we can see that the remaining logical dependencies overlap a lot with the structural dependencies, so we are not introducing too much new information.
-
- So, the number of logical dependencies used is so small that it doesn't influence the key class identification. Since the structural dependencies used don't change, we obtain the same results for different threshold values. 
-
-
-
-In figures \ref{fig:plot_ld_ant}, \ref{fig:plot_ld_tomcat} and \ref{fig:plot_ld_hibernate} are the measurements obtained by using only logical dependencies.
-Initially, we expected to see a Gaussian curve, but instead, we see a bell curve.  We think that in the beginning, we use a high number of logical dependencies in key class detection, among those logical dependencies is an important number of key classes and also an important number of other classes. But the number of other classes does not influence the key classes detection. When we start to increase the value of the threshold and filter more the logical dependencies, we also filter some of the initial detected key classes and remain with a significant number of other classes. In this case, the other classes that remain influence the measurements, causing the worst-performing solutions. 
-Some of the key classes are strongly connected in the versioning system, and even for higher threshold values don't get filtered out. Meanwhile, the rest of the classes that are not key classes get filtered out for higher threshold values which leads to better performing measurements when the threshold value are above 60\%. 
 
 \section{Conclusions}
 \label{sec:conclusion}
