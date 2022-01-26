@@ -19,8 +19,6 @@
 \usepackage{color, colortbl}
 \graphicspath{ {./figures/} }
 
-\definecolor{lightgreen}{rgb}{0.82, 0.94, 0.75}
-\definecolor{lightorange}{rgb}{0.98, 0.84, 0.65}
 \newcommand*{\Comb}[2]{{}C^{#1}_{#2}}%
 %%%%%%%
 
@@ -30,17 +28,17 @@
 %% Use this if the title is too long for the running heads
 \titlerunning{Logical dependencies in practice}
 
-\author{Adelina Stana\inst{1} \and Ioana Sora\inst{2}}
+\author{Adelina Diana Stana\inst{1} \and Ioana Şora\inst{2}}
 
 %% Use this the list of authors is too long for the running heads
 %\authorrunning{First Author et al.}
 
 \institute{Stana Adelina Diana\\
-  Address\\
+  Politehnica University, Piaţa Victoriei Nr. 2, ; 300006 Timişoara, jud. Timiş, România\\
   \email{stana.adelina.diana@gmail.com}
   \and
-  Sora Ioana\\
-  Address\\
+  Şora Ioana\\
+ Politehnica University, Piaţa Victoriei Nr. 2, ; 300006 Timişoara, jud. Timiş, România\\
   \email{ioana.sora@cs.upt.ro}}
 
 \begin{document}
@@ -138,9 +136,9 @@ The key class identification can be done by using different algorithms with diff
 Zaidman et al. use a webmining algorithm and dynamic analysis of the source code to identify the key classes \cite{ZaidmanJurnal}.
 
 \subsection{Baseline approach}
-We use the research of I. Sora et al \cite{Finding-key-classes} as a baseline for our research involving the usage of logical dependencies to find key classes. 
+We use the research of I. Şora et al \cite{Finding-key-classes} as a baseline for our research involving the usage of logical dependencies to find key classes. 
 
-Sora et al. used the static analysis of the source code, a page ranking algorithm and other class attributes to find key classes \cite{PagerankENASE}, \cite{enase15}, \cite{SoraSpringer}, \cite{PagerankSACI},\cite{Finding-key-classes}.
+Şora et al. used the static analysis of the source code, a page ranking algorithm and other class attributes to find key classes \cite{PagerankENASE}, \cite{enase15}, \cite{SoraSpringer}, \cite{PagerankSACI},\cite{Finding-key-classes}.
 The page ranking algorithm is a customization of PageRank, the algorithm used to rank web pages \cite{ilprints422} and works based on a recommendation system. If one node has a connection with another node, then it recommends the second node. In previous works, connections are established based on structural dependencies extracted from static code analysis. If A has a structural dependency with B, then A recommends B, and also B recommends A.
 
 The ranking algorithm ranks all the classes from the source code of the system analyzed according to their importance. To identify the important classes from the rest of the classes a threshold for TOP classes from the top of the ranking is set. The TOP threshold value can go from 1 to the total number of classes found in the system. 
@@ -199,7 +197,7 @@ True Negatives (TN) are classes that are found neither in the reference solution
 In multiple related works, the ROC-AUC metric has been used to evaluate the results for finding key classes of software systems.
 For a classifier to be considered good, its ROC-AUC metric value should be as close to 1 as possible, when the value is 1 then the classifier is considered to be perfect.
 
-Osman et al. obtained in their research an average Area Under the Receiver Operating Characteristic Curve (ROC-AUC) score of 0.750 \cite{6676885}. Thung et al. obtained an average ROC-AUC score of 0.825 \cite{rocclasification}  and Sora et al. (the baseline) obtained an average ROC-AUC score of 0.894 \cite{Finding-key-classes}.
+Osman et al. obtained in their research an average Area Under the Receiver Operating Characteristic Curve (ROC-AUC) score of 0.750 \cite{6676885}. Thung et al. obtained an average ROC-AUC score of 0.825 \cite{rocclasification}  and Şora et al. (the baseline) obtained an average ROC-AUC score of 0.894 \cite{Finding-key-classes}.
 
 
 \section{Data set used}
@@ -502,7 +500,7 @@ CON\_T	&	0.644	&	0.564	&	0.601	&	0.619	&	0.622	&	0.650	&	0.653	&	\uline{0.654}	&
 
 The logical dependencies are filtered co-changing pairs extracted from the versioning system history. The filters applied to the co-changing pairs are the following: the filter based on commit size and the filter based on connection strength.
 
-In our experiments the filter based on commit size had a hard threshold of 10 files, meaning that we use co-changing pairs only from commits with at most 10 files changed. The filter based on connection strength had a variable threshold, starting with 10\% and ending with 100\%. We used a variable threshold for connection strength because we wanted to observe how this threshold will impact the key classes detection.
+The filter based on connection strength had a variable threshold, starting with 10\% and ending with 100\%. We used a variable threshold for connection strength because we wanted to observe how this threshold will impact the key classes detection.
 
 In section \ref{sec:current_measurements} we approached two scenarios to detect key classes by using logical dependencies. In the first scenario, we used logical dependencies together with structural dependencies and in the second, we used only logical dependencies to detect the key classes. We modified the tool used in the baseline approach to use also logical dependencies, and then we performed the key class identification using that tool. 
 The quality of the results obtained was evaluated with the same tool, the metric used to evaluate the results is Area Under the Receiver Operating Characteristic Curve (ROC-AUC). We then compared the evaluation results with the results obtained by the baseline approach. 
@@ -510,7 +508,7 @@ The quality of the results obtained was evaluated with the same tool, the metric
 Based on the results obtained, compared with the baseline results, we did saw a slight improvement in key class detection when both logical and structural dependencies were used together, the best results were obtained with a connection strength threshold of 40-70\%. When we used only logical dependencies to detect key classes, the results were less performing than using only structural or structural and logical dependencies combined.
 
 As we mentioned in section \ref{sec:baseline_approach}, also other researchers tried to identify the key classes, and even though the approaches are not the same, most of them have used the ROC-AUC metric to evaluate the quality of the results. 
-Osman et al. obtained in their research an average Area Under the Receiver Operating Characteristic Curve (ROC-AUC) score of 0.750 \cite{6676885}. Thung et al. obtained an average ROC-AUC score of 0.825 \cite{rocclasification}  and Sora et al. (the baseline approach) obtained an average ROC-AUC score of 0.894 \cite{Finding-key-classes}.
+Osman et al. obtained in their research an average Area Under the Receiver Operating Characteristic Curve (ROC-AUC) score of 0.750 \cite{6676885}. Thung et al. obtained an average ROC-AUC score of 0.825 \cite{rocclasification}  and Şora et al. (the baseline approach) obtained an average ROC-AUC score of 0.894 \cite{Finding-key-classes}.
 
 In the current research, we obtained an average ROC-AUC score of 0.926 when using logical and structural dependencies combined and a score of 0.747 when using only logical dependencies to detect key classes.
 
