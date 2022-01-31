@@ -48,8 +48,32 @@
 \begin{abstract}
 One of the biggest problems when it comes to legacy software systems is the lack of modernization. A legacy software system is an obsolete system that might still be in use and satisfy the organization's needs but due to the lack of modernization, it has a high maintenance cost. One solution is to modernize or refactor the system and to do that the developers must have a good understanding of the system. Here comes one other problem of the legacy software systems, the lack of up-to-date documentation or the lack of documentation. The solution for this problem is to analyze the legacy software system in order to gain more knowledge about the system and how the system works. Our approach is to analyze the legacy software system by using historical information extracted from the versioning systems.
 
-\vspace{6pt}\textbf{Keywords:} logical dependencies, versioning system, key classes.
+\vspace{6pt}\textbf{Keywords:} logical dependencies; mining software repositories; versioning system; key classes; co-changing entities.
 \end{abstract}
+
+
+\section{Introduction}
+
+
+
+
+The version control ( also known as source control) system that tracks changes in source code during software development can provide useful information about the system's details. 
+The usage of information extracted from the version control system is not something new, previous works have used version control information to detect design issues \cite{Zimmermann:2004:MVH:998675.999460}, predict fault incidence among modules \cite{Predictingfaultincidence} or guide software changes \cite{4815274}, \cite{DBLP:journals/ese/AjienkaCC18}.
+In software engineering literature, concepts like evolutionary coupling, evolutionary dependencies, logical dependencies, or logical coupling refer to the same sort of relationship among software entities. That relationship is extracted from the version control system and can mean that the entities from the source code files that are changing together, evolve together, and might depend on one another. Studies show that dependency relationships found in the source code overlap only in a small percentage with dependency relationships found in the version control system and suggest that these two types of relationships can be used together \cite{Oliva:2011:ISL:2067853.2068086}, \cite{DBLP:journals/jss/AjienkaC17}. But, in practice, dependencies extracted from the version management system are rarely used due to the size of the information extracted \cite{Shtern:2012:CMS:2332427.2332428}. A relatively small source code repository with roundabout one thousand commits can lead to millions of connections. 
+In this paper, we intend to speed up the processing time, reduce the size of connections extracted from the version control and, increase the confidence that the connections obtained might be related by applying a set of filters with different thresholds to the information extracted. 
+In order to validate the results obtained, and to see if the filtering methods had or not had a favorable effect on the final result, we want to identify the key classes of different systems. The identification of key classes had been previously performed by using structural dependencies, so,
+we intend to use the results obtained together with structural dependencies, and also separate, and see how the final results fluctuate.
+
+The paper is organized as follows: Section 2 introduces the concepts of logical dependencies and the method of obtaining them. Section 3 introduces the concept of key classes and the new approach of using logical dependencies to detect key classes. The metrics for results evaluation are presented in section 4. Section 5 defines the data set used, and section 6 presents the new results obtained on the data set. Finally, section 7 discusses the conclusions based on the results obtained. 
+
+
+%%%%%%%%%%%
+
+
+There are various types of information that can be used to extract system-related information from the versioning system: release notes, bug reports, comments, or commits. We will focus on commits and on what files changed in each commit. By focusing on the files changed and not on the entities from the files, we don't need any code parser. This might constitute an advantage for dynamically typed languages like Python, Ruby, JavaScript, Objective-C, or even for statically typed languages that allow to not explicitly specify the type, like auto for C++ (since C++11) or var for C\#.
+
+
+\section{Related Works}
 
 
 \section{The concept of logical dependencies}
