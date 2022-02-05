@@ -46,8 +46,10 @@
 \maketitle
 
 \begin{abstract}
-One of the biggest problems when it comes to legacy software systems is the lack of modernization. A legacy software system is an obsolete system that might still be in use and satisfy the organization's needs but due to the lack of modernization, it has a high maintenance cost. One solution is to modernize or refactor the system and to do that the developers must have a good understanding of the system. Here comes one other problem of the legacy software systems, the lack of up-to-date documentation or the lack of documentation. The solution for this problem is to analyze the legacy software system in order to gain more knowledge about the system and how the system works. Our approach is to analyze the legacy software system by using historical information extracted from the versioning systems.
-
+The version control system of every software product can provide important information about how the system is connected. 
+In this study, we first propose a language-independent method to collect and filter dependencies from the version control, and second, we use the results obtained in the first step to identify key classes from three software systems. To identify the key classes we are using the dependencies extracted together with dependencies from the source code but also separate. Based on the results obtained we can say that compared with the results obtained by using only dependencies extracted from code, the mix between both types of dependencies do not provide dramatically different results, only small improvements. And, by using only dependencies from the version control system we obtained results that did not surpass the results previously mentioned but are still acceptable.
+This means that software systems that use dynamically typed languages such as JavaScript, Objective-C, Python, or Ruby for which the code dependencies are harder to obtain can use the dependencies extracted from the version control to obtain better knowledge about the system. 
+  
 \vspace{6pt}\textbf{Keywords:} logical dependencies; mining software repositories; versioning system; key classes; co-changing entities.
 \end{abstract}
 
