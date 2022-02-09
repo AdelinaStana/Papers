@@ -50,7 +50,7 @@ The version control system of every software product can provide important infor
 In this study, we first propose a language-independent method to collect and filter dependencies from the version control, and second, we use the results obtained in the first step to identify key classes from three software systems. To identify the key classes we are using the dependencies extracted from the version control system together with dependencies from the source code, but also separate. Based on the results obtained we can say that, compared with the results obtained by using only dependencies extracted from code, the mix between both types of dependencies do not provide dramatically different results, only small improvements. And, by using only dependencies from the version control system, we obtained results that did not surpass the results previously mentioned, but are still acceptable.
 This means that software systems that use dynamically typed languages such as JavaScript, Objective-C, Python or Ruby, for which the code dependencies are harder to obtain, can use the dependencies extracted from the version control to obtain better knowledge about the system. 
   
-\vspace{6pt}\textbf{Keywords:} logical dependencies; mining software repositories; versioning system; key classes; co-changing entities.
+\vspace{6pt}\textbf{Keywords:} logical dependencies; logical coupling; mining software repositories; versioning system; key classes; co-changing entities; software evolution.
 \end{abstract}
 
 
@@ -58,9 +58,8 @@ This means that software systems that use dynamically typed languages such as Ja
 
 
 
-
-The version control ( also known as source control) system that tracks changes in source code during software development can provide useful information about the system's details. 
-The usage of information extracted from the version control system is not something new, previous works have used version control information to detect design issues \cite{Zimmermann:2004:MVH:998675.999460}, predict fault incidence among modules \cite{Predictingfaultincidence} or guide software changes \cite{4815274}, \cite{DBLP:journals/ese/AjienkaCC18}.
+The version control ( also known as source control ) system that tracks changes in source code during software development can provide useful information about the system's details. 
+The usage of information extracted from the version control system is not something new, previous works have used version control information to detect design issues \cite{Zimmermann:2004:MVH:998675.999460}, predict fault incidence among modules \cite{Predictingfaultincidence}, \cite{Cataldo2009SoftwareDW} or guide software changes \cite{4815274}, \cite{DBLP:journals/ese/AjienkaCC18}.
 In software engineering literature, concepts like evolutionary coupling, evolutionary dependencies, logical dependencies, or logical coupling refer to the same sort of relationship among software entities. That relationship is extracted from the version control system and can mean that the entities from the source code files that are changing together, evolve together, and might depend on one another. Studies show that dependency relationships found in the source code overlap only in a small percentage with dependency relationships found in the version control system and suggest that these two types of relationships can be used together \cite{Oliva:2011:ISL:2067853.2068086}, \cite{DBLP:journals/jss/AjienkaC17}. But, in practice, dependencies extracted from the version management system are rarely used due to the size of the information extracted \cite{Shtern:2012:CMS:2332427.2332428}. A relatively small source code repository with roundabout one thousand commits can lead to millions of connections. 
 In this paper, we intend to speed up the processing time, reduce the size of connections extracted from the version control and, increase the confidence that the connections obtained might be related by applying a set of filters with different thresholds to the information extracted. 
 In order to validate the results obtained, and to see if the filtering methods had or not had a favorable effect on the final result, we want to identify the key classes of different systems. The identification of key classes had been previously performed by using structural dependencies, so,
@@ -75,11 +74,9 @@ The paper is organized as follows: Section 2 introduces the concepts of logical 
 There are various types of information that can be used to extract system-related information from the versioning system: release notes, bug reports, comments, or commits. We will focus on commits and on what files changed in each commit. By focusing on the files changed and not on the entities from the files, we don't need any code parser. This might constitute an advantage for dynamically typed languages like Python, Ruby, JavaScript, Objective-C, or even for statically typed languages that allow to not explicitly specify the type, like auto for C++ (since C++11) or var for C\#.
 
 
-\section{Related Works}
-
-
 \section{The concept of logical dependencies}
 
+\subsection{State of the art}
 A logical dependency between two software entities (classes, modules, interfaces, etc. ) signals that those entities in some way depend on one another. 
 
 The concept of logical coupling (dependency) was first introduced by Gall \cite{Gall:1998:DLC:850947.853338}. They defined the logical coupling between two modules as the fact that the modules repeatedly change together during the historical evolution of the software system.
@@ -153,6 +150,8 @@ After this step, we will continue our research by using the logical dependencies
 \section{Key classes: baseline versus current approach}
 \label{sec:baseline_approach}
 
+\subsection{State of the art}
+
 Zaidman et al \cite{ZaidmanJurnal} were the first to introduce the concept of key classes and it refers to classes that can be found in documents written to provide an architectural overview of the system or an introduction to the system structure. 
 Tahvildari and Kontogiannis have a more detailed definition regarding key classes concept: “Usually, the most important concepts of a system are implemented by very few key classes which can be characterized by the specific properties. These classes, which we refer to as key classes, manage many other classes or use them in order to implement their functionality. The key classes are tightly coupled with other parts of the system. Additionally, they tend to be rather complex, since they implement much of the legacy system’s functionality” \cite{Tahvildari2004ImprovingDQ}.
 
@@ -194,7 +193,7 @@ Previous research used PageRank values computed on both directed and undirected,
 
 
 
-\section{Metrics for results evaluation}
+\subsection{Metrics for results evaluation}
 \label{sec:evalmetrics}
 To evaluate the quality of the key classes ranking algorithm and solution produced, the key classes found by the algorithm are compared with a reference solution. The reference solution is extracted from the developer documentation.  Classes mentioned in the documentation are considered key classes and form the reference solution (ground truth) used for validation \cite{7551990}. 
 
@@ -226,7 +225,19 @@ For a classifier to be considered good, its ROC-AUC metric value should be as cl
 Osman et al. obtained in their research an average Area Under the Receiver Operating Characteristic Curve (ROC-AUC) score of 0.750 \cite{6676885}. Thung et al. obtained an average ROC-AUC score of 0.825 \cite{rocclasification}  and Şora et al. (the baseline) obtained an average ROC-AUC score of 0.894 \cite{Finding-key-classes}.
 
 
-\section{Data set used}
+
+\section{Experimental results using logical dependencies}
+\label{sec:current_measurements}
+
+As we mentioned in the beginning the purpose is to check if the logical dependencies can improve key class detection. 
+
+As presented in section \ref{sec:baseline_approach}, the key class detection was done by using structural dependencies of the system. 
+In this section, we will use the same tool used in the baseline approach presented in section \ref{sec:baseline_approach}, and we will add a new input to it, the logical dependencies. 
+
+Below is a comparison between the new approach and baseline approach, how we collect the logical dependencies, the results obtained previously, and the new results obtained. 
+The new results are separated into two categories, the results obtained by using structural and logical dependencies and the results obtained by using only logical dependencies. 
+
+\subsection{Data set used}
 \label{sec:dataset}
 In this section, we will look over all the systems studied in the baseline research presented in section \ref{sec:baseline_approach}, and we will try to identify the systems that could be used also in our current research involving logical dependencies.
 
@@ -267,17 +278,6 @@ S15	&	Wro4J	&	1.6.3	&	v1.6.3	&	2871	\\
 
 
 
-
-\section{Measurements using logical dependencies}
-\label{sec:current_measurements}
-
-As we mentioned in the beginning the purpose is to check if the logical dependencies can improve key class detection. 
-
-As presented in section \ref{sec:baseline_approach}, the key class detection was done by using structural dependencies of the system. 
-In this section, we will use the same tool used in the baseline approach presented in section \ref{sec:baseline_approach}, and we will add a new input to it, the logical dependencies. 
-
-Below is a comparison between the new approach and baseline approach, how we collect the logical dependencies, the results obtained previously, and the new results obtained. 
-The new results are separated into two categories, the results obtained by using structural and logical dependencies and the results obtained by using only logical dependencies. 
 
 
 \subsection{Measurements using only the baseline approach}
