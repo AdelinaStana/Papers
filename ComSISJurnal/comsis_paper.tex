@@ -90,6 +90,25 @@ Previously, we tried to obtain reliable logical dependencies from co-changing pa
 
 Currently, we aim to refine the filtering method with a new filter that can be applied for all sorts of commit history sizes. This new filter will be used together with a filter previously explored, the commit size filter \cite{enase19}.
 
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{fig_ant_maxOcc.png}
+\caption{Overview of the number of occurences in Ant. }
+\label{fig:strength_overview}
+\centering
+\end{figure}
+
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{fig_hibernate_maxOcc.png}
+\caption{Overview of the number of occurences in Ant. }
+\label{fig:strength_overview}
+\centering
+\end{figure}
+
+
 \subsection{Commit size filter}
 
 The commit size filter filters out all co-changing pairs from commits with more than 10 files changed. We consider that commits with more than 10 files changed tend to be code unrelated; we studied the commit size trend from serval git open-source repositories, and we concluded that most of the commits contain less than ten files. On average, only 10 \% of the total commits have more than ten files changed. 
@@ -111,6 +130,8 @@ Assuming that we have a co-changing pair formed by entities A and B, the connect
 \begin{equation}
  connection\ factor\ for\ B = \frac{100 * commits\ involving\ A\ and\ B}{total\ nr\ of\ commits\ involving\ B}
 \end{equation}
+
+
 
 We calculated the connection factor for each entity involved in a co-changing pair and filtered the co-changing pairs based on it. The rule set is that both entities that form a co-changing pair had to have a connection factor with each other greater than a threshold value.
 
