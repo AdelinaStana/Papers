@@ -347,13 +347,13 @@ We started with logical dependencies that have a connection strength greater tha
 As for the new results obtained by combining structural and logical dependencies, the values close to the previously registered values, but did not surpass them, are underlined with one line. And, with two lines, are underlined the values that are better than the previously registered values. At this step, we can also observe that for all three systems measured in tables \ref{tab:measurementscombined:ant}, \ref{tab:measurementscombined:tomcat}, and \ref{tab:measurementscombined:hibernate}, the best values obtained are for connection strength between 40-70\%.
 
 \begin{table}[!h]
-\renewcommand{\arraystretch}{1}
+\setlength\tabcolsep{3.5pt}
 \caption{Measurements for Ant using structural and logical dependencies combined}
 \label{tab:measurementscombined:ant}
 \centering
 \begin{tabular}{|c|cccccccccc|c|}
 \hline
-Metrics &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$		&	Baseline \\
+Metrics &	$\geq10$	&	$\geq20$		&	$\geq30$		&	$\geq40$		&	$\geq50$		&	$\geq60$		&	$\geq70$		&	$\geq80$		&	$\geq90$		&	$\geq100$		&	Baseline \\
 \hline
 
 PR\_U2\_W	&	0.877	&	0.880	&	0.883	&	0.888	&	0.884	&	0.880	&	0.901	&	0.924	&	0.900	&	0.891	&	0.929	\\
@@ -368,13 +368,13 @@ CON\_T	&	0.920	&	0.919	&	0.921	&	0.923	&	0.923	&	0.932	&	0.934	&	0.939	&	0.937	&
 
 
 \begin{table}[!h]
-\renewcommand{\arraystretch}{1}
+\setlength\tabcolsep{3.5pt}
 \caption{Measurements for Tomcat using structural and logical dependencies combined}
 \label{tab:measurementscombined:tomcat}
 \centering
 \begin{tabular}{|c|cccccccccc|c|}
 \hline
-Metrics &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$		&	Baseline \\
+Metrics &	$\geq10$	&	$\geq20$		&	$\geq30$		&	$\geq40$		&	$\geq50$		&	$\geq60$		&	$\geq70$		&	$\geq80$		&	$\geq90$		&	$\geq100$		&	Baseline \\
 \hline
 
 PR\_U2\_W	&	0.862	&	0.883	&	0.898	&	0.901	&	0.907	&	0.909	&	0.910	&	0.916	&	0.918	&	0.918	&	0.923	\\
@@ -390,13 +390,13 @@ CON\_T	&	0.925	&	0.934	&	0.937	&	0.938	&	0.938	&	0.938	&	0.938	&	0.938	&	0.938	&
 
 
 \begin{table}[!h]
-\renewcommand{\arraystretch}{1}
+\setlength\tabcolsep{3.5pt}
 \caption{Measurements for Hibernate using structural and logical dependencies combined}
 \label{tab:measurementscombined:hibernate}
 \centering
 \begin{tabular}{|c|cccccccccc|c|}
 \hline
-Metrics &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$		&	Baseline \\
+Metrics &	$\geq10$	&	$\geq20$		&	$\geq30$		&	$\geq40$		&	$\geq50$		&	$\geq60$		&	$\geq70$		&	$\geq80$		&	$\geq90$		&	$\geq100$		&	Baseline \\
 \hline
 
 PR\_U2\_W	&	0.903	&	0.909	&	0.916	&	0.928	&	0.930	&	0.932	&	0.946	&	0.947	&	0.947	&	0.949	&	0.958	\\
@@ -417,17 +417,17 @@ In table \ref{tab:ratio_sd_ld} are the ratio numbers between structural dependen
 
 
 \begin{table}[!h]
-\renewcommand{\arraystretch}{1}
+\setlength\tabcolsep{3pt}
 \caption{Percentage of logical dependencies that are also structural dependencies}
 \label{tab:overlap}
 \centering
 \begin{tabular}{|c|cccccccccc|}
 \hline
-System &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$ \\
+System &	$\geq10$	&	$\geq20$		&	$\geq30$		&	$\geq40$		&	$\geq50$		&	$\geq60$		&	$\geq70$		&	$\geq80$		&	$\geq90$		&	$\geq100$ \\
 \hline
-Ant	&	25.202	&	34.419	&	36.385	&	34.656	&	33.528	&	33.333	&	28.659	&	33.333	&	35.294	&	35.294	\\
-Tomcat Catalina	&	4.059	&	22.089	&	25.000	&	25.758	&	25.926	&	37.525	&	47.368	&	55.285	&	75.000	&	76.923	\\
-Hibernate	&	6.546	&	26.607	&	29.565	&	32.374	&	32.543	&	45.170	&	44.980	&	42.473	&	42.473	&	42.473	\\
+Ant	&	17.628	&	19.872	&	20.461	&	20.858	&	21.078	&	23.913	&	24.688	&	21.807	&	20.000	&	19.776	\\
+Tomcat Catalina  	&	10.331	&	14.931	&	15.862	&	16.221	&	16.427	&	16.302	&	16.598	&	18.336	&	19.207	&	19.149	\\
+Hibernate	&	8.005	&	8.971	&	9.755	&	12.060	&	12.348	&	12.254	&	18.426	&	19.105	&	18.836	&	19.371	\\
 \hline
 \end{tabular}
 \end{table}
@@ -435,17 +435,18 @@ Hibernate	&	6.546	&	26.607	&	29.565	&	32.374	&	32.543	&	45.170	&	44.980	&	42.473
 
 
 \begin{table}[!h]
-\renewcommand{\arraystretch}{1}
+\setlength\tabcolsep{3.5pt}
 \caption{Ratio between structural and logical dependencies (SD/LD)}
 \label{tab:ratio_sd_ld}
 \centering
 \begin{tabular}{|c|cccccccccc|}
 \hline
-System &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$ \\
+System &	$\geq10$	&	$\geq20$		&	$\geq30$		&	$\geq40$		&	$\geq50$		&	$\geq60$		&	$\geq70$		&	$\geq80$		&	$\geq90$		&	$\geq100$ \\
+
 \hline
-Ant	&	1.315	&	3.284	&	4.972	&	5.603	&	6.175	&	10.697	&	12.915	&	27.154	&	41.529	&	41.529	\\
-Tomcat Catalina	&	0.120	&	0.923	&	1.313	&	1.531	&	1.619	&	3.177	&	7.092	&	13.146	&	67.375	&	124.385	\\
-Hibernate	&	1.037	&	6.391	&	10.037	&	14.947	&	18.940	&	54.248	&	83.442	&	111.704	&	111.704	&	111.704	\\
+Ant	&	1.373	&	2.251	&	2.870	&	3.133	&	3.461	&	4.604	&	5.282	&	6.598	&	7.060	&	7.903	\\
+Tomcat Catalina	&	0.445	&	0.936	&	1.302	&	1.543	&	1.660	&	1.967	&	2.218	&	3.057	&	3.376	&	3.440	\\
+Hibernate	&	1.159	&	1.747	&	2.184	&	3.867	&	4.283	&	4.877	&	10.547	&	11.920	&	12.464	&	14.851	\\
 
 \hline
 \end{tabular}
@@ -477,13 +478,13 @@ Initially, we expected to see a Gaussian curve, but instead, we see a bell curve
 Some of the key classes are strongly connected in the versioning system, and even for higher threshold values don't get filtered out. Meanwhile, the rest of the classes that are not key classes get filtered out for higher threshold values which leads to better performing measurements when the threshold value are above 60\%. 
 
 \begin{table}[!h]
-\renewcommand{\arraystretch}{1}
+\setlength\tabcolsep{3.5pt}
 \caption{Measurements for Ant using only logical dependencies}
 \label{tab:measurementshistory:ant}
 \centering
 \begin{tabular}{|c|cccccccccc|c|}
 \hline
-Metrics &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$		&	Baseline \\
+Metrics &	$\geq10$	&	$\geq20$		&	$\geq30$		&	$\geq40$		&	$\geq50$		&	$\geq60$		&	$\geq70$		&	$\geq80$		&	$\geq90$		&	$\geq100$		&	Baseline \\
 \hline
 
 PR\_U2\_W	&	0.679	&	0.695	&	0.738	&	0.799	&	0.822	&	0.883	&	0.890	&	0.901	&	0.846	&	0.862	&	0.929	\\
@@ -499,13 +500,13 @@ CON\_T	&	0.856	&	0.836	&	0.819	&	0.803	&	0.801	&	0.816	&	0.831	&	0.855	&	0.840	&
 
 
 \begin{table}[!h]
-\renewcommand{\arraystretch}{1}
+\setlength\tabcolsep{3.5pt}
 \caption{Measurements for Tomcat using only logical dependencies}
 \label{tab:measurementshistory:tomcat}
 \centering
 \begin{tabular}{|c|cccccccccc|c|}
 \hline
-Metrics &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$		&	Previous \\
+Metrics &	$\geq10$	&	$\geq20$		&	$\geq30$		&	$\geq40$		&	$\geq50$		&	$\geq60$		&	$\geq70$		&	$\geq80$		&	$\geq90$		&	$\geq100$		&	Baseline \\
 \hline
 
 PR\_U2\_W	&	0.775	&	0.810	&	0.834	&	0.828	&	0.819	&	0.815	&	0.805	&	0.816	&	0.820	&	0.813	&	0.923	\\
@@ -522,13 +523,13 @@ CON\_T	&	0.787	&	0.812	&	0.835	&	0.832	&	0.821	&	0.814	&	0.804	&	0.817	&	0.820	&
 
 
 \begin{table}[!h]
-\renewcommand{\arraystretch}{1}
+\setlength\tabcolsep{3.5pt}
 \caption{Measurements for Hibernate using only logical dependencies}
 \label{tab:measurementshistory:hibernate}
 \centering
 \begin{tabular}{|c|cccccccccc|c|}
 \hline
-Metrics &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$		&	Baseline \\
+Metrics &	$\geq10$	&	$\geq20$		&	$\geq30$		&	$\geq40$		&	$\geq50$		&	$\geq60$		&	$\geq70$		&	$\geq80$		&	$\geq90$		&	$\geq100$		&	Baseline \\
 \hline
 
 PR\_U2\_W	&	0.721	&	0.733	&	0.743	&	0.700	&	0.700	&	0.703	&	0.741	&	0.742	&	0.744	&	0.751	&	0.958	\\
