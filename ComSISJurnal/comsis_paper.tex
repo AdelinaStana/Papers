@@ -60,26 +60,33 @@ This means that software systems that use dynamically typed languages such as Ja
 
 The version control ( also known as source control ) system that tracks changes in source code during software development can provide useful information about the system's details. 
 The usage of information extracted from the version control system is not something new, previous works have used version control information to detect design issues \cite{Zimmermann:2004:MVH:998675.999460}, predict fault incidence among modules \cite{Predictingfaultincidence}, \cite{Cataldo2009SoftwareDW} or guide software changes \cite{4815274}, \cite{DBLP:journals/ese/AjienkaCC18}.
-In software engineering literature, concepts like evolutionary coupling, evolutionary dependencies, logical dependencies, or logical coupling refer to the same sort of relationship among software entities. That relationship is extracted from the version control system and can mean that the entities from the source code files that are changing together, evolve together, and might depend on one another. Studies show that dependency relationships found in the source code overlap only in a small percentage with dependency relationships found in the version control system and suggest that these two types of relationships can be used together \cite{Oliva:2011:ISL:2067853.2068086}, \cite{DBLP:journals/jss/AjienkaC17}. But, in practice, dependencies extracted from the version management system are rarely used due to the size of the information extracted \cite{Shtern:2012:CMS:2332427.2332428}. A relatively small source code repository with roundabout one thousand commits can lead to millions of connections. 
+In software engineering literature, concepts like evolutionary coupling, evolutionary dependencies, logical dependencies, or logical coupling refer to the same sort of relationship among software entities. That relationship is extracted from the version control system and can mean that the entities from the source code files that are changing together, evolve together, and might depend on one another. Studies show that dependency relationships found in the source code overlap only in a small percentage with dependency relationships found in the version control system, and suggest that these two types of relationships can be used together \cite{Oliva:2011:ISL:2067853.2068086}, \cite{DBLP:journals/jss/AjienkaC17}. But, in practice, dependencies extracted from the version management system are rarely used due to the size of the information extracted \cite{Shtern:2012:CMS:2332427.2332428}. A relatively small source code repository with roundabout one thousand commits can lead to millions of connections. 
 In this paper, we intend to speed up the processing time, reduce the size of connections extracted from the version control and, increase the confidence that the connections obtained might be related by applying a set of filters with different thresholds to the information extracted. 
 In order to validate the results obtained, and to see if the filtering methods had or not had a favorable effect on the final result, we want to identify the key classes of different systems. The identification of key classes had been previously performed by using structural dependencies, so,
 we intend to use the results obtained together with structural dependencies, and also separate, and see how the final results fluctuate.
 
-The paper is organized as follows: Section 2 introduces the concepts of logical dependencies and the method of obtaining them. Section 3 introduces the concept of key classes and the new approach of using logical dependencies to detect key classes. The metrics for results evaluation are presented in section 4. Section 5 defines the data set used, and section 6 presents the new results obtained on the data set. Finally, section 7 discusses the conclusions based on the results obtained. 
+The paper is organized as follows: Section 2 introduces the concepts of logical dependencies and the methods of obtaining them. Section 3 introduces the concept of key classes and the new approach of using logical dependencies to detect key classes. Section 4 defines the data set used, and presents the new results obtained with the data set. Finally, section 5 discusses the conclusions based on the results obtained. 
 
 
-%%%%%%%%%%%
-
-
-There are various types of information that can be used to extract system-related information from the versioning system: release notes, bug reports, comments, or commits. We will focus on commits and on what files changed in each commit. By focusing on the files changed and not on the entities from the files, we don't need any code parser. This might constitute an advantage for dynamically typed languages like Python, Ruby, JavaScript, Objective-C, or even for statically typed languages that allow to not explicitly specify the type, like auto for C++ (since C++11) or var for C\#.
 
 
 \section{The concept of logical dependencies}
 
 \subsection{State of the art}
-A logical dependency between two software entities (classes, modules, interfaces, etc. ) signals that those entities in some way depend on one another. 
 
-The concept of logical coupling (dependency) was first introduced by Gall \cite{Gall:1998:DLC:850947.853338}. They defined the logical coupling between two modules as the fact that the modules repeatedly change together during the historical evolution of the software system.
+The concept of logical coupling (dependency) was first introduced by Gall \cite{Gall:1998:DLC:850947.853338}. A logical dependency between two software entities (classes, modules, interfaces, etc. ) signals that those entities in some way depend on one another. They defined the logical dependency between two modules as the fact that the modules repeatedly change together during the historical evolution of the software system.
+
+%%%%
+
+Structural dependencies do not co-evolve, and vice-versa \cite{Oliva:2011:ISL:2067853.2068086}, \cite{DBLP:conf/issre/OlivaG15}, \cite{DBLP:journals/jss/AjienkaC17}
+
+Lanza et all consider that LD might be useful because can reveal dependencies that are not visible via code analysis \cite{inproceedings_radar_evolution}
+
+
+Previous research uses the frequency and the confidence measures \cite{Zimmermann:2004:MVH:998675.999460}, \cite{DBLP:journals/jss/AjienkaC17}, \cite{Yu2007}. Zimmermann et al use Apriori algorithm to filter the co-changes, but it took several days to complete the experiments.
+
+
+\subsection{Current approach}
 
 To define the logical dependencies, we have first to define the co-changing pairs. A \textit{co-changing pair} are two software entities that update together in the same commit. For example, a commit that contains seven entities will generate 21 co-changing pairs ($\Comb{n}{k}=\frac{n!}{k!(n-k)!} = \frac{7!}{2!(5)!} = 21$).
 
@@ -90,6 +97,14 @@ Previously, we tried to obtain reliable logical dependencies from co-changing pa
 
 Currently, we aim to refine the filtering method with a new filter that can be applied for all sorts of commit history sizes. This new filter will be used together with a filter previously explored, the commit size filter \cite{enase19}.
 
+
+\subsection{Commit size filter}
+
+The commit size filter filters out all co-changing pairs from commits with more than 10 files changed. We consider that commits with more than 10 files changed tend to be code unrelated; we studied the commit size trend from serval git open-source repositories, and we concluded that most of the commits contain less than ten files. On average, only 10 \% of the total commits have more than ten files changed. 
+
+This filter will also prevent the volume of data processed from going out of proportion. In some of the repositories studied, we found commits with more than 1000 files; these commits could generate over half a million co-changing pairs if the commit size filter is not applied. 
+
+\subsection{Connection strength filter}
 
 \begin{figure}
 \centering
@@ -109,14 +124,6 @@ Ant number of classes: 458, and Hibernate 3671.
 \centering
 \end{figure}
 
-
-\subsection{Commit size filter}
-
-The commit size filter filters out all co-changing pairs from commits with more than 10 files changed. We consider that commits with more than 10 files changed tend to be code unrelated; we studied the commit size trend from serval git open-source repositories, and we concluded that most of the commits contain less than ten files. On average, only 10 \% of the total commits have more than ten files changed. 
-
-This filter will also prevent the volume of data processed from going out of proportion. In some of the repositories studied, we found commits with more than 1000 files; these commits could generate over half a million co-changing pairs if the commit size filter is not applied. 
-
-\subsection{Connection strength filter}
 
 This filter is new for our research regarding logical dependencies and is based on the experience with the occurrence filter.  One important conclusion drawn from the measurements with the occurrence filter is that setting a hard threshold for a filter is not always a good idea. A certain threshold can work well with a medium/large-sized system but, when applied to a small-sized system, can reduce the co-changes filtered to 0. This made us realize that we need a filter that is computed according to the system's specifications. 
 
@@ -473,7 +480,7 @@ In tables \ref{tab:measurementshistory:ant}, \ref{tab:measurementshistory:tomcat
 
 One possible explanation for the less performing results is that the key classes may have a better design than the rest of the classes, which means that are less prone to change. If the key classes are less prone to change, this implies that the number of dependencies extracted from the versioning system can be less than for other classes.
 
-
+%% !!!!!!!!!!!!!!!!
 Initially, we expected to see a Gaussian curve, but instead, we see a bell curve.  We think that in the beginning, we use a high number of logical dependencies in key class detection, among those logical dependencies is an important number of key classes and also an important number of other classes. But the number of other classes does not influence the key classes detection. When we start to increase the value of the threshold and filter more the logical dependencies, we also filter some of the initial detected key classes and remain with a significant number of other classes. In this case, the other classes that remain influence the measurements, causing the worst-performing solutions. 
 Some of the key classes are strongly connected in the versioning system, and even for higher threshold values don't get filtered out. Meanwhile, the rest of the classes that are not key classes get filtered out for higher threshold values which leads to better performing measurements when the threshold value are above 60\%. 
 
