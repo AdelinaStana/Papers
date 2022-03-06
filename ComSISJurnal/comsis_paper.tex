@@ -11,6 +11,7 @@
 \usepackage{hyperref}
 \usepackage{verbatim}
 \usepackage{graphicx}
+\usepackage{amsmath}
 \usepackage[normalem]{ulem}
 
 
@@ -47,8 +48,8 @@
 
 \begin{abstract}
 The version control system of every software product can provide important information about how the system is connected. 
-In this study, we first propose a language-independent method to collect and filter dependencies from the version control, and second, we use the results obtained in the first step to identify key classes from three software systems. To identify the key classes we are using the dependencies extracted from the version control system together with dependencies from the source code, but also separate. Based on the results obtained we can say that, compared with the results obtained by using only dependencies extracted from code, the mix between both types of dependencies do not provide dramatically different results, only small improvements. And, by using only dependencies from the version control system, we obtained results that did not surpass the results previously mentioned, but are still acceptable.
-This means that software systems that use dynamically typed languages such as JavaScript, Objective-C, Python or Ruby, for which the code dependencies are harder to obtain, can use the dependencies extracted from the version control to obtain better knowledge about the system. 
+In this study, we first propose a language-independent method to collect and filter dependencies from the version control, and second, we use the results obtained in the first step to identify key classes from three software systems. To identify the key classes, we are using the dependencies extracted from the version control system together with dependencies from the source code, but also separate. Based on the results obtained we can say that, compared with the results obtained by using only dependencies extracted from code, the mix between both types of dependencies do not provide dramatically different results, only small improvements. And, by using only dependencies from the version control system, we obtained results that did not surpass the results previously mentioned, but are still acceptable.
+Even though the logical dependencies results are only acceptable, this might open an important opportunity for software systems that use dynamically typed languages such as JavaScript, Objective-C, Python, Ruby, or systems that use multiple languages. These types of systems, for which the code dependencies are harder to obtain, can use the dependencies extracted from the version control to gain better knowledge about the system.
   
 \vspace{6pt}\textbf{Keywords:} logical dependencies; logical coupling; mining software repositories; versioning system; key classes; co-changing entities; software evolution.
 \end{abstract}
@@ -74,16 +75,17 @@ The paper is organized as follows: Section 2 introduces the concepts of logical 
 
 \subsection{State of the art}
 
-The concept of logical coupling (dependency) was first introduced by Gall \cite{Gall:1998:DLC:850947.853338}. A logical dependency between two software entities (classes, modules, interfaces, etc. ) signals that those entities in some way depend on one another. They defined the logical dependency between two modules as the fact that the modules repeatedly change together during the historical evolution of the software system.
-
-%%%%
-
-Structural dependencies do not co-evolve, and vice-versa \cite{Oliva:2011:ISL:2067853.2068086}, \cite{DBLP:conf/issre/OlivaG15}, \cite{DBLP:journals/jss/AjienkaC17}
-
-Lanza et all consider that LD might be useful because can reveal dependencies that are not visible via code analysis \cite{inproceedings_radar_evolution}
+The concept of logical coupling (dependency) was first introduced by Gall et al. \cite{Gall:1998:DLC:850947.853338}. They defined the logical dependency between two software entities (classes, modules, interfaces, etc. ) as the fact that the entities repeatedly change together during the historical evolution of a software system.
+Since then, logical dependencies have been used in multiple areas of software engineering, most commonly in fault and change prediction.  
+Besides the studies on how logical dependencies can help gain knowledge about software systems, some studies also focused on the interplay between logical and structural dependencies. Ajienka et al. and Olivia et al. studied the interplay between structural and logical dependencies, and they concluded that, in most cases, structural dependencies do not lead to logical dependencies \cite{Oliva:2011:ISL:2067853.2068086}, \cite{DBLP:conf/issre/OlivaG15}, \cite{DBLP:journals/jss/AjienkaC17}. The above affirmation is also supported by Lanza et al., who consider that logical dependencies are important because they can reveal dependencies that are not visible via code analysis \cite{inproceedings_radar_evolution}.
 
 
-Previous research uses the frequency and the confidence measures \cite{Zimmermann:2004:MVH:998675.999460}, \cite{DBLP:journals/jss/AjienkaC17}, \cite{Yu2007}. Zimmermann et al use Apriori algorithm to filter the co-changes, but it took several days to complete the experiments.
+
+In previous research, the \textit{support} and \textit{confidence} metrics were used to measure the strength of a logical dependency. 
+The logical dependencies are commonly represented as directed association rules, the association rule between A and B ( $A \implies B$) means that changes in entity A cause changes in entity B, where A is the antecedent, and B is the consequent of the rule. 
+The support metric counts the number of commits in which both entities of an association rule change together. The confidence metric is the ratio between the support metric and the total number of commits in which the antecedent of the rule was involved. 
+
+By appling different thresholds to the metrics presented above, the logical dependencies to further use where selected \cite{DBLP:conf/issre/OlivaG15}, \cite{DBLP:journals/jss/AjienkaC17}, \cite{Zimmermann:2004:MVH:998675.999460}.
 
 
 \subsection{Current approach}
