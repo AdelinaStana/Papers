@@ -90,46 +90,46 @@ By appling different thresholds to the metrics presented above, the logical depe
 
 \subsection{Current approach}
 
-To define the logical dependencies, we have first to define the co-changing pairs. A \textit{co-changing pair} are two software entities that update together in the same commit. For example, a commit that contains seven entities will generate 21 co-changing pairs ($\Comb{n}{k}=\frac{n!}{k!(n-k)!} = \frac{7!}{2!(5)!} = 21$).
+
+To avoid confusion, we call \textit{co-changing pairs} all the association rules of one system. The association rules are formed between two software entities that update together in the same commit.
+For example, a commit that contains seven entities will generate 21 co-changing pairs ($\Comb{n}{k}=\frac{n!}{k!(n-k)!} = \frac{7!}{2!(5)!} = 21$).
 
 
-After extraction, some co-changing pairs are removed by passing them through various filters (filtering phase). The \textit{logical dependencies} are those co-changing pairs that remain after the filtering phase. Another reason for the filtering is to decrease the size of processed data; a commit with 1030 entities will produce over half a million co-changing pairs. These kinds of commits are, in most cases, not code-related, so the co-changing pairs extracted from this kind of commit have nothing to do with the code.
+The \textit{logical dependencies} are the association rules whose metrics fulfill certain conditions. So, the logical dependencies are a subset of the co-changing pairs. 
 
-Previously, we tried to obtain reliable logical dependencies from co-changing pairs by applying different types of filters like the occurrence filter and commit size filter \cite{saci19}, \cite{enase19}. The main disadvantage of the occurrence filter is that it does not work well for systems with few commits.
+The conditions that need to be met by a co-changing pair to be considered a logical dependency are called \textit{filters}. Like in other research regarding logical dependencies, our filters are thresholds applied to the metrics of association rules. 
 
-Currently, we aim to refine the filtering method with a new filter that can be applied for all sorts of commit history sizes. This new filter will be used together with a filter previously explored, the commit size filter \cite{enase19}.
+Previously, we tried to filter logical dependencies from co-changing pairs by applying filters like the occurrence filter and commit size filter \cite{saci19}, \cite{enase19}. 
+The commit size filter, presented in more detail in section \ref{commit_filter}, and used by other authors \cite{DBLP:journals/jss/AjienkaC17}, proved to be helpful, and it will be also used for this paper. 
+But, we cannot say the same for the occurrence filter, the filter consisted of different thresholds applied to the support metric and proved to not work well for systems with few commits.
 
+So currently, we aim to refine the filtering method with a new filter that can be applied for all sorts of commit history sizes. This new filter, presented in section \ref{strength_filter}, will be used together with the commit size filter to filter logical dependencies from co-changing pairs. The entire process of extracting co-changing pairs from the versioning system, filtering them to obtain logical dependencies, and exporting the results is done with a tool written in Python. The workflow is presented in figure \ref{fig:workflow_key}.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{ld_workflow.png}
+\caption{Workflow for logical dependencies extraction.}
+\label{fig:workflow_key}
+\centering
+\end{figure}
 
 \subsection{Commit size filter}
+\label{commit_filter}
 
 The commit size filter filters out all co-changing pairs from commits with more than 10 files changed. We consider that commits with more than 10 files changed tend to be code unrelated; we studied the commit size trend from serval git open-source repositories, and we concluded that most of the commits contain less than ten files. On average, only 10 \% of the total commits have more than ten files changed. 
 
 This filter will also prevent the volume of data processed from going out of proportion. In some of the repositories studied, we found commits with more than 1000 files; these commits could generate over half a million co-changing pairs if the commit size filter is not applied. 
 
+
+
 \subsection{Connection strength filter}
+\label{strength_filter}
 
-\begin{figure}
-\centering
-\includegraphics[width=\textwidth]{fig_ant_maxOcc.png}
-\caption{Overview of the number of occurences in Ant. }
-\label{fig:strength_overview}
-\centering
-\end{figure}
-
-Ant number of classes: 458, and Hibernate 3671.
-
-\begin{figure}
-\centering
-\includegraphics[width=\textwidth]{fig_hibernate_maxOcc.png}
-\caption{Overview of the number of occurences in Ant. }
-\label{fig:strength_overview}
-\centering
-\end{figure}
 
 
 This filter is new for our research regarding logical dependencies and is based on the experience with the occurrence filter.  One important conclusion drawn from the measurements with the occurrence filter is that setting a hard threshold for a filter is not always a good idea. A certain threshold can work well with a medium/large-sized system but, when applied to a small-sized system, can reduce the co-changes filtered to 0. This made us realize that we need a filter that is computed according to the system's specifications. 
 
-We will call this filter, the connection strength filter and, it is applied after the commit size filter. To determine the connection strength, we first need to calculate the connection factors of both entities that form a co-changing pair.
+We will call this filter the connection strength filter and, it is applied after the commit size filter. To determine the connection strength, we first need to calculate the connection factors of both entities that form a co-changing pair.
 
 Assuming that we have a co-changing pair formed by entities A and B, the connection factor of entity A with entity B is the percentage from the total commits involving A that contains entity B. The connection factor of entity B with entity A is the percentage from the total commits involving B also containing entity A.
 
@@ -141,6 +141,24 @@ Assuming that we have a co-changing pair formed by entities A and B, the connect
  connection\ factor\ for\ B = \frac{100 * commits\ involving\ A\ and\ B}{total\ nr\ of\ commits\ involving\ B}
 \end{equation}
 
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.7]{fig_ant_maxOcc.png}
+\caption{Overview of the number of occurences in Ant. }
+\label{fig:strength_overview}
+\centering
+\end{figure}
+
+Ant number of classes: 458, and Hibernate 3671.
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.7]{fig_hibernate_maxOcc.png}
+\caption{Overview of the number of occurences in Hibernate. }
+\label{fig:strength_overview}
+\centering
+\end{figure}
 
 
 We calculated the connection factor for each entity involved in a co-changing pair and filtered the co-changing pairs based on it. The rule set is that both entities that form a co-changing pair had to have a connection factor with each other greater than a threshold value.
@@ -162,15 +180,9 @@ We compare the number of remaining co-changing pairs with the number of structur
 \end{figure}
 
 
-\begin{figure}
-\centering
-\includegraphics[width=\textwidth]{ld_workflow.png}
-\caption{Workflow for logical dependencies extraction.}
-\label{fig:workflow_key}
-\centering
-\end{figure}
 
-The co-changing pairs that remain after filtering, can be called logical dependencies. The entire process of extracting co-changing pairs from the versioning system, filter them, and export the remaining ones is done with a tool written in Python. The tool's workflow is presented in figure \ref{fig:workflow_key}.
+
+The co-changing pairs that remain after filtering, can be called logical dependencies. 
 
 After this step, we will continue our research by using the logical dependencies obtained with different threshold values and see which threshold value performs the best. Up until now, we only looked at the size of the logical dependencies and decided if a filter is good or not. But now, we can also look at the results obtained by using the logical dependencies and decide.
 
