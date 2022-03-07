@@ -89,7 +89,7 @@ By appling different thresholds to the metrics presented above, the logical depe
 
 
 \subsection{Current approach}
-
+\label{current_approach}
 
 To avoid confusion, we call \textit{co-changing pairs} all the association rules of one system. The association rules are formed between two software entities that update together in the same commit.
 For example, a commit that contains seven entities will generate 21 co-changing pairs ($\Comb{n}{k}=\frac{n!}{k!(n-k)!} = \frac{7!}{2!(5)!} = 21$).
@@ -647,8 +647,51 @@ So, by setting a too high connection strength threshold, we risk filtering out t
 
 
 
-\subsection{Comparison between strength and confidence metrics}
+\subsection{Comparison between results obtained with strength versus confidence metric}
 \label{sec:measure_metrics}
+
+
+As mentioned in section \ref{strength_filter}, we did not use the confidence metric does not consider the big picture of the system.
+A co-changing pair $A \rightarrow B$, where A updates only once in the entire history, and when it updates, updates together with B, will have the best confidence value that we can get. This is why we introduced the strength metric, to balance the metric in the favor of those who update more frequently.
+Since both metrics require the same inputs, only the calculation method is different, we calculated with our tool the confidence metric and applied the same threshold to it as to the strength metric. The only difference from how other authors calculated the metric is that we multiplied its value by 100. So, the confidence values can fluctuate between 0 and 100.
+
+The comparison between the average values obtained by using the confidence metric, and the strength metric, can be found in table \ref{tab:confidence_vs_strength}.
+Based on the results obtained, we can say that the connection strength metric is more suited for logical dependencies detection.
+
+
+\begin{table}[!h]
+\setlength\tabcolsep{3.5pt}
+\caption{ Average results obtained with strength versus confidence metric.}
+\label{tab:confidence_vs_strength}
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+Metric  &\multicolumn{2}{c|}{Using}\\
+ used &Only logical dependencies 	&	Structural and logical dependencies 	 \\
+\hline
+\multicolumn{3}{|c|}{Average values obtained for all systems}\\
+\hline
+strength	&	0.791	&	0.916	\\
+confidence	&	0.731	&	0.893	\\
+\hline
+\multicolumn{3}{|c|}{Average values obtained for Ant}\\
+\hline
+strength	&	0.826	&	0.903	\\
+confidence	&	0.741	&	0.873	\\
+\hline
+\multicolumn{3}{|c|}{Average values obtained for Catalina}\\
+\hline
+strength	&	0.816	&	0.910	\\
+confidence	&	0.752	&	0.878	\\
+\hline
+\multicolumn{3}{|c|}{Average values obtained for Hibernate}\\
+\hline
+strength	&	0.732	&	0.935	\\
+confidence	&	0.699	&	0.929	\\
+
+\hline
+\end{tabular}
+\end{table}
 
 \section{Conclusions}
 \label{sec:conclusion}
