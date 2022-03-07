@@ -493,23 +493,14 @@ The second scenario assumes that the connection strength threshold is too big, s
 In this case, the logical dependencies introduced in the graph are too few to improve the detection, and instead, will create noise in the graph.
 This leads us to the third scenario, in which the connection strength threshold is just right, not too small because this will introduce too many logical dependencies in the graph and produce less performing results. And not too high, because this will decrease too much the number of logical dependencies, producing less performing results. 
 
-The 'just right' value can differ from one system to another, depending on the size of the system. If we look at Ant (the smaller size system), we can see that the results begin to decrease sooner than for Hibernate. On average, all the systems perform the best between 40 and 70 for the connection strength threshold value.
+The 'just right' value can differ from one system to another, depending on the size of the system. If we look at Ant (the smaller size system), we can see that the results begin to decrease sooner than for Hibernate. On average, all the systems perform well between 40 and 70 for the connection strength threshold value.
 
 
 
 
 \subsection{Measurements using only logical dependencies}
 \label{sec:measure_ld}
-In the previous section, we added in the graph based on which the ranking algorithm works the logical and structural dependencies. In the current section, we will add only the logical dependencies to the graph.
 
-In tables \ref{tab:measurementshistory:ant}, \ref{tab:measurementshistory:tomcat}, and \ref{tab:measurementshistory:hibernate}, are presented the results obtained by using only logical dependencies to detect key classes. The measurements obtained are not as good as using logical and structural dependencies combined or using only structural dependencies. But, all the values obtained are above 0.5, which means that a good part of the key classes is detected by only using logical dependencies.  As mentioned in section \ref{sec:evalmetrics}, a classifier is good if it has the ROC-AUC value as close to 1 as possible. 
-
-
-One possible explanation for the less performing results is that the key classes may have a better design than the rest of the classes, which means that are less prone to change. If the key classes are less prone to change, this implies that the number of dependencies extracted from the versioning system can be less than for other classes.
-
-%% !!!!!!!!!!!!!!!!
-Initially, we expected to see a Gaussian curve, but instead, we see a bell curve.  We think that in the beginning, we use a high number of logical dependencies in key class detection, among those logical dependencies is an important number of key classes and also an important number of other classes. But the number of other classes does not influence the key classes detection. When we start to increase the value of the threshold and filter more the logical dependencies, we also filter some of the initial detected key classes and remain with a significant number of other classes. In this case, the other classes that remain influence the measurements, causing the worst-performing solutions. 
-Some of the key classes are strongly connected in the versioning system, and even for higher threshold values don't get filtered out. Meanwhile, the rest of the classes that are not key classes get filtered out for higher threshold values which leads to better performing measurements when the threshold value are above 60\%. 
 
 \begin{table}[!h]
 \setlength\tabcolsep{3.5pt}
@@ -577,6 +568,85 @@ CON\_T	&	0.740	&	0.743	&	0.750	&	0.700	&	0.700	&	0.704	&	0.746	&	0.746	&	0.747	&
 \end{tabular}
 \end{table}
 
+
+
+
+
+\begin{table}[!h]
+\setlength\tabcolsep{3.5pt}
+\caption{ Ant key classes update overview.}
+\label{tab:overviewcommit:ant}
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+Key class name &	Commit count	&	Max occurence 	 \\
+&		&	with another entity	 \\
+\hline
+
+org.apache.tools.ant.Task	&	40	&	13	\\
+org.apache.tools.ant.Target	&	39	&	16	\\
+org.apache.tools.ant.IntrospectionHelper	&	52	&	43	\\
+org.apache.tools.ant.RuntimeConfigurable	&	38	&	16	\\
+org.apache.tools.ant.ProjectHelper	&	67	&	17	\\
+org.apache.tools.ant.TaskContainer	&	6	&	2	\\
+org.apache.tools.ant.Main	&	56	&	21	\\
+org.apache.tools.ant.UnknownElement	&	47	&	16	\\
+org.apache.tools.ProjectHelper2\$ElementHandler	&	21	&	14	\\
+
+\hline
+\end{tabular}
+\end{table}
+
+
+\begin{table}[!h]
+\setlength\tabcolsep{3.5pt}
+\caption{ Hibernate key classes update overview.}
+\label{tab:overviewcommit:hibernate}
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+Key class name &	Commit count	&	Max occurence 	 \\
+&		&	with another entity	 \\
+\hline
+
+org.hibernate.Query	&	9	&	1	\\
+org.hibernate.engine.spi.SessionFactoryImplementor	&	26	&	10	\\
+org.hibernate.SessionFactory	&	20	&	3	\\
+org.hibernate.mapping.Table	&	39	&	25	\\
+org.hibernate.criterion.Projection	&	2	&	0	\\
+org.hibernate.criterion.Criterion	&	2	&	0	\\
+org.hibernate.engine.spi.SessionImplementor	&	16	&	2	\\
+org.hibernate.cfg.Configuration	&	88	&	9	\\
+org.hibernate.mapping.Column	&	16	&	3	\\
+org.hibernate.type.Type	&	10	&	0	\\
+org.hibernate.Transaction	&	9	&	0	\\
+org.hibernate.engine.ConnectionProvider	&	2	&	0	\\
+org.hibernate.Session	&	25	&	14	\\
+org.hibernate.Criteria	&	10	&	1	\\
+
+
+\hline
+\end{tabular}
+\end{table}
+
+
+
+In the previous subsection, we added the logical and structural dependenciesin the graph based on which the ranking algorithm works. In the current subsection, we will add only the logical dependencies to the graph.
+
+In tables \ref{tab:measurementshistory:ant}, \ref{tab:measurementshistory:tomcat}, and \ref{tab:measurementshistory:hibernate}, are presented the results obtained by using only logical dependencies to detect key classes.
+
+The measurements obtained are not as good as using logical and structural dependencies combined or using only structural dependencies. But the values obtained are above 0.5, which means that a good part of the key classes is detected by only using logical dependencies. As mentioned in section \ref{sec:evalmetrics}, a classifier is good if it has the ROC-AUC value as close to 1 as possible.
+
+
+One explanation for the less performing results is that the key classes may have a better design than the rest of the classes, which means that are less prone to change. If the key classes are less prone to change, then the associated connection strength metric is less than for other entities.
+
+Tables \ref{tab:overviewcommit:ant} and \ref{tab:overviewcommit:hibernate}, provide us a better overview of the update behavior of key classes in the versioning system.
+For both cases, some key classes change a lot in the versioning system, for example, Configuration for Hibernate and ProjectHelper for Ant. Also, some classes create strong connections with other entities, like IntrospectionHelper for Ant and Table for Hibernate. But, in most cases, the key classes are not the entities that update the most in the versioning system.
+So, by setting a too high connection strength threshold, we risk filtering out the key classes.
+
+
+
+
 \subsection{Comparison between strength and confidence metrics}
 \label{sec:measure_metrics}
 
@@ -584,9 +654,9 @@ CON\_T	&	0.740	&	0.743	&	0.750	&	0.700	&	0.700	&	0.704	&	0.746	&	0.746	&	0.747	&
 \label{sec:conclusion}
 
 
-The logical dependencies are filtered co-changing pairs extracted from the versioning system history. The filters applied to the co-changing pairs are the following: the filter based on commit size and the filter based on connection strength.
+We defined the logical dependencies as filtered co-changing pairs extracted from the versioning system history. In  The filters applied to the co-changing pairs are the following: the filter based on commit size and the filter based on connection strength.
 
-The filter based on connection strength had a variable threshold, starting with 10\% and ending with 100\%. We used a variable threshold for connection strength because we wanted to observe how this threshold will impact the key classes detection.
+The filter based on connection strength had a variable threshold, starting with 10 and ending at 100. We used a variable threshold for connection strength because we wanted to observe how this threshold will impact the key classes detection.
 
 In section \ref{sec:current_measurements} we approached two scenarios to detect key classes by using logical dependencies. In the first scenario, we used logical dependencies together with structural dependencies and in the second, we used only logical dependencies to detect the key classes. We modified the tool used in the baseline approach to use also logical dependencies, and then we performed the key class identification using that tool. 
 The quality of the results obtained was evaluated with the same tool, the metric used to evaluate the results is Area Under the Receiver Operating Characteristic Curve (ROC-AUC). We then compared the evaluation results with the results obtained by the baseline approach. 
