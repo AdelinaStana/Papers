@@ -375,7 +375,7 @@ In tables \ref{tab:measurementscombined:ant}, \ref{tab:measurementscombined:tomc
 We started with logical dependencies that have a connection strength metric greater than 10, then we increased the value by 10 until 100. The last column of the table contains the results previously obtained by the tool by only using structural dependencies (the results presented in section \ref{sec:measure_baseline}).
 
 
-The results obtained by combining structural and logical dependencies are close to the previously registered values but, in most cases, do not surpass them. Underlined are the values that are better than the previously registered values. We can also observe that for all three systems, the best values obtained are for connection strength between 40-70.
+The results obtained by combining structural and logical dependencies are close to the previously registered values but, in most cases, do not surpass them. Underlined are the values that are better than the previously registered values. We can also observe that for all three systems, the best values obtained are for connection strength between 50-80.
 
 \begin{table}[!h]
 \setlength\tabcolsep{3.5pt}
@@ -441,10 +441,10 @@ CON\_T	&	0.920	&	0.927	&	0.932	&	0.940	&	0.940	&	0.940	&	0.945	&	0.945	&	0.945	&
 \end{table}
 
 
-The details of the systems are presented in two tables.  In table \ref{tab:overlap} are the overlappings between structural and logical dependencies expressed in percentages. Each column represents the percentage of logical dependencies that are also structural, for each column the logical dependencies are obtained by applying a different connection strength filter. The connection strength filter begins at 10, meaning that in at least 10 \% of the total commits involving two entities, the entities update together. We increase the connection strength filter by 10 up until we reach 100, meaning that in all the commits that involve one entity, the other entity is present also.
+Some other details about the systems are presented in tables \ref{tab:overlap} and \ref{tab:ratio_sd_ld} . In table \ref{tab:overlap} are the overlappings between structural and logical dependencies expressed in percentages. Each column represents the percentage of logical dependencies that are also structural, one column for each connection strength filter threshold. 
+The values obtained confirm that indeed, the logical dependencies overlap with structural dependencies in a small percentage, and they must be treated as different dependencies.
 
-
-In table \ref{tab:ratio_sd_ld} are the ratio numbers between structural dependencies and logical dependencies. We added this table in order to highlight how different the total number of both dependencies is.
+In table \ref{tab:ratio_sd_ld} are the ratio numbers between structural dependencies and logical dependencies. We added this table to highlight how different the total number of both dependencies is.
 
 
 \begin{table}[!h]
@@ -484,15 +484,16 @@ Hibernate	&	1.159	&	1.747	&	2.184	&	3.867	&	4.283	&	4.877	&	10.547	&	11.920	&	12
 \end{table}
 
 
-In tables \ref{tab:measurementscombined:ant}, \ref{tab:measurementscombined:tomcat}, and \ref{tab:measurementscombined:hibernate} we can also observe that the measurements at the beginning are smaller than the rest. Once with the increasing of the threshold value also the measurements begin to increase. Meaning that better results for key class detection are found. 
-The best measurements are when the threshold value is between 40 and 60, after that, the measurements tend to decrease a little bit and stay at that fixed value. 
+In most cases, for all systems, the results tend to become better once with the increasing value of the connection strength threshold up until one point, after which, the results obtained begin to drop.
+If we look at table A, we can observe that high values for the connection strength filter reduce the number of logical dependencies. For example, in Hibernate, the value 70 for the connection strength threshold makes the structural dependencies outnumber 10 times the logical dependencies. 
 
-A possible explanation of the results fluctuation and then capping is that if we are looking at table \ref{tab:ratio_sd_ld} we can see that at the beginning, the total number of logical dependencies used is close to the number of existing structural dependencies. The high volume of logical dependencies introduced might cause an erroneous detection of the key classes, in consequence, smaller measurements. 
-When the threshold begins to be more restrictive and the total number of logical dependencies used begins to decrease, the key classes detection starts to improve. This improvement stops after the threshold value reaches 60\%. If we look again at table \ref{tab:ratio_sd_ld} we can see that after 60\% the number of structural dependencies outnumbers the number of logical dependencies up to 124 times in some cases. In addition, if we look at table \ref{tab:overlap} we can see that the remaining logical dependencies overlap a lot with the structural dependencies, so we are not introducing too much new information.
+We can identify three scenarios based tables \ref{tab:measurementscombined:ant}, \ref{tab:measurementscombined:tomcat}, \ref{tab:measurementscombined:hibernate} and \ref{tab:ratio_sd_ld}: in the first scenario, the connection strength threshold is too small, and we remain with a lot of logical dependencies after filtering. The high volume of logical dependencies introduced in the graph might cause an erroneous detection of the key classes, in consequence, less performing measurements/results. This affirmation is sustained by the fact that 
+when the threshold begins to be more restrictive, and the total number of logical dependencies begins to decrease, the key classes detection starts to improve.
+The second scenario assumes that the connection strength threshold is too big, significantly decreasing the number of logical dependencies.
+In this case, the logical dependencies introduced in the graph are too few to improve the detection, and instead, will create noise in the graph.
+This leads us to the third scenario, in which the connection strength threshold is just right, not too small because this will introduce too many logical dependencies in the graph and produce less performing results. And not too high, because this will decrease too much the number of logical dependencies, producing less performing results. 
 
- So, the number of logical dependencies used is so small that it doesn't influence the key class identification. Since the structural dependencies used don't change, we obtain the same results for different threshold values. 
-
-
+The 'just right' value can differ from one system to another, depending on the size of the system. If we look at Ant (the smaller size system), we can see that the results begin to decrease sooner than for Hibernate. On average, all the systems perform the best between 40 and 70 for the connection strength threshold value.
 
 
 
