@@ -375,7 +375,7 @@ In tables \ref{tab:measurementscombined:ant}, \ref{tab:measurementscombined:tomc
 We started with logical dependencies that have a connection strength metric greater than 10, then we increased the value by 10 until 100. The last column of the table contains the results previously obtained by the tool by only using structural dependencies (the results presented in section \ref{sec:measure_baseline}).
 
 
-The results obtained by combining structural and logical dependencies are close to the previously registered values but, in most cases, do not surpass them. Underlined are the values that are better than the previously registered values. We can also observe that for all three systems, the best values obtained are for connection strength between 50-80.
+The results obtained by combining structural and logical dependencies are close to the previously registered values but, in most cases, do not surpass them. Underlined are the values that are better than the previously registered values. We can also observe that for all three systems, the best values obtained are for connection strength between 40-70.
 
 \begin{table}[!h]
 \setlength\tabcolsep{3.5pt}
@@ -654,23 +654,21 @@ So, by setting a too high connection strength threshold, we risk filtering out t
 \label{sec:conclusion}
 
 
-We defined the logical dependencies as filtered co-changing pairs extracted from the versioning system history. In  The filters applied to the co-changing pairs are the following: the filter based on commit size and the filter based on connection strength.
+We defined the logical dependencies as filtered co-changing pairs extracted from the versioning system. The filters applied to the co-changing pairs are the following: the filter based on commit size and the filter based on connection strength.
+If a co-changing pair has associated metrics that surpass the threshold values settled for the filters, it is called a logical dependency.
 
-The filter based on connection strength had a variable threshold, starting with 10 and ending at 100. We used a variable threshold for connection strength because we wanted to observe how this threshold will impact the key classes detection.
+In section \ref{sec:current_measurements} we approached two scenarios to detect key classes by using logical dependencies. In the first scenario, we used logical dependencies together with structural dependencies and in the second, we used only logical dependencies to detect the key classes. We modified the tool used in the baseline approach to use also logical dependencies, and then we performed the key class identification. 
 
-In section \ref{sec:current_measurements} we approached two scenarios to detect key classes by using logical dependencies. In the first scenario, we used logical dependencies together with structural dependencies and in the second, we used only logical dependencies to detect the key classes. We modified the tool used in the baseline approach to use also logical dependencies, and then we performed the key class identification using that tool. 
-The quality of the results obtained was evaluated with the same tool, the metric used to evaluate the results is Area Under the Receiver Operating Characteristic Curve (ROC-AUC). We then compared the evaluation results with the results obtained by the baseline approach. 
+Based on the results obtained, compared with the baseline results, we did saw a slight improvement in key class detection when both logical and structural dependencies were used together, the best results were obtained with a connection strength threshold of 40-70. When we used only logical dependencies to detect key classes, the results were less performing than using only structural or structural and logical dependencies combined.
 
-Based on the results obtained, compared with the baseline results, we did saw a slight improvement in key class detection when both logical and structural dependencies were used together, the best results were obtained with a connection strength threshold of 40-70\%. When we used only logical dependencies to detect key classes, the results were less performing than using only structural or structural and logical dependencies combined.
-
-As we mentioned in section \ref{sec:baseline_approach}, also other researchers tried to identify the key classes, and even though the approaches are not the same, most of them have used the ROC-AUC metric to evaluate the quality of the results. 
+As we mentioned in section \ref{sec:baseline_approach}, also other researchers tried to identify the key classes, and even though the approaches are not the same, most of them have used the ROC-AUC metric to evaluate the quality of the results, same as us. 
 Osman et al. obtained in their research an average Area Under the Receiver Operating Characteristic Curve (ROC-AUC) score of 0.750 \cite{6676885}. Thung et al. obtained an average ROC-AUC score of 0.825 \cite{rocclasification}  and Şora et al. (the baseline approach) obtained an average ROC-AUC score of 0.894 \cite{Finding-key-classes}.
 
-In the current research, we obtained an average ROC-AUC score of 0.926 when using logical and structural dependencies combined and a score of 0.747 when using only logical dependencies to detect key classes.
+In the current research, we obtained an average ROC-AUC score of 0.916 when using logical and structural dependencies combined and a score of 0.791 when using only logical dependencies to detect key classes.
 
-In conclusion, by using both dependencies combined, we can obtain a slightly better ROC-AUC score than the one obtained by the baseline approach. And, by using only logical dependencies we don't obtain a better score than the baseline approach but compared with the results obtained by other researchers \cite{6676885}, the score obtained is almost equal. The advantage of using only logical dependencies in key class detection is that it only uses data extracted from the versioning system and can be generalized to various programming languages.
+In conclusion, when using both dependencies combined, we can obtain a slightly better ROC-AUC score than the one from the baseline approach. And, when using only logical dependencies, even though we do not obtain a better score than the baseline approach, we obtain results that can be compared with results obtained by other researchers \cite{6676885}, being almost equal. 
 
-
+The advantage of using only logical dependencies in key class detection is that it only uses data extracted from the versioning system and can be generalized to various programming languages.
 
 
 \bibliographystyle{splncs03}
