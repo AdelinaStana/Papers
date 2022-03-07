@@ -82,7 +82,7 @@ Besides the studies on how logical dependencies can help gain knowledge about so
 
 
 In previous research, the \textit{support} and \textit{confidence} metrics were used to measure the strength of a logical dependency. 
-The logical dependencies are commonly represented as directed association rules, the association rule between A and B ( $A \implies B$) means that changes in entity A cause changes in entity B, where A is the antecedent, and B is the consequent of the rule. 
+The logical dependencies are commonly represented as directed association rules, the association rule between A and B ( $A \rightarrow B$) means that changes in entity A cause changes in entity B, where A is the antecedent, and B is the consequent of the rule. 
 The support metric counts the number of commits in which both entities of an association rule change together. The confidence metric is the ratio between the support metric and the total number of commits in which the antecedent of the rule was involved. 
 
 By appling different thresholds to the metrics presented above, the logical dependencies to further use where selected \cite{DBLP:conf/issre/OlivaG15}, \cite{DBLP:journals/jss/AjienkaC17}, \cite{Zimmermann:2004:MVH:998675.999460}.
@@ -126,50 +126,59 @@ This filter will also prevent the volume of data processed from going out of pro
 \label{strength_filter}
 
 
+The connection strength filter is new for our research regarding logical dependencies identification, and it is based on our experience with the occurrence filter.
+An important conclusion drawn from the results obtained with the occurrence filter is that setting a hard threshold for a filter is not always a good idea. A certain threshold can work well with a medium/large-sized system but, when applied to a small-sized system, can reduce the co-changes filtered to 0. To avoid this type of situation, we evaluated a filter that considers the system's specifications. 
 
-This filter is new for our research regarding logical dependencies and is based on the experience with the occurrence filter.  One important conclusion drawn from the measurements with the occurrence filter is that setting a hard threshold for a filter is not always a good idea. A certain threshold can work well with a medium/large-sized system but, when applied to a small-sized system, can reduce the co-changes filtered to 0. This made us realize that we need a filter that is computed according to the system's specifications. 
 
-We will call this filter the connection strength filter and, it is applied after the commit size filter. To determine the connection strength, we first need to calculate the connection factors of both entities that form a co-changing pair.
+As we previously mentioned, a filter has two components: the metrics computed for each co-changing pair (association rule) and the threshold values. The connection strength filter's metrics derive from the support and the confidence metric.
 
-Assuming that we have a co-changing pair formed by entities A and B, the connection factor of entity A with entity B is the percentage from the total commits involving A that contains entity B. The connection factor of entity B with entity A is the percentage from the total commits involving B also containing entity A.
+For an association rule (co-changing pair) formed from the ascendent A and consequent B ($A \rightarrow B$), 
+the support count is the total number of commits in which both entities are involved,
 
-\begin{equation}
- connection\ factor\ for\ A = \frac{100 * commits\ involving\ A\ and\ B}{total\ nr\ of\ commits\ involving\ A}
-\end{equation}
 
-\begin{equation}
- connection\ factor\ for\ B = \frac{100 * commits\ involving\ A\ and\ B}{total\ nr\ of\ commits\ involving\ B}
-\end{equation}
+$support (A \rightarrow B) = freq_{total\ commits} {(A \cup B)}$
 
+and the confidence is the ratio between the support and the frequency of the ascendent of the rule.
+
+$confidence (A \rightarrow B) =\frac{support (A \rightarrow B) }{freq_{total\ commits}(A)}$
+
+The only problem with the confidence metric, as it is defined above, is that it does not include the big picture of the system.
+The best value for the confidence metric is 1, meaning that in all commits in which entity A is present, entity B is also there. If, for example, we have a co-changing pair $A \rightarrow B$, and A updates only once in the entire history, and in that time, updates together with B, then the confidence metric associated with the co-changing pair will be 1 (the best value possible). That is not a fair value compared with other scenarios. For example, we can have the co-changing pair $A \rightarrow B$, and A updates 100 in the entire history from which 80 times updates together with B, leading to a confidence value of 0.8.
+Even though in the second scenario we have a confidence value smaller than in the first scenario, the second scenario could lead to a more trustworthy connection.
+
+
+Figures \ref{fig:strength_overview_ant} and \ref{fig:strength_overview_hibernate}  intend to offer the big picture of two systems, one small-sized (Ant) and one medium-sized(Hibernate). In both figures, the dots represent the maximum number of updates of one entity with another, and the blue line represents the average occurrence value of the system.
+It can be observed that both systems have multiple entities that update only once (the dark line at the bottom), meaning that we might have many confidence values of 1 (highest value possible) for entities that update only once together.
+
+To consider also the big picture of the system, we defined a new metric for a co-changing pair (association rule), called the connection strength metric. The metric considers the mean value of all the occurrences between two entities from the system. Also, the values obtained are clipped between 0 and 100, where 100 is the best value to obtain and 0 is the worst.
+
+
+$ system factor for (A \rightarrow B) =\frac{support (A \rightarrow B) }{system\ mean}$
+
+$ strength (A \rightarrow B) =\frac{support (A \rightarrow B) * 100}{freq_{total\ commits}(A)} * system\ factor$
+
+By using the strength metric, if we consider again the two scenarios presented above, and a system mean value of 10, we will have the following values: for the scenario in which entity A and B update only once, and in that one update, update together, the strength metric value is 10. For the scenario in which entity A updates 100 in the entire history from which 80 times updates together with B, the strength metric value is 100.  
 
 \begin{figure}
 \centering
 \includegraphics[scale=0.7]{fig_ant_maxOcc.png}
 \caption{Overview of the number of occurences in Ant. }
-\label{fig:strength_overview}
+\label{fig:strength_overview_ant}
 \centering
 \end{figure}
-
-Ant number of classes: 458, and Hibernate 3671.
 
 \begin{figure}
 \centering
 \includegraphics[scale=0.7]{fig_hibernate_maxOcc.png}
 \caption{Overview of the number of occurences in Hibernate. }
-\label{fig:strength_overview}
+\label{fig:strength_overview_hibernate}
 \centering
 \end{figure}
 
 
-We calculated the connection factor for each entity involved in a co-changing pair and filtered the co-changing pairs based on it. The rule set is that both entities that form a co-changing pair had to have a connection factor with each other greater than a threshold value.
+Since the values can vary from 0 to 100, the filter threshold values begin at 10 and are incremented by 10, until 100. We do not settle for one value because we want to see how the threshold values affect the number of remaining co-changing pairs and the output of their usage.
 
-As a practical example, if the pair formed by A and B update together 7 times and the total number of commits involving A is 20 and involving B is 7, then the factor for A is 35 and for B is 100. If the connection strength threshold is set to 50, that means that this co-changing pair will be filtered out because the factor of A is smaller than the threshold. 
-
-Since the factors can vary from 0 to 100, for this filter, we started with a threshold value of 10 and incremented it by 10 until we reached 100. And we want to see how the threshold value affects the number of co-changing pairs left. 
-
-In figure \ref{fig:strength_overview} we plot the number of structural dependencies, co-changing pairs before filtering, and co-changing pairs after filtering with different threshold values for two systems, one small-sized and one medium-sized. As can be observed, with this filter, the small-sized system didn't lose all the co-changing pairs once with the filtering. 
-
-We compare the number of remaining co-changing pairs with the number of structural dependencies because according to surveys \cite{Shtern:2012:CMS:2332427.2332428}, \cite{sar}, the main reason why logical dependencies (a.k.a filtered co-changes) are not used together with structural dependencies is because of their size. So, it is essential to get an overview of the comparison between the co-changing pairs number and the structural dependencies number at each filtering step.
+In figure \ref{fig:strength_overview} we plotted the number of structural dependencies, co-changing pairs before filtering, and co-changing pairs after filtering for two systems, one small-sized and one medium-sized. With the connection strength filter, the small-sized system didn't lose all the co-changing pairs once with the filtering.
 
 \begin{figure}
 \centering
@@ -180,15 +189,11 @@ We compare the number of remaining co-changing pairs with the number of structur
 \end{figure}
 
 
+We compare the number of remaining co-changing pairs with the number of structural dependencies because according to surveys \cite{Shtern:2012:CMS:2332427.2332428}, \cite{sar}, the main reason why logical dependencies (filtered co-changes) are not used together with structural dependencies is because of their size. So, it is essential to get an overview of the comparison between the co-changing pairs number and the structural dependencies number at each filtering step.
 
+We call the co-changing pairs that remain after filtering, logical dependencies. 
 
-The co-changing pairs that remain after filtering, can be called logical dependencies. 
-
-After this step, we will continue our research by using the logical dependencies obtained with different threshold values and see which threshold value performs the best. Up until now, we only looked at the size of the logical dependencies and decided if a filter is good or not. But now, we can also look at the results obtained by using the logical dependencies and decide.
-
-
-
-
+After this step, we will use the logical dependencies obtained with different threshold values and see which threshold value performs the best. Up until now, we only looked at the size of the resulting logical dependencies and decided if a filter and its threshold are good or not. Now, we can also look at the results obtained by using the logical dependencies and decide.
 
 \section{Key classes: baseline versus current approach}
 \label{sec:baseline_approach}
