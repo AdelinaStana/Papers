@@ -366,16 +366,16 @@ CONN\_TOTAL	&	0.94630	&	0.93903	&	0.94630	\\
 \label{sec:measure_ld_sd}
 
 The tool used in the baseline approach runs a graph-ranking algorithm on a graph that contains all the structural dependencies extracted from static source code analysis.
-Each edge in the graph represents a dependency, the entities that form a structural dependency are represented as vertices in the graph. 
-As mentioned in section \ref{sec:baseline_approach}, we modified the tool to be able to take logical dependencies as input.
-For this subsection's measurements, we add in the graph that contains structural dependencies the logical dependencies. Since it is a weighted graph, if a structural dependency is also a logical dependency, then the final weight of the connection is the sum of the current weight and the connection strength metric associated with the logical dependency. 
+Each edge in the graph represents a dependency. The entities that form a structural dependency are represented as vertices in the graph. 
+As mentioned in section \ref{sec:baseline_approach}, we modified the tool to take sturcural and logical dependencies as input.
+For this subsection's measurements, we add in the graph that contains all structural dependencies, the logical dependencies. Since it is a weighted graph, if a structural dependency is also a logical dependency, then the final weight of the connection is the sum of the current weight (the weight computed for the structural dependency) and the connection strength metric associated with the logical dependency. 
 
-In tables \ref{tab:measurementscombined:ant}, \ref{tab:measurementscombined:tomcat}, and \ref{tab:measurementscombined:hibernate}, on each line, we have the computed key class metric, and on each column, the connection strength threshold that was applied to the co-changing pairs.
+In tables \ref{tab:measurementscombined:ant}, \ref{tab:measurementscombined:tomcat}, and \ref{tab:measurementscombined:hibernate}, on each line, we have the computed the key class metric generated with logical dependencies extracted with the connection strength threshold that is specified in the colums header.
 
 We started with logical dependencies that have a connection strength metric greater than 10, then we increased the value by 10 until 100. The last column of the table contains the results previously obtained by the tool by only using structural dependencies (the results presented in section \ref{sec:measure_baseline}).
 
 
-The results obtained by combining structural and logical dependencies are close to the previously registered values but, in most cases, do not surpass them. Underlined are the values that are better than the previously registered values. We can also observe that for all three systems, the best values obtained are for connection strength between 40-70.
+The results obtained by combining structural and logical dependencies are close to the previously registered values but, in most cases, do not surpass them. Underlined are the values that are better than the previously registered values. We can observe that for all three systems, the best values obtained are for connection strength between 40-70.
 
 \begin{table}[!h]
 \setlength\tabcolsep{3.5pt}
@@ -485,13 +485,13 @@ Hibernate	&	1.159	&	1.747	&	2.184	&	3.867	&	4.283	&	4.877	&	10.547	&	11.920	&	12
 
 
 In most cases, for all systems, the results tend to become better once with the increasing value of the connection strength threshold up until one point, after which, the results obtained begin to drop.
-If we look at table A, we can observe that high values for the connection strength filter reduce the number of logical dependencies. For example, in Hibernate, the value 70 for the connection strength threshold makes the structural dependencies outnumber 10 times the logical dependencies. 
+If we look at table \ref{tab:overlap}, we can observe that the bigger the threshold for the connection strength filter, the smaller the number of total logical dependencies. For example, in Hibernate, the value 70 for the connection strength threshold makes the structural dependencies outnumber 10 times the logical dependencies. 
 
-We can identify three scenarios based tables \ref{tab:measurementscombined:ant}, \ref{tab:measurementscombined:tomcat}, \ref{tab:measurementscombined:hibernate} and \ref{tab:ratio_sd_ld}: in the first scenario, the connection strength threshold is too small, and we remain with a lot of logical dependencies after filtering. The high volume of logical dependencies introduced in the graph might cause an erroneous detection of the key classes, in consequence, less performing measurements/results. This affirmation is sustained by the fact that 
+We can identify three scenarios based on tables \ref{tab:measurementscombined:ant}, \ref{tab:measurementscombined:tomcat}, \ref{tab:measurementscombined:hibernate} and \ref{tab:ratio_sd_ld}. In the first scenario, the connection strength threshold is too small, and we remain with a lot of logical dependencies after filtering. The high volume of logical dependencies introduced in the graph might cause an erroneous detection of the key classes, in consequence, less performing measurements/results. This affirmation is sustained by the fact that 
 when the threshold begins to be more restrictive, and the total number of logical dependencies begins to decrease, the key classes detection starts to improve.
 The second scenario assumes that the connection strength threshold is too big, significantly decreasing the number of logical dependencies.
-In this case, the logical dependencies introduced in the graph are too few to improve the detection, and instead, will create noise in the graph.
-This leads us to the third scenario, in which the connection strength threshold is just right, not too small because this will introduce too many logical dependencies in the graph and produce less performing results. And not too high, because this will decrease too much the number of logical dependencies, producing less performing results. 
+In this case, the logical dependencies introduced in the graph are too few to improve the detection, and instead, will create noise in the graph and less performing results.
+This leads us to the third scenario, in which the connection strength threshold is 'just right'. Not too small, because it will introduce too many logical dependencies in the graph and produce less performing results. And not too high, because it will decrease too much the number of logical dependencies, producing less performing results. 
 
 The 'just right' value can differ from one system to another, depending on the size of the system. If we look at Ant (the smaller size system), we can see that the results begin to decrease sooner than for Hibernate. On average, all the systems perform well between 40 and 70 for the connection strength threshold value.
 
