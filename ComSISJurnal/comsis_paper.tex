@@ -158,9 +158,9 @@ It can be observed that both systems have multiple entities that update only onc
 
 To take into account the big picture of the system, we defined a new metric for a co-changing pair (association rule), called the \textit{connection strength metric}. 
 
-The strength metric is computing the same ratio as the confidence metric, a.k.a the ratio between the support metric and the frequency of the antecedent. And additionally, it multiplies it with a system factor and with 100. 
-The \textit{system factor} calculates the ratio between the support metric and the system mean value for updates. The \textit{system mean} is the mean value of all the support values for all the association rules from the system. 
-We multiply with 100 because we want to scale the metric values to structural dependencies metric values that have, in most cases, supraunitary values. The values obtained are clipped between 0 and 100, where 100 is the best value and 0 is the worst.
+The connection strength metric is computing the same ratio as the confidence metric, a.k.a the ratio between the support metric and the frequency of the antecedent. And additionally, it multiplies it with a system factor and with 100. 
+The \textit{system factor} calculates the ratio between the support metric and the mean value for updates. The \textit{system mean} is the mean value of all the support values for all the association rules from the system. 
+We multiply with 100 because we want to scale the metric's values to structural dependencies metric's values that have, in most cases, supraunitary values. And we want both metrics to be comparable. The values obtained are clipped between 0 and 100, where 100 is the best value and 0 is the worst.
 
 
 
