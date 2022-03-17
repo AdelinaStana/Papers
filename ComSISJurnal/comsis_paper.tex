@@ -118,7 +118,7 @@ Currently, we aim to refine the filtering method with a new filter applicable fo
 
 The commit size filter filters out all co-changing pairs from commits with more than 10 files changed. We consider that commits with more than 10 files changed tend to be code unrelated; we studied the commit size trend from serval git open-source repositories, and we concluded that most of the commits contain less than 10 files. On average, only 10\% of the total commits have more than 10 files changed. 
 
-This filter will also prevent the volume of data processed from going out of proportion. In some of the repositories studied, we found commits with more than 1000 files; these commits could generate over half a million co-changing pairs if the commit size filter is not applied. 
+This filter will also prevent the volume of data processed from going out of proportion. In some of the repositories studied, we found commits with more than 1000 files; these commits could generate over half a million co-changing pairs if the commit size filter is not applied \cite{enase19}, \cite{saci19}. 
 
 
 
@@ -132,7 +132,7 @@ An important conclusion drawn from the results obtained with the occurrence filt
 
 As we previously mentioned, a filter has two components: the metrics computed for each co-changing pair (association rule) and the threshold values. The connection strength metric derive from the support and the confidence metrics.
 
-For an association rule (co-changing pair) formed from the ascendent A and consequent B ($A \rightarrow B$), 
+For an association rule (co-changing pair) formed from the antecedent A and consequent B ($A \rightarrow B$), 
 the support count is the total number of commits in which both entities are involved,
 
 
@@ -140,7 +140,7 @@ the support count is the total number of commits in which both entities are invo
 support (A \rightarrow B) = freq_{total\ commits} {(A \cup B)}
 \end{equation}
 
-and the confidence is the ratio between the support and the frequency of the ascendent of the rule.
+and the confidence is the ratio between the support and the frequency of the antecedent of the rule.
 
 \begin{equation}
 confidence (A \rightarrow B) =\frac{support (A \rightarrow B) }{freq_{total\ commits}(A)}
@@ -156,7 +156,13 @@ Figures \ref{fig:strength_overview_ant} and \ref{fig:strength_overview_hibernate
 It can be observed that both systems have multiple entities that update only once (the dark line at the bottom), meaning that we might have many confidence values of 1 (highest value possible) for entities that update only once together.
 
 
-To take into account the big picture of the system, we defined a new metric for a co-changing pair (association rule), called the connection strength metric. The metric considers the mean value of all the occurrences between two entities from the system. The values obtained are clipped between 0 and 100, where 100 is the best value to obtain and 0 is the worst.
+To take into account the big picture of the system, we defined a new metric for a co-changing pair (association rule), called the \textit{connection strength metric}. 
+
+The strength metric is computing the same ratio as the confidence metric, a.k.a the ratio between the support metric and the frequency of the antecedent. And additionally, it multiplies it with a system factor and with 100. 
+The \textit{system factor} calculates the ratio between the support metric and the system mean value for updates. The \textit{system mean} is the mean value of all the support values for all the association rules from the system. 
+We multiply with 100 because we want to scale the metric values to structural dependencies metric values that have, in most cases, supraunitary values. The values obtained are clipped between 0 and 100, where 100 is the best value and 0 is the worst.
+
+
 
 \begin{equation}
  system factor for (A \rightarrow B) =\frac{support (A \rightarrow B) }{system\ mean}
@@ -185,7 +191,7 @@ By using the strength metric, if we consider again the two scenarios presented a
 \end{figure}
 
 
-Since the values can vary from 0 to 100, the filter threshold values begin at 10 and are incremented by 10, until 100. We do not settle for one value because we want to see how the threshold values affect the number of remaining co-changing pairs and the output of their usage.
+Since the values can vary from 0 to 100, the filter threshold values begin at 10 and are repeatedly incremented by 10, until 100. We do not settle for one value because we want to see how the threshold values affect the number of remaining co-changing pairs and the output of their usage.
 
 In figure \ref{fig:strength_overview} we plotted for two systems (one small-sized and one medium-sized) the number of structural dependencies, co-changing pairs before filtering, and co-changing pairs after filtering. With the connection strength filter, the small-sized system didn't lose all the co-changing pairs once with the filtering.
 We compare the number of remaining co-changing pairs with the number of structural dependencies because, according to surveys \cite{Shtern:2012:CMS:2332427.2332428}, \cite{sar}, the main reason why logical dependencies (filtered co-changes) are not used together with structural dependencies is their size. So, it is essential to get an overview of the comparison between the number of co-changing pairs and the number of structural dependencies at each filtering step.
@@ -220,7 +226,7 @@ We use the research of I. Şora et al. \cite{Finding-key-classes} as a baseline 
 Şora et al. used the static analysis of the source code, a page ranking algorithm and other class attributes to find key classes \cite{PagerankENASE}, \cite{enase15}, \cite{SoraSpringer}, \cite{PagerankSACI},\cite{Finding-key-classes}.
 The page ranking algorithm is a customization of PageRank, the algorithm used to rank web pages \cite{ilprints422}, and it works based on a recommendation system. If one node has a connection with another node, then it recommends the second node. In previous research, connections are established based on structural dependencies extracted from static code analysis. If A has a structural dependency with B, then A recommends B, and also B recommends A.
 
-The ranking algorithm ranks all the classes from the source code of the system, according to their importance. To identify the important classes from the rest, a threshold for TOP classes from the top of the ranking is set. The TOP threshold value can go from 1 to the total number of classes found in the system. 
+The ranking algorithm ranks all the classes from the source code of the system, according to their importance. To identify the important classes from the rest, a threshold for the top classes from the top of the ranking is set. We call this TOP threshold, and its value can range from 1 to the total number of classes found in the system. 
 
 
 
@@ -295,13 +301,13 @@ In subsection \ref{sec:dataset}, we present the data set used to generate new re
 
 The research of I. Sora et al. takes into consideration structural dependencies that were extracted using static analysis techniques, and were performed on the object-oriented systems presented in table \ref{tab:gitfoundsystems} \cite{Finding-key-classes}.
 
-The requirements for a system to qualify as suited for investigations using logical dependencies are: has to be version controlled by GitHub, has to have releases for different code versions (previous research was done only on specific versions), and also has to have a significant number of commits. 
-From the total of 14 object-oriented systems listed in the baseline \cite{Finding-key-classes}, 13 of them have repositories in Github \ref{tab:gitfoundsystems}, and from the found repositories, only 6 repositories have the same release tag as the specified version in previous research.
-The commits number found on the remaining 6 repositories varies from 19108 commits for Tomcat Catalina to 149 commits for JHotDraw. In order to have more accurate results, we need a significant number of commits (more than 5000 commits), so we concluded to use only 3 systems from the initial candidates for key classes detection using logical dependencies: Apache Ant, Hibernate, and Tomcat Catalina.  
+The requirements for a system to qualify as suited for investigations using logical dependencies are: has to be version controlled by Git, has to have releases for different code versions (previous research was done only on specific versions), and also has to have a significant number of commits. 
+From the total of 14 object-oriented systems listed in the baseline \cite{Finding-key-classes}, 13 of them have repositories in git \ref{tab:gitfoundsystems}, and from the found repositories, only 6 repositories have the same release tag as the specified version in previous research.
+The commits number found on the remaining 6 repositories varies from 19108 commits for Tomcat Catalina to 149 commits for JHotDraw. In order to have more accurate results, we need a significant number of commits (more than 5000 commits), so we concluded to use only 3 systems from the initial candidates for key classes detection using logical dependencies:  Ant, Hibernate, and Tomcat Catalina.  
 
 \begin{table}
 \renewcommand{\arraystretch}{1}
-\caption{Found systems and versions of the systems in GitHub. }
+\caption{Systems and versions of the systems found in Git. }
 \label{tab:gitfoundsystems}
 \centering
 \begin{tabular}{lllll}
@@ -396,7 +402,7 @@ CON\_T	&	0.920	&	0.919	&	0.921	&	0.923	&	0.923	&	0.932	&	0.934	&	0.939	&	0.937	&
 
 \begin{table}[!h]
 \setlength\tabcolsep{3.5pt}
-\caption{Measurements for Tomcat using structural and logical dependencies combined}
+\caption{Measurements for Tomcat Catalina using structural and logical dependencies combined}
 \label{tab:measurementscombined:tomcat}
 \centering
 \begin{tabular}{|c|cccccccccc|c|}
@@ -527,7 +533,7 @@ CON\_T	&	0.856	&	0.836	&	0.819	&	0.803	&	0.801	&	0.816	&	0.831	&	0.855	&	0.840	&
 
 \begin{table}[!h]
 \setlength\tabcolsep{3.5pt}
-\caption{Measurements for Tomcat using only logical dependencies}
+\caption{Measurements for Tomcat Catalina using only logical dependencies}
 \label{tab:measurementshistory:tomcat}
 \centering
 \begin{tabular}{|c|cccccccccc|c|}
@@ -648,7 +654,7 @@ org.hibernate.Criteria	&	10	&	1	\\
 As mentioned in section \ref{strength_filter}, we did not use the confidence metric because it does not consider the big picture of the system.
 A co-changing pair $A \rightarrow B$, where A updates only once in the entire history, and when it updates, it updates together with B, will have the best confidence value that we can get. This is why we introduced the strength metric, to balance the metric in the favor of those which update more frequently.
 Since both metrics require the same inputs and only the calculation method is different, we computed with our tool the confidence metric and applied the same threshold to it as to the strength metric. The only difference from how other authors computed the metric is that we multiplied its value by 100. So, the confidence values can fluctuate between 0 and 100.
-
+In the graph used by the key classes detection tool, the structural dependencies weights are supraunitary values. So, we multiplied with 100 the confidence value to scale it to the structural dependencies weights. Otherwise, if we add a subunitary value (confidence value) to a high value (the structural weight), it will not make a difference, so we will not be able to see the impact of the logical dependencies in the graph.
 
 \begin{table}[!h]
 \setlength\tabcolsep{3.5pt}
@@ -670,7 +676,7 @@ confidence	&	0.731	&	0.893	\\
 strength	&	0.826	&	0.903	\\
 confidence	&	0.741	&	0.873	\\
 \hline
-\multicolumn{3}{|c|}{Average values obtained for Catalina}\\
+\multicolumn{3}{|c|}{Average values obtained for Tomcat Catalina}\\
 \hline
 strength	&	0.816	&	0.910	\\
 confidence	&	0.752	&	0.878	\\
@@ -708,7 +714,7 @@ In the current research, we obtained an average ROC-AUC score of 0.916 when usin
 
 So, when using both dependencies combined, we can obtain a slightly better ROC-AUC score than the one from the baseline approach. And, when using only logical dependencies, even though we do not obtain a better score than the baseline approach, we obtain results that can be compared with results obtained by other researchers \cite{6676885}, being almost equal. 
 
-To sum up briefly the findings of this paper, we consider that the big advantage of using only logical dependencies in key class detection is that it only uses data extracted from the versioning system, and can be generalized to various programming languages. In the future, we want to check if there are also other areas that can be improved by using logical dependencies, like software clustering.
+To sum up briefly the findings of this paper, we consider that the big advantage of using only logical dependencies in key class detection is that it only uses data extracted from the versioning system, and can be generalized to various programming languages. In the future, we want to check if there are also other areas that can be improved by using logical dependencies, like software clustering \cite{SoraConti}, \cite{Shtern:2012:CMS:2332427.2332428}, \cite{SoraSem13}.
 
 \bibliographystyle{splncs03}
 \bibliography{logicaldepd}
