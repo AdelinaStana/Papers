@@ -1,0 +1,26 @@
+Comments:
+
+1. The manuscript should be better structured.
+
+2. The initial hypotheses to be tested are missing.
+
+3. Researchers questions to be answered in the manuscript are missing.
+
+4. Experiments should be focused on verification of the research questions according to the hypotheses.
+5. The section regarding threads to validity is missing.
+
+6. Maybe the title should be slightly corrected so that it better reflects the structure of the paper.
+
+7. Chapters 2 and 3 begin with elaboration, and it would be nice to get an introductory paragraph 
+describing a given chapter, as it exists in Chapter 4.
+
+8. The conclusion should be better structured. The given conclusion has many short passages and 
+has a lot of references. There are usually three separate parts in the conclusion. The first part 
+usually gives an overview of what the manuscript was about, the second part gives a critical overview
+of what was achieved, and the third part gives some perspective for future work.
+
+9. In reference [16], I am not sure does the number 0.894 refers to the solution presented in the 
+referred paper or to the solution that the refereed paper was compared to. One result from the 
+referred paper is 0.890. If this is a mistake please check other members.
+
+10. In many places in the manuscript it was used the third person "we" which is more suitable for
