@@ -66,13 +66,13 @@ In this paper, by applying a set of filters with different thresholds to the inf
 In order to validate the results obtained, and to see if the filtering methods had or not had a favorable effect on the final result, we want to identify the key classes of different systems. The identification of key classes has been previously performed by using structural dependencies, so
 we intend to use the results obtained together with structural dependencies, and also separate, and see how the final results fluctuate.
 
-The paper is organized as follows: Section 2 introduces the concepts of logical dependencies and the methods of obtaining them. Section 3 introduces the concept of key classes and the new approach of using logical dependencies to detect key classes. Section 4 defines the data set used and presents the new results obtained with the data set. Finally, section 5 discusses the conclusions based on the results obtained. 
+The paper is organized as follows: Section \ref{ld_def} introduces the concepts of logical dependencies and the methods of obtaining them. Section \ref{sec:baseline_approach} introduces the concept of key classes and the metrics used for results evaluation. The new approach of using logical dependencies to detect key classes can be found in section \ref{sec:keycalss_identification}. Section \ref{sec:current_measurements} defines the data set used and presents the new results obtained with the data set. In section \ref{sec:threats} we present the threats to the validity of the results presented in this paper. And finally, section \ref{sec:conclusion} discusses the conclusions based on the results obtained. 
 
 
 
 
 \section{The concept of logical dependencies}
-
+\label{ld_def}
 This section presents the definition of logical dependencies, previous works involving logical dependencies, and our contribution to this topic. In subsection \ref{definition_ld}, we define what logical dependencies are and the previous research involving them. In subsection \ref{current_approach}, we present our approach for identifying logical dependencies and the work we have done around this subject. Related to subsection \ref{current_approach}, sections \ref{commit_filter}, and \ref{strength_filter} present more details about the filtering techniques we used to identify logical dependencies.
 
 \subsection{Definition and previous research}
@@ -705,7 +705,10 @@ confidence	&	0.699	&	0.929	\\
 The comparison between the average values obtained by using the confidence metric and the strength metric, can be found in table \ref{tab:confidence_vs_strength}.
 As we expected, based on the results, we can say that the connection strength metric is more suited for logical dependencies detection. So, by considering the mean update frequency of the entire system in the filtering process, we improve the detection of logical dependencies.
 
-
+\section{Threats to validity}
+\label{sec:threats}
+We will present in this section some aspects that can constitute threats to the validity of the results from this paper. First, we extract co-changes only from main (master) branch commits. Development branches are not taken into consideration, which might cause some information loss. Especially if there are many branches in development with many commits in them. On the other hand, if we designed the tool that extracts co-changes to consider also development branches, that would have constituted another threat to the validity. Some branches are just for try and error or prototyping, or sometimes they never get integrated into the main branch, which means that we risk analyzing information that does not reflect the reality of the system.
+Another threat to the validity of the results is that we do not consider the age of the co-changes. It can happen that two entities updated together a lot because they were also structurally related entities, but, at some point in time, that connection was removed from the code, and they do not update together any longer. In this case, it can happen that the tool still considers them logical dependencies due to the frequency of updates.
 
 \section{Conclusions}
 \label{sec:conclusion}
