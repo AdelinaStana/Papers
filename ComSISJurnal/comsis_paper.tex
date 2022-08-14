@@ -178,15 +178,16 @@ By using the strength metric, if we consider again the two scenarios presented a
 
 \begin{figure}
 \centering
-\includegraphics[scale=0.7]{fig_ant_maxOcc.png}
+\includegraphics[scale=0.8]{fig_ant_maxOcc.png}
 \caption{Overview of the number of occurences in Ant. }
 \label{fig:strength_overview_ant}
 \centering
 \end{figure}
 
+\vspace{-1em}
 \begin{figure}
 \centering
-\includegraphics[scale=0.7]{fig_hibernate_maxOcc.png}
+\includegraphics[scale=0.8]{fig_hibernate_maxOcc.png}
 \caption{Overview of the number of occurences in Hibernate. }
 \label{fig:strength_overview_hibernate}
 \centering
@@ -351,12 +352,11 @@ S15	&	Wro4J	&	1.6.3	&	v1.6.3	&	2871	\\
 
 In table \ref{tab:previousresults} are presented the ROC-AUC values for different attributes computed for the systems Ant, Tomcat Catalina, and Hibernate by using the baseline approach. We intend to compare these values with the new values obtained by using also logical dependencies in key class detection.
 
-\begin{table}[!h]
+\begin{table}
 \renewcommand{\arraystretch}{1}
 \caption{ROC-AUC metric values extracted. }
 \label{tab:previousresults}
 \centering
-\scalebox{0.9}{
 \begin{tabular}{|c|ccc|}
 \hline
 Metrics &	Ant	&	Tomcat Catalina	&	Hibernate	\\
@@ -367,15 +367,11 @@ PR	&	0.94944	&	0.92670	&	0.94944	\\
 PR\_U	&	0.95060	&	0.93220	&	0.95060	\\
 CONN\_TOTAL\_W	&	0.94437	&	0.92595	&	0.94437	\\
 CONN\_TOTAL	&	0.94630	&	0.93903	&	0.94630	\\
-
 \hline
 \end{tabular}
-}
 \end{table}
 
-
-
-
+\vspace{-2em}
 
 \subsection{Measurements using combined structural and logical dependencies}
 \label{sec:measure_ld_sd}
@@ -412,6 +408,7 @@ CON\_T	&	0.920	&	0.919	&	0.921	&	0.923	&	0.923	&	0.932	&	0.934	&	0.939	&	0.937	&
 \end{tabular}
 \end{table}
 
+\vspace{-2em}
 
 \begin{table}[!h]
 \setlength\tabcolsep{3.5pt}
@@ -433,7 +430,7 @@ CON\_T	&	0.925	&	0.934	&	0.937	&	0.938	&	0.938	&	0.938	&	0.938	&	0.938	&	0.938	&
 \hline
 \end{tabular}
 \end{table}
-
+\vspace{-2em}
 
 \begin{table}[!h]
 \setlength\tabcolsep{3.5pt}
@@ -454,7 +451,7 @@ CON\_T	&	0.920	&	0.927	&	0.932	&	0.940	&	0.940	&	0.940	&	0.945	&	0.945	&	0.945	&
 \hline
 \end{tabular}
 \end{table}
-
+\vspace{-2em}
 
 Some other details about the systems are presented in tables \ref{tab:overlap} and \ref{tab:ratio_sd_ld} . In table \ref{tab:overlap} are the overlappings between structural and logical dependencies expressed in percentages. Each column represents the percentage of logical dependencies that are also structural. 
 The values obtained confirm that, indeed, the logical dependencies overlap with structural dependencies in a small percentage, and they must be treated as different dependencies.
@@ -477,7 +474,7 @@ Hibernate	&	8.005	&	8.971	&	9.755	&	12.060	&	12.348	&	12.254	&	18.426	&	19.105	&
 \hline
 \end{tabular}
 \end{table}
-
+\vspace{-2em}
 
 
 \begin{table}[!h]
@@ -497,7 +494,7 @@ Hibernate	&	1.159	&	1.747	&	2.184	&	3.867	&	4.283	&	4.877	&	10.547	&	11.920	&	12
 \hline
 \end{tabular}
 \end{table}
-
+\vspace{-2em}
 
 In most cases, for all systems, the results tend to become better once with increasing the value of the connection strength threshold up until one point, after which the results obtained begin to drop.
 If we look at table \ref{tab:overlap}, we can observe that the bigger the threshold for the connection strength filter, the smaller the number of total logical dependencies becomes. For example, in Hibernate, the value 70 for the connection strength threshold makes the structural dependencies outnumber 10 times the logical dependencies. 
@@ -542,7 +539,7 @@ CON\_T	&	0.856	&	0.836	&	0.819	&	0.803	&	0.801	&	0.816	&	0.831	&	0.855	&	0.840	&
 \hline
 \end{tabular}
 \end{table}
-
+\vspace{-2em}
 
 \begin{table}[!h]
 \setlength\tabcolsep{3.5pt}
@@ -565,7 +562,7 @@ CON\_T	&	0.787	&	0.812	&	0.835	&	0.832	&	0.821	&	0.814	&	0.804	&	0.817	&	0.820	&
 \end{tabular}
 
 \end{table}
-
+\vspace{-2em}
 
 \begin{table}[!h]
 \setlength\tabcolsep{3.5pt}
@@ -588,7 +585,7 @@ CON\_T	&	0.740	&	0.743	&	0.750	&	0.700	&	0.700	&	0.704	&	0.746	&	0.746	&	0.747	&
 \end{tabular}
 \end{table}
 
-
+\vspace{-1em}
 
 
 
@@ -625,7 +622,7 @@ org.apache.tools.ProjectHelper2\$ElementHandler	&	21	&	14	\\
 \hline
 \end{tabular}
 \end{table}
-
+\vspace{-2em}
 
 \begin{table}[!h]
 \setlength\tabcolsep{3.5pt}
@@ -658,7 +655,7 @@ org.hibernate.Criteria	&	10	&	1	\\
 \end{tabular}
 \end{table}
 
-
+\vspace{-2em}
 
 \subsection{Comparison between results obtained with strength versus confidence metric}
 \label{sec:measure_metrics}
@@ -702,6 +699,8 @@ confidence	&	0.699	&	0.929	\\
 \hline
 \end{tabular}
 \end{table}
+
+\vspace{-1em}
 
 The comparison between the average values obtained by using the confidence metric and the strength metric, can be found in table \ref{tab:confidence_vs_strength}.
 As we expected, based on the results, we can say that the connection strength metric is more suited for logical dependencies detection. So, by considering the mean update frequency of the entire system in the filtering process, we improve the detection of logical dependencies.
