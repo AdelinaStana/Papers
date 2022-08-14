@@ -73,8 +73,10 @@ The paper is organized as follows: Section 2 introduces the concepts of logical 
 
 \section{The concept of logical dependencies}
 
-\subsection{State of the art}
+This section presents the definition of logical dependencies, previous works involving logical dependencies, and our contribution to this topic. In subsection \ref{definition_ld}, we define what logical dependencies are and the previous research involving them. In subsection \ref{current_approach}, we present our approach for identifying logical dependencies and the work we have done around this subject. Related to subsection \ref{current_approach}, sections \ref{commit_filter}, and \ref{strength_filter} present more details about the filtering techniques we used to identify logical dependencies.
 
+\subsection{Definition and previous research}
+\label{definition_ld}
 The concept of logical coupling (dependency) was first introduced by Gall et al. \cite{Gall:1998:DLC:850947.853338}. They defined the logical dependency between two software entities (classes, modules, interfaces, etc.) as the fact that the entities repeatedly change together during the historical evolution of a software system.
 Since then, logical dependencies have been used in multiple areas of software engineering, most commonly in fault and change prediction.  
 Besides the studies on how logical dependencies can help gain knowledge about software systems, some studies also focused on the interplay between logical and structural dependencies. Ajienka et al. and Olivia et al. studied the interplay between structural and logical dependencies, and they concluded that, in most cases, structural dependencies do not lead to logical dependencies \cite{Oliva:2011:ISL:2067853.2068086}, \cite{DBLP:conf/issre/OlivaG15}, \cite{DBLP:journals/jss/AjienkaC17}. The above affirmation is also supported by Lanza et al., who consider that logical dependencies are important because they can reveal dependencies that are not visible via code analysis \cite{inproceedings_radar_evolution}.
@@ -88,7 +90,7 @@ The support metric counts the number of commits in which both entities of an ass
 By appling different thresholds to the metrics presented above, the logical dependencies to further use were selected \cite{DBLP:conf/issre/OlivaG15}, \cite{DBLP:journals/jss/AjienkaC17}, \cite{Zimmermann:2004:MVH:998675.999460}.
 
 
-\subsection{Current approach}
+\subsection{Our approach for logical dependencies identification}
 \label{current_approach}
 
 To avoid confusion, we call \textit{co-changing pairs} all the association rules of one system. The association rules are formed between two software entities that update together in the same commit.
@@ -113,7 +115,7 @@ Currently, we aim to refine the filtering method with a new filter applicable fo
 \centering
 \end{figure}
 
-\subsection{Commit size filter}
+\subsection{Logical dependencies filtering: The commit size filter}
 \label{commit_filter}
 
 The commit size filter filters out all co-changing pairs from commits with more than 10 files changed. We consider that commits with more than 10 files changed tend to be code unrelated; we studied the commit size trend from serval git open-source repositories, and we concluded that most of the commits contain less than 10 files. On average, only 10\% of the total commits have more than 10 files changed. 
@@ -122,7 +124,7 @@ This filter will also prevent the volume of data processed from going out of pro
 
 
 
-\subsection{Connection strength filter}
+\subsection{Logical dependencies filtering: The connection strength filter}
 \label{strength_filter}
 
 
@@ -207,10 +209,15 @@ After this step, we will use the logical dependencies obtained with different th
 \centering
 \end{figure}
 
-\section{Key classes: baseline versus current approach}
+\section{The concept of key classes}
 \label{sec:baseline_approach}
 
-\subsection{State of the art}
+This section presents the key classes definition, previous research regarding key classes identification, and metrics used to evaluate the results obtained.
+In section \ref{sec:keyclass_definition}, we present a summary of previous researchers and their approaches for key classes identification. Section \ref{sec:baseline_approach_sub} focuses on one previous research that we consider as our baseline research in key classes identification. With the results of the baseline research, we will compare our results. 
+In section \ref{sec:evalmetrics}, we present the metrics used in previous researches to evaluate the results obtained. 
+
+\subsection{Definition and previous research}
+\label{sec:keyclass_definition}
 
 Zaidman et al. \cite{ZaidmanJurnal} were the first to introduce the concept of key classes and it refers to classes that can be found in documents written to provide an architectural overview of the system or an introduction to the system structure.
 Tahvildari and Kontogiannis have a more detailed definition regarding the key classes concept: “Usually, the most important concepts of a system are implemented by very few key classes which can be characterized by the specific properties. These classes, which we refer to as key classes, manage many other classes or use them in order to implement their functionality. The key classes are tightly coupled with other parts of the system. Additionally, they tend to be rather complex, since they implement much of the legacy system’s functionality” \cite{Tahvildari2004ImprovingDQ}.
@@ -221,35 +228,13 @@ The key class identification can be done by using different algorithms with diff
 Zaidman et al. used a web mining algorithm and dynamic analysis of the source code to identify the key classes \cite{ZaidmanJurnal}.
 
 \subsection{Baseline approach}
+\label{sec:baseline_approach_sub}
 We use the research of I. Şora et al. \cite{Finding-key-classes} as a baseline for our research involving the usage of logical dependencies to find key classes. 
 
 Şora et al. used the static analysis of the source code, a page ranking algorithm and other class attributes to find key classes \cite{PagerankENASE}, \cite{enase15}, \cite{SoraSpringer}, \cite{PagerankSACI},\cite{Finding-key-classes}.
 The page ranking algorithm is a customization of PageRank, the algorithm used to rank web pages \cite{ilprints422}, and it works based on a recommendation system. If one node has a connection with another node, then it recommends the second node. In previous research, connections are established based on structural dependencies extracted from static code analysis. If A has a structural dependency with B, then A recommends B, and also B recommends A.
 
 The ranking algorithm ranks all the classes from the source code of the system, according to their importance. To identify the important classes from the rest, a threshold for the top classes from the top of the ranking is set. We call this TOP threshold, and its value can range from 1 to the total number of classes found in the system. 
-
-
-
-\subsection{Current approach}
-
-The baseline approach uses a tool that takes as an input the source code of the system and applies ranking strategies to rank the classes according to their importance. We modified the tool used by the baseline approach to take also the logical dependencies as input; the rest of the workflow is the same as in the baseline approach (figure \ref{fig:baseline_approach}).
-
-\begin{figure}
-\centering
-\includegraphics[width=\textwidth]{current_approach.PNG}
-\caption{Overview of the current approach.}
-\label{fig:baseline_approach}
-\centering
-\end{figure}
-Below are some of the class metrics used in the baseline approach and in our current research to rank the classes according to their importance. 
-
-The class metrics used can be separated into two categories: class connection metrics and class PageRank values.
-The class connection metrics are CONN-TOTAL-W, which is the total weight of all connections of the class, and CONN-TOTAL, the total number of distinct classes that a class uses or are using the class \cite{Finding-key-classes}.
-
-Previous research used PageRank values computed on both directed and undirected, weighted and unweighted graphs. In the current research, we use the PR, which is the PageRank value computed on the directed and unweighted graph, the PR-U, which is the value computed on the undirected and unweighted graph, and the PR-U2-W, the value computed on the weighted graph with back-recommendations \cite{PagerankENASE}, \cite{enase15}, \cite{Finding-key-classes}, \cite{PagerankSACI}.
-
-
-
 
 \subsection{Metrics for results evaluation}
 \label{sec:evalmetrics}
@@ -283,6 +268,34 @@ For a classifier to be considered good, its ROC-AUC metric value should be as cl
 Osman et al. obtained in their research an average ROC-AUC score of 0.750 \cite{6676885}. Thung et al. obtained an average ROC-AUC score of 0.825 \cite{rocclasification}  and Şora et al. (the baseline) obtained an average ROC-AUC score of 0.894 \cite{Finding-key-classes}.
 
 
+
+\section{Key classes identification using logical dependencies}
+\label{sec:keycalss_identification}
+This section presents our approach for key classes identification by using logical dependencies. 
+In section \ref{sec:current_approach}, we describe the experimental setup and how we intend to integrate logical dependencies with the baseline approach. 
+Section \ref{sec:plan} presents our investigation plan and how this plan can respond to the research questions we enunciated at the beginning of this paper.
+
+\subsection{Current approach}
+\label{sec:current_approach}
+The baseline approach uses a tool that takes as an input the source code of the system and applies ranking strategies to rank the classes according to their importance. We modified the tool used by the baseline approach to take also the logical dependencies as input; the rest of the workflow is the same as in the baseline approach (figure \ref{fig:baseline_approach}).
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{current_approach.PNG}
+\caption{Overview of the current approach.}
+\label{fig:baseline_approach}
+\centering
+\end{figure}
+Below are some of the class metrics used in the baseline approach and in our current research to rank the classes according to their importance. 
+
+The class metrics used can be separated into two categories: class connection metrics and class PageRank values.
+The class connection metrics are CONN-TOTAL-W, which is the total weight of all connections of the class, and CONN-TOTAL, the total number of distinct classes that a class uses or are using the class \cite{Finding-key-classes}.
+
+Previous research used PageRank values computed on both directed and undirected, weighted and unweighted graphs. In the current research, we use the PR, which is the PageRank value computed on the directed and unweighted graph, the PR-U, which is the value computed on the undirected and unweighted graph, and the PR-U2-W, the value computed on the weighted graph with back-recommendations \cite{PagerankENASE}, \cite{enase15}, \cite{Finding-key-classes}, \cite{PagerankSACI}.
+
+
+\subsection{Experimental plan}
+\label{sec:plan}
 
 \section{Experimental results using logical dependencies}
 \label{sec:current_measurements}

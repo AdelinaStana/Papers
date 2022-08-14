@@ -7,6 +7,7 @@ Comments:
 3. Researchers questions to be answered in the manuscript are missing.
 
 4. Experiments should be focused on verification of the research questions according to the hypotheses.
+
 5. The section regarding threads to validity is missing.
 
 6. Maybe the title should be slightly corrected so that it better reflects the structure of the paper.
@@ -22,5 +23,8 @@ of what was achieved, and the third part gives some perspective for future work.
 9. In reference [16], I am not sure does the number 0.894 refers to the solution presented in the 
 referred paper or to the solution that the refereed paper was compared to. One result from the 
 referred paper is 0.890. If this is a mistake please check other members.
+COMMENTS:
+-> see [16] jurnal paper; value 0.894 is the avg of table5 avg : (0.889 + 0.890 + 0.903)/3
+-> maybe add small explination that we did the average
 
 10. In many places in the manuscript it was used the third person "we" which is more suitable for
