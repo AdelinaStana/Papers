@@ -63,10 +63,21 @@ The version control (also known as source control) system that tracks changes in
 The usage of information extracted from the version control system is not new. Previous works have used version control information to detect design issues \cite{Zimmermann:2004:MVH:998675.999460}, predict fault incidence among modules \cite{Predictingfaultincidence}, \cite{Cataldo2009SoftwareDW} or guide software changes \cite{4815274}, \cite{DBLP:journals/ese/AjienkaCC18}.
 In software engineering literature, concepts like evolutionary coupling, evolutionary dependencies, logical dependencies, or logical coupling refer to the same sort of relationship among software entities. That relationship is extracted from the version control system and can mean that the entities from the source code files that change together, evolve together, and might depend on one another. Studies show that dependency relationships found in the source code overlap only in a small percentage with dependency relationships found in the version control system, and suggest that these two types of relationships can be used together \cite{Oliva:2011:ISL:2067853.2068086}, \cite{DBLP:journals/jss/AjienkaC17}. But, in practice, dependencies extracted from the version management system are rarely used because of the size of the information extracted \cite{Shtern:2012:CMS:2332427.2332428}. A relatively small source code repository with roundabout one thousand commits can lead to millions of connections. 
 In this paper, by applying a set of filters with different thresholds to the information extracted, we intend to speed up the processing time, reduce the size of connections extracted from the version control and increase the confidence that the connections obtained might be related.
-In order to validate the results obtained, and to see if the filtering methods had or not had a favorable effect on the final result, we want to identify the key classes of different systems. The identification of key classes has been previously performed by using structural dependencies, so
+In order to validate the results obtained, and to see if the filtering methods had or had not a favorable effect on the final result, we want to identify the key classes of different systems. The identification of key classes has been previously performed by using structural dependencies, so
 we intend to use the results obtained together with structural dependencies, and also separate, and see how the final results fluctuate.
 
-The paper is organized as follows: Section \ref{ld_def} introduces the concepts of logical dependencies and the methods of obtaining them. Section \ref{sec:baseline_approach} introduces the concept of key classes and the metrics used for results evaluation. The new approach of using logical dependencies to detect key classes can be found in section \ref{sec:keycalss_identification}. Section \ref{sec:current_measurements} defines the data set used and presents the new results obtained with the data set. In section \ref{sec:threats} we present the threats to the validity of the results presented in this paper. And finally, section \ref{sec:conclusion} discusses the conclusions based on the results obtained. 
+We performed our analysis on three open
+source projects: Ant, Tomcat Catalina, and Hibernate. And we answered the following research questions:
+
+\textbf{RQ1: Will logical dependencies enhance results previously obtained by using only structural dependencies?}
+
+Since previous researches and our studies show that logical dependencies overlap only in a small percentage with structural dependencies, we intend to combine both types of dependencies and provide them as input for key classes identification tools.
+
+\textbf{RQ2: Can logical dependencies provide good results if used instead of structural dependencies?}
+
+In this research question, we want to focus more on the use of logical dependencies as stand-alone dependencies. Even though logical dependencies are not the same as structural dependencies, they can provide enough information about the system to be successfully used as input for tools like key classes detection tools. 
+
+\textbf{Paper structure.} The paper is organized as follows: Section \ref{ld_def} introduces the concepts of logical dependencies and the methods of obtaining them. Section \ref{sec:baseline_approach} introduces the concept of key classes and the metrics used for results evaluation. The new approach of using logical dependencies to detect key classes can be found in section \ref{sec:keycalss_identification}. Section \ref{sec:current_measurements} defines the data set used and presents the new results obtained with the data set. In section \ref{sec:threats} we present the threats to the validity of the results presented in this paper. And finally, section \ref{sec:conclusion} discusses the conclusions based on the results obtained. 
 
 
 
@@ -109,7 +120,7 @@ Currently, we aim to refine the filtering method with a new filter applicable fo
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{ld_workflow.png}
+\includegraphics[scale=0.7]{ld_workflow.png}
 \caption{Workflow for logical dependencies extraction.}
 \label{fig:workflow_key}
 \centering
@@ -163,8 +174,6 @@ To take into account the big picture of the system, we defined a new metric for 
 The connection strength metric is computing the same ratio as the confidence metric, a.k.a the ratio between the support metric and the frequency of the antecedent. And additionally, it multiplies it with a system factor and with 100. 
 The \textit{system factor} calculates the ratio between the support metric and the mean value for updates. The \textit{system mean} is the mean value of all the support values for all the association rules from the system. 
 We multiply with 100 because we want to scale the metric's values to structural dependencies metric's values that have, in most cases, supraunitary values. And we want both metrics to be comparable. The values obtained are clipped between 0 and 100, where 100 is the best value and 0 is the worst.
-
-
 
 \begin{equation}
  system factor for (A \rightarrow B) =\frac{support (A \rightarrow B) }{system\ mean}
@@ -298,6 +307,14 @@ Previous research used PageRank values computed on both directed and undirected,
 \subsection{Experimental plan}
 \label{sec:plan}
 
+\noindent\fbox{%
+    \parbox{\textwidth}{%
+      \textit{Null hypothesis:}
+     
+     \textit{Alternative Hypothesis:}  
+    }%
+}
+
 \section{Experimental results using logical dependencies}
 \label{sec:current_measurements}
 
@@ -430,7 +447,6 @@ CON\_T	&	0.925	&	0.934	&	0.937	&	0.938	&	0.938	&	0.938	&	0.938	&	0.938	&	0.938	&
 \hline
 \end{tabular}
 \end{table}
-\vspace{-2em}
 
 \begin{table}[!h]
 \setlength\tabcolsep{3.5pt}
