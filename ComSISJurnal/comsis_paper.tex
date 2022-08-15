@@ -753,23 +753,23 @@ Another threat to the validity of the results is that we do not consider the age
 \section{Conclusions}
 \label{sec:conclusion}
 
+In this paper we studied the filtering and the usage co-changes extracted from the versioning system. In the first part of the paper we focused on the co-changes filtering, and in the second part we used the filtered co-changes (logical dependencies) to detect key classes.
+For co-changes filtering, we applied the commit size filter and the filter based on connection strength. The co-changes that remained after filtering, called logical dependencies, were provided as input for a tool that detects key classes. 
 
-We defined the logical dependencies as filtered co-changing pairs extracted from the versioning system. 
-
-The filters applied to the co-changing pairs are the filter based on commit size and the filter based on connection strength. If a co-changing pair has associated metrics that surpass the threshold values settled for the filters mentioned, then it is called a logical dependency.
-
-In section \ref{sec:current_measurements} we approached two scenarios to detect key classes by using logical dependencies. In the 1$^{st}$ scenario, we used logical dependencies together with structural dependencies and in the 2$^{nd}$, we used only logical dependencies to detect the key classes. We modified the tool used in the baseline approach to use also logical dependencies, and then we performed the key class identification. 
+We approached two scenarios to detect key classes by using logical dependencies. In the 1$^{st}$ scenario, we used logical dependencies together with structural dependencies and in the 2$^{nd}$, we used only logical dependencies to detect the key classes. We modified the tool used in the baseline approach to use also logical dependencies, and then we performed the key class identification.
 
 Based on the results obtained, compared with the baseline results, we did saw a slight improvement in key class detection when both logical and structural dependencies were used together. The best results were obtained with a connection strength threshold of 40-70. When we used only logical dependencies to detect key classes, the results were less performing than using only structural or structural and logical dependencies combined.
 
-As we mentioned in section \ref{sec:baseline_approach}, also other researchers tried to identify the key classes, and even though the approaches were not the same, most of them used the ROC-AUC metric to evaluate the quality of the results, same as us. 
-Osman et al. obtained in their research an average ROC-AUC score of 0.750 \cite{6676885}. Thung et al. obtained an average ROC-AUC score of 0.825 \cite{rocclasification}  and Şora et al. (our baseline approach) obtained an average ROC-AUC score of 0.894 \cite{Finding-key-classes}.
+To give some context on the results that we obtained, we will enumerate in this paragraph what other authors had obtained. Even though the approaches were not the same, most of them used the ROC-AUC metric to evaluate the quality of the results, same as us.
+Osman et al. obtained in their research an average ROC-AUC score of 0.750 \cite{6676885}. Thung et al. obtained an average ROC-AUC score of 0.825 \cite{rocclasification} and Şora et al. (our baseline approach) obtained an average ROC-AUC score of 0.894 \cite{Finding-key-classes}.
 
 In the current research, we obtained an average ROC-AUC score of 0.916 when using logical and structural dependencies combined and a score of 0.791 when using only logical dependencies to detect key classes.
 
-So, when using both dependencies combined, we can obtain a slightly better ROC-AUC score than the one from the baseline approach. And, when using only logical dependencies, even though we do not obtain a better score than the baseline approach, we obtain results that can be compared with results obtained by other researchers \cite{6676885}, being almost equal. 
+So, when using both dependencies combined, we can obtain a slightly better ROC-AUC score than the one from the baseline approach. And, when using only logical dependencies, even though we do not obtain a better score than the baseline approach, we obtain results that can be compared with results obtained by other researchers. 
 
-To sum up briefly the findings of this paper, we consider that the big advantage of using only logical dependencies in key class detection is that it only uses data extracted from the versioning system, and can be generalized to various programming languages. In the future, we want to check if there are also other areas that can be improved by using logical dependencies, like software clustering \cite{SoraConti}, \cite{Shtern:2012:CMS:2332427.2332428}, \cite{SoraSem13}.
+To sum up the findings of this paper, logical dependencies can be used to gain knowledge about software systems. We consider that the advantage of using only logical dependencies is that it only uses data extracted from the versioning system and can be generalized to various programming languages.
+
+In the future, we want to check if there are also other areas that can be improved by using logical dependencies, like software clustering \cite{SoraConti}, \cite{Shtern:2012:CMS:2332427.2332428}, \cite{SoraSem13}.
 
 \bibliographystyle{splncs03}
 \bibliography{logicaldepd}
