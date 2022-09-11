@@ -70,12 +70,13 @@ We performed our analysis on three open
 source projects: Ant, Tomcat Catalina, and Hibernate. And we answered the following research questions:
 
 \textbf{RQ1: Will logical dependencies enhance results previously obtained by using only structural dependencies?}
-
 Since previous researches and our studies show that logical dependencies overlap only in a small percentage with structural dependencies, we intend to combine both types of dependencies and provide them as input for key classes identification tools.
 
 \textbf{RQ2: Can logical dependencies provide good results if used instead of structural dependencies?}
-
 In this research question, we want to focus more on the use of logical dependencies as stand-alone dependencies. Even though logical dependencies are not the same as structural dependencies, they can provide enough information about the system to be successfully used as input for tools like key classes detection tools. 
+
+\textbf{RQ3: Does the connection strength filter has a favorable impact on the results obtained?}
+In this paper, we use a new type of filter: the connection strength filter. This filter, together with the commit size filter, will be used to filter co-changes into logical dependencies. Now, the question is if this new filter will indeed do what we expect and provide better results.
 
 \textbf{Paper structure.} The paper is organized as follows: Section \ref{ld_def} introduces the concepts of logical dependencies and the methods of obtaining them. Section \ref{sec:baseline_approach} introduces the concept of key classes and the metrics used for results evaluation. The new approach of using logical dependencies to detect key classes can be found in section \ref{sec:keycalss_identification}. Section \ref{sec:current_measurements} defines the data set used and presents the new results obtained with the data set. In section \ref{sec:threats} we present the threats to the validity of the results presented in this paper. And finally, section \ref{sec:conclusion} discusses the conclusions based on the results obtained. 
 
@@ -86,7 +87,7 @@ In this research question, we want to focus more on the use of logical dependenc
 \label{ld_def}
 This section presents the definition of logical dependencies, previous works involving logical dependencies, and our contribution to this topic. In subsection \ref{definition_ld}, we define what logical dependencies are and the previous research involving them. In subsection \ref{current_approach}, we present our approach for identifying logical dependencies and the work we have done around this subject. Related to subsection \ref{current_approach}, sections \ref{commit_filter}, and \ref{strength_filter} present more details about the filtering techniques we used to identify logical dependencies.
 
-\subsection{Definition and previous research}
+\subsection{Definition and previous related research}
 \label{definition_ld}
 The concept of logical coupling (dependency) was first introduced by Gall et al. \cite{Gall:1998:DLC:850947.853338}. They defined the logical dependency between two software entities (classes, modules, interfaces, etc.) as the fact that the entities repeatedly change together during the historical evolution of a software system.
 Since then, logical dependencies have been used in multiple areas of software engineering, most commonly in fault and change prediction.  
@@ -120,11 +121,12 @@ Currently, we aim to refine the filtering method with a new filter applicable fo
 
 \begin{figure}
 \centering
-\includegraphics[scale=0.7]{ld_workflow.png}
+\includegraphics[scale=0.6]{ld_workflow.png}
 \caption{Workflow for logical dependencies extraction.}
 \label{fig:workflow_key}
 \centering
 \end{figure}
+\vspace{-2em}
 
 \subsection{Logical dependencies filtering: The commit size filter}
 \label{commit_filter}
@@ -187,16 +189,15 @@ By using the strength metric, if we consider again the two scenarios presented a
 
 \begin{figure}
 \centering
-\includegraphics[scale=0.8]{fig_ant_maxOcc.png}
+\includegraphics[scale=0.6]{fig_ant_maxOcc.png}
 \caption{Overview of the number of occurences in Ant. }
 \label{fig:strength_overview_ant}
 \centering
 \end{figure}
 
-\vspace{-1em}
 \begin{figure}
 \centering
-\includegraphics[scale=0.8]{fig_hibernate_maxOcc.png}
+\includegraphics[scale=0.6]{fig_hibernate_maxOcc.png}
 \caption{Overview of the number of occurences in Hibernate. }
 \label{fig:strength_overview_hibernate}
 \centering
@@ -219,12 +220,15 @@ After this step, we will use the logical dependencies obtained with different th
 \centering
 \end{figure}
 
+
+
 \section{The concept of key classes}
 \label{sec:baseline_approach}
 
 This section presents the key classes definition, previous research regarding key classes identification, and metrics used to evaluate the results obtained.
 In section \ref{sec:keyclass_definition}, we present a summary of previous researchers and their approaches for key classes identification. Section \ref{sec:baseline_approach_sub} focuses on one previous research that we consider as our baseline research in key classes identification. With the results of the baseline research, we will compare our results. 
 In section \ref{sec:evalmetrics}, we present the metrics used in previous researches to evaluate the results obtained. 
+
 
 \subsection{Definition and previous research}
 \label{sec:keyclass_definition}
@@ -273,7 +277,8 @@ The True Positives (TP) are the classes found in the reference solution and also
 True Negatives (TN) are classes that are found neither in the reference solution, nor in the TOP ranked classes. False Negatives (FN) are classes that are found in the reference solution, but are not found in the TOP ranked classes.
 
 In related research, the ROC-AUC metric has been used to evaluate the results for finding key classes of software systems.
-For a classifier to be considered good, its ROC-AUC metric value should be as close to 1 as possible. When the value is 1, then the classifier is considered to be perfect.
+For a classifier to be considered good, its ROC-AUC metric value should be as close to 1 as possible.
+When the value is 1, then the classifier is considered to be perfect. A metric value between 0.8 and 0.9 means that the classifier is excellent. Between 0.8 and 0.7 means acceptable results, and between 0.7 and 0.5 means poor results \cite{ROC_METRIC_VALS}. 
 
 Osman et al. obtained in their research an average ROC-AUC score of 0.750 \cite{6676885}. Thung et al. obtained an average ROC-AUC score of 0.825 \cite{rocclasification}  and Şora et al. (the baseline) obtained an average ROC-AUC score of 0.894 \cite{Finding-key-classes}.
 
@@ -309,9 +314,9 @@ Previous research used PageRank values computed on both directed and undirected,
 
 Our study aims to check whether logical dependencies can be usable. Previous research focused on filtering the co-changes extracted from the versioning system and studying how filtering affects their size or how they overlap with structural dependencies. We intend to use the resulting information after co-changes filtering (the logical dependencies) in a tool that usually receives structural dependencies as input.
 
-Our research questions are the following: \textbf{RQ1:} \textit{Will logical dependencies enhance results previously obtained by using only structural dependencies?} \textbf{RQ2:} \textit{Can logical dependencies provide good results if used instead of structural dependencies?}
+Our research questions are the following: \textbf{RQ1:} \textit{Will logical dependencies enhance results previously obtained by using only structural dependencies?} \textbf{RQ2:} \textit{Can logical dependencies provide good results if used instead of structural dependencies?} \textit{RQ3: Does the connection strength filter has a favorable impact on the results obtained?}
 
-To answer the research question, we defined the following experimental plan: 
+To answer the research questions, we defined the following experimental plan: 
 We will use the tool mentioned in the above section. Previously the tool had as input the structural dependencies of the system and the reference solution, and the output was the ROC-AUC score. The closer the ROC-AUC score is to 1, the better the results.  
 The slightly modified version of the tool, we be able to receive as input also logical dependencies.
 
@@ -321,10 +326,7 @@ For \textbf {RQ1}, we will give as input to the tool the structural and the logi
 
 \noindent\fbox{%
     \parbox{\textwidth}{%
-      \textit{Null hypothesis:} Key classes detection is better when we provide both types of dependencies as input to the tool. The output has a higher ROC-AUC score than the base approach.
-     
-     \textit{Alternative Hypothesis:} Key classes detection is worse when we provide both types of dependencies as input to the tool. The output has a lower ROC-AUC score than the base approach.
-
+      \textit{Hypothesis:} Key classes detection is better when we provide both types of dependencies as input to the tool. The output has a higher ROC-AUC score than the base approach.
     }%
 }
 \medskip
@@ -339,16 +341,26 @@ We do not expect that the results will be better compared to the results previou
 
 \noindent\fbox{%
     \parbox{\textwidth}{%
-      \textit{Null hypothesis:} The output has a ROC-AUC score between 0.5 and 1. 
-     
-     \textit{Alternative Hypothesis:} The output has a ROC-AUC score between 0 and 0.5. 
-
+      \textit{Hypothesis:} The output has a ROC-AUC score between 0.7 and 1. 
     }%
 }
 
 \medskip
 
 Our findings for this research question can be found in section \ref{sec:measure_ld}.
+
+For \textbf {RQ3}, we generate two sets of logical dependencies. One set will be generated with the connection strength filter and one with the confidence filter. We will then use each set in two different scenarios: one when we only use logical dependencies to detect key classes and one when we use logical and structural dependencies for detection. Finally, we will compare the results obtained. We expect that the connection strength filter will generate better results. 
+
+\medskip
+
+\noindent\fbox{%
+    \parbox{\textwidth}{%
+      \textit{Hypothesis:} The results obtained by using the connection strength filter are better than the ones obtained with the confidence filter. 
+    }%
+}
+
+\medskip
+Our findings for this research question can be found in section \ref{sec:measure_metrics}.
 
 \section{Experimental results using logical dependencies}
 \label{sec:current_measurements}
@@ -436,6 +448,7 @@ In tables \ref{tab:measurementscombined:ant}, \ref{tab:measurementscombined:tomc
 
 We started with logical dependencies that have a connection strength metric greater than 10, then we repeteadly increased the value by 10 until we reached 100. The last column of the table contains the results previously obtained by the tool by only using structural dependencies (the results presented in section \ref{sec:measure_baseline}).
 
+So, to answer \textit{RQ1: Will logical dependencies enhance results previously obtained by using only structural dependencies?}:
 
 The results obtained by combining structural and logical dependencies are close to the previously registered values but, in most cases, do not surpass them. Underlined are the values that are better than the previously registered values. We can observe that for all 3 systems, the best values obtained are for connection strength between 40-70.
 
@@ -562,7 +575,9 @@ In the previous subsection, we added the logical and structural dependencies in 
 
 In tables \ref{tab:measurementshistory:ant}, \ref{tab:measurementshistory:tomcat}, and \ref{tab:measurementshistory:hibernate} are presented the results obtained by using only logical dependencies to detect key classes.
 
-The measurements obtained are not as good as the ones using logical and structural dependencies combined or using only structural dependencies. But the values obtained are above 0.5, which means that a good part of the key classes is detected by using only logical dependencies. As mentioned in section \ref{sec:evalmetrics}, a classifier is good if it has the ROC-AUC value as close to 1 as possible.
+For the second research question: '\textbf{RQ2: Can logical dependencies provide good results if used instead of structural dependencies?}', the initial hypothesis is confirmed by the results obtained.
+
+The measurements obtained are not as good as the ones using logical and structural dependencies combined or using only structural dependencies. But the values obtained are above 0.7, which means that a good part of the key classes is detected by using only logical dependencies. As mentioned in section \ref{sec:evalmetrics}, a classifier is good if it has the ROC-AUC value as close to 1 as possible.
 
 
 \begin{table}[!h]
@@ -584,6 +599,7 @@ CON\_T	&	0.856	&	0.836	&	0.819	&	0.803	&	0.801	&	0.816	&	0.831	&	0.855	&	0.840	&
 
 \hline
 \end{tabular}
+\vspace{-7mm}
 \end{table}
 
 \begin{table}[!h]
@@ -605,7 +621,6 @@ CON\_T	&	0.787	&	0.812	&	0.835	&	0.832	&	0.821	&	0.814	&	0.804	&	0.817	&	0.820	&
 				
 \hline
 \end{tabular}
-
 \end{table}
 
 \begin{table}[!h]
@@ -743,12 +758,13 @@ confidence	&	0.699	&	0.929	\\
 
 
 The comparison between the average values obtained by using the confidence metric and the strength metric, can be found in table \ref{tab:confidence_vs_strength}.
-As we expected, based on the results, we can say that the connection strength metric is more suited for logical dependencies detection. So, by considering the mean update frequency of the entire system in the filtering process, we improve the detection of logical dependencies.
+
+These results help us answer the third research question: \textit{RQ3: Does the connection strength filter has a favorable impact on the results obtained?}. As we expected in our initial hypothesis and now based on the results, we can say that the connection strength metric is more suited for logical dependencies detection. So, by considering the mean update frequency of the entire system in the filtering process, we improve the detection of logical dependencies.
 
 \section{Threats to validity}
 \label{sec:threats}
 We will present in this section some aspects that can constitute threats to the validity of the results from this paper. First, we extract co-changes only from main (master) branch commits. Development branches are not taken into consideration, which might cause some information loss. Especially if there are many branches in development with many commits in them. On the other hand, if we designed the tool that extracts co-changes to consider also development branches, that would have constituted another threat to the validity. Some branches are just for try and error or prototyping, or sometimes they never get integrated into the main branch, which means that we risk analyzing information that does not reflect the reality of the system.
-Another threat to the validity of the results is that we do not consider the age of the co-changes. It can happen that two entities updated together a lot because they were also structurally related entities, but, at some point in time, that connection was removed from the code, and they do not update together any longer. In this case, it can happen that the tool still considers them logical dependencies due to the frequency of updates.
+Another threat to the validity of the results is that we do not consider the age of the co-changes. It can happen that two entities updated together a lot because they were also structurally related entities, but, at some point in time, that connection was removed from the code, and they do not update together any longer. In this case, it can happen that the tool still considers them logical dependencies due to the frequency of updates. In future works, we will try to identify outdated connections. 
 
 \section{Conclusions}
 \label{sec:conclusion}
@@ -766,6 +782,8 @@ Osman et al. obtained in their research an average ROC-AUC score of 0.750 \cite{
 In the current research, we obtained an average ROC-AUC score of 0.916 when using logical and structural dependencies combined and a score of 0.791 when using only logical dependencies to detect key classes.
 
 So, when using both dependencies combined, we can obtain a slightly better ROC-AUC score than the one from the baseline approach. And, when using only logical dependencies, even though we do not obtain a better score than the baseline approach, we obtain results that can be compared with results obtained by other researchers. 
+
+We consider this a very positive result because this research uses a different type of input than the previous ones, the logical dependencies. It is also an open door for new research in multiple fields that use structural dependencies to gain knowledge about software systems. And since logical dependencies are easy and fast to extract from the versioning system and do not depend on the language of the software system, the cost of integrating them is small. 
 
 To sum up the findings of this paper, logical dependencies can be used to gain knowledge about software systems. We consider that the advantage of using only logical dependencies is that it only uses data extracted from the versioning system and can be generalized to various programming languages.
 
