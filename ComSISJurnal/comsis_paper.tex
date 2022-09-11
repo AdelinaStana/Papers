@@ -166,10 +166,24 @@ The only problem with the confidence metric, as it is defined above, is that it 
 The best value for the confidence metric is 1, meaning that in all commits in which entity A is present, entity B is also there. If, for example, we have a co-changing pair $A \rightarrow B$, and A updates only once in the entire history, and in that time, updates together with B, then the confidence metric associated with the co-changing pair will be 1 (the best value possible). That is not a fair value compared with other scenarios. For example, we can have the co-changing pair $A \rightarrow B$, and A updates 100 in the entire history from which 80 times updates together with B, leading to a confidence value of 0.8.
 Even though in the second scenario we have a confidence value smaller than in the first scenario, the second scenario could lead to a more trustworthy connection.
 
-
 Figures \ref{fig:strength_overview_ant} and \ref{fig:strength_overview_hibernate}  intend to offer the big picture of two systems, one small-sized (Ant) and one medium-sized (Hibernate). In both figures, the dots represent the maximum number of updates of one entity with another, and the blue line represents the average occurrence value of the system.
 It can be observed that both systems have multiple entities that update only once (the dark line at the bottom), meaning that we might have many confidence values of 1 (highest value possible) for entities that update only once together.
 
+\begin{figure}
+\centering
+\includegraphics[scale=0.6]{fig_ant_maxOcc.png}
+\caption{Overview of the number of occurences in Ant. }
+\label{fig:strength_overview_ant}
+\centering
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.6]{fig_hibernate_maxOcc.png}
+\caption{Overview of the number of occurences in Hibernate. }
+\label{fig:strength_overview_hibernate}
+\centering
+\end{figure}
 
 To take into account the big picture of the system, we defined a new metric for a co-changing pair (association rule), called the \textit{connection strength metric}. 
 
@@ -187,21 +201,7 @@ We multiply with 100 because we want to scale the metric's values to structural 
 
 By using the strength metric, if we consider again the two scenarios presented above, and a system mean value of 10, we will have the following values: for the scenario in which the entities A and B update only once, and in that one update, they update together, the strength metric value is 10. For the scenario in which entity A updates 100 times in the entire history from which 80 times updates together with B, the strength metric value is 100.  
 
-\begin{figure}
-\centering
-\includegraphics[scale=0.6]{fig_ant_maxOcc.png}
-\caption{Overview of the number of occurences in Ant. }
-\label{fig:strength_overview_ant}
-\centering
-\end{figure}
 
-\begin{figure}
-\centering
-\includegraphics[scale=0.6]{fig_hibernate_maxOcc.png}
-\caption{Overview of the number of occurences in Hibernate. }
-\label{fig:strength_overview_hibernate}
-\centering
-\end{figure}
 
 
 Since the values can vary from 0 to 100, the filter threshold values begin at 10 and are repeatedly incremented by 10, until 100. We do not settle for one value because we want to see how the threshold values affect the number of remaining co-changing pairs and the output of their usage.
@@ -388,6 +388,7 @@ The commits number found on the remaining 6 repositories varies from 19108 commi
 \caption{Systems and versions of the systems found in Git. }
 \label{tab:gitfoundsystems}
 \centering
+\scalebox{0.9}{
 \begin{tabular}{lllll}
 \hline
 ID	&	System	&	Version	&	Release Tag name	&	Commits number	\\
@@ -409,6 +410,7 @@ S14	&	Tomcat Catalina	&	9.0.4	&	9.0.4	&	19108	\\
 S15	&	Wro4J	&	1.6.3	&	v1.6.3	&	2871	\\
 \hline
 \end{tabular}
+}
 \end{table}
 
 \subsection{Measurements using only the baseline approach}
@@ -421,6 +423,7 @@ In table \ref{tab:previousresults} are presented the ROC-AUC values for differen
 \caption{ROC-AUC metric values extracted. }
 \label{tab:previousresults}
 \centering
+\scalebox{0.9}{
 \begin{tabular}{|c|ccc|}
 \hline
 Metrics &	Ant	&	Tomcat Catalina	&	Hibernate	\\
@@ -433,6 +436,7 @@ CONN\_TOTAL\_W	&	0.94437	&	0.92595	&	0.94437	\\
 CONN\_TOTAL	&	0.94630	&	0.93903	&	0.94630	\\
 \hline
 \end{tabular}
+}
 \end{table}
 
 
@@ -457,19 +461,19 @@ The results obtained by combining structural and logical dependencies are close 
 \caption{Measurements for Ant using structural and logical dependencies combined}
 \label{tab:measurementscombined:ant}
 \centering
+\scalebox{0.9}{
 \begin{tabular}{|c|cccccccccc|c|}
 \hline
 Metrics &	$\geq10$	&	$\geq20$		&	$\geq30$		&	$\geq40$		&	$\geq50$		&	$\geq60$		&	$\geq70$		&	$\geq80$		&	$\geq90$		&	$\geq100$		&	Baseline \\
 \hline
-
 PR\_U2\_W	&	0.877	&	0.880	&	0.883	&	0.888	&	0.884	&	0.880	&	0.901	&	0.924	&	0.900	&	0.891	&	0.929	\\
 PR	&	\underline{0.955}	&	\underline{0.932}	&	\underline{0.936}	&	\underline{0.936}	&	\underline{0.880}	&	\underline{0.884}	&	\underline{0.887}	&	\underline{0.889}	&	\underline{0.888}	&	\underline{0.890}	&	0.855	\\
 PR\_U	&	0.933	&	\underline{0.937}	&	\underline{0.936}	&	\underline{0.939}	&	\underline{0.940}	&	\underline{0.939}	&	\underline{0.941}	&	\underline{0.943}	&	\underline{0.942}	&	\underline{0.940}	&	0.933	\\
 CON\_T\_W	&	0.841	&	0.839	&	0.836	&	0.838	&	0.835	&	0.849	&	0.859	&	0.872	&	0.870	&	0.874	&	0.934	\\
 CON\_T	&	0.920	&	0.919	&	0.921	&	0.923	&	0.923	&	0.932	&	0.934	&	0.939	&	0.937	&	0.937	&	0.942	\\
-
 \hline
 \end{tabular}
+}
 \end{table}
 
 
@@ -478,20 +482,19 @@ CON\_T	&	0.920	&	0.919	&	0.921	&	0.923	&	0.923	&	0.932	&	0.934	&	0.939	&	0.937	&
 \caption{Measurements for Tomcat Catalina using structural and logical dependencies combined}
 \label{tab:measurementscombined:tomcat}
 \centering
+\scalebox{0.9}{
 \begin{tabular}{|c|cccccccccc|c|}
 \hline
 Metrics &	$\geq10$	&	$\geq20$		&	$\geq30$		&	$\geq40$		&	$\geq50$		&	$\geq60$		&	$\geq70$		&	$\geq80$		&	$\geq90$		&	$\geq100$		&	Baseline \\
 \hline
-
 PR\_U2\_W	&	0.862	&	0.883	&	0.898	&	0.901	&	0.907	&	0.909	&	0.910	&	0.916	&	0.918	&	0.918	&	0.923	\\
 PR	&	0.879	&	0.885	&	0.888	&	0.882	&	0.869	&	0.869	&	0.863	&	0.863	&	0.863	&	0.863	&	0.927	\\
 PR\_U	&	0.924	&	0.930	&	0.931	&	0.932	&	0.932	&	0.932	&	0.932	&	0.932	&	0.932	&	0.932	&	0.932	\\
 CON\_T\_W	&	0.868	&	0.888	&	0.901	&	0.909	&	0.914	&	0.917	&	0.918	&	0.923	&	0.925	&	0.925	&	0.926	\\
-CON\_T	&	0.925	&	0.934	&	0.937	&	0.938	&	0.938	&	0.938	&	0.938	&	0.938	&	0.938	&	0.938	&	0.939	\\
-																										
-
+CON\_T	&	0.925	&	0.934	&	0.937	&	0.938	&	0.938	&	0.938	&	0.938	&	0.938	&	0.938	&	0.938	&	0.939	\\																							
 \hline
 \end{tabular}
+}
 \end{table}
 
 \begin{table}[!h]
@@ -499,19 +502,19 @@ CON\_T	&	0.925	&	0.934	&	0.937	&	0.938	&	0.938	&	0.938	&	0.938	&	0.938	&	0.938	&
 \caption{Measurements for Hibernate using structural and logical dependencies combined}
 \label{tab:measurementscombined:hibernate}
 \centering
+\scalebox{0.9}{
 \begin{tabular}{|c|cccccccccc|c|}
 \hline
 Metrics &	$\geq10$	&	$\geq20$		&	$\geq30$		&	$\geq40$		&	$\geq50$		&	$\geq60$		&	$\geq70$		&	$\geq80$		&	$\geq90$		&	$\geq100$		&	Baseline \\
 \hline
-
 PR\_U2\_W	&	0.903	&	0.909	&	0.916	&	0.928	&	0.930	&	0.932	&	0.946	&	0.947	&	0.947	&	0.949	&	0.958	\\
 PR	&	0.956	&	0.959	&	0.961	&	0.962	&	0.962	&	0.962	&	0.953	&	0.953	&	0.953	&	0.954	&	0.949	\\
 PR\_U	&	0.937	&	0.941	&	0.943	&	0.947	&	0.948	&	0.948	&	0.950	&	0.950	&	0.950	&	0.950	&	0.951	\\
 CON\_T\_W	&	0.864	&	0.872	&	0.879	&	0.896	&	0.898	&	0.900	&	0.929	&	0.930	&	0.931	&	0.934	&	0.944	\\
 CON\_T	&	0.920	&	0.927	&	0.932	&	0.940	&	0.940	&	0.940	&	0.945	&	0.945	&	0.945	&	0.945	&	0.946	\\
-
 \hline
 \end{tabular}
+}
 \end{table}
 
 Some other details about the systems are presented in tables \ref{tab:overlap} and \ref{tab:ratio_sd_ld} . In table \ref{tab:overlap} are the overlappings between structural and logical dependencies expressed in percentages. Each column represents the percentage of logical dependencies that are also structural. 
@@ -525,6 +528,7 @@ In table \ref{tab:ratio_sd_ld} are the ratio numbers between structural dependen
 \caption{Percentage of logical dependencies that are also structural dependencies}
 \label{tab:overlap}
 \centering
+\scalebox{0.9}{
 \begin{tabular}{|c|cccccccccc|}
 \hline
 System &	$\geq10$	&	$\geq20$		&	$\geq30$		&	$\geq40$		&	$\geq50$		&	$\geq60$		&	$\geq70$		&	$\geq80$		&	$\geq90$		&	$\geq100$ \\
@@ -534,6 +538,7 @@ Tomcat Catalina  	&	10.331	&	14.931	&	15.862	&	16.221	&	16.427	&	16.302	&	16.598
 Hibernate	&	8.005	&	8.971	&	9.755	&	12.060	&	12.348	&	12.254	&	18.426	&	19.105	&	18.836	&	19.371	\\
 \hline
 \end{tabular}
+}
 \end{table}
 
 
@@ -542,6 +547,7 @@ Hibernate	&	8.005	&	8.971	&	9.755	&	12.060	&	12.348	&	12.254	&	18.426	&	19.105	&
 \caption{Ratio between structural and logical dependencies (SD/LD)}
 \label{tab:ratio_sd_ld}
 \centering
+\scalebox{0.9}{
 \begin{tabular}{|c|cccccccccc|}
 \hline
 System &	$\geq10$	&	$\geq20$		&	$\geq30$		&	$\geq40$		&	$\geq50$		&	$\geq60$		&	$\geq70$		&	$\geq80$		&	$\geq90$		&	$\geq100$ \\
@@ -553,6 +559,7 @@ Hibernate	&	1.159	&	1.747	&	2.184	&	3.867	&	4.283	&	4.877	&	10.547	&	11.920	&	12
 
 \hline
 \end{tabular}
+}
 \end{table}
 
 In most cases, for all systems, the results tend to become better once with increasing the value of the connection strength threshold up until one point, after which the results obtained begin to drop.
@@ -585,6 +592,7 @@ The measurements obtained are not as good as the ones using logical and structur
 \caption{Measurements for Ant using only logical dependencies}
 \label{tab:measurementshistory:ant}
 \centering
+\scalebox{0.9}{
 \begin{tabular}{|c|cccccccccc|c|}
 \hline
 Metrics &	$\geq10$	&	$\geq20$		&	$\geq30$		&	$\geq40$		&	$\geq50$		&	$\geq60$		&	$\geq70$		&	$\geq80$		&	$\geq90$		&	$\geq100$		&	Baseline \\
@@ -595,11 +603,9 @@ PR	&	0.868	&	0.776	&	0.767	&	0.825	&	0.822	&	0.850	&	0.834	&	0.863	&	0.844	&	0.8
 PR\_U	&	0.801	&	0.792	&	0.757	&	0.806	&	0.822	&	0.854	&	0.856	&	0.867	&	0.848	&	0.860	&	0.933	\\
 CON\_T\_W	&	0.819	&	0.825	&	0.818	&	0.817	&	0.813	&	0.828	&	0.843	&	0.861	&	0.845	&	0.854	&	0.934	\\
 CON\_T	&	0.856	&	0.836	&	0.819	&	0.803	&	0.801	&	0.816	&	0.831	&	0.855	&	0.840	&	0.851	&	0.942	\\
-
-
 \hline
 \end{tabular}
-\vspace{-7mm}
+}
 \end{table}
 
 \begin{table}[!h]
@@ -607,6 +613,7 @@ CON\_T	&	0.856	&	0.836	&	0.819	&	0.803	&	0.801	&	0.816	&	0.831	&	0.855	&	0.840	&
 \caption{Measurements for Tomcat Catalina using only logical dependencies}
 \label{tab:measurementshistory:tomcat}
 \centering
+\scalebox{0.9}{
 \begin{tabular}{|c|cccccccccc|c|}
 \hline
 Metrics &	$\geq10$	&	$\geq20$		&	$\geq30$		&	$\geq40$		&	$\geq50$		&	$\geq60$		&	$\geq70$		&	$\geq80$		&	$\geq90$		&	$\geq100$		&	Baseline \\
@@ -617,10 +624,9 @@ PR	&	0.813	&	0.813	&	0.836	&	0.831	&	0.820	&	0.814	&	0.804	&	0.816	&	0.820	&	0.8
 PR\_U	&	0.772	&	0.815	&	0.835	&	0.831	&	0.820	&	0.814	&	0.804	&	0.816	&	0.819	&	0.813	&	0.932	\\
 CON\_T\_W	&	0.805	&	0.823	&	0.842	&	0.835	&	0.822	&	0.815	&	0.805	&	0.817	&	0.820	&	0.813	&	0.926	\\
 CON\_T	&	0.787	&	0.812	&	0.835	&	0.832	&	0.821	&	0.814	&	0.804	&	0.817	&	0.820	&	0.813	&	0.939	\\
-
-				
 \hline
 \end{tabular}
+}
 \end{table}
 
 \begin{table}[!h]
@@ -628,6 +634,7 @@ CON\_T	&	0.787	&	0.812	&	0.835	&	0.832	&	0.821	&	0.814	&	0.804	&	0.817	&	0.820	&
 \caption{Measurements for Hibernate using only logical dependencies}
 \label{tab:measurementshistory:hibernate}
 \centering
+\scalebox{0.9}{
 \begin{tabular}{|c|cccccccccc|c|}
 \hline
 Metrics &	$\geq10$	&	$\geq20$		&	$\geq30$		&	$\geq40$		&	$\geq50$		&	$\geq60$		&	$\geq70$		&	$\geq80$		&	$\geq90$		&	$\geq100$		&	Baseline \\
@@ -638,10 +645,9 @@ PR	&	0.735	&	0.747	&	0.756	&	0.704	&	0.702	&	0.706	&	0.745	&	0.745	&	0.746	&	0.7
 PR\_U	&	0.738	&	0.740	&	0.749	&	0.699	&	0.701	&	0.704	&	0.744	&	0.743	&	0.745	&	0.752	&	0.951	\\
 CON\_T\_W	&	0.730	&	0.739	&	0.747	&	0.701	&	0.702	&	0.706	&	0.746	&	0.747	&	0.748	&	0.754	&	0.944	\\
 CON\_T	&	0.740	&	0.743	&	0.750	&	0.700	&	0.700	&	0.704	&	0.746	&	0.746	&	0.747	&	0.753	&	0.946	\\
-
-
 \hline
 \end{tabular}
+}
 \end{table}
 
 
@@ -661,6 +667,7 @@ So, by setting too high the connection strength threshold, we risk filtering out
 \caption{ Ant key classes update overview.}
 \label{tab:overviewcommit:ant}
 \centering
+\scalebox{0.85}{
 \begin{tabular}{|c|c|c|}
 \hline
 Key class name &	Commit count	&	Max occurence 	 \\
@@ -679,6 +686,7 @@ org.apache.tools.ProjectHelper2\$ElementHandler	&	21	&	14	\\
 
 \hline
 \end{tabular}
+}
 \end{table}
 
 \begin{table}[!h]
@@ -686,6 +694,7 @@ org.apache.tools.ProjectHelper2\$ElementHandler	&	21	&	14	\\
 \caption{ Hibernate key classes update overview.}
 \label{tab:overviewcommit:hibernate}
 \centering
+\scalebox{0.85}{
 \begin{tabular}{|c|c|c|}
 \hline
 Key class name &	Commit count	&	Max occurence 	 \\
@@ -706,10 +715,9 @@ org.hibernate.Transaction	&	9	&	0	\\
 org.hibernate.engine.ConnectionProvider	&	2	&	0	\\
 org.hibernate.Session	&	25	&	14	\\
 org.hibernate.Criteria	&	10	&	1	\\
-
-
 \hline
 \end{tabular}
+}
 \end{table}
 
 
@@ -727,6 +735,7 @@ In the graph used by the key classes detection tool, the structural dependencies
 \caption{ Average results obtained with strength versus confidence metric.}
 \label{tab:confidence_vs_strength}
 \centering
+\scalebox{0.85}{
 \begin{tabular}{|c|c|c|}
 \hline
 Metric  &\multicolumn{2}{c|}{Using}\\
@@ -754,6 +763,7 @@ confidence	&	0.699	&	0.929	\\
 
 \hline
 \end{tabular}
+}
 \end{table}
 
 
