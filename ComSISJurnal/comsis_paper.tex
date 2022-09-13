@@ -23,8 +23,7 @@
 \newcommand*{\Comb}[2]{{}C^{#1}_{#2}}%
 %%%%%%%
 
-\title{Logical dependencies: extraction from the versioning system and usage in key classes detection
-\footnote{If this is an extended version of a conference paper, it should be clearly stated here.}}
+\title{Logical dependencies: extraction from the versioning system and usage in key classes detection}
 
 %% Use this if the title is too long for the running heads
 \titlerunning{Logical dependencies in practice}
@@ -44,9 +43,9 @@
 \maketitle
 
 \begin{abstract}
-The version control system of every software product can provide important information about how the system is connected. 
-In this study, we first propose a language-independent method to collect and filter dependencies from the version control, and second, we use the results obtained in the first step to identify key classes from three software systems. To identify the key classes, we are using the dependencies extracted from the version control system together with dependencies from the source code, and also separate. Based on the results obtained we can say that, compared with the results obtained by using only dependencies extracted from code, the mix between both types of dependencies provide small improvements. And, by using only dependencies from the version control system, we obtained results that did not surpass the results previously mentioned, but are still acceptable.
-We still consider this an important result beacuse this might open an important opportunity for software systems that use dynamically typed languages such as JavaScript, Objective-C, Python, Ruby, or systems that use multiple languages. These types of systems, for which the code dependencies are harder to obtain, can use the dependencies extracted from the version control to gain better knowledge about the system.
+The version control system of every software product can provide important information about how the system is connected.
+In this study, we first propose a language-independent method to collect and filter dependencies from the version control, and second, we use the results obtained in the first step to identify key classes from three software systems. To identify the key classes, we are using the dependencies extracted from the version control system together with dependencies from the source code, and also separate. Based on the results obtained we can say that compared with the results obtained by using only dependencies extracted from code, the mix between both types of dependencies provides small improvements. And, by using only dependencies from the version control system, we obtained results that did not surpass the results previously mentioned, but are still acceptable.
+We still consider this an important result because this might open an important opportunity for software systems that use dynamically typed languages such as JavaScript, Objective-C, Python, and Ruby, or systems that use multiple languages. These types of systems, for which the code dependencies are harder to obtain, can use the dependencies extracted from the version control to gain better knowledge about the system.
   
 \vspace{6pt}\textbf{Keywords:} logical dependencies; logical coupling; mining software repositories; versioning system; key classes; co-changing entities; software evolution.
 \end{abstract}
@@ -54,13 +53,11 @@ We still consider this an important result beacuse this might open an important 
 
 \section{Introduction}
 
-
-
 The version control (also known as source control) system that tracks changes in source code during software development can provide useful information about the system's details. 
 The usage of information extracted from the version control system is not new. Previous works have used version control information to detect design issues \cite{Zimmermann:2004:MVH:998675.999460}, predict fault incidence among modules \cite{Predictingfaultincidence}, \cite{Cataldo2009SoftwareDW}, reconstructing software development methods \cite{article_comsis} or guide software changes \cite{4815274}, \cite{DBLP:journals/ese/AjienkaCC18}.
-In software engineering literature, concepts like evolutionary coupling, evolutionary dependencies, logical dependencies, or logical coupling refer to the same sort of relationship among software entities. That relationship is extracted from the version control system and can mean that the entities from the source code files that change together, evolve together, and might depend on one another. Studies show that dependency relationships found in the source code overlap only in a small percentage with dependency relationships found in the version control system, and suggest that these two types of relationships can be used together \cite{Oliva:2011:ISL:2067853.2068086}, \cite{DBLP:journals/jss/AjienkaC17}. But, in practice, dependencies extracted from the version management system are rarely used because of the size of the information extracted \cite{Shtern:2012:CMS:2332427.2332428}. A relatively small source code repository with roundabout one thousand commits can lead to millions of connections. 
+In software engineering literature, concepts like evolutionary coupling, evolutionary dependencies, logical dependencies, or logical coupling refer to the same sort of relationship among software entities. That relationship is extracted from the version control system and can mean that the entities from the source code files change together, evolve together, and might depend on one another. Studies show that dependency relationships found in the source code overlap only in a small percentage with dependency relationships found in the version control system, and suggest that these two types of relationships can be used together \cite{Oliva:2011:ISL:2067853.2068086}, \cite{DBLP:journals/jss/AjienkaC17}. But, in practice, dependencies extracted from the version management system are rarely used because of the size of the information extracted \cite{Shtern:2012:CMS:2332427.2332428}. A relatively small source code repository with roundabout one thousand commits can lead to millions of connections. 
 In this paper, by applying a set of filters with different thresholds to the information extracted, we intend to speed up the processing time, reduce the size of connections extracted from the version control and increase the confidence that the connections obtained might be related.
-In order to validate the results obtained, and to see if the filtering methods had or had not a favorable effect on the final result, we want to identify the key classes of different systems. The identification of key classes has been previously performed by using structural dependencies, so
+To validate the results obtained, and to see if the filtering methods had or had not a favorable effect on the final result, we want to identify the key classes of different systems. The identification of key classes has been previously performed by using structural dependencies, so
 we intend to use the results obtained together with structural dependencies, and also separate, and see how the final results fluctuate.
 
 In this work we perform our analysis on three open
@@ -96,7 +93,7 @@ In previous research, the \textit{support} and \textit{confidence} metrics were 
 The logical dependencies are commonly represented as directed association rules \cite{DBLP:conf/issre/OlivaG15}, \cite{DBLP:journals/jss/AjienkaC17}, \cite{Zimmermann:2004:MVH:998675.999460}. The association rule between A and B ( $A \rightarrow B$) means that changes in entity A cause changes in entity B, where A is the antecedent, and B is the consequent of the rule. 
 The support metric counts the number of commits in which both entities of an association rule change together. The confidence metric is the ratio between the support metric and the total number of commits in which the antecedent of the rule was involved. 
 
-By appling different thresholds to the metrics presented above, the logical dependencies to further use were selected.
+By applying different thresholds to the metrics presented above, the logical dependencies to further use were selected.
 
 
 \subsection{Our approach for logical dependencies identification}
@@ -114,7 +111,7 @@ Previously, we tried to filter logical dependencies from co-changing pairs by ap
 The commit size filter, presented in more detail in section \ref{commit_filter}, and used by other authors \cite{DBLP:journals/jss/AjienkaC17}, proved to be helpful, and it will be also used for this paper. 
 But we cannot say the same for the occurrence filter. The filter consisted of different thresholds applied to the support metric and proved to not work well for systems with few commits.
 
-Currently, we aim to refine the filtering method with a new filter applicable for all sorts of commit history sizes. This new filter, presented in section \ref{strength_filter}, will be used together with the commit size filter to filter logical dependencies from co-changing pairs. The entire process of extracting co-changing pairs from the versioning system, filtering them to obtain logical dependencies, and exporting the results, is done with a tool written in Python. The workflow is presented in figure \ref{fig:workflow_key}.
+Currently, we aim to refine the filtering method with a new filter applicable to all sorts of commit history sizes. This new filter, presented in section \ref{strength_filter}, will be used together with the commit size filter to filter logical dependencies from co-changing pairs. The entire process of extracting co-changing pairs from the versioning system, filtering them to obtain logical dependencies, and exporting the results, is done with a tool written in Python. The workflow is presented in figure \ref{fig:workflow_key}.
 
 \begin{figure}
 \centering
@@ -142,7 +139,7 @@ The connection strength filter is new for our research regarding logical depende
 An important conclusion drawn from the results obtained with the occurrence filter is that setting a hard threshold for a filter is not always a good idea. A certain threshold can work well with a medium/large-sized system, but when applied to a small-sized system, it can reduce the co-changes filtered to 0. To avoid this kind of situation, we evaluated a filter that considers the system's specifications. 
 
 
-As we previously mentioned, a filter has two components: the metrics computed for each co-changing pair (association rule) and the threshold values. The connection strength metric derive from the support and the confidence metrics.
+As we previously mentioned, a filter has two components: the metrics computed for each co-changing pair (association rule) and the threshold values. The connection strength metric derives from the support and the confidence metrics.
 
 For an association rule (co-changing pair) formed from the antecedent A and consequent B ($A \rightarrow B$), 
 the support count is the total number of commits in which both entities are involved,
@@ -164,12 +161,12 @@ The best value for the confidence metric is 1, meaning that in all commits in wh
 Even though in the second scenario we have a confidence value smaller than in the first scenario, the second scenario could lead to a more trustworthy connection.
 
 Figures \ref{fig:strength_overview_ant} and \ref{fig:strength_overview_hibernate}  intend to offer the big picture of two systems, one small-sized (Ant) and one medium-sized (Hibernate). In both figures, the dots represent the maximum number of updates of one entity with another, and the blue line represents the average occurrence value of the system.
-It can be observed that both systems have multiple entities that update only once (the dark line at the bottom), meaning that we might have many confidence values of 1 (highest value possible) for entities that update only once together.
+It can be observed that both systems have multiple entities that update only once (the dark line at the bottom), meaning that we might have many confidence values of 1 (the highest value possible) for entities that update only once together.
 
 \begin{figure}
 \centering
 \includegraphics[scale=0.6]{fig_ant_maxOcc.png}
-\caption{Overview of the number of occurences in Ant. }
+\caption{Overview of the number of occurrences in Ant. }
 \label{fig:strength_overview_ant}
 \centering
 \end{figure}
@@ -177,7 +174,7 @@ It can be observed that both systems have multiple entities that update only onc
 \begin{figure}
 \centering
 \includegraphics[scale=0.6]{fig_hibernate_maxOcc.png}
-\caption{Overview of the number of occurences in Hibernate. }
+\caption{Overview of the number of occurrences in Hibernate. }
 \label{fig:strength_overview_hibernate}
 \centering
 \end{figure}
@@ -223,14 +220,14 @@ After this step, we will use the logical dependencies obtained with different th
 \label{sec:baseline_approach}
 
 This section presents the key classes definition, previous research regarding key classes identification, and metrics used to evaluate the results obtained.
-In section \ref{sec:keyclass_definition}, we present a summary of previous researchers and their approaches for key classes identification. Section \ref{sec:baseline_approach_sub} focuses on one previous research that we consider as our baseline research in key classes identification. With the results of the baseline research, we will compare our results. 
-In section \ref{sec:evalmetrics}, we present the metrics used in previous researches to evaluate the results obtained. 
+In section \ref{sec:keyclass_definition}, we present a summary of previous researchers and their approaches to key classes identification. Section \ref{sec:baseline_approach_sub} focuses on one previous research that we consider as our baseline research in key classes identification. With the results of the baseline research, we will compare our results. 
+In section \ref{sec:evalmetrics}, we present the metrics used in previous research to evaluate the results obtained. 
 
 
 \subsection{Definition and previous research}
 \label{sec:keyclass_definition}
 
-Zaidman et al. \cite{ZaidmanJurnal} were the first to introduce the concept of key classes and it refers to classes that can be found in documents written to provide an architectural overview of the system or an introduction to the system structure.
+Zaidman et al. \cite{ZaidmanJurnal} was the first to introduce the concept of key classes and it refers to classes that can be found in documents written to provide an architectural overview of the system or an introduction to the system structure.
 Tahvildari and Kontogiannis have a more detailed definition regarding the key classes concept: “Usually, the most important concepts of a system are implemented by very few key classes which can be characterized by the specific properties. These classes, which we refer to as key classes, manage many other classes or use them in order to implement their functionality. The key classes are tightly coupled with other parts of the system. Additionally, they tend to be rather complex, since they implement much of the legacy system’s functionality” \cite{Tahvildari2004ImprovingDQ}.
 
 
@@ -268,7 +265,7 @@ The false positive rate of a classifier is calculated as the division between th
 \end{equation}
 
 The True Positives (TP) are the classes found in the reference solution and also in the top TOP ranked classes. False Positives (FP) are the classes that are not in the reference solution, but are in the TOP ranked classes.
-True Negatives (TN) are classes that are found neither in the reference solution, nor in the TOP ranked classes. False Negatives (FN) are classes that are found in the reference solution, but are not found in the TOP ranked classes.
+True Negatives (TN) are classes that are found neither in the reference solution nor in the TOP ranked classes. False Negatives (FN) are classes that are found in the reference solution, but are not found in the TOP ranked classes.
 
 In related research, the ROC-AUC metric has been used to evaluate the results for finding key classes of software systems.
 For a classifier to be considered good, its ROC-AUC metric value should be as close to 1 as possible.
@@ -295,7 +292,7 @@ The baseline approach uses a tool that takes as an input the source code of the 
 Below are some of the class metrics used in the baseline approach and in our current research to rank the classes according to their importance. 
 
 The class metrics used can be separated into two categories: class connection metrics and class PageRank values.
-The class connection metrics are CONN-TOTAL-W, which is the total weight of all connections of the class, and CONN-TOTAL, the total number of distinct classes that a class uses or are using the class \cite{Finding-key-classes}.
+The class connection metrics are CONN-TOTAL-W, which is the total weight of all connections of the class, and CONN-TOTAL, the total number of distinct classes that a class uses or is using the class \cite{Finding-key-classes}.
 
 Previous research used PageRank values computed on both directed and undirected, weighted and unweighted graphs. In the current research, we use the PR, which is the PageRank value computed on the directed and unweighted graph, the PR-U, which is the value computed on the undirected and unweighted graph, and the PR-U2-W, the value computed on the weighted graph with back-recommendations \cite{PagerankENASE}, \cite{enase15}, \cite{Finding-key-classes}, \cite{PagerankSACI}.
 
@@ -309,7 +306,7 @@ Our research questions are the following: \textbf{RQ1:} \textit{Will logical dep
 
 To answer the research questions, we defined the following experimental plan: 
 We will use the tool mentioned in the above section. Previously the tool had as input the structural dependencies of the system and the reference solution, and the output was the ROC-AUC score. The closer the ROC-AUC score is to 1, the better the results.  
-The slightly modified version of the tool, we be able to receive as input also logical dependencies.
+With the slightly modified version of the tool, we are able to receive as input also logical dependencies.
 
 
 For \textbf {RQ1}, we will give as input to the tool the structural and the logical dependencies, and we will compare the ROC-AUC scores obtained with the results obtained by using only structural dependencies.
@@ -360,7 +357,7 @@ Our findings for this research question can be found in section \ref{sec:measure
 As presented in section \ref{sec:baseline_approach}, the key class detection was previously done only by using the structural dependencies of the system. 
 In this section, we use the same tool used in the baseline approach presented in section \ref{sec:baseline_approach}, and we add a new input to it, the logical dependencies. 
 
-In subsection \ref{sec:dataset}, we present the data set used to generate new results and, in subsection \ref{sec:measure_baseline}, we present the previously obtained results. Subsection \ref{sec:measure_ld_sd} presents the conclusions and results obtained by using logical and structural dependencies together, subsection \ref{sec:measure_ld} presents the conclusions and results obtained by using only logical dependencies. And, finally, subsection \ref{sec:measure_metrics} presents a comparison between results obtained with confidence metric versus results obtained with strength metric.
+In subsection \ref{sec:dataset}, we present the data set used to generate new results and, in subsection \ref{sec:measure_baseline}, we present the previously obtained results. Subsection \ref{sec:measure_ld_sd} presents the conclusions and results obtained by using logical and structural dependencies together, and subsection \ref{sec:measure_ld} presents the conclusions and results obtained by using only logical dependencies. And, finally, subsection \ref{sec:measure_metrics} presents a comparison between results obtained with the confidence metric versus results obtained with the strength metric.
 
 
 
@@ -368,11 +365,11 @@ In subsection \ref{sec:dataset}, we present the data set used to generate new re
 \label{sec:dataset}
 
 
-The research of I. Sora et al. takes into consideration structural dependencies that were extracted using static analysis techniques, and were performed on the object-oriented systems presented in table \ref{tab:gitfoundsystems} \cite{Finding-key-classes}.
+The research of I. Sora et al. take into consideration structural dependencies that were extracted using static analysis techniques and were performed on the object-oriented systems presented in table \ref{tab:gitfoundsystems} \cite{Finding-key-classes}.
 
 The requirements for a system to qualify as suited for investigations using logical dependencies are: has to be version controlled by Git, has to have releases for different code versions (previous research was done only on specific versions), and also has to have a significant number of commits. 
 From the total of 14 object-oriented systems listed in the baseline \cite{Finding-key-classes}, 13 of them have repositories in git \ref{tab:gitfoundsystems}, and from the found repositories, only 6 repositories have the same release tag as the specified version in previous research.
-The commits number found on the remaining 6 repositories varies from 19108 commits for Tomcat Catalina to 149 commits for JHotDraw. In order to have more accurate results, we need a significant number of commits (more than 5000 commits), so we concluded to use only 3 systems from the initial candidates for key classes detection using logical dependencies:  Ant, Hibernate, and Tomcat Catalina.  
+The commit number found on the remaining 6 repositories varies from 19108 commits for Tomcat Catalina to 149 commits for JHotDraw. In order to have more accurate results, we need a significant number of commits (more than 5000 commits), so we concluded to use only 3 systems from the initial candidates for key classes detection using logical dependencies:  Ant, Hibernate, and Tomcat Catalina.  
 
 \begin{table}
 \renewcommand{\arraystretch}{1}
@@ -436,12 +433,12 @@ CONN\_TOTAL	&	0.94630	&	0.93903	&	0.94630	\\
 
 The tool used in the baseline approach runs a graph-ranking algorithm on a graph that contains all the structural dependencies extracted from static source code analysis.
 Each edge in the graph represents a dependency. The entities that form a structural dependency are represented as vertices in the graph. 
-As mentioned in section \ref{sec:baseline_approach}, we modified the tool to take sturcural and logical dependencies as input.
+As mentioned in section \ref{sec:baseline_approach}, we modified the tool to take structural and logical dependencies as input.
 For this subsection's measurements, we add the logical dependencies in the graph that contains all structural dependencies. Since it is a weighted graph, if a structural dependency is also a logical dependency, then the final weight of the connection is the sum of the weight computed for the structural dependency and the connection strength metric associated with the logical dependency.
 
 In tables \ref{tab:measurementscombined:ant}, \ref{tab:measurementscombined:tomcat}, and \ref{tab:measurementscombined:hibernate}, on each line, we have the computed the key class metric generated with logical dependencies extracted with the connection strength threshold that is specified in the colums header.
 
-We started with logical dependencies that have a connection strength metric greater than 10, then we repeteadly increased the value by 10 until we reached 100. The last column of the table contains the results previously obtained by the tool by only using structural dependencies (the results presented in section \ref{sec:measure_baseline}).
+We started with logical dependencies that have a connection strength metric greater than 10, then we repeatedly increased the value by 10 until we reached 100. The last column of the table contains the results previously obtained by the tool by only using structural dependencies (the results presented in section \ref{sec:measure_baseline}).
 
 So, to answer \textit{RQ1: Will logical dependencies combined with structural dependencies enhance results previously obtained?}:
 
@@ -644,7 +641,7 @@ CON\_T	&	0.740	&	0.743	&	0.750	&	0.700	&	0.700	&	0.704	&	0.746	&	0.746	&	0.747	&
 
 
 
-One explanation for the less performing results is that the key classes may have a better design than the rest of the classes, which means that are less prone to change. If the key classes are less prone to change, then the associated connection strength metric has a lower value than for other entities.
+One explanation for the less performing results is that the key classes may have a better design than the rest of the classes, which means that are less prone to change. If the key classes are less prone to change, then the associated connection strength metric has a lower value than other entities.
 
 Tables \ref{tab:overviewcommit:ant} and \ref{tab:overviewcommit:hibernate}, provide us a better overview of the update behavior of key classes in the versioning system. The commit count column presents the number of commits in which the entity was involved. The column 'Max occurrence with another entity' contains the maximum number of updates with another entity from the system (the strongest connection with another entity).
 
@@ -661,7 +658,7 @@ So, by setting too high the connection strength threshold, we risk filtering out
 \scalebox{0.85}{
 \begin{tabular}{|c|c|c|}
 \hline
-Key class name &	Commit count	&	Max occurence 	 \\
+Key class name &	Commit count	&	Max occurrence 	 \\
 &		&	with another entity	 \\
 \hline
 
@@ -688,7 +685,7 @@ org.apache.tools.ProjectHelper2\$ElementHandler	&	21	&	14	\\
 \scalebox{0.85}{
 \begin{tabular}{|c|c|c|}
 \hline
-Key class name &	Commit count	&	Max occurence 	 \\
+Key class name &	Commit count	&	Max occurrence 	 \\
 &		&	with another entity	 \\
 \hline
 
@@ -758,13 +755,15 @@ confidence	&	0.699	&	0.929	\\
 \end{table}
 
 
-The comparison between the average values obtained by using the confidence metric and the strength metric, can be found in table \ref{tab:confidence_vs_strength}.
+The comparison between the average values obtained by using the confidence metric and the strength metric can be found in table \ref{tab:confidence_vs_strength}.
 
 These results help us answer the third research question: \textit{RQ3: Does the connection strength filter has a favorable impact on the results obtained?}. As we expected in our initial hypothesis and now based on the results, we can say that the connection strength metric is more suited for logical dependencies detection. So, by considering the mean update frequency of the entire system in the filtering process, we improve the detection of logical dependencies.
 
 \subsection{ Comparison and discussion on the obtained results}
-In this subsection we compare the results o ...
-Even though the approaches were not the same, most of them used the ROC-AUC metric to evaluate the quality of the results, same as us.
+
+In this subsection, we compare the results obtained in the current paper with results previously obtained by other researchers. 
+
+Even though the approaches were not the same, most of them used the ROC-AUC metric to evaluate the quality of the results, the same as ours.
 Osman et al. obtained in their research an average ROC-AUC score of 0.750 \cite{6676885}. Thung et al. obtained an average ROC-AUC score of 0.825 \cite{rocclasification} and Şora et al. (our baseline approach) obtained an average ROC-AUC score of 0.894 \cite{Finding-key-classes}.
 
 In the current research, we obtained an average ROC-AUC score of 0.916 when using logical and structural dependencies combined and a score of 0.791 when using only logical dependencies to detect key classes.
@@ -774,24 +773,24 @@ So, when using both dependencies combined, we can obtain a slightly better ROC-A
 
 \section{Threats to validity}
 \label{sec:threats}
-We will present in this section some aspects that can constitute threats to the validity of the results from this paper. First, we extract co-changes only from main (master) branch commits. Development branches are not taken into consideration, which might cause some information loss. Especially if there are many branches in development with many commits in them. On the other hand, if we designed the tool that extracts co-changes to consider also development branches, that would have constituted another threat to the validity. Some branches are just for try and error or prototyping, or sometimes they never get integrated into the main branch, which means that we risk analyzing information that does not reflect the reality of the system.
+We will present in this section some aspects that can constitute threats to the validity of the results from this paper. First, we extract co-changes only from main (master) branch commits. Development branches are not taken into consideration, which might cause some information loss. Especially if there are many branches in development with many commits in them. On the other hand, if we designed the tool that extracts co-changes to consider also development branches, that would have constituted another threat to the validity. Some branches are just for trial and error or prototyping, or sometimes they never get integrated into the main branch, which means that we risk analyzing information that does not reflect the reality of the system.
 Another threat to the validity of the results is that we do not consider the age of the co-changes. It can happen that two entities updated together a lot because they were also structurally related entities, but, at some point in time, that connection was removed from the code, and they do not update together any longer. In this case, it can happen that the tool still considers them logical dependencies due to the frequency of updates. In future works, we will try to identify outdated connections. 
 
 \section{Conclusions}
 \label{sec:conclusion}
 
-In this paper we studied the filtering and the usage of co-changes extracted from the versioning system. In the first part of the paper we focused on the co-changes filtering, and in the second part we used the filtered co-changes (logical dependencies) to detect key classes.
+In this paper, we studied the filtering and the usage of co-changes extracted from the versioning system. In the first part of the paper, we focused on the co-changes filtering, and in the second part, we used the filtered co-changes (logical dependencies) to detect key classes.
 For co-changes filtering, we applied the commit size filter and the filter based on connection strength. The co-changes that remained after filtering, called logical dependencies, were provided as input for a tool that detects key classes. 
 
-We approached two scenarios to detect key classes by using logical dependencies. In the 1$^{st}$ scenario, we used logical dependencies together with structural dependencies and in the 2$^{nd}$, we used only logical dependencies to detect the key classes. We modified the tool used in the baseline approach for detecting key classes from structural dependencies \cite{Finding-key-classes}, to use also logical depenedencies.
+We approached two scenarios to detect key classes by using logical dependencies. In the 1$^{st}$ scenario, we used logical dependencies together with structural dependencies, and in the 2$^{nd}$, we used only logical dependencies to detect the key classes. We modified the tool used in the baseline approach for detecting key classes from structural dependencies \cite{Finding-key-classes}, to use also logical dependencies.
 
-Based on the results obtained, compared with the baseline results, we did saw a slight improvement in key class detection when both logical and structural dependencies were used together. The best results were obtained with a connection strength threshold of 40-70. Also, using our connection strength metric performs better than the confidence metric used in related works.
+Based on the results obtained, compared with the baseline results, we saw a slight improvement in key class detection when both logical and structural dependencies were used together. The best results were obtained with a connection strength threshold of 40-70. Also, our connection strength metric performs better than the confidence metric used in related works.
 
 When we used only logical dependencies to detect key classes, the results were less performing than using only structural or structural and logical dependencies combined. We consider this a very positive result because this research uses a different type of input than the previous ones, the logical dependencies. It is also an open door for new research in multiple fields that use structural dependencies to gain knowledge about software systems. And since logical dependencies are easy and fast to extract from the versioning system and do not depend on the language of the software system, the cost of integrating them is small. 
 
 To sum up the findings of this paper, logical dependencies can be used to gain knowledge about software systems. We consider that the advantage of using only logical dependencies is that it only uses data extracted from the versioning system and can be generalized to various programming languages.
 
-In the future, we want to check if there are also other areas that can be improved by using logical dependencies, like software clustering \cite{SoraConti}, \cite{Shtern:2012:CMS:2332427.2332428}, \cite{SoraSem13}.
+In the future, we want to check if other areas can be improved by using logical dependencies, like software clustering \cite{SoraConti}, \cite{Shtern:2012:CMS:2332427.2332428}, \cite{SoraSem13}.
 
 \bibliographystyle{splncs03}
 \bibliography{logicaldepd}
