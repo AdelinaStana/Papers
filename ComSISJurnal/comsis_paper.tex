@@ -357,8 +357,7 @@ Our findings for this research question can be found in section \ref{sec:measure
 As presented in section \ref{sec:baseline_approach}, the key class detection was previously done only by using the structural dependencies of the system. 
 In this section, we use the same tool used in the baseline approach presented in section \ref{sec:baseline_approach}, and we add a new input to it, the logical dependencies. 
 
-In subsection \ref{sec:dataset}, we present the data set used to generate new results and, in subsection \ref{sec:measure_baseline}, we present the previously obtained results. Subsection \ref{sec:measure_ld_sd} presents the conclusions and results obtained by using logical and structural dependencies together, and subsection \ref{sec:measure_ld} presents the conclusions and results obtained by using only logical dependencies. And, finally, subsection \ref{sec:measure_metrics} presents a comparison between results obtained with the confidence metric versus results obtained with the strength metric.
-
+In subsection \ref{sec:dataset}, we present the data set used to generate new results and, in subsection \ref{sec:measure_baseline}, we present the previously obtained results. Subsection \ref{sec:measure_ld_sd} presents the conclusions and results obtained by using logical and structural dependencies together, and subsection \ref{sec:measure_ld} presents the conclusions and results obtained by using only logical dependencies. Subsection \ref{sec:measure_metrics} presents a comparison between results obtained with the confidence metric versus results obtained with the strength metric. And finally, subsection \ref{sec:compare_others} presents a comparison between the results obtained in the current paper and the results of other researchers.
 
 
 \subsection{Data set used}
@@ -760,7 +759,7 @@ The comparison between the average values obtained by using the confidence metri
 These results help us answer the third research question: \textit{RQ3: Does the connection strength filter has a favorable impact on the results obtained?}. As we expected in our initial hypothesis and now based on the results, we can say that the connection strength metric is more suited for logical dependencies detection. So, by considering the mean update frequency of the entire system in the filtering process, we improve the detection of logical dependencies.
 
 \subsection{ Comparison and discussion on the obtained results}
-
+\label{sec:compare_others}
 In this subsection, we compare the results obtained in the current paper with results previously obtained by other researchers. 
 
 Even though the approaches were not the same, most of them used the ROC-AUC metric to evaluate the quality of the results, the same as ours.
@@ -786,7 +785,10 @@ We approached two scenarios to detect key classes by using logical dependencies.
 
 Based on the results obtained, compared with the baseline results, we saw a slight improvement in key class detection when both logical and structural dependencies were used together. The best results were obtained with a connection strength threshold of 40-70. Also, our connection strength metric performs better than the confidence metric used in related works.
 
-When we used only logical dependencies to detect key classes, the results were less performing than using only structural or structural and logical dependencies combined. We consider this a very positive result because this research uses a different type of input than the previous ones, the logical dependencies. It is also an open door for new research in multiple fields that use structural dependencies to gain knowledge about software systems. And since logical dependencies are easy and fast to extract from the versioning system and do not depend on the language of the software system, the cost of integrating them is small. 
+When we used only logical dependencies to detect key classes, the results were less performing than our results when using only structural or structural and
+logical dependencies combined, but they were comparable with results of related work using structural dependencies. We consider this a very
+positive result because this research uses a different type of input than the previous ones, the logical dependencies.
+It is also an open door for new research in multiple fields that use structural dependencies to gain knowledge about software systems. And since logical dependencies are easy and fast to extract from the versioning system and do not depend on the language of the software system, the cost of integrating them is small. 
 
 To sum up the findings of this paper, logical dependencies can be used to gain knowledge about software systems. We consider that the advantage of using only logical dependencies is that it only uses data extracted from the versioning system and can be generalized to various programming languages.
 
