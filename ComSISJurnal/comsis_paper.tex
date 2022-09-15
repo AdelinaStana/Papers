@@ -120,7 +120,6 @@ Currently, we aim to refine the filtering method with a new filter applicable to
 \label{fig:workflow_key}
 \centering
 \end{figure}
-\vspace{-2em}
 
 \subsection{Logical dependencies filtering: The commit size filter}
 \label{commit_filter}
@@ -165,7 +164,7 @@ It can be observed that both systems have multiple entities that update only onc
 
 \begin{figure}
 \centering
-\includegraphics[scale=0.6]{fig_ant_maxOcc.png}
+\includegraphics[scale=0.63]{fig_ant_maxOcc.png}
 \caption{Overview of the number of occurrences in Ant. }
 \label{fig:strength_overview_ant}
 \centering
@@ -173,7 +172,7 @@ It can be observed that both systems have multiple entities that update only onc
 
 \begin{figure}
 \centering
-\includegraphics[scale=0.6]{fig_hibernate_maxOcc.png}
+\includegraphics[scale=0.63]{fig_hibernate_maxOcc.png}
 \caption{Overview of the number of occurrences in Hibernate. }
 \label{fig:strength_overview_hibernate}
 \centering
@@ -302,7 +301,7 @@ Previous research used PageRank values computed on both directed and undirected,
 
 Our study aims to check whether logical dependencies can be usable. Previous research focused on filtering the co-changes extracted from the versioning system and studying how filtering affects their size or how they overlap with structural dependencies. We intend to use the resulting information after co-changes filtering (the logical dependencies) in a tool that usually receives structural dependencies as input.
 
-Our research questions are the following: \textbf{RQ1:} \textit{Will logical dependencies combined with structural dependencies enhance results previously obtained?} \textbf{RQ2:} \textit{Can logical dependencies provide good results if used instead of structural dependencies?} \textit{RQ3: Does the connection strength filter has a favorable impact on the results obtained?}
+Our research questions are the following: \textbf{RQ1:} \textit{Will logical dependencies combined with structural dependencies enhance results previously obtained?} \textbf{RQ2:} \textit{Can logical dependencies provide good results if used instead of structural dependencies?} \textbf{RQ3:} \textit{ Does the connection strength filter has a favorable impact on the results obtained?}
 
 To answer the research questions, we defined the following experimental plan: 
 We will use the tool mentioned in the above section. Previously the tool had as input the structural dependencies of the system and the reference solution, and the output was the ROC-AUC score. The closer the ROC-AUC score is to 1, the better the results.  
@@ -337,7 +336,7 @@ We do not expect that the results will be better compared to the results previou
 
 Our findings for this research question can be found in section \ref{sec:measure_ld}.
 
-For \textbf {RQ3}, we generate two sets of logical dependencies. One set will be generated with the connection strength filter and one with the confidence filter. We will then use each set in two different scenarios: one when we only use logical dependencies to detect key classes and one when we use logical and structural dependencies for detection. Finally, we will compare the results obtained. We expect that the connection strength filter will generate better results. 
+For \textbf {RQ3}, we will generate two sets of logical dependencies. One set will be generated with the connection strength filter and one with the confidence filter. We will then use each set in two different scenarios: one when we only use logical dependencies to detect key classes and one when we use logical and structural dependencies for detection. Finally, we will compare the results obtained. We expect that the connection strength filter will generate better results. 
 
 \medskip
 
@@ -403,7 +402,7 @@ S15	&	Wro4J	&	1.6.3	&	v1.6.3	&	2871	\\
 \subsection{Measurements using only the baseline approach}
 \label{sec:measure_baseline}
 
-In table \ref{tab:previousresults} are presented the ROC-AUC values for different attributes computed for the systems Ant, Tomcat Catalina, and Hibernate by using the baseline approach. We intend to compare these values with the new values obtained by using also logical dependencies in key class detection.
+In table \ref{tab:previousresults} are presented the ROC-AUC values for different attributes computed for the systems Ant, Tomcat Catalina, and Hibernate by using the baseline approach. We compare these values with the new values obtained by using also logical dependencies in key class detection.
 
 \begin{table}
 \renewcommand{\arraystretch}{1}
@@ -569,7 +568,7 @@ In the previous subsection, we added the logical and structural dependencies in 
 
 In tables \ref{tab:measurementshistory:ant}, \ref{tab:measurementshistory:tomcat}, and \ref{tab:measurementshistory:hibernate} are presented the results obtained by using only logical dependencies to detect key classes.
 
-For the second research question: '\textbf{RQ2: Can logical dependencies provide good results if used instead of structural dependencies?}', the initial hypothesis is confirmed by the results obtained.
+For the second research question: '\textit{RQ2: Can logical dependencies provide good results if used instead of structural dependencies?}', the initial hypothesis is confirmed by the results obtained.
 
 The measurements obtained are not as good as the ones using logical and structural dependencies combined or using only structural dependencies. But the values obtained are above 0.7, which means that a good part of the key classes is detected by using only logical dependencies. As mentioned in section \ref{sec:evalmetrics}, a classifier is good if it has the ROC-AUC value as close to 1 as possible.
 
