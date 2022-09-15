@@ -1,26 +1,48 @@
-Comments:
+Response to reviewer's comments:
 
 1. The manuscript should be better structured.
+We restructured the manuscript as follows:
+Renamed section 2.1 from 'State of the art' to 'Definition and previous work.
+Renamed section 2.2 from 'Current approach' to 'Our approach for logical dependencies identification'.
+Renamed section 2.3 from 'Commit size filter' to 'Logical dependencies filtering: The commit size filter'.
+Renamed section 2.4 from 'Connection strength filter' to 'Logical dependencies filtering: The connection strength filter'.
+Renamed chapter 3 from 'Key classes: baseline versus current approach to 'The concept of key classes'.
+Renamed section 3.1 from 'State of the art' to 'Definition and previous research.
+Moved section 3.3 in chapter 4, section 4.1.
+Inserted new chapter 'Key classes identification using logical dependencies' as chapter 4, old chapter 4 becomes chapter 5.
+Added section 4.2 'Experimental plan'.
+Added chapter 6 'Threads to validity'.
 
 2. The initial hypotheses to be tested are missing.
+We added the hypoteses in chapter 4, section 4.2 'Experimental plan'.
 
 3. Researchers questions to be answered in the manuscript are missing.
+We added the research questions in chapter 1 'Introduction'.
 
 4. Experiments should be focused on verification of the research questions according to the hypotheses.
+We detailed this in the experimental plan.
+
 5. The section regarding threads to validity is missing.
+We added the threads to validity in chapter 6.
 
 6. Maybe the title should be slightly corrected so that it better reflects the structure of the paper.
+We changed the title to 'Logical dependencies: extraction from the versioning system and usage in key classes detection'
 
 7. Chapters 2 and 3 begin with elaboration, and it would be nice to get an introductory paragraph 
 describing a given chapter, as it exists in Chapter 4.
+We added the descriptions for chapters 2 and 3 and also for the new chapter 4.
 
 8. The conclusion should be better structured. The given conclusion has many short passages and 
 has a lot of references. There are usually three separate parts in the conclusion. The first part 
 usually gives an overview of what the manuscript was about, the second part gives a critical overview
 of what was achieved, and the third part gives some perspective for future work.
+Following the suggestions given by the reviewer, we re-written part of the conclusions chapter.
 
 9. In reference [16], I am not sure does the number 0.894 refers to the solution presented in the 
 referred paper or to the solution that the refereed paper was compared to. One result from the 
 referred paper is 0.890. If this is a mistake please check other members.
+COMMENTS:
+For jurnal paper [16] 'Finding key classes in object-oriented software systems by techniques based on static analysis' the value 0.894 is the avgerage of table5 avgerages : (0.889 + 0.890 + 0.903)/3.
+Since we presented the results as an average of all the metrics, we did the same with the results from the paper mentioned above.
 
 10. In many places in the manuscript it was used the third person "we" which is more suitable for
