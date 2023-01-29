@@ -14,7 +14,8 @@
 \usepackage{amsmath}
 \usepackage[normalem]{ulem}
 
-
+\DeclareMathSizes{10}{9}{6}{5}
+\setlength{\textfloatsep}{0.2cm} 
 %%%%% NEW PACKAGES 
 \usepackage{graphicx}
 \usepackage{color, colortbl}
@@ -283,7 +284,7 @@ The baseline approach uses a tool that takes as an input the source code of the 
 
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{current_approach.PNG}
+\includegraphics[scale=0.45]{current_approach.PNG}
 \caption{Overview of the current approach.}
 \label{fig:baseline_approach}
 \centering
@@ -462,7 +463,6 @@ CON\_T	&	0.920	&	0.919	&	0.921	&	0.923	&	0.923	&	0.932	&	0.934	&	0.939	&	0.937	&
 }
 \end{table}
 
-
 \begin{table}[!h]
 \setlength\tabcolsep{3.5pt}
 \caption{Measurements for Tomcat Catalina using structural and logical dependencies combined}
@@ -502,7 +502,6 @@ CON\_T	&	0.920	&	0.927	&	0.932	&	0.940	&	0.940	&	0.940	&	0.945	&	0.945	&	0.945	&
 \end{tabular}
 }
 \end{table}
-
 Some other details about the systems are presented in tables \ref{tab:overlap} and \ref{tab:ratio_sd_ld} . In table \ref{tab:overlap} are the overlappings between structural and logical dependencies expressed in percentages. Each column represents the percentage of logical dependencies that are also structural. 
 The values obtained confirm that, indeed, the logical dependencies overlap with structural dependencies in a small percentage, and they must be treated as different dependencies.
 
