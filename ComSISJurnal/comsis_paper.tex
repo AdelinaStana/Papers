@@ -179,6 +179,8 @@ It can be observed that both systems have multiple entities that update only onc
 \centering
 \end{figure}
 
+
+
 To take into account the big picture of the system, we defined a new metric for a co-changing pair (association rule), called the \textit{connection strength metric}. 
 
 The connection strength metric is computing the same ratio as the confidence metric, a.k.a the ratio between the support metric and the frequency of the antecedent. And additionally, it multiplies it with a system factor and with 100. 
@@ -195,7 +197,13 @@ We multiply with 100 because we want to scale the metric's values to structural 
 
 By using the strength metric, if we consider again the two scenarios presented above, and a system mean value of 10, we will have the following values: for the scenario in which the entities A and B update only once, and in that one update, they update together, the strength metric value is 10. For the scenario in which entity A updates 100 times in the entire history from which 80 times updates together with B, the strength metric value is 100.  
 
-
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{fig_catalina_maxOcc.png}
+\caption{Overview of the number of occurrences in Catalina. }
+\label{fig:strength_overview_catalina}
+\centering
+\end{figure}
 
 
 Since the values can vary from 0 to 100, the filter threshold values begin at 10 and are repeatedly incremented by 10, until 100. We do not settle for one value because we want to see how the threshold values affect the number of remaining co-changing pairs and the output of their usage.
