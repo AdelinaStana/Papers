@@ -1,19 +1,25 @@
 1. Research questions should be slightly rephrased or they explanations expanded. From the questions itself it is unclear what are results previously obtained that will be enhance
 by combining logical dependencies with structural dependencies.
 The research questions should be slightly reformulated or the explanations expanded.
+->TBD
 
 2. In Section 2.4, some equations and relations are introduced. It would be nice to see the values they return on selected datasets (Ant and Hibernate).
+-> TDB: Already there; do histogram like plot
 
 3. It would be nice to improve the image quality of Figure 2 and Figure 3. Currently, some dots appear solid black, while others appear in different shades of gray, and also their size varies.
-DONE: We changed the plot settings and right now all the dots have the same color, the size might vary depending on if two dots are close together. In this case, it might appear as a big 'out of shape' dot.
+->DONE: We changed the plot settings and right now all the dots have the same color, the size might vary depending on if two dots are close together. In this case, it might appear as a big 'out of shape' dot.
 
 4. It would also be nice to show a pair of histograms corresponding to Figure 2 and Figure 3 that represent all occurrences between entities, not just the maximum ones.
+-> CANNOT DO THIS explain why; x axis will grow too much; add in response note 
 
 5. In the rest of the manuscript three datasets were used and in Section 2.4 data regarding only two datasets were shown. It would be nice to show data regarding Tomcat Catalina also.
-DONE: ish
+->DONE: added max occurence figure also for Tomcat Catalina 
 
 6. It would be nice to name y axis on Figure 4, not only in the text.
+->DONE
 
 7. In Section 5.4 it would be nice to have a table concerning Tomcat key classes like tables regarding key classes concerning Ant and Hibernate. If the content of the table is too large, only the top classes can be represented.
+->DONE: we cannot do a top-top key classes table (cannot choose a criteria of separation), so we added in the table all key classes of Tomcat
 
 8. In Section 5.4 it would be nice to explain how these key classes were identified.
+->DONE: The selected classes from all three tables are the key classes extracted from developer documentation.

@@ -160,8 +160,8 @@ The only problem with the confidence metric, as it is defined above, is that it 
 The best value for the confidence metric is 1, meaning that in all commits in which entity A is present, entity B is also there. If, for example, we have a co-changing pair $A \rightarrow B$, and A updates only once in the entire history, and in that time, updates together with B, then the confidence metric associated with the co-changing pair will be 1 (the best value possible). That is not a fair value compared with other scenarios. For example, we can have the co-changing pair $A \rightarrow B$, and A updates 100 in the entire history from which 80 times updates together with B, leading to a confidence value of 0.8.
 Even though in the second scenario we have a confidence value smaller than in the first scenario, the second scenario could lead to a more trustworthy connection.
 
-Figures \ref{fig:strength_overview_ant} and \ref{fig:strength_overview_hibernate}  intend to offer the big picture of two systems, one small-sized (Ant) and one medium-sized (Hibernate). In both figures, the dots represent the maximum number of updates of one entity with another, and the blue line represents the average occurrence value of the system.
-It can be observed that both systems have multiple entities that update only once (the dark line at the bottom), meaning that we might have many confidence values of 1 (the highest value possible) for entities that update only once together.
+Figures \ref{fig:strength_overview_ant}t, \ref{fig:strength_overview_catalina} and \ref{fig:strength_overview_hibernate}  intend to offer a big picture of systems. The dots represent the maximum number of updates of one entity with another, and the black line represents the average occurrence value of the system.
+It can be observed that both systems have multiple entities that update only once, meaning that we might have many confidence values of 1 (the highest value possible) for entities that update only once together.
 
 \begin{figure}
 \centering
@@ -648,7 +648,7 @@ CON\_T	&	0.740	&	0.743	&	0.750	&	0.700	&	0.700	&	0.704	&	0.746	&	0.746	&	0.747	&
 
 One explanation for the less performing results is that the key classes may have a better design than the rest of the classes, which means that are less prone to change. If the key classes are less prone to change, then the associated connection strength metric has a lower value than other entities.
 
-Tables \ref{tab:overviewcommit:ant} and \ref{tab:overviewcommit:hibernate}, provide us a better overview of the update behavior of key classes in the versioning system. The commit count column presents the number of commits in which the entity was involved. The column 'Max occurrence with another entity' contains the maximum number of updates with another entity from the system (the strongest connection with another entity).
+Tables \ref{tab:overviewcommit:ant}, \ref{tab:overviewcommit:catalina} and \ref{tab:overviewcommit:hibernate}, provide us a better overview of the update behavior of key classes in the versioning system. The selected classes from all three tables are the key classes extracted from developer documentation. The commit count column presents the number of commits in which the entity was involved. The column 'Max occurrence with another entity' contains the maximum number of updates with another entity from the system (the strongest connection with another entity).
 
 It can be observed that some key classes change a lot in the versioning system, for example, Configuration for Hibernate and ProjectHelper for Ant. Also, some classes create strong connections with other entities, like IntrospectionHelper for Ant and Table for Hibernate. But, in most cases, the key classes are not the entities that update the most in the versioning system.
 So, by setting too high the connection strength threshold, we risk filtering out the key classes.
@@ -708,6 +708,54 @@ org.hibernate.Transaction	&	9	&	0	\\
 org.hibernate.engine.ConnectionProvider	&	2	&	0	\\
 org.hibernate.Session	&	25	&	14	\\
 org.hibernate.Criteria	&	10	&	1	\\
+\hline
+\end{tabular}
+}
+\end{table}
+
+
+
+
+\begin{table}[!h]
+\setlength\tabcolsep{3.5pt}
+\caption{ Tomcat Catalina key classes update overview.}
+\label{tab:overviewcommit:catalina}
+\centering
+\scalebox{0.85}{
+\begin{tabular}{|c|c|c|}
+\hline
+Key class name &	Commit count	&	Max occurrence 	 \\
+&		&	with another entity	 \\
+\hline
+org.apache.catalina.Session	&	15	&	8	\\
+org.apache.catalina.Loader	&	7	&	1	\\
+org.apache.catalina.startup.Catalina	&	46	&	32	\\
+org.apache.catalina.Pipeline	&	9	&	3	\\
+org.apache.catalina.core.StandardHost	&	55	&	38	\\
+org.apache.catalina.Container	&	25	&	16	\\
+org.apache.catalina.Wrapper	&	18	&	13	\\
+org.apache.catalina.core.StandardService	&	42	&	12	\\
+org.apache.catalina.startup.HostConfig	&	60	&	43	\\
+org.apache.catalina.core.StandardContext	&	242	&	213	\\
+org.apache.catalina.core.StandardServer	&	46	&	12	\\
+org.apache.catalina.Realm	&	17	&	8	\\
+org.apache.catalina.connector.CoyoteAdapter	&	153	&	129	\\
+org.apache.catalina.core.StandardWrapper	&	82	&	25	\\
+org.apache.catalina.Valve	&	9	&	2	\\
+org.apache.catalina.connector.Request	&	208	&	178	\\
+org.apache.catalina.Context	&	91	&	68	\\
+org.apache.catalina.connector.Connector	&	80	&	18	\\
+org.apache.catalina.Server	&	15	&	8	\\
+org.apache.catalina.connector.Response	&	102	&	28	\\
+org.apache.catalina.core.StandardEngine	&	30	&	17	\\
+org.apache.catalina.startup.Bootstrap	&	26	&	5	\\
+org.apache.catalina.Host	&	19	&	11	\\
+org.apache.catalina.LifecycleListener	&	5	&	1	\\
+org.apache.catalina.core.StandardPipeline	&	25	&	6	\\
+org.apache.catalina.Manager	&	22	&	15	\\
+org.apache.catalina.Service	&	15	&	8	\\
+org.apache.catalina.Engine	&	4	&	1	\\
+
 \hline
 \end{tabular}
 }
