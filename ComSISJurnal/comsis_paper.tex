@@ -160,8 +160,9 @@ The only problem with the confidence metric, as it is defined above, is that it 
 The best value for the confidence metric is 1, meaning that in all commits in which entity A is present, entity B is also there. If, for example, we have a co-changing pair $A \rightarrow B$, and A updates only once in the entire history, and in that time, updates together with B, then the confidence metric associated with the co-changing pair will be 1 (the best value possible). That is not a fair value compared with other scenarios. For example, we can have the co-changing pair $A \rightarrow B$, and A updates 100 in the entire history from which 80 times updates together with B, leading to a confidence value of 0.8.
 Even though in the second scenario we have a confidence value smaller than in the first scenario, the second scenario could lead to a more trustworthy connection.
 
-Figures \ref{fig:strength_overview_ant}t, \ref{fig:strength_overview_catalina} and \ref{fig:strength_overview_hibernate}  intend to offer a big picture of systems. The dots represent the maximum number of updates of one entity with another, and the black line represents the average occurrence value of the system.
-It can be observed that both systems have multiple entities that update only once, meaning that we might have many confidence values of 1 (the highest value possible) for entities that update only once together.
+Figures \ref{fig:strength_overview_ant}t, \ref{fig:strength_overview_catalina} and \ref{fig:strength_overview_hibernate} intend to offer a big picture of systems. The dots represent the maximum number of updates of one entity with another, and the black line represents the average occurrence value of the system.
+It can be observed that both systems have multiple entities that update only once, meaning that we might have many confidence values of 1 (the highest value possible) for entities that update only once together. 
+We plotted only the maximum occurrences between entities to not overcrowd the plot. For Hibernate, we would have had to draw approx 40000 dots instead of just 3671, the number of points from the current figure 4.
 
 \begin{figure}
 \centering
@@ -648,9 +649,9 @@ CON\_T	&	0.740	&	0.743	&	0.750	&	0.700	&	0.700	&	0.704	&	0.746	&	0.746	&	0.747	&
 
 One explanation for the less performing results is that the key classes may have a better design than the rest of the classes, which means that are less prone to change. If the key classes are less prone to change, then the associated connection strength metric has a lower value than other entities.
 
-Tables \ref{tab:overviewcommit:ant}, \ref{tab:overviewcommit:catalina} and \ref{tab:overviewcommit:hibernate}, provide us a better overview of the update behavior of key classes in the versioning system. The selected classes from all three tables are the key classes extracted from developer documentation. The commit count column presents the number of commits in which the entity was involved. The column 'Max occurrence with another entity' contains the maximum number of updates with another entity from the system (the strongest connection with another entity).
+Tables \ref{tab:overviewcommit:ant}, \ref{tab:overviewcommit:catalina} and \ref{tab:overviewcommit:hibernate}, provide us a better overview of the update behavior of key classes in the versioning system. The selected classes from all three tables are the key classes extracted from developer documentation \cite{Finding-key-classes}. The commit count column presents the number of commits in which the entity was involved. The column 'Max occurrence with another entity' contains the maximum number of updates with another entity from the system (the strongest connection with another entity).
 
-It can be observed that some key classes change a lot in the versioning system, for example, Configuration for Hibernate and ProjectHelper for Ant. Also, some classes create strong connections with other entities, like IntrospectionHelper for Ant and Table for Hibernate. But, in most cases, the key classes are not the entities that update the most in the versioning system.
+It can be observed that some key classes change a lot in the versioning system, for example, Configuration for Hibernate, ProjectHelper for Ant and StandardContext for Catalina. Also, some classes create strong connections with other entities, like IntrospectionHelper for Ant, Table for Hibernate and StandardContext for Catalina. But, in most cases, the key classes are not the entities that update the most in the versioning system.
 So, by setting too high the connection strength threshold, we risk filtering out the key classes.
 
 
