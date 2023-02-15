@@ -1,10 +1,10 @@
 1. Research questions should be slightly rephrased or they explanations expanded. From the questions itself it is unclear what are results previously obtained that will be enhance
 by combining logical dependencies with structural dependencies.
 The research questions should be slightly reformulated or the explanations expanded.
--> TBD
+-> DONE: We rephrased the research questions.
 
 2. In Section 2.4, some equations and relations are introduced. It would be nice to see the values they return on selected datasets (Ant and Hibernate).
--> DONE: some of the information is already there, in figures 2, 3, and 4. The support metric is represented as dots, but only the maximum values for each entity are plotted. The average frequency of all the commits is represented as the black line from the figure. Unfortunately, we cannot plot or display these values for the entire system and all the commits, since we have 21886 pairs of entities for Ant, 26902 for Catalina, and 40054 for Hibernate
+-> DONE: Some of the information is already there, in figures 2, 3, and 4. The support metric is represented as dots, but only the maximum values for each entity are plotted. The average frequency of all the commits is represented as the black line from the figure. Unfortunately, we cannot plot or display these values for the entire system and all the commits, since we have 21886 pairs of entities for Ant, 26902 for Catalina, and 40054 for Hibernate
  
 
 3. It would be nice to improve the image quality of Figure 2 and Figure 3. Currently, some dots appear solid black, while others appear in different shades of gray, and also their size varies.
@@ -15,15 +15,37 @@ The research questions should be slightly reformulated or the explanations expan
 We added in the paper a small explanation of why we plotted only the max occurrences for all the systems.
 
 5. In the rest of the manuscript three datasets were used and in Section 2.4 data regarding only two datasets were shown. It would be nice to show data regarding Tomcat Catalina also.
-->DONE: added max occurence figure also for Tomcat Catalina 
+->DONE: We added max occurence figure also for Tomcat Catalina 
 
 6. It would be nice to name y axis on Figure 4, not only in the text.
-->DONE
+->DONE: We named the y-axis.
 
 7. In Section 5.4 it would be nice to have a table concerning Tomcat key classes like tables regarding key classes concerning Ant and Hibernate. If the content of the table is too large, only the top classes can be represented.
-->DONE: we cannot do a top-top key classes table (we cannot choose a criteria of separation), so we added in the table all key classes of Tomcat. We also added in the text exaples from the new added table.
+->DONE: We cannot do a top-top key classes table (we cannot choose a criteria of separation), so we added in the table all key classes of Tomcat. We also added in the text exaples from the new added table.
 
 8. In Section 5.4 it would be nice to explain how these key classes were identified.
 ->DONE: The selected classes from all three tables are the key classes extracted from developer documentation. We added this information in the paper, in chapter 5.4.
 
 
+- la RQ1 formularea contine tot previous research
+
+- pagina 5: typo si inversare la "Figures 2t, 4 and 3 intend to offer a
+big picture of systems." -> Figures 2, 3 and 4
+
+- tot acolo la acelasi paragraf "It can be observed that both systems"
+=>all systems ca acum sunt 3
+
+- parca lipseste o fraza in care sa se argumenteze reprezentarea aleasa
+cu maximum only, si nu doar din perspectiva ca facem asa ca nu le putem
+reprezenta pe toate. Adica scos explicit in evidenta ca nu se pierde
+nici o informatie utila in felul acesta (daca maximele sunt majoritatea
+puncte ingramadite in partea de jos a graficului, atunci si restul
+punctelor care ar corespunde celorlalte valori vor fi si ele tot acolo
+jos ingramadite, se pastreaza/intareste concluzia ca pentru majoritatea
+perechilor de entitati numarul de co-changes este mic, valori 1 (si
+chiar si zero - sunt entity ids pentru care nu sunt deloc puncte pe
+grafic?)
+
+- in scrisoarea de raspuns parca si acolo imi lipseste argumentul ca nu
+se pierde nici o  informatie daca nu se face graficul ptr toate
+perechile, nu doar ptr max

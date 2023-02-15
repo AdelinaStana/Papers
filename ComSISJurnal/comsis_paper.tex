@@ -64,13 +64,13 @@ we intend to use the results obtained together with structural dependencies, and
 In this work we perform our analysis on three open
 source projects: Ant, Tomcat Catalina, and Hibernate. And we answer the following research questions:
 
-\textbf{RQ1: Will logical dependencies combined with structural dependencies enhance results previously obtained?}
+\textbf{RQ1: Can logical dependencies combined with structural dependencies enhance the results obtained by using only structural dependencies in key class detection?}
 Since previous researches and our studies show that logical dependencies overlap only in a small percentage with structural dependencies, we intend to combine both types of dependencies and provide them as input for key classes identification tools.
 
-\textbf{RQ2: Can logical dependencies provide good results if used instead of structural dependencies?}
+\textbf{RQ2: Can logical dependencies provide good results if they are used instead of structural dependencies in key class detection?}
 In this research question, we want to focus more on the use of logical dependencies as stand-alone dependencies. Even though logical dependencies are not the same as structural dependencies, they can provide enough information about the system to be successfully used as input for tools like key classes detection tools. 
 
-\textbf{RQ3: Does the connection strength filter has a favorable impact on the results obtained?}
+\textbf{RQ3: Does the connection strength filter has a favorable impact on the detection of key classes?}
 In this paper, we use a new type of filter: the connection strength filter. This filter, together with the commit size filter, will be used to filter co-changes into logical dependencies. Now, the question is if this new filter will indeed do what we expect and provide better results.
 
 \textbf{Paper structure.} The paper is organized as follows: Section \ref{ld_def} introduces the concepts of logical dependencies and the methods of obtaining them. Section \ref{sec:baseline_approach} introduces the concept of key classes and the metrics used for results evaluation. The new approach of using logical dependencies to detect key classes can be found in section \ref{sec:keycalss_identification}. Section \ref{sec:current_measurements} defines the data set used and presents the new results obtained with the data set. In section \ref{sec:threats} we present the threats to the validity of the results presented in this paper. And finally, section \ref{sec:conclusion} discusses the conclusions based on the results obtained. 
@@ -160,9 +160,9 @@ The only problem with the confidence metric, as it is defined above, is that it 
 The best value for the confidence metric is 1, meaning that in all commits in which entity A is present, entity B is also there. If, for example, we have a co-changing pair $A \rightarrow B$, and A updates only once in the entire history, and in that time, updates together with B, then the confidence metric associated with the co-changing pair will be 1 (the best value possible). That is not a fair value compared with other scenarios. For example, we can have the co-changing pair $A \rightarrow B$, and A updates 100 in the entire history from which 80 times updates together with B, leading to a confidence value of 0.8.
 Even though in the second scenario we have a confidence value smaller than in the first scenario, the second scenario could lead to a more trustworthy connection.
 
-Figures \ref{fig:strength_overview_ant}t, \ref{fig:strength_overview_catalina} and \ref{fig:strength_overview_hibernate} intend to offer a big picture of systems. The dots represent the maximum number of updates of one entity with another, and the black line represents the average occurrence value of the system.
-It can be observed that both systems have multiple entities that update only once, meaning that we might have many confidence values of 1 (the highest value possible) for entities that update only once together. 
-We plotted only the maximum occurrences between entities to not overcrowd the plot. For Hibernate, we would have had to draw approx 40000 dots instead of just 3671, the number of points from the current figure 4.
+Figures \ref{fig:strength_overview_ant}, \ref{fig:strength_overview_catalina} and \ref{fig:strength_overview_hibernate} intend to offer a big picture of systems. The dots represent the maximum number of updates of one entity with another, and the black line represents the average occurrence value of the system.
+It can be observed that all systems have multiple entities that update only once, meaning that we might have many confidence values of 1 (the highest value possible) for entities that update only once together. 
+We plotted only the maximum occurrences between entities to not overcrowd the plot. Even with only the maximum occurrences plotted, it can be observed that most of the points are at the bottom of the graphic. So, plotting all the points wouldn't change the overall picture of the system, the other points will create a line of points even lower at the bottom of the graphic.
 
 \begin{figure}
 \centering
@@ -293,7 +293,7 @@ The baseline approach uses a tool that takes as an input the source code of the 
 
 \begin{figure}
 \centering
-\includegraphics[scale=0.45]{current_approach.PNG}
+\includegraphics[scale=0.43]{current_approach.PNG}
 \caption{Overview of the current approach.}
 \label{fig:baseline_approach}
 \centering
@@ -311,7 +311,7 @@ Previous research used PageRank values computed on both directed and undirected,
 
 Our study aims to check whether logical dependencies can be usable. Previous research focused on filtering the co-changes extracted from the versioning system and studying how filtering affects their size or how they overlap with structural dependencies. We intend to use the resulting information after co-changes filtering (the logical dependencies) in a tool that usually receives structural dependencies as input.
 
-Our research questions are the following: \textbf{RQ1:} \textit{Will logical dependencies combined with structural dependencies enhance results previously obtained?} \textbf{RQ2:} \textit{Can logical dependencies provide good results if used instead of structural dependencies?} \textbf{RQ3:} \textit{ Does the connection strength filter has a favorable impact on the results obtained?}
+Our research questions are the following: \textbf{RQ1:} \textit{Can logical dependencies combined with structural dependencies enhance the results obtained by using only structural dependencies in key class detection?} \textbf{RQ2:} \textit{Can logical dependencies provide good results if they are used instead of structural dependencies in key class detection?} \textbf{RQ3:} \textit{ Does the connection strength filter has a favorable impact on the detection of key classes?}
 
 To answer the research questions, we defined the following experimental plan: 
 We will use the tool mentioned in the above section. Previously the tool had as input the structural dependencies of the system and the reference solution, and the output was the ROC-AUC score. The closer the ROC-AUC score is to 1, the better the results.  
@@ -448,7 +448,7 @@ In tables \ref{tab:measurementscombined:ant}, \ref{tab:measurementscombined:tomc
 
 We started with logical dependencies that have a connection strength metric greater than 10, then we repeatedly increased the value by 10 until we reached 100. The last column of the table contains the results previously obtained by the tool by only using structural dependencies (the results presented in section \ref{sec:measure_baseline}).
 
-So, to answer \textit{RQ1: Will logical dependencies combined with structural dependencies enhance results previously obtained?}:
+So, to answer \textit{RQ1: Can logical dependencies combined with structural dependencies enhance the results obtained by using only structural dependencies in key class detection?}:
 
 The results obtained by combining structural and logical dependencies are close to the previously registered values but, in most cases, do not surpass them. Underlined are the values that are better than the previously registered values. We can observe that for all 3 systems, the best values obtained are for connection strength between 40-70.
 
@@ -576,7 +576,7 @@ In the previous subsection, we added the logical and structural dependencies in 
 
 In tables \ref{tab:measurementshistory:ant}, \ref{tab:measurementshistory:tomcat}, and \ref{tab:measurementshistory:hibernate} are presented the results obtained by using only logical dependencies to detect key classes.
 
-For the second research question: '\textit{RQ2: Can logical dependencies provide good results if used instead of structural dependencies?}', the initial hypothesis is confirmed by the results obtained.
+For the second research question: '\textit{RQ2: Can logical dependencies provide good results if they are used instead of structural dependencies in key class detection?}', the initial hypothesis is confirmed by the results obtained.
 
 The measurements obtained are not as good as the ones using logical and structural dependencies combined or using only structural dependencies. But the values obtained are above 0.7, which means that a good part of the key classes is detected by using only logical dependencies. As mentioned in section \ref{sec:evalmetrics}, a classifier is good if it has the ROC-AUC value as close to 1 as possible.
 
@@ -802,7 +802,6 @@ confidence	&	0.752	&	0.878	\\
 \hline
 strength	&	0.732	&	0.935	\\
 confidence	&	0.699	&	0.929	\\
-
 \hline
 \end{tabular}
 }
@@ -811,7 +810,7 @@ confidence	&	0.699	&	0.929	\\
 
 The comparison between the average values obtained by using the confidence metric and the strength metric can be found in table \ref{tab:confidence_vs_strength}.
 
-These results help us answer the third research question: \textit{RQ3: Does the connection strength filter has a favorable impact on the results obtained?}. As we expected in our initial hypothesis and now based on the results, we can say that the connection strength metric is more suited for logical dependencies detection. So, by considering the mean update frequency of the entire system in the filtering process, we improve the detection of logical dependencies.
+These results help us answer the third research question: \textit{RQ3: Does the connection strength filter has a favorable impact on the detection of key classes?}. As we expected in our initial hypothesis and now based on the results, we can say that the connection strength metric is more suited for logical dependencies detection. So, by considering the mean update frequency of the entire system in the filtering process, we improve the detection of logical dependencies.
 
 \subsection{ Comparison and discussion on the obtained results}
 \label{sec:compare_others}
