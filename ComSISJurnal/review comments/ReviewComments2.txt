@@ -30,10 +30,10 @@ We added in the paper a small explanation of why we plotted only the max occurre
 - la RQ1 formularea contine tot previous research
 
 - pagina 5: typo si inversare la "Figures 2t, 4 and 3 intend to offer a
-big picture of systems." -> Figures 2, 3 and 4
+big picture of systems." -> Figures 2, 3 and 4 - solved
 
 - tot acolo la acelasi paragraf "It can be observed that both systems"
-=>all systems ca acum sunt 3
+=>all systems ca acum sunt 3 - solved
 
 - parca lipseste o fraza in care sa se argumenteze reprezentarea aleasa
 cu maximum only, si nu doar din perspectiva ca facem asa ca nu le putem
