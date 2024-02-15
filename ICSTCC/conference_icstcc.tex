@@ -1,0 +1,144 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{soul}
+\usepackage{url}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\begin{document}
+
+\title{Logical dependencies: applications in software clustering} %Integrating Logical Dependencies in Software Clustering: A Path to Enhanced Architecture Reconstruction
+
+\author{\IEEEauthorblockN{1\textsuperscript{st} Adelina Stana}
+\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
+\textit{name of organization (of Aff.)}\\
+City, Country \\
+email address }
+\and
+\IEEEauthorblockN{2\textsuperscript{nd} Ioana Sora}
+\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
+\textit{name of organization (of Aff.)}\\
+City, Country \\
+email address }
+}
+
+\maketitle
+
+\begin{abstract}
+This document is a model and instructions for \LaTeX.
+This and the IEEEtran.cls file define the components of your paper [title, text, heads, etc.]. *CRITICAL: Do Not Use Symbols, Special Characters, Footnotes, 
+or Math in Paper Title or Abstract.
+\end{abstract}
+
+\begin{IEEEkeywords}
+component, formatting, style, styling, insert
+\end{IEEEkeywords}
+
+\section{Introduction}
+
+The software architecture helps developers in gaining a better understanding of the system and its expected behavior. Additionally, it is also of great help in change management. By knowing the existing system architecture, project managers can assess whether a requested change can be easily implemented or not.
+
+Architecture reconstruction appears in contexts where a software system lacks documentation entirely, or where the documentation hasn't been updated to reflect changes in the system. 
+
+
+We intend to use connections obtained from the versioning system to enhance the results of clustering methods that previously relied solely on connections extracted from code.
+
+\section{Logical dependencies}
+
+About how LD are obtained; cite past papers
+
+\section{Related work}
+
+Talk about the results of others and then about what we intend to do.
+
+
+\section{Method}
+Explain how the script works; insert diagram 
+
+\subsection{Clustering algorithms: MST Clustering}
+Minimum Spanning Tree Clustering is a hierarchical clustering method based on the construction of a minimum spanning tree from the weighted graph formed by the data connections of the system \cite{mst_clustering}.
+
+
+\subsection{Clustering algorithms: Louvain Clustering}
+Louvain Clustering is a community detection algorithm designed for finding clusters or communities in complex networks. The Louvain method involves a greedy algorithm that moves nodes between clusters to obtain clusters that are highly interconnected \cite{louvain_clustering}.
+
+
+\section{Results}
+
+\begin{table}[htbp]
+  \centering
+  \caption{Comparison of Louvain and MST clustering results for LD}
+  \label{tab:clustering-results1}
+  \begin{tabular}{lc|cc|cc}
+    \toprule
+    \textbf{Dataset} & \textbf{Entities} & \multicolumn{2}{c}{\textbf{Cluster count}} & \multicolumn{2}{c}{\textbf{MQ metric}} \\
+    & \textbf{Count} & \textbf{Louvain} & \textbf{MST} & \textbf{Louvain} & \textbf{MST} \\
+    \midrule
+    SD only & 517 & 14 & 228 & 0.085 & 0.084 \\
+    LD strength 10\% & 517 & 272 & 353 & 0.047 & 0.031 \\
+    LD strength 20\% & 517 & 355 & 360 & 0.04 & 0.037 \\
+    LD strength 30\% & 517 & 387 & 404 & 0.036 & 0.033 \\
+    LD strength 40\% & 517 & 405 & 413 & 0.034 & 0.033 \\
+    LD strength 50\% & 517 & 414 & 422 & 0.03 & 0.029 \\
+    LD strength 60\% & 517 & 431 & 439 & 0.029 & 0.027 \\
+    LD strength 70\% & 517 & 443 & 444 & 0.027 & 0.026 \\
+    LD strength 80\% & 517 & 454 & 460 & 0.024 & 0.022 \\
+    LD strength 90\% & 517 & 462 & 463 & 0.021 & 0.021 \\
+    LD strength 100\% & 517 & 472 & 480 & 0.019 & 0.016 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+
+
+\begin{table}[htbp]
+  \centering
+  \caption{Comparison of Louvain and MST clustering results for LD combined with SD}
+  \label{tab:clustering-results2}
+  \begin{tabular}{lc|cc|cc}
+    \toprule
+    \textbf{Dataset} & \textbf{Entities} & \multicolumn{2}{c}{\textbf{Cluster count}} & \multicolumn{2}{c}{\textbf{MQ metric}} \\
+    & \textbf{Count} & \textbf{Louvain} & \textbf{MST} & \textbf{Louvain} & \textbf{MST} \\
+    \midrule
+    SD only & 517 & 14 & 228 & 0.085 & 0.084 \\
+    SD and LD strength 10\% & 517 & 15 & 74 & 0.087 & \underline{0.054} \\
+    SD and LD strength 20\% & 517 & 13 & 8 & 0.071 & \underline{0.059} \\
+    SD and LD strength 30\% & 517 & 13 & 14 & 0.071 & \underline{0.083} \\
+    SD and LD strength 40\% & 517 & 13 & 8 & 0.071 & 0.109 \\
+    SD and LD strength 50\% & 517 & 13 & 8 & 0.071 & 0.109 \\
+    SD and LD strength 60\% & 517 & 13 & 8 & 0.071 & 0.109 \\
+    SD and LD strength 70\% & 517 & 13 & 10 & 0.071 & 0.155 \\
+    SD and LD strength 80\% & 517 & 13 & 6 & 0.071 & 0.177 \\
+    SD and LD strength 90\% & 517 & 13 & 2 & 0.071 & 0.129 \\
+    SD and LD strength 100\% & 517 & 13 & 8 & 0.072 & 0.166 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+
+
+
+\section{Discussion}
+
+Based on the results from table \ref{tab:clustering-results2}, we can observe that the combined approach of structural dependencies and logical dependencies gives a Modularity Quality (MQ) metric of 0.071, which is an improvement over the 0.085 MQ metric obtained when considering only structural dependencies. 
+
+Next, we will examine the clustering solutions obtained only from structural dependencies, in comparison to the clustering solution derived from incorporating both structural and logical dependencies, filtered with a threshold of 20\% for strength.
+
+The entities listed below are placed in different clusters when analyzed based on structural dependencies alone, compared with the analysis using both logical and structural dependencies: taskdefs.Available\$FileDir, taskdefs.Concat, taskdefs.Concat\$1, taskdefs.Concat\$MultiReader, taskdefs.Concat\$TextElement, taskdefs.Javadoc\$AccessType, util.WeakishReference, util.WeakishReference\$HardReference.
+
+The placement of the Concat class and its inner classes (Concat\$1, Concat\$MultiReader, Concat\$TextElement) in a different cluster might be based on it's usage and purpose; according to the documentation : "This class contains the 'concat' task, used to concatenate a series of files into a single stream." \cite{ant_concat}.
+
+\section{Conclusion & Future work}
+
+
+\bibliographystyle{IEEEtran}
+\bibliography{logicaldepd}
+
+\end{document}
