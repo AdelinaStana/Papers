@@ -1,0 +1,52 @@
+<mxfile host="app.diagrams.net" modified="2024-02-26T07:00:39.734Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36" etag="4zsu_Fx51wR3IpnK1NaU" version="23.1.6" type="device">
+  <diagram name="Page-1" id="OtFu4kKZsTq8bzaDGcZf">
+    <mxGraphModel dx="794" dy="420" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="r9Iey-6niKZlRgbI32lW-4" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#003300;" vertex="1" parent="1">
+          <mxGeometry x="90" y="40" width="150" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="r9Iey-6niKZlRgbI32lW-2" value="" style="verticalLabelPosition=bottom;html=1;verticalAlign=top;align=center;strokeColor=none;fillColor=#34f000;shape=mxgraph.azure.github_code;pointerEvents=1;movable=1;resizable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="1">
+          <mxGeometry x="140" y="110" width="50" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="r9Iey-6niKZlRgbI32lW-3" value="" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=default;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.git_repository;movable=1;resizable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;" vertex="1" parent="1">
+          <mxGeometry x="135" y="170" width="60" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="r9Iey-6niKZlRgbI32lW-5" value="" style="endArrow=none;html=1;rounded=0;entryX=1;entryY=0.25;entryDx=0;entryDy=0;exitX=0;exitY=0.25;exitDx=0;exitDy=0;" edge="1" parent="1" source="r9Iey-6niKZlRgbI32lW-4" target="r9Iey-6niKZlRgbI32lW-4">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="130" y="240" as="sourcePoint" />
+            <mxPoint x="180" y="190" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r9Iey-6niKZlRgbI32lW-6" value="&lt;font color=&quot;#ffffcc&quot;&gt;Extract code from versioning system&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="100" y="50" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="r9Iey-6niKZlRgbI32lW-7" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#003300;" vertex="1" parent="1">
+          <mxGeometry x="280" y="40" width="150" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="r9Iey-6niKZlRgbI32lW-8" value="" style="endArrow=none;html=1;rounded=0;exitX=0;exitY=0.25;exitDx=0;exitDy=0;entryX=1;entryY=0.25;entryDx=0;entryDy=0;" edge="1" parent="1" source="r9Iey-6niKZlRgbI32lW-7" target="r9Iey-6niKZlRgbI32lW-7">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="380" y="240" as="sourcePoint" />
+            <mxPoint x="430" y="190" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r9Iey-6niKZlRgbI32lW-9" value="&lt;font color=&quot;#ffffcc&quot;&gt;Filter information&lt;br&gt;Create Logical Dep.&lt;br&gt;&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="295" y="50" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="r9Iey-6niKZlRgbI32lW-11" value="" style="sketch=0;aspect=fixed;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;fillColor=#34F000;shape=mxgraph.mscae.enterprise.filter" vertex="1" parent="1">
+          <mxGeometry x="295" y="110" width="33.33" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="r9Iey-6niKZlRgbI32lW-12" value="&lt;font color=&quot;#ffffcc&quot;&gt;commit size &amp;gt; 20&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="340" y="120" width="60" height="10" as="geometry" />
+        </mxCell>
+        <mxCell id="r9Iey-6niKZlRgbI32lW-13" value="" style="sketch=0;aspect=fixed;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;fillColor=#34F000;shape=mxgraph.mscae.enterprise.filter" vertex="1" parent="1">
+          <mxGeometry x="295" y="160" width="33.33" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="r9Iey-6niKZlRgbI32lW-14" value="&lt;font color=&quot;#ffffcc&quot;&gt;commit strength&amp;nbsp;&amp;gt; 20&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="340" y="170" width="80" height="10" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -9,12 +9,16 @@
 \usepackage{xcolor}
 \usepackage{booktabs}
 \usepackage{soul}
+\usepackage{amsmath}
 \usepackage{url}
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\graphicspath{ {./images/} }
+
 \begin{document}
 
-\title{Logical dependencies: applications in software clustering} %Integrating Logical Dependencies in Software Clustering: A Path to Enhanced Architecture Reconstruction
+\title{Integrating Logical Dependencies in Software Clustering: A case of study on Apache Ant}
 
 \author{\IEEEauthorblockN{1\textsuperscript{st} Adelina Stana}
 \IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
@@ -32,13 +36,11 @@ email address }
 \maketitle
 
 \begin{abstract}
-This document is a model and instructions for \LaTeX.
-This and the IEEEtran.cls file define the components of your paper [title, text, heads, etc.]. *CRITICAL: Do Not Use Symbols, Special Characters, Footnotes, 
-or Math in Paper Title or Abstract.
+Extracted code co-changes from versioning systems have multiple applications across numerous fields, including fault detection, software reconstruction, key class identification, among others. This paper will focus on the influence of code co-changes on software clustering. Specifically, we will analyze their impact on the clustering solution of Apache Ant in order to assess whether co-changes usage enhances the quality of the obtained solution.
 \end{abstract}
 
 \begin{IEEEkeywords}
-component, formatting, style, styling, insert
+logical dependencies, logical coupling, mining software repositories, code co-change; co-changing entities, software evolution, clustering
 \end{IEEEkeywords}
 
 \section{Introduction}
@@ -47,12 +49,43 @@ The software architecture helps developers in gaining a better understanding of 
 
 Architecture reconstruction appears in contexts where a software system lacks documentation entirely, or where the documentation hasn't been updated to reflect changes in the system. 
 
+Previous research has revealed that dependencies extracted from versioning systems are distinct from those extracted from code, implying that using them could enhance our understanding of the system \cite{DBLP:conf/issre/OlivaG15}, \cite{DBLP:journals/jss/AjienkaC17}, \cite{Oliva:2011:ISL:2067853.2068086}.
 
-We intend to use connections obtained from the versioning system to enhance the results of clustering methods that previously relied solely on connections extracted from code.
+We intend to use dependencies obtained from the versioning system to enhance the results of clustering methods that previously relied solely on connections extracted from code. 
+
+To evaluate the results, we will initially create a clustering solution based on structural dependencies alone. Next, we will incorporate dependencies extracted from the versioning system with the structural dependencies to produce a second clustering solution. Lastly, we will construct a clustering solution that relies entirely on logical dependencies, and we will compare all three solutions obtained.
+
 
 \section{Logical dependencies}
+\label{ld_def}
 
-About how LD are obtained; cite past papers
+During development processes, numerous software entities are changed. It has been observed that entities changing together are not only those with structural relationships but also include entities that are functionally dependent on one another. This functional dependency, however, cannot be observed by examining the code.
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.6]{dependencies.png}
+\caption{Overview on updates of different entities}
+\label{fig:dependencies}
+\centering
+\end{figure}
+
+This type of entities, that consistently change together throughout development activities, are called logical dependencies or coupling. This concept was initially introduced by Gall et al. \cite{Gall:1998:DLC:850947.853338} and has numerous fields of application.
+
+A problem with dependencies extracted from the versioning system is their potential to become excessively numerous. This often results from commits that contain numerous files, thereby generating thousands of dependencies from a single commit. Additionally, the reliability of co-changes is another problem; certain entities may only change together once throughout the entire versioning history, making them less reliable than entities that change together hundreds of times, for instance. Figure \ref{fig:dependencies} ilustrates this scenario.
+
+Previous research uses two known metrics in order to solve this problems: \textit{support} and \textit{confidence}. Given a dependency where $A \rightarrow B$, the support metric measures the frequency of updates that two entities share within the versioning system. The confidence metric calculates the proportion of updates between two entities relative to the total updates of the antecedent (A) or consequent (B) entity \cite{DBLP:conf/issre/OlivaG15}, \cite{DBLP:journals/jss/AjienkaC17}, \cite{Zimmermann:2004:MVH:998675.999460}.
+
+
+In our previous research, we focused on identifying metrics that enhance the reliability of dependencies extracted from the versioning system \cite{saci19}, \cite{enase19}. One of the metrics is the \textit{commit size metric}, which involves extracting dependencies from commits that do not exceed a specific commit size limit, thereby reducing the possibility of extracting an overly large number of dependencies. Additionally, we developed the strength metric, which serves as a refinement of the more known \textit{confidence metric} \cite{articlekeyclass23}.
+
+
+The strength metric was developed to obtain a better reflection of the system and its values. For instance, when using the confidence metric, two entities that update together only once will have the highest possible score on the confidence metric, a result that is not desirable. On the other hand, entities that undergo hundreds of updates together, and even more updates with other entities, will receive a lower confidence metric score. Thus, the confidence metric will favor entities that update less and always together.
+
+ The strength metric is calculated by multiplying the confidence metric value with a system factor, which is determined by the average number of updates for all entities in the system. In this way, a very high confidence score resulting from only a few updates will be adjusted downwards, while a low confidence score that is based on a big number of updates will be increased.
+
+The confidence metric score ranges from 0 to 1, with 1 representing the best value. On the other hand, the strength metric ranges from 0 to 100, where 100 represents the best possible score.
+
+Co-changes that meet both the commit size metric threshold and the strength metric threshold are referred to as \textit{logical dependencies}.
 
 \section{Related work}
 
@@ -60,7 +93,23 @@ Talk about the results of others and then about what we intend to do.
 
 
 \section{Method}
-Explain how the script works; insert diagram 
+\label{method}
+
+To obtain the logical dependencies for further use, we will use the same Python tool developed in our previous research \cite{articlekeyclass23}. This tool retrieves all necessary data from GitHub \cite{ApacheAntGitHub} using git commands and then processes it. 
+The initial phase involves applying a commit size filter to exclude all commits that involve changes to more than 10 files. Following, the tool creates dependencies based on these commits, establishing a dependency link between each entity in a modified file and all entities in other files modified by the same commit. 
+
+Next, the tool calculates the strength metric as described in chapter \ref{ld_def}. It then filters out any dependencies falling below the set strength metric threshold. For our experiments, we initiated with a strength metric threshold of 10, incrementing in steps of 10 up to 100 (the maximum value for the metric). Finally, we exported the results in comma separated values format file (.csv). The above described workflow is illustrated in figure \ref{fig:extraction}.
+
+
+\begin{figure}
+\centering
+\includegraphics[width=\columnwidth]{dependencies-export.png}
+\caption{Logical depenedencies extraction workflow}
+\label{fig:extraction}
+\centering
+\end{figure}
+
+Following the generation of logical dependencies, we integrate them into software clustering techniques. For this, a Python script was developed to extract both structural and logical dependencies from their respective files, forming a dependency matrix. This matrix is used as the input for the Minimum Spanning Tree (MST) and Louvain Clustering algorithms. The resulting clustering solution is then evaluated using the Modularity Quality (MQ) metric \cite{mqmetric}.
 
 \subsection{Clustering algorithms: MST Clustering}
 Minimum Spanning Tree Clustering is a hierarchical clustering method based on the construction of a minimum spanning tree from the weighted graph formed by the data connections of the system \cite{mst_clustering}.
@@ -69,8 +118,22 @@ Minimum Spanning Tree Clustering is a hierarchical clustering method based on th
 \subsection{Clustering algorithms: Louvain Clustering}
 Louvain Clustering is a community detection algorithm designed for finding clusters or communities in complex networks. The Louvain method involves a greedy algorithm that moves nodes between clusters to obtain clusters that are highly interconnected \cite{louvain_clustering}.
 
+In order to compare the clustering solutions and their asociated MQ metric, we generated clustering solutions in three scenarios: the first one by using only structural dependencies, the second one by using only logical dependencies and the third one by using logical and structural dependencies to populate the dependency matrix that is further used in the cluster generation. The third scenario workflow is ilustrated in the figure \ref{fig:clustering-gen}.
+
+To generate and compare the clustering solutions and their corresponding Modularity Quality (MQ) metric, we created clustering solutions for three distinct scenarios: the first scenario utilizes solely structural dependencies, the second exclusively employs logical dependencies, and the third combines both logical and structural dependencies to fill the dependency matrix, which is then utilized in generating the clusters. The process for the third scenario is depicted in Figure \ref{fig:clustering-gen}.
+
+\begin{figure}
+\centering
+\includegraphics[width=\columnwidth]{clustering-generation.png}
+\caption{Clustering solution creation process diagram}
+\label{fig:clustering-gen}
+\centering
+\end{figure}
+
 
 \section{Results}
+
+The results of the scenarios mentioned in chapter \ref{method} are presented in table \ref{tab:clustering-results1} and \ref{tab:clustering-results2}.
 
 \begin{table}[htbp]
   \centering
@@ -108,19 +171,21 @@ Louvain Clustering is a community detection algorithm designed for finding clust
     & \textbf{Count} & \textbf{Louvain} & \textbf{MST} & \textbf{Louvain} & \textbf{MST} \\
     \midrule
     SD only & 517 & 14 & 228 & 0.085 & 0.084 \\
-    SD and LD strength 10\% & 517 & 15 & 74 & 0.087 & \underline{0.054} \\
-    SD and LD strength 20\% & 517 & 13 & 8 & 0.071 & \underline{0.059} \\
-    SD and LD strength 30\% & 517 & 13 & 14 & 0.071 & \underline{0.083} \\
-    SD and LD strength 40\% & 517 & 13 & 8 & 0.071 & 0.109 \\
-    SD and LD strength 50\% & 517 & 13 & 8 & 0.071 & 0.109 \\
-    SD and LD strength 60\% & 517 & 13 & 8 & 0.071 & 0.109 \\
-    SD and LD strength 70\% & 517 & 13 & 10 & 0.071 & 0.155 \\
-    SD and LD strength 80\% & 517 & 13 & 6 & 0.071 & 0.177 \\
-    SD and LD strength 90\% & 517 & 13 & 2 & 0.071 & 0.129 \\
-    SD and LD strength 100\% & 517 & 13 & 8 & 0.072 & 0.166 \\
+    SD  LD strength 10\% & 517 & 15 & 74 & 0.087 & \underline{0.054} \\
+    SD  LD strength 20\% & 517 & 13 & 8 & 0.071 & \underline{0.059} \\
+    SD  LD strength 30\% & 517 & 13 & 14 & 0.071 & \underline{0.083} \\
+    SD  LD strength 40\% & 517 & 13 & 8 & 0.071 & 0.109 \\
+    SD  LD strength 50\% & 517 & 13 & 8 & 0.071 & 0.109 \\
+    SD  LD strength 60\% & 517 & 13 & 8 & 0.071 & 0.109 \\
+    SD  LD strength 70\% & 517 & 13 & 10 & 0.071 & 0.155 \\
+    SD  LD strength 80\% & 517 & 13 & 6 & 0.071 & 0.177 \\
+    SD  LD strength 90\% & 517 & 13 & 2 & 0.071 & 0.129 \\
+    SD  LD strength 100\% & 517 & 13 & 8 & 0.072 & 0.166 \\
     \bottomrule
   \end{tabular}
 \end{table}
+
+
 
 
 
@@ -135,8 +200,9 @@ The entities listed below are placed in different clusters when analyzed based o
 
 The placement of the Concat class and its inner classes (Concat\$1, Concat\$MultiReader, Concat\$TextElement) in a different cluster might be based on it's usage and purpose; according to the documentation : "This class contains the 'concat' task, used to concatenate a series of files into a single stream." \cite{ant_concat}.
 
-\section{Conclusion & Future work}
+\section{Conclusion and Future work}
 
+In our 
 
 \bibliographystyle{IEEEtran}
 \bibliography{logicaldepd}
