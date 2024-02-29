@@ -21,16 +21,16 @@
 \title{Integrating Logical Dependencies in Software Clustering: A case of study on Apache Ant}
 
 \author{\IEEEauthorblockN{1\textsuperscript{st} Adelina Stana}
-\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
-\textit{name of organization (of Aff.)}\\
-City, Country \\
-email address }
+\IEEEauthorblockA{\textit{Computer Science and Engineering Department} \\
+\textit{"Politehnica" University of Timisoara}\\
+ Timişoara, România \\
+stana.adelina.diana@gmail.com }
 \and
 \IEEEauthorblockN{2\textsuperscript{nd} Ioana Sora}
-\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
-\textit{name of organization (of Aff.)}\\
-City, Country \\
-email address }
+\IEEEauthorblockA{\textit{Computer Science and Engineering Department} \\
+\textit{"Politehnica" University of Timisoara}\\
+ Timişoara, România \\
+ioana.sora@cs.upt.ro}
 }
 
 \maketitle
@@ -89,7 +89,12 @@ Co-changes that meet both the commit size metric threshold and the strength metr
 
 \section{Related work}
 
-Talk about the results of others and then about what we intend to do.
+There are numerous applications of co-changes extracted from version control systems. Prajapati et al. used structural dependencies, co-changes, and lexical dependencies to enhance system modularization. Benkoczi et al. analyze how a system's modularity evolves over time using only co-change history \cite{10.1145/3196398.3196409}, by utilizing two metrics based on a weighted design structure matrix.
+
+Anshu et al. analyze how co-changes impact the packaging restructuring \cite{clusters-cochange}, Silva et al. generated co-change clusters based on the versioning system information \cite{article-cochangem}.
+
+
+The Modularization Quality (MQ) metric, as defined by Mitchell and Mancoridis \cite{mqmetric}, \cite{mqmetric2}, is extensively utilized to assess the results of clustering techniques. While it is primarily applied to clusters formed from structural dependencies \cite{Bunch1},\cite{Bunch2},\cite{Bunch3}, it also for evaluating clusters derived from other types of dependencies \cite{clustering-ld-lexical}.
 
 
 \section{Method}
@@ -132,6 +137,7 @@ To generate and compare the clustering solutions and their corresponding Modular
 
 
 \section{Results}
+\label{results}
 
 The results of the scenarios mentioned in chapter \ref{method} are presented in table \ref{tab:clustering-results1} and \ref{tab:clustering-results2}.
 
@@ -191,6 +197,7 @@ The results of the scenarios mentioned in chapter \ref{method} are presented in 
 
 
 \section{Discussion}
+\label{discussion}
 
 Based on the results from table \ref{tab:clustering-results2}, we can observe that the combined approach of structural dependencies and logical dependencies gives a Modularity Quality (MQ) metric of 0.071, which is an improvement over the 0.085 MQ metric obtained when considering only structural dependencies. 
 
@@ -198,11 +205,20 @@ Next, we will examine the clustering solutions obtained only from structural dep
 
 The entities listed below are placed in different clusters when analyzed based on structural dependencies alone, compared with the analysis using both logical and structural dependencies: taskdefs.Available\$FileDir, taskdefs.Concat, taskdefs.Concat\$1, taskdefs.Concat\$MultiReader, taskdefs.Concat\$TextElement, taskdefs.Javadoc\$AccessType, util.WeakishReference, util.WeakishReference\$HardReference.
 
-The placement of the Concat class and its inner classes (Concat\$1, Concat\$MultiReader, Concat\$TextElement) in a different cluster might be based on it's usage and purpose; according to the documentation : "This class contains the 'concat' task, used to concatenate a series of files into a single stream." \cite{ant_concat}.
+The placement of the Concat class and its inner classes (Concat\$1, Concat\$MultiReader, Concat\$TextElement) in a different cluster might be based on it's usage and purpose; according to the documentation : "This class contains the 'concat' task, used to concatenate a series of files into a single stream." \cite{ant_concat}. \ref{fig:cluster1}
+
+\begin{figure}
+\centering
+\includegraphics[width=\columnwidth]{cluster1.png}
+\caption{Ant cluster}
+\label{fig:cluster1}
+\centering
+\end{figure}
 
 \section{Conclusion and Future work}
 
-In our 
+Based the outcomes detailed in Chapter \ref{results} and the analysis in Chapter \ref{discussion}, it is clear that incorporating logical dependencies improves the quality of clustering solutions. For our forthcoming work, we intend to conduct further experiments across various projects to validate these findings. Additionally, we will try to create a reference clustering solution for these projects, based on their code and documentation. We will then evaluate the clustering results against the reference solution by utilizing the MOJO metric for comparison \cite{mojo-tzerpos}.
+
 
 \bibliographystyle{IEEEtran}
 \bibliography{logicaldepd}
