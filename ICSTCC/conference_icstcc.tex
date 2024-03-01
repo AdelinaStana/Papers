@@ -89,12 +89,22 @@ Co-changes that meet both the commit size metric threshold and the strength metr
 
 \section{Related work}
 
-There are numerous applications of co-changes extracted from version control systems. Prajapati et al. used structural dependencies, co-changes, and lexical dependencies to enhance system modularization. Benkoczi et al. analyze how a system's modularity evolves over time using only co-change history \cite{10.1145/3196398.3196409}, by utilizing two metrics based on a weighted design structure matrix.
 
-Anshu et al. analyze how co-changes impact the packaging restructuring \cite{clusters-cochange}, Silva et al. generated co-change clusters based on the versioning system information \cite{article-cochangem}.
+Software clustering is the process of organizing software entities into groups (clusters) based on their similarity. There are numerous algorithms that can be used for software clustering such as hierarchical algorithms like Minimum Spanning Tree and Louvain that cluster software entities by their hierarchical relationships \cite{hicluster}, \cite{SoraSem13}. Partitioning algorithms, like k-means, that organize data into clusters by similarity \cite{5453745}. Density-based algorithms, such as DBSCAN, focus on areas of higher density to form clusters \cite{10.1145/304181.304187}, and many others \cite{Xu2015ACS}. 
 
 
-The Modularization Quality (MQ) metric, as defined by Mitchell and Mancoridis \cite{mqmetric}, \cite{mqmetric2}, is extensively utilized to assess the results of clustering techniques. While it is primarily applied to clusters formed from structural dependencies \cite{Bunch1},\cite{Bunch2},\cite{Bunch3}, it also for evaluating clusters derived from other types of dependencies \cite{clustering-ld-lexical}.
+Regarding the input data used by clustering algorithms, some approaches rely solely on data derived from code dependencies (structural dependencies) to establish clusters \cite{SoraSem13}, \cite{891477}. The Bunch tool, developed by Mitchell and Mancoridis, utilizes source code analysis along with hill-climbing and genetic algorithms to create clusters from the code data \cite{Bunch1},\cite{Bunch2},\cite{Bunch3}.
+
+Other approaches use lexical dependencies extracted from code comments \cite{5741257} or the name of the source files \cite{Anquetil1999RecoveringSA} \cite{Anquetil1998RecoveringSA}. 
+
+A more recent approach involves using data from the system's historical changes in order to gain more knowledge about the system \cite{article-cochangem}. Co-changes have been used to analyze how the system's modularity evolves over time \cite{10.1145/3196398.3196409} or how co-changes impact the packaging restructuring \cite{clusters-cochange}.
+
+Prajapati et al. used structural dependencies, lexical dependencies and co-changes from the versioning system to enhance system modularization \cite{clustering-ld-lexical}.
+
+When it comes to evaluating the obatined clustering solutions,  if a reference solution exists, metrics can be applied to evaluate the similarity between the reference clustering solution and the obtained clusterings. One such metric is the MOJO distance, MOJO measures the minimum number of Move and Join operations required to transform one clustering solution into another \cite{mojo-tzerpos}. 
+
+
+If no reference solution exists, then metrics that evaluate the cohesion of the clustering solution, based on the input graph, can be used. One such metric is the Modularization Quality (MQ) metric. As defined by Mitchell and Mancoridis \cite{mqmetric}, \cite{mqmetric2}, is extensively used to assess the results of clustering techniques. While it is primarily applied to clusters formed from structural dependencies \cite{Bunch1},\cite{Bunch2},\cite{Bunch3}, it can be used also for evaluating clusters derived from other types of dependencies \cite{clustering-ld-lexical}.
 
 
 \section{Method}
@@ -192,7 +202,7 @@ The results of the scenarios mentioned in chapter \ref{method} are presented in 
 \end{table}
 
 
-
+!INFO: not yet done.
 
 
 
@@ -201,19 +211,52 @@ The results of the scenarios mentioned in chapter \ref{method} are presented in 
 
 Based on the results from table \ref{tab:clustering-results2}, we can observe that the combined approach of structural dependencies and logical dependencies gives a Modularity Quality (MQ) metric of 0.071, which is an improvement over the 0.085 MQ metric obtained when considering only structural dependencies. 
 
-Next, we will examine the clustering solutions obtained only from structural dependencies, in comparison to the clustering solution derived from incorporating both structural and logical dependencies, filtered with a threshold of 20\% for strength.
+We manualy compared two clustering solutions, the clustering solutions obtained only from structural dependencies, in comparison to the clustering solution obtained from using both structural and logical dependencies, filtered with a threshold of 20\% for strength, in order to asses if the second solution is better or not.
 
-The entities listed below are placed in different clusters when analyzed based on structural dependencies alone, compared with the analysis using both logical and structural dependencies: taskdefs.Available\$FileDir, taskdefs.Concat, taskdefs.Concat\$1, taskdefs.Concat\$MultiReader, taskdefs.Concat\$TextElement, taskdefs.Javadoc\$AccessType, util.WeakishReference, util.WeakishReference\$HardReference.
+The entities listed below are placed in different clusters: taskdefs.Available\$FileDir, taskdefs.Concat, taskdefs.Concat\$1, taskdefs.Concat\$MultiReader, taskdefs.Concat\$TextElement, taskdefs.Javadoc\$AccessType, util.WeakishReference, util.WeakishReference\$HardReference.
 
-The placement of the Concat class and its inner classes (Concat\$1, Concat\$MultiReader, Concat\$TextElement) in a different cluster might be based on it's usage and purpose; according to the documentation : "This class contains the 'concat' task, used to concatenate a series of files into a single stream." \cite{ant_concat}. \ref{fig:cluster1}
+We will refer to the clusters resulted from the structural dependencies as \textit{Cluster A} and to those from logical and structural dependencies as \textit{Cluster B}.
+
+
+
+In Cluster A, the Concat class and its inner classes (Concat\$1, Concat\$MultiReader, Concat\$TextElement) are placed together with conditions like Available, And, Or, IsTrue, Equals, IsReference, Contains.
+
+On the other hand, Cluster B places them with classes associated with file manipulation and archive operations such as Ear, Jar, War, and Zip, as well as utility classes for file handling like FileUtils and JavaEnvUtils, and entities for zip file processing (ZipEntry, ZipFile).
+
+
+The placement of the Concat class together with its inner classes in a different cluster can be motivated based on it's usage and purpose; according to the documentation : "This class contains the 'concat' task, used to concatenate a series of files into a single stream." \cite{ant_concat}. 
+So, from our point of view, it is better placed in Cluster B, then in Cluster A.
+Figure \ref{fig:cluster1} represents the connections that Concat has in the versioning and file system. Figure \ref{fig:clusterA} represents Cluster A connections and figure \ref{fig:clusterB} represents Cluster B connections  .
+
+
+
+\begin{figure}
+\centering
+\includegraphics[width=\columnwidth]{dep.png}
+\caption{Ant dependencies (LD and SD) of Concat class}
+\label{fig:cluster1}
+\centering
+\end{figure}
 
 \begin{figure}
 \centering
 \includegraphics[width=\columnwidth]{cluster1.png}
-\caption{Ant cluster}
-\label{fig:cluster1}
+\caption{Cluster A}
+\label{fig:clusterA}
 \centering
 \end{figure}
+
+
+\begin{figure}
+\centering
+\includegraphics[width=\columnwidth]{cluster2.png}
+\caption{Cluster B}
+\label{fig:clusterB}
+\centering
+\end{figure}
+
+
+
 
 \section{Conclusion and Future work}
 
