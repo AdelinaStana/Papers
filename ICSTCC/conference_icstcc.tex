@@ -176,11 +176,6 @@ The results of the scenarios mentioned in chapter \ref{method} are presented in 
 Table \ref{tab:clustering-results1} presents the results when using only logical dependencies for software clustering. All rows, except the first one, represent the measurements obtained from logical dependencies extracted with varying strength thresholds.
 
 
-
-
-
-
-
 \begin{table}[htbp]
   \centering
   \caption{Louvain clustering results for LD only}
@@ -249,69 +244,135 @@ Based on the results from table \ref{tab:clustering-results2}, we can observe th
 
 We manualy compared two clustering solutions, the clustering solution obtained only from structural dependencies, in comparison to the clustering solution obtained from using both structural and logical dependencies, filtered with a threshold of 20\% for strength, in order to asses if the second solution is better or not.
 
-The entities listed below are placed in different clusters: 
+The clustering solution relying solely on structural dependencies consists of 14 clusters, while the solution using both structural and logical dependencies consists of 13 clusters, both solutions involve the same number of entities (517). The entities listed below are placed in different clusters: 
+
 
 \begin{itemize}
     \item taskdefs.Available\$FileDir
-    \item taskdefs.Concat
-    \item taskdefs.Concat\$1
-    \item taskdefs.Concat\$MultiReader
-    \item taskdefs.Concat\$TextElement
+    \item taskdefs.Concat and its inner classes taskdefs.Concat\$1, taskdefs.Concat\$ MultiReader, taskdefs.Concat\$ TextElement
     \item taskdefs.Javadoc\$AccessType
-    \item util.WeakishReference
-    \item util.WeakishReference\$HardReference
+    \item util.WeakishReference and its inner class util.WeakishReference\$HardReference
+    \item taskdefs.Replace and its inner classes taskdefs.Replace\$ NestedString, taskdefs.Replace\$ Replacefilter
 \end{itemize}
 
+The migration of entities between clusters is ilustared in Figure \ref{fig:clustersmigration}. Given that the inner classes are shifted from one cluster to another in identical way as the outer class, we omitted the inner classes from the diagram.
 
-We will refer to the clusters resulted from the structural dependencies as \textit{Cluster A} and to those from logical and structural dependencies as \textit{Cluster B}.
+As the cluster number itself is not significant and may vary across different script runs (labels might vary), we will refer to each individual cluster resulting from structural dependencies as \textit{Cluster A} and to the ones resulting from both logical and structural dependencies as \textit{Cluster B}.
 
+\begin{figure}
+\centering
+\includegraphics[width=\columnwidth]{clusters.png}
+\caption{Migration of entities between clusters}
+\label{fig:clustersmigration}
+\centering
+\end{figure}
 
-
+\subsection{taskdefs.Concat and its inner classes}
 In Cluster A, the Concat class and its inner classes (Concat\$1, Concat\$MultiReader, Concat\$TextElement) are placed together with conditions like Available, And, Or, IsTrue, Equals, IsReference, Contains.
 
-On the other hand, Cluster B places them with classes associated with file manipulation and archive operations such as Ear, Jar, War, and Zip, as well as utility classes for file handling like FileUtils and JavaEnvUtils, and entities for zip file processing (ZipEntry, ZipFile).
+On the other hand, in Cluster B are placed with classes associated with file manipulation and archive operations such as Ear, Jar, War, and Zip, as well as utility classes for file handling like FileUtils and JavaEnvUtils, and entities for zip file processing (ZipEntry, ZipFile).  This is due to the logical dependencies that the Concat class has with FileUtils and FileSet in the versioning system.
 
 
-The placement of the Concat class together with its inner classes in Cluster B can be motivated based on it's usage and purpose; according to the documentation : "This class contains the 'concat' task, used to concatenate a series of files into a single stream." \cite{ant_concat}. 
-So, from our point of view, it is better placed in Cluster B, then in Cluster A.
-Figure \ref{fig:cluster1} represents the connections that Concat has in the versioning and file system. Figure \ref{fig:clusterA} represents Cluster A connections and figure \ref{fig:clusterB} represents Cluster B connections.
+The placement of the Concat class together with its inner classes in Cluster B can be motivated based on it's usage and purpose according to the official documentation : "This class contains the 'concat' task, used to concatenate a series of files into a single stream." \cite{ant_concat}. 
+Based on the description provided in the documentation, it is better to position it within Cluster B rather than Cluster A.
+
+Figure \ref{fig:dep_concat} represents the logical and structural connections of Concat. Figure \ref{fig:clusterAconcat} represents Cluster A connections and figure \ref{fig:clusterBconcat} represents Cluster B connections.
 
 
 
 \begin{figure}
 \centering
-\includegraphics[width=\columnwidth]{dep.png}
+\includegraphics[width=\columnwidth]{dep_concat.png}
 \caption{Ant dependencies (LD and SD) of Concat class}
-\label{fig:cluster1}
+\label{fig:dep_concat}
 \centering
 \end{figure}
 
 \begin{figure}
 \centering
-\includegraphics[width=\columnwidth]{cluster1.png}
-\caption{Cluster A; cluster size: 25}
-\label{fig:clusterA}
+\includegraphics[width=\columnwidth]{cluster_concatSD.PNG}
+\caption{Cluster A Concat; cluster size: 25}
+\label{fig:clusterAconcat}
 \centering
 \end{figure}
 
 
 \begin{figure}
 \centering
-\includegraphics[width=\columnwidth]{cluster2.png}
-\caption{Cluster B; cluster size: 52}
-\label{fig:clusterB}
+\includegraphics[width=\columnwidth]{cluster_concatSDLD.PNG}
+\caption{Cluster B Concat; cluster size: 52}
+\label{fig:clusterBconcat}
+\centering
+\end{figure}
+
+\subsection{taskdefs.Available\$FileDir}
+In Cluster A the entity 'taskdefs.Available\$FileDir' is in the same cluster with entities that are related to the build process (ProjectHelper, TaskAdapter, ComponentHelper), but not with entities that have any relation to condition checks or file existence evaluations or with its outer class. 
+
+Cluster B if formed by entities that are related to condition checking (And, Contains, Equals, Or, UpToDate), and also with the outer class of 'taskdefs.Available\$FileDir',  'taskdefs.Available'. The movement of entities from Cluster A to Cluster B was influenced by the logical dependencies between 'taskdefs.Available' and 'taskdefs.Available\$FileDir'.
+
+The documentation description for 'taskdefs.Available' states: "Will set the given property if the requested resource is available at runtime. This task may also be used as a condition by the condition task."\cite{ant_concat}.
+This explains its placement in Cluster B, which is centered around task definitions and conditions related to build processes.
+
+Figure \ref{fig:dep_filedir} represents the logical and structural connections of taskdefs.Available\$FileDir. Figure \ref{fig:clusterAfiledir} represents Cluster A connections and figure \ref{fig:clusterBfiledir} represents Cluster B connections.
+
+
+\begin{figure}
+\centering
+\includegraphics[width=\columnwidth]{dep_filedir.png}
+\caption{Ant dependencies (LD and SD) of Available\$FileDir class}
+\label{fig:dep_filedir}
+\centering
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\columnwidth]{cluster_filedirSD.PNG}
+\caption{Cluster A FileDir ; cluster size: 45}
+\label{fig:clusterAfiledir}
 \centering
 \end{figure}
 
 
-The entity 'taskdefs.Available\$FileDir', in Cluster A, is clustered together with entities that are related to the build process (ProjectHelper, TaskAdapter, ComponentHelper), but do not have any relation to condition checks or file existence evaluations as does Available\$FileDir. 
+\begin{figure}
+\centering
+\includegraphics[width=\columnwidth]{cluster_filedirSDLD.PNG}
+\caption{Cluster B FileDir; cluster size: 25}
+\label{fig:clusterBfiledir}
+\centering
+\end{figure}
 
-Cluster B if formed by entities that are related to condition checking (And, Contains, Equals, Or, UpToDate), and also the outer class of 'taskdefs.Available\$FileDir',  'taskdefs.Available'. 
+\subsection{ taskdefs.Replace and its inner classes}
 
- The documentation description for 'taskdefs.Available' states: "Will set the given property if the requested resource is available at runtime. This task may also be used as a condition by the condition task."\cite{ant_concat}.
- This explains its association in Cluster B, which is centered around task definitions and conditions related to build processes.
+Replace and its inner classes are placed in Cluster B with entities with which they share common functionality and purpose, such as Copydir, Delete, DependSet, or MatchingTask. These entities are involved in similar tasks and operations. On the other hand, the placement in Cluster A, with WeakishReference and its inner classes doesn't seem good, as these entities are unrelated. 
+
+The movement of entities from Cluster A to Cluster B was influenced by the strong logical dependency between 'taskdefs.Replace' and 'taskdefs.MatchingTask'.
+
+Figure \ref{fig:dep_replace} represents the logical and structural connections of taskdefs.Replace and its inner classes. Figure \ref{fig:clusterAreplace} represents Cluster A connections and figure \ref{fig:clusterBreplace} represents Cluster B connections.
+
+\begin{figure}
+\centering
+\includegraphics[width=\columnwidth]{dep_replace.png}
+\caption{Ant dependencies (LD and SD) of Replace and its inner classes}
+\label{fig:dep_replace}
+\centering
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=\columnwidth]{cluster_replaceSD.PNG}
+\caption{Cluster A Replace ; cluster size: 5}
+\label{fig:clusterAreplace}
+\centering
+\end{figure}
 
 
+\begin{figure}
+\centering
+\includegraphics[width=\columnwidth]{cluster_replaceSDLD.PNG}
+\caption{Cluster B Replace; cluster size: 42}
+\label{fig:clusterBreplace}
+\centering
+\end{figure}
 
 \section{Conclusion and Future work}
 
