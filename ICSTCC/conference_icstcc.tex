@@ -52,7 +52,7 @@ Architecture reconstruction appears in contexts where a software system lacks do
 
 Previous research has revealed that dependencies extracted from versioning systems (called logical dependencies) are distinct from those extracted from code, implying that using them could enhance our understanding of the system \cite{DBLP:conf/issre/OlivaG15}, \cite{DBLP:journals/jss/AjienkaC17}, \cite{Oliva:2011:ISL:2067853.2068086}.
 
-We use logical dependencies to enhance the results of clustering methods that previously relied solely on dependencies extracted from code. In this work, we investigate the feasibility of this idea by analyzing in-depth various scenarios of software clustering with logical dependencies for one case study. We use as a case study a big and well-known open-source software system, Ant \cite{ApacheAntGitHub}.
+We use logical dependencies to enhance the results of software clustering methods that previously relied solely on dependencies extracted from code. In this work, we investigate the feasibility of this idea by analyzing in-depth various scenarios of software clustering with logical dependencies for one case study. We use as a case study a big and well-known open-source software system, Ant \cite{ApacheAntGitHub}.
 
 In Section \ref{ld_def}, we detail how we extract logical dependencies from the versioning system and how different filter methods affect the logical dependencies size and reliability. Section \ref{related_work} discusses previous approaches to software clustering, including the inputs and evaluation methods used by other authors. Our methodology for generating clustering solutions based on logical dependencies and our evaluation approach are presented in Section \ref{method}. Section \ref{results} presents our findings, while Section \ref{discussion} provides a more thorough analysis of two solutions, one incorporating logical dependencies and the other without. Finally, our conclusions and plans for future work are summarized in Section \ref{conclusion}.
 
@@ -356,10 +356,9 @@ Also, the cluster from figure \ref{fig:clusterAreplace} is the 14th cluster that
 \label{conclusion}
 
 Based the outcomes from Section \ref{results} and the analysis from Section \ref{discussion}, it is clear that incorporating logical dependencies improves the quality of clustering solutions. 
-The improvement is obtained from the insights provided by the logical dependencies within the system. This reinforces the idea that dependencies extracted from the versioning system contribute with new information that isn't otherwise available through code analysis. Information that can be used separately or together with other types of dependencies, to enhance the overall effectiveness of software clustering techniques.
+This reinforces the idea that dependencies extracted from the versioning system contribute with new information that isn't otherwise available through code analysis.  Our current findings are that using logical dependencies combined with structural dependencies improves the quality of the software clustering solution. Using only logical dependencies as input for software clustering does not attain the same quality as with structural dependencies, but it could be an alternative solution if the analysis of the source code is not possible.
 
-For our forthcoming work, we intend to conduct further experiments across various projects to validate these findings. Additionally, we will try to create reference clustering solutions for these projects, based on their code and documentation. We will then evaluate the clustering results against the reference solution by utilizing the MOJO metric for comparison \cite{mojo-tzerpos}.
-
+In our forthcoming work, we intend to expand the project list for our software clustering analysis to better understand the effectiveness of integrating both structural and logical dependencies. Additionally, we'll explore alternative metrics besides MQ to validate the improved quality of these solutions compared to those based solely on structural dependencies.
 
 \bibliographystyle{IEEEtran}
 \bibliography{logicaldepd}
