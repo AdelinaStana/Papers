@@ -37,7 +37,7 @@ ioana.sora@cs.upt.ro}
 \maketitle
 
 \begin{abstract}
-Extracted code co-changes from versioning systems have multiple applications across numerous fields, including fault detection, software reconstruction, key class identification, among others. This paper will focus on the influence of code co-changes on software clustering for architectural reconstruction. Specifically, we will analyze their impact on the clustering solution of Apache Ant in order to assess whether co-changes usage enhances the quality of the obtained solution.
+Logical dependencies, extracted from co-changes from versioning system, have multiple applications across numerous fields, including fault detection, software reconstruction, key class identification, among others. This paper will focus on the influence of code co-changes on software clustering for architectural reconstruction. Specifically, we will analyze their impact on the clustering solution of Apache Ant in order to assess whether co-changes usage enhances the quality of the obtained solution.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -50,9 +50,9 @@ The software architecture helps developers in gaining a better understanding of 
 
 Architecture reconstruction appears in contexts where a software system lacks documentation entirely, or when existing documentation fails to accurately reflect changes within the system. This process involves identifying the modules or subsystems within the system, which is done through software clustering. Additionally, architectural reconstruction can be used for validating whether a documented modularization aligns with the actual structure of the system.
 
-Previous research has revealed that dependencies extracted from versioning systems are distinct from those extracted from code, which are called logical dependencies, implying that using them could enhance our understanding of the system \cite{DBLP:conf/issre/OlivaG15}, \cite{DBLP:journals/jss/AjienkaC17}, \cite{Oliva:2011:ISL:2067853.2068086}.
+Previous research has revealed that dependencies extracted from versioning systems (called logical dependencies) are distinct from those extracted from code, implying that using them could enhance our understanding of the system \cite{DBLP:conf/issre/OlivaG15}, \cite{DBLP:journals/jss/AjienkaC17}, \cite{Oliva:2011:ISL:2067853.2068086}.
 
-We use logical dependencies to enhance the results of clustering methods that previously relied solely on dependencies extracted from code. 
+We use logical dependencies to enhance the results of clustering methods that previously relied solely on dependencies extracted from code. In this work, we investigate the feasibility of this idea by analyzing in-depth various scenarios of software clustering with logical dependencies for one case study. We use as a case study a big and well-known open-source software system, Ant \cite{ApacheAntGitHub}.
 
 In Section \ref{ld_def}, we detail how we extract logical dependencies from the versioning system and how different filter methods affect the logical dependencies size and reliability. Section \ref{related_work} discusses previous approaches to software clustering, including the inputs and evaluation methods used by other authors. Our methodology for generating clustering solutions based on logical dependencies and our evaluation approach are presented in Section \ref{method}. Section \ref{results} presents our findings, while Section \ref{discussion} provides a more thorough analysis of two solutions, one incorporating logical dependencies and the other without. Finally, our conclusions and plans for future work are summarized in Section \ref{conclusion}.
 
@@ -69,7 +69,7 @@ In our previous research, we examined several software systems and determined th
 
 Additionally, the reliability of co-changes is another problem; certain entities may only change together once throughout the entire versioning history, making them less reliable than entities that change together hundreds of times, for instance. 
 
-Previous research uses two known metrics in order to solve this problems: \textit{support} and \textit{confidence}, defined as in equations (1)  and (2). Given a dependency where $A \rightarrow B$, the support metric measures the frequency of updates that two entities share within the versioning system. The confidence metric calculates the proportion of updates between two entities relative to the total updates of the antecedent (A) or consequent (B) entity \cite{DBLP:conf/issre/OlivaG15}, \cite{DBLP:journals/jss/AjienkaC17}, \cite{Zimmermann:2004:MVH:998675.999460}.
+Previous research uses two known metrics in order to solve this problems: \textit{support} and \textit{confidence}, defined as in equations (1)  and (2) \cite{DBLP:conf/issre/OlivaG15}, \cite{DBLP:journals/jss/AjienkaC17}, \cite{Zimmermann:2004:MVH:998675.999460} . Given a dependency where $A \rightarrow B$, the support metric measures the frequency of updates that two entities share within the versioning system. The confidence metric calculates the proportion of updates between two entities relative to the total updates of the antecedent (A) or consequent (B) entity.
 
 \begin{equation}
 \small
@@ -82,10 +82,10 @@ Previous research uses two known metrics in order to solve this problems: \texti
 \end{equation}
 
 
-In our previous research, we focused on identifying metrics that enhance the reliability of dependencies extracted from the versioning system \cite{saci19}, \cite{enase19}. One of the metrics is the \textit{commit size metric}, which involves extracting dependencies from commits that do not exceed a specific commit size limit, thereby reducing the possibility of extracting an overly large number of dependencies. Additionally, we developed the strength metric, which serves as a refinement of the more known \textit{confidence metric} \cite{articlekeyclass23}.
+In our previous research, we focused on identifying metrics that enhance the reliability of dependencies extracted from the versioning system \cite{saci19}, \cite{enase19}. One of the metrics is the \textit{commit size metric}, which involves extracting dependencies from commits that do not exceed a specific commit size limit, thereby reducing the possibility of extracting an overly large number of dependencies. Additionally, we developed the \textit{strength metric}, which serves as a refinement of the confidence metric presented before. \cite{articlekeyclass23}.
 
 
-The strength metric, as defined in equation (4), was developed to obtain a better reflection of the system and its values. For instance, when using the confidence metric, two entities that update together only once, and this is also their only update, will have the highest possible score on the confidence metric, a result that is not desirable. On the other hand, entities that undergo hundreds of updates together, and even more updates with other entities, will receive a lower confidence metric score. Thus, the confidence metric will favor entities that update less and always together.
+We developed the strength metric, as defined in equation (4), to obtain a better reflection of the system and its values. For instance, when using the confidence metric, two entities that update together only once, and this is also their only update, will have the highest possible score on the confidence metric, a result that is not desirable. On the other hand, entities that undergo hundreds of updates together, and even more updates with other entities, will receive a lower confidence metric score. Thus, the confidence metric will favor entities that update less and always together, even if their number of updates is too small to be relevant.
 
 
  The strength metric is calculated by multiplying the confidence metric value with a system factor, which is determined by the average number of updates for all entities in the system. In this way, a very high confidence score resulting from only a few updates will be adjusted downwards, while a low confidence score that is based on a big number of updates will be increased.
@@ -131,14 +131,7 @@ To generate and evaluate the results of our approach, we initially create a clus
 
 \subsection{Dependencies extraction}
 
-To obtain the logical dependencies for further use, we use a Python tool developed in our previous research \cite{articlekeyclass23}. This tool retrieves all necessary data from GitHub \cite{ApacheAntGitHub} using git commands and then processes it. The workfow of this tool is presented in Figure \ref{fig:extraction}.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=\columnwidth]{dependencies-export2.png}
-\caption{Logical dependencies extraction workflow}
-\label{fig:extraction}
-\end{figure}
+To obtain the logical dependencies for further use, we use a Python tool developed in our previous research \cite{articlekeyclass23}. This tool retrieves all necessary data from GitHub \cite{ApacheAntGitHub} using git commands and then processes it. 
 
 The initial phase involves applying a commit size filter to exclude all commits that involve changes to more than 10 files. Following, the tool creates dependencies based on these commits, establishing a dependency link between each entity in a modified file and all entities in other files modified by the same commit. 
 
@@ -178,7 +171,7 @@ Table \ref{tab:clustering-results1} presents the results when using only logical
 
 \begin{table}[htbp]
   \centering
-  \caption{Louvain clustering results for LD only}
+  \caption{Louvain clustering results for LD only vs SD only}
   \label{tab:clustering-results1}
   \begin{tabular}{lc|c|c}
     \toprule
@@ -208,7 +201,7 @@ In both tables, the second column shows the total count of different entities fo
 
 \begin{table}[htbp]
   \centering
-  \caption{Louvain clustering results for LD and SD combined}
+  \caption{Louvain clustering results for LD and SD combined vs SD only}
   \label{tab:clustering-results2}
   \begin{tabular}{lc|c|c}
     \toprule
@@ -363,7 +356,7 @@ Also, the cluster from figure \ref{fig:clusterAreplace} is the 14th cluster that
 \label{conclusion}
 
 Based the outcomes from Section \ref{results} and the analysis from Section \ref{discussion}, it is clear that incorporating logical dependencies improves the quality of clustering solutions. 
-The improvement is obtained from the insights provided by the logical dependencies within the system. This reinforces the idea that dependencies extracted from the versioning system contribute with new information that isn't otherwise available through code analysis. Information that can be used together or separately, along with other types of dependencies, to enhance the overall effectiveness of software clustering techniques.
+The improvement is obtained from the insights provided by the logical dependencies within the system. This reinforces the idea that dependencies extracted from the versioning system contribute with new information that isn't otherwise available through code analysis. Information that can be used separately or together with other types of dependencies, to enhance the overall effectiveness of software clustering techniques.
 
 For our forthcoming work, we intend to conduct further experiments across various projects to validate these findings. Additionally, we will try to create reference clustering solutions for these projects, based on their code and documentation. We will then evaluate the clustering results against the reference solution by utilizing the MOJO metric for comparison \cite{mojo-tzerpos}.
 
