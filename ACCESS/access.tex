@@ -69,7 +69,10 @@ In this paper, we assess whether using structural dependencies combined with log
 
 To evaluate the results, we generate software clustering on five open-source projects and use two types of metrics for comparison. One of the metrics is MQ (Modularization Quality), which evaluates the modularization quality based on the interaction between the modules and does not require any additional input besides the clustering result \cite{b2}. The other is the MoJo (Move and Join) metric, a commonly used metric for evaluating the similarity between two different software clustering results \cite{b3}. For this metric, we manually generate a base of comparison for the clustering result and compare it against this baseline.
 
-[ToDo]: add chapters
+In Section \ref{sec:related_work}, we review the related work and previous studies that used various dependencies for software clustering and their metrics for evaluation.
+Section \ref{sec:workflow_implementation} details the workflow and implementation of our approach, including the extraction and filtering of dependencies, and the clustering algorithm used.
+The results of our experiments on five open-source projects are presented in Section \ref{sec:results}. Section \ref{sec:evaluation} evaluates our results by using the Modularization Quality (MQ) metric and the Move and Join (MoJo) metric. We also manually analyze some of the clustering solutions.
+Finally, Section \ref{sec:conclusion} contains our conclusions, findings, and potential directions for future work.
 
 \subsection{Abbreviations and Acronyms}
 
@@ -87,23 +90,53 @@ Logical Dependencies (LD) refer to the relationships between software entities t
 Structural Dependencies (SD), on the other hand, refer to the relationships between software entities extracted from static code analysis.
 Modularization Quality Metric (MQ) and Move and Join Metric (MoJo) are metrics used to evaluate software clustering results.
 
+\section{Related Work}
+\label{sec:related_work}
 
-\section{Related work}
 
 \section{Workflow and Implementation}
+\label{sec:workflow_implementation}
+
+
+To achieve our goal of evaluating how the quality of clustering solutions is impacted by logical dependencies, we developed a Python tool capable of using any type of dependency, either alone or combined with other types of dependencies, as long as they are provided in CSV format. The tool clusters and evaluates software clustering solutions using either the MQ metric or the MoJo metric. In the following subsections, we present how we obtain the structural dependencies and logical dependencies used, the type of clustering algorithm we use, and the tool's workflow.
+
+\subsection{Structural Dependencies}
+\label{subsec:sd}
+
+The structural dependencies are obtained using a tool from our previous research. While the tool primarily exports the key class ranking of a software system, it also has the capability to export the data in CSV format. The exported dependencies are directed and weighted based on the type of dependency they represent.
+
+\subsection{Logical Dependencies}
+\label{subsec:ld}
+
+We refer to logical dependencies as the filtered co-changes between software entities. A co-change occurs when two or more software entities are modified together during the same commit in the version control system. Co-changes indicate that these entities are likely related or dependent on each other, directly or indirectly.
+
+There is a degree of uncertainty associated with co-changes. Compared to structural dependencies, where the presence of a dependency is certain, co-changes are less reliable. For example, if the system was migrated from one version control system to another, the first commit will include all the entities from the system at that point in time. Should we consider all these entities as related to one another in this case? This would introduce false dependencies and reduce the likelihood of achieving accurate results when combining them with more reliable types of dependencies.
+
+Even if we address the issue of the first commit, it can still happen that a developer resolves multiple unrelated issues in the same commit (even though this is not recommended by development processes).
+
+To solve this problem, in our previous works, we have refined some filtering methods to ensure that the co-changes that remain after filtering are more reliable and suitable for use with other dependencies or individually.
+
+\subsection{Louvain Clustering Algorithm}
+\label{subsec:louvain}
+
+\subsection{Tool Workflow Overview}
+\label{subsec:tool_workflow}
 
 \section{Results}
+\label{sec:results}
 
 \section{Evaluation}
+\label{sec:evaluation}
 
 \section{Conclusion}
-
+\label{sec:conclusion}
 
 \begin{thebibliography}{00}
 
 \bibitem{b1} Ajienka, Nemitari \& Capiluppi, Andrea. (2017). Understanding the Interplay between the Logical and Structural Coupling of Software Classes. Journal of Systems and Software. 134. 10.1016/j.jss.2017.08.042.
 \bibitem{b2} S. Mancoridis, B. Mitchell, C. Rorres, Y. Chen, and E. Gansner, “Using automatic clustering to produce high-level system organizations of source code,” in Proceedings. 6th International Workshop on Program Comprehension. IWPC’98 (Cat. No.98TB100242), 1998, pp. 45–52.
 \bibitem{b3} V. Tzerpos and R. C. Holt, "MoJo: a distance metric for software clusterings," Sixth Working Conference on Reverse Engineering (Cat. No.PR00303), Atlanta, GA, USA, 1999, pp. 187-193, doi: 10.1109/WCRE.1999.806959.
+\bibitem{b4} Stana, Adelina-Diana \& Şora, Ioana. (2023). Logical dependencies: Extraction from the versioning system and usage in key classes detection. Computer Science and Information Systems. 20. 25-25. 10.2298/CSIS220518025S. 
 
 \end{thebibliography}
 
