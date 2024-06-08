@@ -167,10 +167,11 @@ We refer to this addition to the original calculation formula as strength metric
 
 \subsubsection{Filter Application Process}
 
-
 The overall filter application process is illustrated in Fig. \ref{fig:filtering}.  We begin by extracting all co-changes from the versioning system, and the first filter applied is the commit size filter. The commit size filter has a strict threshold of 10 files, meaning that any co-changes from commits involving more than 10 files are filtered out.
 
 The co-changes that remain after applying the commit size filter are then processed using the strength filter. The strength filter uses multiple thresholds, specifically 10 different thresholds. We start with a threshold of 10 and increment it by 10 until we reach a maximum value of 100. The reason for not using a fixed threshold is to assess how different strength thresholds affect our cluster generation. 
+
+
 
 \begin{figure}[t!]
   \centering
@@ -179,12 +180,32 @@ The co-changes that remain after applying the commit size filter are then proces
   \label{fig:filtering}
 \end{figure}
 
+To extract and filter the co-changes, we used a previously developed tool \cite{b4}. This tool takes as input the GitHub repository address and the threshold values for commit and strength filters. The tool clones the repository, downloads all commit diffs starting from the first commit, examines all files changed in each commit to identify which entities have changed in those files, and creates undirected co-change dependencies between all changed entities within a commit.
+
+The commit size filter is applied to these undirected co-change dependencies, since the metric value for $(A \rightarrow B)$ is the same as for $(B \rightarrow A)$. For the strength filter, each co-change dependency is converted into a directed co-change dependency, so for each $(A \rightarrow B)$ dependency we have both $(A \rightarrow B)$ and $(B \rightarrow A)$. This conversion is necessary because, as mentioned in the previous section, the confidence filter, upon which the strength filter is built, evaluates the antecedent of the rule. Thus, the metric value for $(A \rightarrow B)$ differs from the metric value for $(B \rightarrow A)$.
+
+The remaining dependencies after applying the strength filter are then exported to a CSV file for further use.
 
 \subsection{Louvain Clustering Algorithm}
 \label{subsec:louvain}
 
+The Louvain algorithm was originally developed by Blondel et al. and is used for finding community partitions (clusters) in large networks. The algorithm begins with a weighted network of N nodes, initially assigning each node to its own cluster, resulting in N clusters. For each node, the algorithm evaluates the modularity gain from moving the node to the cluster of each of its neighbors. Based on the results, the node is moved to the cluster with the maximum positive modularity gain. This process is repeated for all nodes until no further improvement in modularity is possible \cite{b8}.
+
+The modularity of a cluster is a value that ranges from -1 to 1, which measures the density of connections inside clusters compared to connections between clusters\cite{b9}.
+
+\subsection{Clustering result evaluation}
+\label{subsec:evaluation_def}
+
+\subsubsection{Modularity Quality Metric}
+
+\subsubsection{MoJo Metric}
+
 \subsection{Tool Workflow Overview}
 \label{subsec:tool_workflow}
+
+For cluster generation and result evaluation, we developed a tool that accepts one or multiple dependency files as input and outputs the cluster results along with the values for both the MoJo and MQ metrics. The dependencies are stored in a CSV file with the format: antecedent, consequent, weight. The tool reads each line, adding the antecedent and consequent as nodes in a directed graph, with the weight serving as the edge weight. If multiple files are processed and the same dependency is found in them, the weights are summed.
+
+Based on the constructed directed graph, the Louvain clustering algorithm is performed, and the solution is evaluated using the MQ metric. We then manually generated baseline solutions for clustering to perform MoJo metric evaluation, comparing the baseline solution with the generated Louvain clustering solution.
 
 \section{Results}
 \label{sec:results}
@@ -204,6 +225,9 @@ The co-changes that remain after applying the commit size filter are then proces
 \bibitem{b5} Stana, Adelina-Diana \& Şora, Ioana. (2019). Analyzing information from versioning systems to detect logical dependencies in software systems. 000015-000020. 10.1109/SACI46893.2019.9111582. 
 \bibitem{b6} Stana, Adelina-Diana \& Şora, Ioana. (2019). Identifying Logical Dependencies from Co-Changing Classes. 486-493. 10.5220/0007758104860493. 
 \bibitem{b7} T. Zimmermann, P. Weibgerber, S. Diehl and A. Zeller, "Mining version histories to guide software changes," Proceedings. 26th International Conference on Software Engineering, Edinburgh, UK, 2004, pp. 563-572, doi: 10.1109/ICSE.2004.1317478.
+\bibitem{b8} Blondel, Vincent \& Guillaume, Jean-Loup \& Lambiotte, Renaud \& Lefebvre, Etienne. (2008). Fast Unfolding of Communities in Large Networks. Journal of Statistical Mechanics Theory and Experiment. 2008. 10.1088/1742-5468/2008/10/P10008. 
+\bibitem{b9} Newman, Mark. (2006). Newman MEJ.. Modularity and community structure in networks. Proc Natl Acad Sci USA 103: 8577-8582. Proceedings of the National Academy of Sciences of the United States of America. 103. 8577-82. 10.1073/pnas.0601602103. 
+
 
 \end{thebibliography}
 
