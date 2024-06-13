@@ -51,7 +51,7 @@
 Version control systems primarily offer support for tracking and managing changes in software code, but they can also provide a great deal of additional information about the managed software. Changes in multiple software entities simultaneously can imply that these entities are connected to one another. Software entities that change at the same time (code co-changes) are treated as a distinct category of software dependencies. In some cases, these co-changes are used together with other types of dependencies, such as structural dependencies or lexical dependencies, to enhance the understanding of a software system.
 
 
-This paper proposes using code co-changes in software clustering for architectural reconstruction. Structural dependencies are the most commonly used type of dependencies in software clustering for architectural reconstruction, so we will use clustering solutions obtained from structural dependencies as the baseline for our evaluations. Our approach will be applied to five open-source projects found on GitHub. For each of the projects, we will compare and evaluate the clustering obtained by using only co-changes and the clustering obtained by using co-changes combined with structural dependencies with the baseline clustering generated solely from structural dependencies.
+This paper proposes using code co-changes in software clustering for architectural reconstruction. Structural dependencies are the most commonly used type of dependencies in software clustering for architectural reconstruction, so we will use clustering solutions obtained from structural dependencies as the baseline for our evaluations. Our approach will be applied to four open-source projects found on GitHub. For each of the projects, we will compare and evaluate the clustering obtained by using only co-changes and the clustering obtained by using co-changes combined with structural dependencies with the baseline clustering generated solely from structural dependencies.
 \end{abstract}
 
 \begin{keywords}
@@ -71,11 +71,11 @@ Among the dependencies that can be used for software clustering are structural d
 
 In this paper, we assess whether using structural dependencies combined with logical dependencies can provide better results than using each type of dependency alone. The structural dependencies are used as they are extracted from static code analysis. The logical dependencies are filtered co-changes from the version control system. The reason behind filtering the co-changes and not using them as they are in the versioning system is to enhance their quality and make them easier to combine with structural dependencies, as their size can outnumber the structural dependencies \cite{b1}.
 
-To evaluate the results, we generate software clustering on five open-source projects and use two types of metrics for comparison. One of the metrics is MQ (Modularization Quality), which evaluates the modularization quality based on the interaction between the modules and does not require any additional input besides the clustering result \cite{b2}. The other is the MoJo (Move and Join) metric, a commonly used metric for evaluating the similarity between two different software clustering results \cite{b3}. For this metric, we manually generate a base of comparison for the clustering result and compare it against this baseline.
+To evaluate the results, we generate software clustering on four open-source projects and use two types of metrics for comparison. One of the metrics is MQ (Modularization Quality), which evaluates the modularization quality based on the interaction between the modules and does not require any additional input besides the clustering result \cite{b2}. The other is the MoJo (Move and Join) metric, a commonly used metric for evaluating the similarity between two different software clustering results \cite{b3}. For this metric, we manually generate a base of comparison for the clustering result and compare it against this baseline.
 
 In Section \ref{sec:related_work}, we review the related work and previous studies that used various dependencies for software clustering and their metrics for evaluation.
 Section \ref{sec:workflow_implementation} details the workflow and implementation of our approach, including the extraction and filtering of dependencies, and the clustering algorithm used.
-The results of our experiments on five open-source projects are presented in Section \ref{sec:results}. Section \ref{sec:evaluation} evaluates our results by using the Modularization Quality (MQ) metric and the Move and Join (MoJo) metric. We also manually analyze some of the clustering solutions.
+The results of our experiments on four open-source projects are presented in Section \ref{sec:results}. Section \ref{sec:evaluation} evaluates our results by using the Modularization Quality (MQ) metric and the Move and Join (MoJo) metric. We also manually analyze some of the clustering solutions.
 Finally, Section \ref{sec:conclusion} contains our conclusions, findings, and potential directions for future work.
 
 \subsection{Abbreviations and Acronyms}
@@ -281,8 +281,8 @@ SD+LD [100] & 13 & 517 & 0.072 & 184 \\
 
 
 \begin{table}[h]
-\caption{Clustering Results Based on Different Dependency Types And Strength Filter Thresholds for Repo: \url{https://github.com/apache/tomcat}}
-\label{tab:clustering_results}
+\caption{Clustering Results Based on Different Dependency Types And Strength Filter Thresholds for Repo: \href{https://github.com/apache/tomcat}{https://github.com/apache/tomcat}}
+\label{tab:clustering_results_tomcat}
 \centering
 \setlength{\tabcolsep}{10pt}
 \begin{tabular}{|l|c|c|c|c|}
@@ -291,16 +291,16 @@ SD+LD [100] & 13 & 517 & 0.072 & 184 \\
 \textbf{[Strength Thresh.]} & \textbf{Clusters} & \textbf{Count} &  &  \\
 \hline
 \textbf{SD} & \textbf{31} & \textbf{662} & \textbf{0.184} & \textbf{220} \\
-LD [10] & 41 & 662 & 0.023 & 314 \\
-LD [20] & 46 & 662 & 0.026 & 425 \\
-LD [30] & 46 & 662 & 0.024 & 460 \\
-LD [40] & 42 & 662 & 0.022 & 488 \\
-LD [50] & 44 & 662 & 0.023 & 499 \\
-LD [60] & 45 & 662 & 0.024 & 521 \\
-LD [70] & 45 & 662 & 0.024 & 531 \\
-LD [80] & 36 & 662 & 0.020 & 557 \\
-LD [90] & 32 & 662 & 0.018 & 564 \\
-LD [100] & 30 & 662 & 0.018 & 568 \\
+LD [10] & 41 & 415 & 0.023 & 314 \\
+LD [20] & 46 & 308 & 0.026 & 425 \\
+LD [30] & 46 & 250 & 0.024 & 460 \\
+LD [40] & 42 & 209 & 0.022 & 488 \\
+LD [50] & 44 & 199 & 0.023 & 499 \\
+LD [60] & 45 & 178 & 0.024 & 521 \\
+LD [70] & 45 & 165 & 0.024 & 531 \\
+LD [80] & 36 & 127 & 0.020 & 557 \\
+LD [90] & 32 & 116 & 0.018 & 564 \\
+LD [100] & 30 & 110 & 0.018 & 568 \\
 \hline
 SD+LD [10] & 26 & 662 & 0.164 & 250 \\
 SD+LD [20] & 28 & 662 & 0.170 & 222 \\
@@ -316,10 +316,9 @@ SD+LD [100] & 29 & 662 & 0.171 & 223 \\
 \end{tabular}
 \end{table}
 
-
 \begin{table}[h]
-\caption{Clustering Results Based on Different Dependency Types + Strength Filter Thresholds \\ for Repo: \href{https://github.com/hibernate/hibernate-orm}{https://github.com/hibernate/hibernate-orm}}
-\label{tab:clustering_results}
+\caption{Clustering Results Based on Different Dependency Types And Strength Filter Thresholds for Repo: \href{https://github.com/hibernate/hibernate-orm}{https://github.com/hibernate/hibernate-orm}}
+\label{tab:clustering_results_hibernate}
 \centering
 \setlength{\tabcolsep}{10pt}
 \begin{tabular}{|l|c|c|c|c|}
@@ -328,16 +327,16 @@ SD+LD [100] & 29 & 662 & 0.171 & 223 \\
 \textbf{[Strength Thresh.]} & \textbf{Clusters} & \textbf{Count} &  &  \\
 \hline
 \textbf{SD} & \textbf{26} & \textbf{4414} & \textbf{0.073} & \textbf{2668} \\
-LD [10] & 46 & 4414 & 0.004 & 3992 \\
-LD [20] & 64 & 4414 & 0.004 & 3991 \\
-LD [30] & 68 & 4414 & 0.004 & 3996 \\
-LD [40] & 87 & 4414 & 0.005 & 4020 \\
-LD [50] & 90 & 4414 & 0.005 & 4020 \\
-LD [60] & 89 & 4414 & 0.005 & 4074 \\
-LD [70] & 93 & 4414 & 0.005 & 4108 \\
-LD [80] & 96 & 4414 & 0.005 & 4117 \\
-LD [90] & 97 & 4414 & 0.005 & 4128 \\
-LD [100] & 86 & 4414 & 0.005 & 4174 \\
+LD [10] & 46 & 1469 & 0.004 & 3992 \\
+LD [20] & 64 & 1343 & 0.004 & 3991 \\
+LD [30] & 68 & 1242 & 0.004 & 3996 \\
+LD [40] & 87 & 933 & 0.005 & 4020 \\
+LD [50] & 90 & 917 & 0.005 & 4020 \\
+LD [60] & 89 & 866 & 0.005 & 4074 \\
+LD [70] & 93 & 474 & 0.005 & 4108 \\
+LD [80] & 96 & 465 & 0.005 & 4117 \\
+LD [90] & 97 & 447 & 0.005 & 4128 \\
+LD [100] & 86 & 370 & 0.005 & 4174 \\
 \hline
 SD+LD [10] & 30 & 4414 & 0.070 & 2596 \\
 SD+LD [20] & 29 & 4414 & 0.073 & 2577 \\
@@ -352,6 +351,45 @@ SD+LD [100] & 30 & 4414 & 0.072 & 2559 \\
 \hline
 \end{tabular}
 \end{table}
+
+
+\begin{table}[h]
+\caption{Clustering Results Based on Different Dependency Types And Strength Filter Thresholds for Repo: \href{https://github.com/google/gson}{https://github.com/google/gson}}
+\label{tab:clustering_results_gson}
+\centering
+\setlength{\tabcolsep}{10pt}
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\textbf{Dependency Type} & \textbf{Nr. of} & \textbf{Class} & \textbf{MQ} & \textbf{Mojo} \\
+\textbf{[Strength Thresh.]} & \textbf{Clusters} & \textbf{Count} &  &  \\
+\hline
+\textbf{SD} & \textbf{10} & \textbf{210} & \textbf{0.144} & \textbf{83} \\
+LD [10] & 10 & 67 & 0.018 & 164 \\
+LD [20] & 11 & 50 & 0.022 & 177 \\
+LD [30] & 12 & 41 & 0.027 & 182 \\
+LD [40] & 8 & 31 & 0.022 & 186 \\
+LD [50] & 8 & 31 & 0.022 & 186 \\
+LD [60] & 8 & 28 & 0.021 & 189 \\
+LD [70] & 7 & 26 & 0.018 & 190 \\
+LD [80] & 5 & 18 & 0.014 & 196 \\
+LD [90] & 5 & 18 & 0.014 & 196 \\
+LD [100] & 5 & 18 & 0.014 & 196 \\
+\hline
+SD+LD [10] & 10 & 210 & 0.144 & 83 \\
+SD+LD [20] & 10 & 210 & 0.139 & 78 \\
+SD+LD [30] & 10 & 210 & 0.139 & 78 \\
+SD+LD [40] & 10 & 210 & 0.139 & 78 \\
+SD+LD [50] & 10 & 210 & 0.139 & 78 \\
+SD+LD [60] & 10 & 210 & 0.139 & 78 \\
+SD+LD [70] & 10 & 210 & 0.139 & 78 \\
+SD+LD [80] & 10 & 210 & 0.139 & 78 \\
+SD+LD [90] & 10 & 210 & 0.139 & 78 \\
+SD+LD [100] & 10 & 210 & 0.139 & 78 \\
+\hline
+\end{tabular}
+\end{table}
+
+
 
 \section{Evaluation}
 \label{sec:evaluation}
