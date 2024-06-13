@@ -4,6 +4,7 @@
 \usepackage{algorithmic}
 \usepackage{graphicx}
 \usepackage{textcomp}
+\usepackage{hyperref}
 
 \usepackage{bm}
 \makeatletter
@@ -171,8 +172,6 @@ The overall filter application process is illustrated in Fig. \ref{fig:filtering
 
 The co-changes that remain after applying the commit size filter are then processed using the strength filter. The strength filter uses multiple thresholds, specifically 10 different thresholds. We start with a threshold of 10 and increment it by 10 until we reach a maximum value of 100. The reason for not using a fixed threshold is to assess how different strength thresholds affect our cluster generation. 
 
-
-
 \begin{figure}[t!]
   \centering
   \includegraphics[width=\columnwidth]{filtering.png}
@@ -186,12 +185,16 @@ The commit size filter is applied to these undirected co-change dependencies, si
 
 The remaining dependencies after applying the strength filter are then exported to a CSV file for further use.
 
+\Figure[t!](topskip=0pt, botskip=0pt, midskip=0pt)[width=\textwidth]{workflow-tool.png}
+{ \textbf{Tool workflow overview: input, processing and output.}\label{fig:tool}}
+
 \subsection{Louvain Clustering Algorithm}
 \label{subsec:louvain}
 
 The Louvain algorithm was originally developed by Blondel et al. and is used for finding community partitions (clusters) in large networks. The algorithm begins with a weighted network of N nodes, initially assigning each node to its own cluster, resulting in N clusters. For each node, the algorithm evaluates the modularity gain from moving the node to the cluster of each of its neighbors. Based on the results, the node is moved to the cluster with the maximum positive modularity gain. This process is repeated for all nodes until no further improvement in modularity is possible \cite{b8}.
 
-The modularity of a cluster is a value that ranges from -1 to 1, which measures the density of connections inside clusters compared to connections between clusters\cite{b9}.
+The modularity of a cluster is a value that ranges from -1 to 1, which measures the density of connections inside clusters compared to connections between clusters \cite{b9}.
+
 
 \subsection{Clustering result evaluation}
 \label{subsec:evaluation_def}
@@ -203,12 +206,152 @@ The modularity of a cluster is a value that ranges from -1 to 1, which measures 
 \subsection{Tool Workflow Overview}
 \label{subsec:tool_workflow}
 
-For cluster generation and result evaluation, we developed a tool that accepts one or multiple dependency files as input and outputs the cluster results along with the values for both the MoJo and MQ metrics. The dependencies are stored in a CSV file with the format: antecedent, consequent, weight. The tool reads each line, adding the antecedent and consequent as nodes in a directed graph, with the weight serving as the edge weight. If multiple files are processed and the same dependency is found in them, the weights are summed.
+To generate the cluster solutions and evaluate the results, we created a tool in Python. The entire workflow of the tool is presented in Fig. \ref{fig:tool}.
 
-Based on the constructed directed graph, the Louvain clustering algorithm is performed, and the solution is evaluated using the MQ metric. We then manually generated baseline solutions for clustering to perform MoJo metric evaluation, comparing the baseline solution with the generated Louvain clustering solution.
+\subsubsection{Input}
+
+The tool takes as input one or multiple dependency CSV files and the baseline solution required for the MoJo metric. We designed the tool to accept multiple dependency files so that we can generate clustering solutions based on either a single type of dependency (structural or logical) or a combination of both.
+
+Since the MoJo metric requires a baseline solution to evaluate the generated solution, we manually inspected the code and created baseline clustering solutions, which we then provide as input for the tool.
+
+\subsubsection{Processing}
+
+The dependencies are saved in the CSV file in the following format: antecedent of a dependency, consequent of a dependency, weight. The tool reads each line, adds the antecedent and consequent as nodes in a directed graph, and creates an edge between them, with the weight from the CSV file becoming the edge weight. If multiple dependency files are processed and the same dependency is found in multiple files, the edge weights are summed.
+
+
+After all dependencies are read, the directed graph is passed to the Louvain clustering algorithm to generate the clustering result. The clustering result is then evaluated. The MQ metric requires the directed graph and the clustering result, while the MoJo metric requires the baseline clustering solution provided as input and the clustering result.
+
+\subsubsection{Output}
+
+After both evaluations are done, we export the clustering result, the cluster count, and the values for both metrics.
 
 \section{Results}
 \label{sec:results}
+
+To assess the impact of using logical dependencies in software clustering, we run the tool presented in Section \ref{subsec:tool_workflow} in three different scenarios. All three scenarios are illustrated in Fig. \ref{fig:scenatrio}.
+
+In the first scenario, we run the tool once, providing only the structural dependencies of the system as input for the clustering algorithm.
+
+In the second scenario, we run the tool ten times, using only logical dependencies as input. We perform ten runs because we generate logical dependencies with different threshold values for the strength filter. We start with a threshold of 10 and increase it in steps of 10 up to 100.
+
+In the third scenario, we combine logical with structural dependencies. Again, we run the tool ten times, each time using structural dependencies and logical dependencies generated with different strength thresholds.
+
+\begin{figure}[t!]
+  \centering
+  \includegraphics[width=\columnwidth]{scenario.png}
+  \caption{ \textbf{Scenarios for results}}
+  \label{fig:scenatrio}
+\end{figure}
+
+\begin{table}[h]
+\caption{Clustering Results Based on Different Dependency Types And Strength Filter Thresholds For Repo: \url{https://github.com/apache/ant}}
+\label{tab:clustering_results_ant}
+\centering
+\setlength{\tabcolsep}{10pt}
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\textbf{Dependency Type} & \textbf{Nr. Of} & \textbf{Class} & \textbf{MQ} & \textbf{Mojo} \\
+\textbf{[Strength thresh.]} & \textbf{clusters} & \textbf{Count} &  &  \\
+\hline
+\textbf{SD} & \textbf{14} & \textbf{517} & \textbf{0.085} & \textbf{181} \\
+LD [10] & 56 & 320 & 0.047 & 301 \\
+LD [20] & 53 & 215 & 0.040 & 361 \\
+LD [30] & 44 & 174 & 0.036 & 384 \\
+LD [40] & 40 & 152 & 0.034 & 401 \\
+LD [50] & 35 & 138 & 0.030 & 407 \\
+LD [60] & 34 & 120 & 0.029 & 423 \\
+LD [70] & 32 & 106 & 0.027 & 432 \\
+LD [80] & 29 & 92 & 0.024 & 443 \\
+LD [90] & 24 & 79 & 0.021 & 451 \\
+LD [100] & 19 & 64 & 0.019 & 461 \\
+\hline
+SD+LD [10] & 15 & 517 & 0.087 & 173 \\
+SD+LD [20] & 13 & 517 & 0.071 & 184 \\
+SD+LD [30] & 13 & 517 & 0.071 & 184 \\
+SD+LD [40] & 13 & 517 & 0.071 & 184 \\
+SD+LD [50] & 13 & 517 & 0.071 & 184 \\
+SD+LD [60] & 13 & 517 & 0.071 & 184 \\
+SD+LD [70] & 13 & 517 & 0.071 & 184 \\
+SD+LD [80] & 13 & 517 & 0.071 & 184 \\
+SD+LD [90] & 13 & 517 & 0.071 & 184 \\
+SD+LD [100] & 13 & 517 & 0.072 & 184 \\
+\hline
+\end{tabular}
+\end{table}
+
+
+\begin{table}[h]
+\caption{Clustering Results Based on Different Dependency Types And Strength Filter Thresholds for Repo: \url{https://github.com/apache/tomcat}}
+\label{tab:clustering_results}
+\centering
+\setlength{\tabcolsep}{10pt}
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\textbf{Dependency Type} & \textbf{Nr. of} & \textbf{Class} & \textbf{MQ} & \textbf{Mojo} \\
+\textbf{[Strength Thresh.]} & \textbf{Clusters} & \textbf{Count} &  &  \\
+\hline
+\textbf{SD} & \textbf{31} & \textbf{662} & \textbf{0.184} & \textbf{220} \\
+LD [10] & 41 & 662 & 0.023 & 314 \\
+LD [20] & 46 & 662 & 0.026 & 425 \\
+LD [30] & 46 & 662 & 0.024 & 460 \\
+LD [40] & 42 & 662 & 0.022 & 488 \\
+LD [50] & 44 & 662 & 0.023 & 499 \\
+LD [60] & 45 & 662 & 0.024 & 521 \\
+LD [70] & 45 & 662 & 0.024 & 531 \\
+LD [80] & 36 & 662 & 0.020 & 557 \\
+LD [90] & 32 & 662 & 0.018 & 564 \\
+LD [100] & 30 & 662 & 0.018 & 568 \\
+\hline
+SD+LD [10] & 26 & 662 & 0.164 & 250 \\
+SD+LD [20] & 28 & 662 & 0.170 & 222 \\
+SD+LD [30] & 27 & 662 & 0.166 & 221 \\
+SD+LD [40] & 28 & 662 & 0.169 & 221 \\
+SD+LD [50] & 28 & 662 & 0.170 & 222 \\
+SD+LD [60] & 28 & 662 & 0.169 & 224 \\
+SD+LD [70] & 26 & 662 & 0.173 & 232 \\
+SD+LD [80] & 29 & 662 & 0.171 & 223 \\
+SD+LD [90] & 29 & 662 & 0.171 & 223 \\
+SD+LD [100] & 29 & 662 & 0.171 & 223 \\
+\hline
+\end{tabular}
+\end{table}
+
+
+\begin{table}[h]
+\caption{Clustering Results Based on Different Dependency Types + Strength Filter Thresholds \\ for Repo: \href{https://github.com/hibernate/hibernate-orm}{https://github.com/hibernate/hibernate-orm}}
+\label{tab:clustering_results}
+\centering
+\setlength{\tabcolsep}{10pt}
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\textbf{Dependency Type} & \textbf{Nr. of} & \textbf{Class} & \textbf{MQ} & \textbf{Mojo} \\
+\textbf{[Strength Thresh.]} & \textbf{Clusters} & \textbf{Count} &  &  \\
+\hline
+\textbf{SD} & \textbf{26} & \textbf{4414} & \textbf{0.073} & \textbf{2668} \\
+LD [10] & 46 & 4414 & 0.004 & 3992 \\
+LD [20] & 64 & 4414 & 0.004 & 3991 \\
+LD [30] & 68 & 4414 & 0.004 & 3996 \\
+LD [40] & 87 & 4414 & 0.005 & 4020 \\
+LD [50] & 90 & 4414 & 0.005 & 4020 \\
+LD [60] & 89 & 4414 & 0.005 & 4074 \\
+LD [70] & 93 & 4414 & 0.005 & 4108 \\
+LD [80] & 96 & 4414 & 0.005 & 4117 \\
+LD [90] & 97 & 4414 & 0.005 & 4128 \\
+LD [100] & 86 & 4414 & 0.005 & 4174 \\
+\hline
+SD+LD [10] & 30 & 4414 & 0.070 & 2596 \\
+SD+LD [20] & 29 & 4414 & 0.073 & 2577 \\
+SD+LD [30] & 29 & 4414 & 0.073 & 2606 \\
+SD+LD [40] & 29 & 4414 & 0.079 & 2648 \\
+SD+LD [50] & 29 & 4414 & 0.079 & 2649 \\
+SD+LD [60] & 30 & 4414 & 0.078 & 2625 \\
+SD+LD [70] & 30 & 4414 & 0.072 & 2559 \\
+SD+LD [80] & 30 & 4414 & 0.072 & 2559 \\
+SD+LD [90] & 30 & 4414 & 0.072 & 2559 \\
+SD+LD [100] & 30 & 4414 & 0.072 & 2559 \\
+\hline
+\end{tabular}
+\end{table}
 
 \section{Evaluation}
 \label{sec:evaluation}
