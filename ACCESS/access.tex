@@ -75,7 +75,7 @@ To evaluate the results, we generate software clustering on four open-source pro
 
 In Section \ref{sec:related_work}, we review the related work and previous studies that used various dependencies for software clustering and their metrics for evaluation.
 Section \ref{sec:workflow_implementation} details the workflow and implementation of our approach, including the extraction and filtering of dependencies, and the clustering algorithm used.
-The results of our experiments on four open-source projects are presented in Section \ref{sec:results}. Section \ref{sec:evaluation} evaluates our results by using the Modularization Quality (MQ) metric and the Move and Join (MoJo) metric. We also manually analyze some of the clustering solutions.
+The plan and results of our experiments on four open-source projects are presented in Section \ref{sec:experiment}. Section \ref{sec:evaluation} evaluates our results by using the Modularization Quality (MQ) metric and the Move and Join (MoJo) metric. We also manually analyze some of the clustering solutions.
 Finally, Section \ref{sec:conclusion} contains our conclusions, findings, and potential directions for future work.
 
 \subsection{Abbreviations and Acronyms}
@@ -225,9 +225,16 @@ After all dependencies are read, the directed graph is passed to the Louvain clu
 
 After both evaluations are done, we export the clustering result, the cluster count, and the values for both metrics.
 
-\section{Results}
-\label{sec:results}
+\section{Experimental Plan and Results}
+\label{sec:experiment}
 
+\subsection{Experimental Plan}
+\label{subsec:plan}
+
+\subsubsection{Objective}
+The objective of our research is to evaluate how the quality of software clustering solutions is impacted by logical dependencies.
+
+\subsubsection{Tool Runs}
 To assess the impact of using logical dependencies in software clustering, we run the tool presented in Section \ref{subsec:tool_workflow} in three different scenarios. All three scenarios are illustrated in Fig. \ref{fig:scenatrio}.
 
 In the first scenario, we run the tool once, providing only the structural dependencies of the system as input for the clustering algorithm.
@@ -243,8 +250,35 @@ In the third scenario, we combine logical with structural dependencies. Again, w
   \label{fig:scenatrio}
 \end{figure}
 
+
+\subsection{Results}
+\label{subsec:results}
+
+\subsubsection{Overview}
+
+In the column 'Project Name', you can find the name of the software project used in the experimental analysis, sourced from GitHub. The 'Release Tag' column contains the specific release tag or version of the project that was analyzed. The 'Number of Commits' column provides the total number of commits made to the project's repository, indicating the extent of its development history. The 'GitHub Repository Link' column includes the URL link to the project's repository on GitHub, allowing for direct access to the repository. Lastly, the 'Repository Description' column offers a brief description of the project's purpose and functionality, giving an overview of what the project entails.
+
+\begin{table*}[h]
+\centering
+\caption{Overview of projects used in experimental analysis}
+\label{tab:project_info}
+\setlength{\tabcolsep}{5pt} 
+\renewcommand{\arraystretch}{1.2} 
+\begin{tabular}{|l|l|c|l|p{4cm}|}
+\hline
+\textbf{Project Name} & \textbf{Release Tag} & \textbf{Number of Commits} & \textbf{GitHub Repository Link} & \textbf{Repository Description} \\ \hline
+Apache Ant & \href{https://github.com/apache/ant/tree/rel/1.10.13}{rel/1.10.13} & 14917 & \href{https://github.com/apache/ant}{https://github.com/apache/ant} & Apache Ant is a Java-based build tool. \\ \hline
+Apache Tomcat & \href{https://github.com/apache/tomcat/tree/8.5.93}{8.5.93} & 22698 & \href{https://github.com/apache/tomcat}{https://github.com/apache/tomcat} & Apache Tomcat software powers numerous large-scale, mission-critical web applications across a diverse range of industries and organizations. \\ \hline
+Hibernate ORM & \href{https://github.com/hibernate/hibernate-orm/tree/6.2.14}{6.2.14} & 16609 & \href{https://github.com/hibernate/hibernate-orm}{https://github.com/hibernate/hibernate-orm} & Hibernate ORM is a powerful object/relational mapping solution for Java. \\ \hline
+Gson & \href{https://github.com/google/gson/tree/gson-parent-2.10.1}{gson-parent-2.10.1} & 1772 & \href{https://github.com/google/gson}{https://github.com/google/gson} & A Java serialization/deserialization library to convert Java Objects into JSON and back. \\ \hline
+\end{tabular}
+\end{table*}
+
+\subsubsection{Detailed Results}
+
+
 \begin{table}[h]
-\caption{Clustering Results Based on Different Dependency Types And Strength Filter Thresholds For Repo: \url{https://github.com/apache/ant}}
+\caption{Clustering results based on different dependency types and strength filter thresholds for repo: \url{https://github.com/apache/ant}}
 \label{tab:clustering_results_ant}
 \centering
 \setlength{\tabcolsep}{10pt}
@@ -281,7 +315,7 @@ SD+LD [100] & 13 & 517 & 0.072 & 184 \\
 
 
 \begin{table}[h]
-\caption{Clustering Results Based on Different Dependency Types And Strength Filter Thresholds for Repo: \href{https://github.com/apache/tomcat}{https://github.com/apache/tomcat}}
+\caption{Clustering results based on different dependency types and strength filter thresholds for repo: \href{https://github.com/apache/tomcat}{https://github.com/apache/tomcat}}
 \label{tab:clustering_results_tomcat}
 \centering
 \setlength{\tabcolsep}{10pt}
@@ -317,7 +351,7 @@ SD+LD [100] & 29 & 662 & 0.171 & 223 \\
 \end{table}
 
 \begin{table}[h]
-\caption{Clustering Results Based on Different Dependency Types And Strength Filter Thresholds for Repo: \href{https://github.com/hibernate/hibernate-orm}{https://github.com/hibernate/hibernate-orm}}
+\caption{Clustering results based on different dependency types and strength filter thresholds for repo: \href{https://github.com/hibernate/hibernate-orm}{https://github.com/hibernate/hibernate-orm}}
 \label{tab:clustering_results_hibernate}
 \centering
 \setlength{\tabcolsep}{10pt}
@@ -354,7 +388,7 @@ SD+LD [100] & 30 & 4414 & 0.072 & 2559 \\
 
 
 \begin{table}[h]
-\caption{Clustering Results Based on Different Dependency Types And Strength Filter Thresholds for Repo: \href{https://github.com/google/gson}{https://github.com/google/gson}}
+\caption{Clustering results based on different dependency types and strength filter thresholds for repo: \href{https://github.com/google/gson}{https://github.com/google/gson}}
 \label{tab:clustering_results_gson}
 \centering
 \setlength{\tabcolsep}{10pt}
@@ -396,6 +430,9 @@ SD+LD [100] & 10 & 210 & 0.139 & 78 \\
 
 \section{Conclusion}
 \label{sec:conclusion}
+Why did the cat get a PhD?
+
+Because it wanted to be a purr-fessor!
 
 \begin{thebibliography}{00}
 
