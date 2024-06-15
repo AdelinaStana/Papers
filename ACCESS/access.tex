@@ -228,6 +228,28 @@ After both evaluations are done, we export the clustering result, the cluster co
 \section{Experimental Plan and Results}
 \label{sec:experiment}
 
+\begin{figure}[t!]
+  \centering
+  \includegraphics[width=\columnwidth]{scenario.png}
+  \caption{ \textbf{Scenarios for results}}
+  \label{fig:scenatrio}
+\end{figure}
+
+\begin{table*}
+\centering
+\caption{Overview of projects used in experimental analysis}
+\label{tab:project_info}
+\setlength{\tabcolsep}{7pt} 
+\begin{tabular}{|l|l|c|l|p{4cm}|}
+\hline
+\textbf{Project Name} & \textbf{Release Tag} & \textbf{Number of Commits} & \textbf{GitHub Repository Link} & \textbf{Repository Description} \\ \hline
+Apache Ant & \href{https://github.com/apache/ant/tree/rel/1.10.13}{rel/1.10.13} & 14917 & \href{https://github.com/apache/ant}{https://github.com/apache/ant} & Apache Ant is a Java-based build tool. \\ \hline
+Apache Tomcat & \href{https://github.com/apache/tomcat/tree/8.5.93}{8.5.93} & 22698 & \href{https://github.com/apache/tomcat}{https://github.com/apache/tomcat} & Apache Tomcat software powers numerous large-scale, mission-critical web applications across a diverse range of industries and organizations. \\ \hline
+Hibernate ORM & \href{https://github.com/hibernate/hibernate-orm/tree/6.2.14}{6.2.14} & 16609 & \href{https://github.com/hibernate/hibernate-orm}{https://github.com/hibernate/hibernate-orm} & Hibernate ORM is a powerful object/relational mapping solution for Java. \\ \hline
+Gson & \href{https://github.com/google/gson/tree/gson-parent-2.10.1}{gson-parent-2.10.1} & 1772 & \href{https://github.com/google/gson}{https://github.com/google/gson} & A Java serialization/deserialization library to convert Java Objects into JSON and back. \\ \hline
+\end{tabular}
+\end{table*}
+
 \subsection{Experimental Plan}
 \label{subsec:plan}
 
@@ -243,52 +265,39 @@ In the second scenario, we run the tool ten times, using only logical dependenci
 
 In the third scenario, we combine logical with structural dependencies. Again, we run the tool ten times, each time using structural dependencies and logical dependencies generated with different strength thresholds.
 
-\begin{figure}[t!]
-  \centering
-  \includegraphics[width=\columnwidth]{scenario.png}
-  \caption{ \textbf{Scenarios for results}}
-  \label{fig:scenatrio}
-\end{figure}
+
 
 
 \subsection{Results}
 \label{subsec:results}
 
-\subsubsection{Overview}
+\subsubsection{Overview of projects used}
 
-In the column 'Project Name', you can find the name of the software project used in the experimental analysis, sourced from GitHub. The 'Release Tag' column contains the specific release tag or version of the project that was analyzed. The 'Number of Commits' column provides the total number of commits made to the project's repository, indicating the extent of its development history. The 'GitHub Repository Link' column includes the URL link to the project's repository on GitHub, allowing for direct access to the repository. Lastly, the 'Repository Description' column offers a brief description of the project's purpose and functionality, giving an overview of what the project entails.
 
-\begin{table*}[h]
-\centering
-\caption{Overview of projects used in experimental analysis}
-\label{tab:project_info}
-\setlength{\tabcolsep}{5pt} 
-\renewcommand{\arraystretch}{1.2} 
-\begin{tabular}{|l|l|c|l|p{4cm}|}
-\hline
-\textbf{Project Name} & \textbf{Release Tag} & \textbf{Number of Commits} & \textbf{GitHub Repository Link} & \textbf{Repository Description} \\ \hline
-Apache Ant & \href{https://github.com/apache/ant/tree/rel/1.10.13}{rel/1.10.13} & 14917 & \href{https://github.com/apache/ant}{https://github.com/apache/ant} & Apache Ant is a Java-based build tool. \\ \hline
-Apache Tomcat & \href{https://github.com/apache/tomcat/tree/8.5.93}{8.5.93} & 22698 & \href{https://github.com/apache/tomcat}{https://github.com/apache/tomcat} & Apache Tomcat software powers numerous large-scale, mission-critical web applications across a diverse range of industries and organizations. \\ \hline
-Hibernate ORM & \href{https://github.com/hibernate/hibernate-orm/tree/6.2.14}{6.2.14} & 16609 & \href{https://github.com/hibernate/hibernate-orm}{https://github.com/hibernate/hibernate-orm} & Hibernate ORM is a powerful object/relational mapping solution for Java. \\ \hline
-Gson & \href{https://github.com/google/gson/tree/gson-parent-2.10.1}{gson-parent-2.10.1} & 1772 & \href{https://github.com/google/gson}{https://github.com/google/gson} & A Java serialization/deserialization library to convert Java Objects into JSON and back. \\ \hline
-\end{tabular}
-\end{table*}
+
+
+In Table \ref{tab:project_info}, we have synthesized all the information about the four projects used in our experiments. The 'Project Name' column lists the names of the software projects sourced from GitHub. The 'Release Tag' column contains the specific release tag of the project that was analyzed. For logical dependencies extraction, we processed all the commits starting from the first commit up to the commit associated with the specified tag. The 'Number of Commits' column provides the total number of commits used for logical dependencies extraction. The 'GitHub Repository Link' column includes the URL link to the project's repository on GitHub. Finally, the 'Repository Description' column offers a brief description of the project's purpose and functionality, sourced from the About section of each repository's GitHub page.
+
+
+Mostly, we chose projects that have more than 10,000 commits in their commit history, so that the logical dependencies extraction can be done on a larger information base. However, we also selected 'Gson', which has a relatively small commit history (1,772 commits), to determine if our experiments work with a smaller information base.
 
 \subsubsection{Detailed Results}
 
 
-\begin{table}[h]
+
+\begin{table}
 \caption{Clustering results based on different dependency types and strength filter thresholds for repo: \url{https://github.com/apache/ant}}
 \label{tab:clustering_results_ant}
 \centering
-\setlength{\tabcolsep}{10pt}
+\setlength{\tabcolsep}{3pt}
 \begin{tabular}{|l|c|c|c|c|}
 \hline
-\textbf{Dependency Type} & \textbf{Nr. Of} & \textbf{Class} & \textbf{MQ} & \textbf{Mojo} \\
+\textbf{Dependency Type} & \textbf{Nr. Of} & \textbf{Entities} & \textbf{MQ} & \textbf{Mojo} \\
 \textbf{[Strength thresh.]} & \textbf{clusters} & \textbf{Count} &  &  \\
 \hline
 \textbf{SD} & \textbf{14} & \textbf{517} & \textbf{0.085} & \textbf{181} \\
-LD [10] & 56 & 320 & 0.047 & 301 \\
+\hline
+LD [10] & 75 & 320 & 0.047 & 301 \\
 LD [20] & 53 & 215 & 0.040 & 361 \\
 LD [30] & 44 & 174 & 0.036 & 384 \\
 LD [40] & 40 & 152 & 0.034 & 401 \\
@@ -314,17 +323,18 @@ SD+LD [100] & 13 & 517 & 0.072 & 184 \\
 \end{table}
 
 
-\begin{table}[h]
+\begin{table}
 \caption{Clustering results based on different dependency types and strength filter thresholds for repo: \href{https://github.com/apache/tomcat}{https://github.com/apache/tomcat}}
 \label{tab:clustering_results_tomcat}
 \centering
-\setlength{\tabcolsep}{10pt}
+\setlength{\tabcolsep}{3pt}
 \begin{tabular}{|l|c|c|c|c|}
 \hline
-\textbf{Dependency Type} & \textbf{Nr. of} & \textbf{Class} & \textbf{MQ} & \textbf{Mojo} \\
+\textbf{Dependency Type} & \textbf{Nr. of} & \textbf{Entities} & \textbf{MQ} & \textbf{Mojo} \\
 \textbf{[Strength Thresh.]} & \textbf{Clusters} & \textbf{Count} &  &  \\
 \hline
 \textbf{SD} & \textbf{31} & \textbf{662} & \textbf{0.184} & \textbf{220} \\
+\hline
 LD [10] & 41 & 415 & 0.023 & 314 \\
 LD [20] & 46 & 308 & 0.026 & 425 \\
 LD [30] & 46 & 250 & 0.024 & 460 \\
@@ -350,17 +360,18 @@ SD+LD [100] & 29 & 662 & 0.171 & 223 \\
 \end{tabular}
 \end{table}
 
-\begin{table}[h]
+\begin{table}
 \caption{Clustering results based on different dependency types and strength filter thresholds for repo: \href{https://github.com/hibernate/hibernate-orm}{https://github.com/hibernate/hibernate-orm}}
 \label{tab:clustering_results_hibernate}
 \centering
-\setlength{\tabcolsep}{10pt}
+\setlength{\tabcolsep}{3pt}
 \begin{tabular}{|l|c|c|c|c|}
 \hline
-\textbf{Dependency Type} & \textbf{Nr. of} & \textbf{Class} & \textbf{MQ} & \textbf{Mojo} \\
+\textbf{Dependency Type} & \textbf{Nr. of} & \textbf{Entities} & \textbf{MQ} & \textbf{Mojo} \\
 \textbf{[Strength Thresh.]} & \textbf{Clusters} & \textbf{Count} &  &  \\
 \hline
 \textbf{SD} & \textbf{26} & \textbf{4414} & \textbf{0.073} & \textbf{2668} \\
+\hline
 LD [10] & 46 & 1469 & 0.004 & 3992 \\
 LD [20] & 64 & 1343 & 0.004 & 3991 \\
 LD [30] & 68 & 1242 & 0.004 & 3996 \\
@@ -387,17 +398,18 @@ SD+LD [100] & 30 & 4414 & 0.072 & 2559 \\
 \end{table}
 
 
-\begin{table}[h]
+\begin{table}
 \caption{Clustering results based on different dependency types and strength filter thresholds for repo: \href{https://github.com/google/gson}{https://github.com/google/gson}}
 \label{tab:clustering_results_gson}
 \centering
-\setlength{\tabcolsep}{10pt}
+\setlength{\tabcolsep}{3pt}
 \begin{tabular}{|l|c|c|c|c|}
 \hline
-\textbf{Dependency Type} & \textbf{Nr. of} & \textbf{Class} & \textbf{MQ} & \textbf{Mojo} \\
+\textbf{Dependency Type} & \textbf{Nr. of} & \textbf{Entities} & \textbf{MQ} & \textbf{Mojo} \\
 \textbf{[Strength Thresh.]} & \textbf{Clusters} & \textbf{Count} &  &  \\
 \hline
 \textbf{SD} & \textbf{10} & \textbf{210} & \textbf{0.144} & \textbf{83} \\
+\hline
 LD [10] & 10 & 67 & 0.018 & 164 \\
 LD [20] & 11 & 50 & 0.022 & 177 \\
 LD [30] & 12 & 41 & 0.027 & 182 \\
@@ -423,6 +435,20 @@ SD+LD [100] & 10 & 210 & 0.139 & 78 \\
 \end{tabular}
 \end{table}
 
+
+
+We present the clustering results based on different dependency types and strength filter thresholds in four tables, each corresponding to a different project. These tables provide an overview of the clustering results, underlining how various dependency types impact the clustering results. Table \ref{tab:clustering_results_ant} shows the results for Apache Ant, Table \ref{tab:clustering_results_tomcat} presents the results for Apache Tomcat, Table \ref{tab:clustering_results_hibernate} presents the results for Hibernate ORM, and Table \ref{tab:clustering_results_gson} presents the results for Gson.
+
+Each table includes the following columns:
+\begin{itemize}
+\item \textbf{Dependency Type:} The type of dependency used in the clustering (SD - Structural Dependencies, LD - Logical Dependencies with various strength thresholds, and combined SD+LD).
+\item \textbf{Nr. of Clusters:} The number of clusters from the clustering solution.
+\item \textbf{Entities Count:} The total number of software entities (such as classes, interfaces, enums) involved in the clustering.
+\item \textbf{MQ (Modularization Quality):} The result obtained when applying the MQ evaluation metric to the clustering solution.
+\item \textbf{Mojo:} The result obtained when applying the MoJo evaluation metric to the clustering solution.
+\end{itemize}
+
+The rows in each table represent different dependency types and strength filter thresholds used in the clustering experiments.
 
 
 \section{Evaluation}
