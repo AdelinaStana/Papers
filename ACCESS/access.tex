@@ -69,14 +69,14 @@ Software systems often face a lack of documentation. Even if there was original 
 
 Among the dependencies that can be used for software clustering are structural dependencies (relationships between entities based on code analysis), lexical dependencies (relationships based on naming conventions), and code co-changes/logical dependencies (relationships between entities extracted from the version control system), among others. Combining multiple types of dependencies, rather than relying on just one type, can be a good approach to generate better results. However, it requires fine-tuning the amount of dependencies used from each category and scaling the coefficients attached to them. Combining dependencies without considering these aspects might lead to results that are less effective than using an individual type of dependency alone.
 
-In this paper, we assess whether using structural dependencies combined with logical dependencies can provide better results than using each type of dependency alone. The structural dependencies are used as they are extracted from static code analysis. The logical dependencies are filtered co-changes from the version control system. The reason behind filtering the co-changes and not using them as they are in the versioning system is to enhance their quality and make them easier to combine with structural dependencies, as their size can outnumber the structural dependencies \cite{b1}.
+In this paper, we assess whether using structural dependencies combined with logical dependencies can provide better results than using each type of dependency alone. The structural dependencies are used as they are extracted from static code analysis. The logical dependencies are filtered co-changes from the version control system \cite{b15}. The reason behind filtering the co-changes and not using them as they are in the versioning system is to enhance their quality and make them easier to combine with structural dependencies, as their size can outnumber the structural dependencies \cite{b1}.
 
 To evaluate the results, we generate software clustering on four open-source projects and use two types of metrics for comparison. One of the metrics is MQ (Modularization Quality), which evaluates the modularization quality based on the interaction between the modules and does not require any additional input besides the clustering result \cite{b2}. The other is the MoJo (Move and Join) metric, a commonly used metric for evaluating the similarity between two different software clustering results \cite{b3}. For this metric, we manually generate a base of comparison for the clustering result and compare it against this baseline.
 
 In Section \ref{sec:related_work}, we review the related work and previous studies that used various dependencies for software clustering and their metrics for evaluation.
 Section \ref{sec:workflow_implementation} details the workflow and implementation of our approach, including the extraction and filtering of dependencies, and the clustering algorithm used.
 The plan and results of our experiments on four open-source projects are presented in Section \ref{sec:experiment}. Section \ref{sec:evaluation} evaluates our results by using the Modularization Quality (MQ) metric and the Move and Join (MoJo) metric. We also manually analyze some of the clustering solutions.
-Finally, Section \ref{sec:conclusion} contains our conclusions, findings, and potential directions for future work.
+Finally, Section \ref{sec:conclusion} contains our conclusions and findings.
 
 \subsection{Abbreviations and Acronyms}
 
@@ -97,10 +97,48 @@ Modularization Quality Metric (MQ) and Move and Join Metric (MoJo) are metrics u
 \section{Related Work}
 \label{sec:related_work}
 
+Software clustering for architectural reconstruction is used to place software entities in meaningful modules (clusters). Various approaches and metrics have been used to improve the quality of clustering solutions. This section presents some of the works related to the use of dependencies, clustering algorithms, and evaluation metrics.
 
-\section{Workflow and Implementation}
+\subsection{Dependency Types}
+
+Software clustering relies on various types of dependencies to identify relationships between software entities. Structural dependencies, extracted from static code analysis, have been predominantly used due to their reliability \cite{b12}. However, recent research has started incorporating other types of dependencies alongside structural dependencies.
+
+Among the additional types of dependencies used in software clustering are lexical dependencies, which can be obtained from code comments \cite{b13} or the names of source files \cite{b14}. Another type of dependency used is logical dependencies, which are derived from co-change information from the version control systems \cite{b16}.
+
+\subsection{Clustering Algorithms}
+
+Various clustering algorithms are used to group software entities into modules. These include hierarchical clustering for building clusters based on their hierarchical relationships \cite{b12}, K-Means clustering for partitioning entities based on their nearest mean \cite{b17}, graph-based clustering for identifying densely connected subgraphs, density-based clustering, such as DBSCAN, for grouping entities based on neighborhood density, and many others. Among hierarchical clustering algorithms, the Louvain algorithm, developed by Blondel et al., is commonly used for finding partitions in large networks \cite{b8}, \cite{b9}.
+
+\subsection{Evaluation Metrics}
+
+Evaluating the quality of clustering solutions is important for assessing the effectiveness of both the clustering algorithm and the inputs to the clustering algorithm. Mancoridis et al. introduced the Modularity Quality (MQ) metric, which evaluates the difference between connections within clusters and connections between different clusters \cite{b10}.
+
+The Move and Join (MoJo) metric, introduced by Tzerpos et al., measures the effort required to transform one clustering solution into another through move and join operations. This metric provides a measure of similarity between the obtained clustering solution and a baseline clustering solution \cite{b11}.
+
+\subsection{Overview}
+
+\begin{table}[h]
+\caption{Summary of Related Work}
+\label{tab:related_work}
+\centering
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{|l|p{3cm}|p{3cm}|}
+\hline
+\textbf{Paper Ref.} & \textbf{Types of Dependencies Used} & \textbf{Clustering Algorithm} \\
+\hline
+Corazza et al \cite {b13} & Lexical dependencies (code comments) & Hierarchical
+Agglomerative Clustering (HAC)  \\
+\hline
+Work in progress &&\\
+\hline
+\end{tabular}
+\end{table}
+
+
+
+
+\section{Theoretical Background, Workflow, and Implementation}
 \label{sec:workflow_implementation}
-
 
 To achieve our goal of evaluating how the quality of clustering solutions is impacted by logical dependencies, we developed a Python tool capable of using any type of dependency, either alone or combined with other types of dependencies, as long as they are provided in CSV format. The tool clusters and evaluates software clustering solutions using either the MQ metric or the MoJo metric. In the following subsections, we present how we obtain the structural dependencies and logical dependencies used, the type of clustering algorithm we use, and the tool's workflow.
 
@@ -195,13 +233,41 @@ The Louvain algorithm was originally developed by Blondel et al. and is used for
 
 The modularity of a cluster is a value that ranges from -1 to 1, which measures the density of connections inside clusters compared to connections between clusters \cite{b9}.
 
-
-\subsection{Clustering result evaluation}
+\subsection{Clustering Result Evaluation}
 \label{subsec:evaluation_def}
+
+To evaluate the clustering results, we use two metrics: the Modularity Quality (MQ) metric and the Move and Join (MoJo) metric. Each of these metrics provides a different perspective on the quality of the clustering solutions. Both metrics are integrated into our tool and receive as input the generated clustering solution.
 
 \subsubsection{Modularity Quality Metric}
 
+Mancoridis et al. introduced the Modularity Quality (MQ) metric to evaluate the modularization quality of a clustering solution based on the interaction between modules (clusters) \cite{b2},\cite{b10}. It evaluates the difference between connections within clusters and connections between different clusters.
+
+The MQ of a graph partitioned into \( k \) clusters, where \( A_i \) is the Intra-Connectivity of the \( i \)-th cluster and \( E_{ij} \) is the Inter-Connectivity between the \( i \)-th and \( j \)-th clusters, is calculated using Equation \eqref{eq:mq} \cite{b2}.
+
+\begin{equation}
+MQ = \left( \frac{1}{k} \sum_{i=1}^{k} A_i \right) - \left( \frac{1}{k(k-1)} \sum_{i,j=1}^{k} E_{ij} \right)
+\label{eq:mq}
+\end{equation}
+
+The MQ metric outputs a value between -1 and 1, where -1 indicates that there is no cohesion within the clusters, and 1 indicates that there is no coupling between the clusters.
+
+The MQ metric is useful because it does not require any additional input besides the clustering result itself. It relies on the structure of the clustered entities and their interactions. 
+
 \subsubsection{MoJo Metric}
+
+The Move and Join (MoJo) metric was introduced by Tzerpos et al. to evaluate the similarity between two different software clustering results. The metric measures the effort required to transform one clustering solution into another through move and join operations \cite{b3}, \cite{b11}.
+
+To use the MoJo metric, we first generate a baseline clustering solution for comparison. This baseline is manually created based on our analysis of the code base. The MoJo metric then calculates the minimal number of move and join operations needed to convert the generated clustering solution into the baseline clustering solution.
+
+The formula for the MoJo metric is represented in Equation \eqref{eq:mojo}, where \( \text{mnr}(A, B) \) is the minimum number of operations to transform cluster \( A \) into cluster \( B \) and \( \text{mnr}(B, A) \) is the minimum number of operations to transform cluster \( B \) into cluster \( A \) \cite{b3}. 
+
+
+\begin{equation}
+\text{MoJo}(A, B) = \min(\text{mnr}(A, B), \text{mnr}(B, A))
+\label{eq:mojo}
+\end{equation}
+
+By using the MoJo metric, we can evaluate the similarity between the generated clustering solutions and the expected clustering structure. We consider this metric useful when combining multiple types of dependencies because it clearly measures the similarity between the obtained clustering solutions and the same baseline.
 
 \subsection{Tool Workflow Overview}
 \label{subsec:tool_workflow}
@@ -274,8 +340,6 @@ In the third scenario, we combine logical with structural dependencies. Again, w
 \subsubsection{Overview of projects used}
 
 
-
-
 In Table \ref{tab:project_info}, we have synthesized all the information about the four projects used in our experiments. The 'Project Name' column lists the names of the software projects sourced from GitHub. The 'Release Tag' column contains the specific release tag of the project that was analyzed. For logical dependencies extraction, we processed all the commits starting from the first commit up to the commit associated with the specified tag. The 'Number of Commits' column provides the total number of commits used for logical dependencies extraction. The 'GitHub Repository Link' column includes the URL link to the project's repository on GitHub. Finally, the 'Repository Description' column offers a brief description of the project's purpose and functionality, sourced from the About section of each repository's GitHub page.
 
 
@@ -292,7 +356,7 @@ Mostly, we chose projects that have more than 10,000 commits in their commit his
 \setlength{\tabcolsep}{3pt}
 \begin{tabular}{|l|c|c|c|c|}
 \hline
-\textbf{Dependency Type} & \textbf{Nr. Of} & \textbf{Entities} & \textbf{MQ} & \textbf{Mojo} \\
+\textbf{Dependency Type} & \textbf{Nr. Of} & \textbf{Entities} & \textbf{MQ} & \textbf{MoJo} \\
 \textbf{[Strength thresh.]} & \textbf{clusters} & \textbf{Count} &  &  \\
 \hline
 \textbf{SD} & \textbf{14} & \textbf{517} & \textbf{0.085} & \textbf{181} \\
@@ -330,7 +394,7 @@ SD+LD [100] & 13 & 517 & 0.072 & 184 \\
 \setlength{\tabcolsep}{3pt}
 \begin{tabular}{|l|c|c|c|c|}
 \hline
-\textbf{Dependency Type} & \textbf{Nr. of} & \textbf{Entities} & \textbf{MQ} & \textbf{Mojo} \\
+\textbf{Dependency Type} & \textbf{Nr. of} & \textbf{Entities} & \textbf{MQ} & \textbf{MoJo} \\
 \textbf{[Strength Thresh.]} & \textbf{Clusters} & \textbf{Count} &  &  \\
 \hline
 \textbf{SD} & \textbf{31} & \textbf{662} & \textbf{0.184} & \textbf{220} \\
@@ -367,7 +431,7 @@ SD+LD [100] & 29 & 662 & 0.171 & 223 \\
 \setlength{\tabcolsep}{3pt}
 \begin{tabular}{|l|c|c|c|c|}
 \hline
-\textbf{Dependency Type} & \textbf{Nr. of} & \textbf{Entities} & \textbf{MQ} & \textbf{Mojo} \\
+\textbf{Dependency Type} & \textbf{Nr. of} & \textbf{Entities} & \textbf{MQ} & \textbf{MoJo} \\
 \textbf{[Strength Thresh.]} & \textbf{Clusters} & \textbf{Count} &  &  \\
 \hline
 \textbf{SD} & \textbf{26} & \textbf{4414} & \textbf{0.073} & \textbf{2668} \\
@@ -405,7 +469,7 @@ SD+LD [100] & 30 & 4414 & 0.072 & 2559 \\
 \setlength{\tabcolsep}{3pt}
 \begin{tabular}{|l|c|c|c|c|}
 \hline
-\textbf{Dependency Type} & \textbf{Nr. of} & \textbf{Entities} & \textbf{MQ} & \textbf{Mojo} \\
+\textbf{Dependency Type} & \textbf{Nr. of} & \textbf{Entities} & \textbf{MQ} & \textbf{MoJo} \\
 \textbf{[Strength Thresh.]} & \textbf{Clusters} & \textbf{Count} &  &  \\
 \hline
 \textbf{SD} & \textbf{10} & \textbf{210} & \textbf{0.144} & \textbf{83} \\
@@ -445,7 +509,7 @@ Each table includes the following columns:
 \item \textbf{Nr. of Clusters:} The number of clusters from the clustering solution.
 \item \textbf{Entities Count:} The total number of software entities (such as classes, interfaces, enums) involved in the clustering.
 \item \textbf{MQ (Modularization Quality):} The result obtained when applying the MQ evaluation metric to the clustering solution.
-\item \textbf{Mojo:} The result obtained when applying the MoJo evaluation metric to the clustering solution.
+\item \textbf{MoJo:} The result obtained when applying the MoJo evaluation metric to the clustering solution.
 \end{itemize}
 
 The rows in each table represent different dependency types and strength filter thresholds used in the clustering experiments.
@@ -453,6 +517,8 @@ The rows in each table represent different dependency types and strength filter 
 
 \section{Evaluation}
 \label{sec:evaluation}
+
+Not yet done, need advice
 
 \section{Conclusion}
 \label{sec:conclusion}
@@ -471,6 +537,14 @@ Because it wanted to be a purr-fessor!
 \bibitem{b7} T. Zimmermann, P. Weibgerber, S. Diehl and A. Zeller, "Mining version histories to guide software changes," Proceedings. 26th International Conference on Software Engineering, Edinburgh, UK, 2004, pp. 563-572, doi: 10.1109/ICSE.2004.1317478.
 \bibitem{b8} Blondel, Vincent \& Guillaume, Jean-Loup \& Lambiotte, Renaud \& Lefebvre, Etienne. (2008). Fast Unfolding of Communities in Large Networks. Journal of Statistical Mechanics Theory and Experiment. 2008. 10.1088/1742-5468/2008/10/P10008. 
 \bibitem{b9} Newman, Mark. (2006). Newman MEJ.. Modularity and community structure in networks. Proc Natl Acad Sci USA 103: 8577-8582. Proceedings of the National Academy of Sciences of the United States of America. 103. 8577-82. 10.1073/pnas.0601602103. 
+\bibitem{b10} S. Mancoridis, B. S. Mitchell, Y. Chen and E. R. Gansner, "Bunch: a clustering tool for the recovery and maintenance of software system structures," Proceedings IEEE International Conference on Software Maintenance - 1999 (ICSM'99). 'Software Maintenance for Business Change' (Cat. No.99CB36360), Oxford, UK, 1999, pp. 50-59, doi: 10.1109/ICSM.1999.792498.
+\bibitem{b11} Zhihua Wen and V. Tzerpos, "An effectiveness measure for software clustering algorithms," Proceedings. 12th IEEE International Workshop on Program Comprehension, 2004., Bari, Italy, 2004, pp. 194-203, doi: 10.1109/WPC.2004.1311061.
+\bibitem{b12} Şora, Ioana. (2013). Software Architecture Reconstruction through Clustering: Finding the Right Similarity Factors. 45-54. 10.5220/0004599600450054. 
+\bibitem{b13} A. Corazza, S. Di Martino, V. Maggio and G. Scanniello, "Investigating the use of lexical information for software system clustering," 2011 15th European Conference on Software Maintenance and Reengineering, Oldenburg, Germany, 2011, pp. 35-44, doi: 10.1109/CSMR.2011.8.
+\bibitem{b14} Anquetil, Nicolas \& Lethbridge, Timothy. (1998). File Clustering Using Naming Conventions for Legacy Systems. 10.1145/782010.782012. 
+\bibitem{b15} Oliva, Gustavo \& Gerosa, Marco Aurelio. (2012). A Method for the Identification of Logical Dependencies. Proceedings - 2012 IEEE 7th International Conference on Global Software Engineering Workshops, ICGSEW 2012. 70-72. 10.1109/ICGSEW.2012.19. 
+\bibitem{b16} Silva, Luciana \& Valente, Marco \& Maia, Marcelo. (2015). Co-change Clusters: Extraction and Application on Assessing Software Modularity. Transactions on Aspect-Oriented Software Development. 10.1007/978-3-662-46734-3\_3. 
+\bibitem{b17} Murtagh, Fionn \& Contreras, Pedro. (2012). Algorithms for hierarchical clustering: An overview. Wiley Interdisc. Rew.: Data Mining and Knowledge Discovery. 2. 86-97. 10.1002/widm.53. 
 
 
 \end{thebibliography}
