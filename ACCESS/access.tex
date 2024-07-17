@@ -5,6 +5,7 @@
 \usepackage{graphicx}
 \usepackage{textcomp}
 \usepackage{hyperref}
+\usepackage[table]{xcolor}
 
 \usepackage{bm}
 \makeatletter
@@ -48,7 +49,7 @@
 
 
 \begin{abstract}
-Version control systems primarily offer support for tracking and managing changes in software code, but they can also provide a great deal of additional information about the managed software. Changes in multiple software entities simultaneously can imply that these entities are connected to one another. Software entities that change at the same time (code co-changes) are treated as a distinct category of software dependencies. In some cases, these co-changes are used together with other types of dependencies, such as structural dependencies or lexical dependencies, to enhance the understanding of a software system.
+Version control systems primarily offer support for tracking and managing changes in software code, but they can also provide valuable information about the managed software. Changes in multiple software entities simultaneously can imply that these entities are connected. Software entities that change at the same time (code co-changes) are treated as a distinct category of software dependencies. In some cases, these co-changes are used together with other types of dependencies, such as structural dependencies or lexical dependencies, to enhance the understanding of a software system.
 
 
 This paper proposes using code co-changes in software clustering for architectural reconstruction. Structural dependencies are the most commonly used type of dependencies in software clustering for architectural reconstruction, so we will use clustering solutions obtained from structural dependencies as the baseline for our evaluations. Our approach will be applied to four open-source projects found on GitHub. For each of the projects, we will compare and evaluate the clustering obtained by using only co-changes and the clustering obtained by using co-changes combined with structural dependencies with the baseline clustering generated solely from structural dependencies.
@@ -71,7 +72,7 @@ Among the dependencies that can be used for software clustering are structural d
 
 In this paper, we assess whether using structural dependencies combined with logical dependencies can provide better results than using each type of dependency alone. The structural dependencies are used as they are extracted from static code analysis. The logical dependencies are filtered co-changes from the version control system \cite{b15}. The reason behind filtering the co-changes and not using them as they are in the versioning system is to enhance their quality and make them easier to combine with structural dependencies, as their size can outnumber the structural dependencies \cite{b1}.
 
-To evaluate the results, we generate software clustering on four open-source projects and use two types of metrics for comparison. One of the metrics is MQ (Modularization Quality), which evaluates the modularization quality based on the interaction between the modules and does not require any additional input besides the clustering result \cite{b2}. The other is the MoJo (Move and Join) metric, a commonly used metric for evaluating the similarity between two different software clustering results \cite{b3}. For this metric, we manually generate a base of comparison for the clustering result and compare it against this baseline.
+To evaluate the results, we generate software clustering on four open-source projects and use two types of metrics for comparison. One of the metrics is MQ (Modularization Quality), which evaluates the modularization quality based on the interaction between the modules and does not require any additional input besides the clustering result \cite{b2}. The other is the MoJo (Move and Join) metric, a commonly used metric for evaluating the similarity between two different software clustering results \cite{b3}. For this metric, we manually generate a base of comparison for the clustering result and compare the results against this baseline.
 
 In Section \ref{sec:related_work}, we review the related work and previous studies that used various dependencies for software clustering and their metrics for evaluation.
 Section \ref{sec:workflow_implementation} details the workflow and implementation of our approach, including the extraction and filtering of dependencies, and the clustering algorithm used.
@@ -101,13 +102,13 @@ Software clustering for architectural reconstruction is used to place software e
 
 \subsection{Dependency Types}
 
-Software clustering relies on various types of dependencies to identify relationships between software entities. Structural dependencies, extracted from static code analysis, have been predominantly used due to their reliability \cite{b12}. However, recent research has started incorporating other types of dependencies alongside structural dependencies.
+Software clustering relies on various types of dependencies to identify relationships between software entities. \textit{Structural dependencies}, extracted from static code analysis, have been mostly used due to their reliability \cite{b12}. However, recent research has started incorporating other types of dependencies besides structural dependencies.
 
-Among the additional types of dependencies used in software clustering are lexical dependencies, which can be obtained from code comments \cite{b13} or the names of source files \cite{b14}. Another type of dependency used is logical dependencies, which are derived from co-change information from the version control systems \cite{b16}.
+Among the additional types of dependencies used in software clustering are \textit{lexical dependencies}, which can be obtained from code comments \cite{b13} or the names of source files \cite{b14}, and \textit{logical dependencies}, which are derived from co-change information in version control systems \cite{b16}.
 
 \subsection{Clustering Algorithms}
 
-Various clustering algorithms are used to group software entities into modules. These include hierarchical clustering for building clusters based on their hierarchical relationships \cite{b12}, K-Means clustering for partitioning entities based on their nearest mean \cite{b17}, graph-based clustering for identifying densely connected subgraphs, density-based clustering, such as DBSCAN, for grouping entities based on neighborhood density, and many others. Among hierarchical clustering algorithms, the Louvain algorithm, developed by Blondel et al., is commonly used for finding partitions in large networks \cite{b8}, \cite{b9}.
+Various clustering algorithms are used to group software entities into modules. These include hierarchical clustering for building clusters based on their hierarchical relationships \cite{b12}, \cite{b16}, K-Means clustering for partitioning entities based on their nearest mean \cite{b17}, graph-based clustering for identifying densely connected subgraphs, density-based clustering, such as DBSCAN, for grouping entities based on neighborhood density. The Louvain algorithm, which we will use in our experiments, was developed by Blondel et al., and it is a community detection algorithm commonly used for finding partitions in large networks \cite{b8}, \cite{b9}.
 
 \subsection{Evaluation Metrics}
 
@@ -117,19 +118,28 @@ The Move and Join (MoJo) metric, introduced by Tzerpos et al., measures the effo
 
 \subsection{Overview}
 
+ Table \ref{tab:related_work} provides a summary of related works that use various types of dependencies in software clustering and the algorithms applied.
+
 \begin{table}[h]
 \caption{Summary of Related Work}
 \label{tab:related_work}
 \centering
 \setlength{\tabcolsep}{3pt}
-\begin{tabular}{|l|p{3cm}|p{3cm}|}
+\begin{tabular}{|l|p{2cm}|p{3cm}|}
 \hline
 \textbf{Paper Ref.} & \textbf{Types of Dependencies Used} & \textbf{Clustering Algorithm} \\
 \hline
-Corazza et al \cite {b13} & Lexical dependencies (code comments) & Hierarchical
-Agglomerative Clustering (HAC)  \\
+Corazza et al. \cite {b13} & Lexical dependencies (Code Comments) & Hierarchical Agglomerative Clustering (HAC)  \\
 \hline
-Work in progress &&\\
+Anquetil et al.  \cite {b14} & Lexical dependencies (File Names, Routine Names, Included Files, Comments) & N-grams based clustering   \\
+\hline
+Mancoridis et al. \cite {b10}, \cite{b101} & Structural dependencies & Search based algorithm (Hill-climbing)   \\
+\hline
+Sora et al. \cite{b12} & Structural dependencies  & Minimum Spanning Tree based algorithms; Metric Based; Search based algorithm (Hill-climbing); Hierarchical clustering\\
+\hline
+Prajapati et al. \cite{b18} & Structural, Lexical, and Changed-history dependencies & Many objective optimization algorithm\\
+\hline
+Silva et al. \cite{b16} & Co-change dependencies & Agglomerative Hierarchical Clustering (Chameleon algorithm)\\
 \hline
 \end{tabular}
 \end{table}
@@ -249,7 +259,7 @@ MQ = \left( \frac{1}{k} \sum_{i=1}^{k} A_i \right) - \left( \frac{1}{k(k-1)} \su
 \label{eq:mq}
 \end{equation}
 
-The MQ metric outputs a value between -1 and 1, where -1 indicates that there is no cohesion within the clusters, and 1 indicates that there is no coupling between the clusters.
+The MQ metric outputs a value between -1 and 1, where -1 indicates that there is no cohesion between the clusters of the clustering solution, and 1 indicates that there is no coupling between them.
 
 The MQ metric is useful because it does not require any additional input besides the clustering result itself. It relies on the structure of the clustered entities and their interactions. 
 
@@ -319,15 +329,13 @@ Gson & \href{https://github.com/google/gson/tree/gson-parent-2.10.1}{gson-parent
 \subsection{Experimental Plan}
 \label{subsec:plan}
 
-\subsubsection{Objective}
-The objective of our research is to evaluate how the quality of software clustering solutions is impacted by logical dependencies.
-
 \subsubsection{Tool Runs}
-To assess the impact of using logical dependencies in software clustering, we run the tool presented in Section \ref{subsec:tool_workflow} in three different scenarios. All three scenarios are illustrated in Fig. \ref{fig:scenatrio}.
+The objective of our research is to evaluate how the quality of software clustering solutions is impacted by logical dependencies.
+To assess the impact, we run the tool presented in Section \ref{subsec:tool_workflow} in three different scenarios. All three scenarios are illustrated in Fig. \ref{fig:scenatrio}.
 
 In the first scenario, we run the tool once, providing only the structural dependencies of the system as input for the clustering algorithm.
 
-In the second scenario, we run the tool ten times, using only logical dependencies as input. We perform ten runs because we generate logical dependencies with different threshold values for the strength filter. We start with a threshold of 10 and increase it in steps of 10 up to 100.
+In the second scenario, we run the tool ten times, using only logical dependencies as input. We perform ten runs because we generate logical dependencies with different threshold values for the strength filter. We start with a threshold of 10 and increase it in steps of 10 up to 100, where 100 is the maximum value for the threshold.
 
 In the third scenario, we combine logical with structural dependencies. Again, we run the tool ten times, each time using structural dependencies and logical dependencies generated with different strength thresholds.
 
@@ -340,86 +348,83 @@ In the third scenario, we combine logical with structural dependencies. Again, w
 \subsubsection{Overview of projects used}
 
 
-In Table \ref{tab:project_info}, we have synthesized all the information about the four projects used in our experiments. The 'Project Name' column lists the names of the software projects sourced from GitHub. The 'Release Tag' column contains the specific release tag of the project that was analyzed. For logical dependencies extraction, we processed all the commits starting from the first commit up to the commit associated with the specified tag. The 'Number of Commits' column provides the total number of commits used for logical dependencies extraction. The 'GitHub Repository Link' column includes the URL link to the project's repository on GitHub. Finally, the 'Repository Description' column offers a brief description of the project's purpose and functionality, sourced from the About section of each repository's GitHub page.
+In Table \ref{tab:project_info}, we have synthesized all the information about the four projects used in our experiments. The 'Project Name' column contains the names of the software projects sourced from GitHub. The 'Release Tag' column contains the specific release tag of the project that was analyzed. For logical dependency extraction, we processed all the commits starting from the first commit up to the commit associated with the specified tag. For structural dependencies, we extracted the dependencies from the code of that specific tag. The 'Number of Commits' column provides the total number of commits used for logical dependencies extraction. The 'GitHub Repository Link' column includes the URL link to the project's repository on GitHub. Finally, the 'Repository Description' column offers a brief description of the project's purpose and functionality.
 
 
-Mostly, we chose projects that have more than 10,000 commits in their commit history, so that the logical dependencies extraction can be done on a larger information base. However, we also selected 'Gson', which has a relatively small commit history (1,772 commits), to determine if our experiments work with a smaller information base.
+We mostly chose projects with more than 10,000 commits in their commit history, so that the logical dependencies extraction can be done on a larger information base. However, we selected 'Gson', which has a relatively small commit history (1,772 commits), to determine if our experiments work with a smaller information base.
 
 \subsubsection{Detailed Results}
-
-
 
 \begin{table}
 \caption{Clustering results based on different dependency types and strength filter thresholds for repo: \url{https://github.com/apache/ant}}
 \label{tab:clustering_results_ant}
 \centering
 \setlength{\tabcolsep}{3pt}
-\begin{tabular}{|l|c|c|c|c|}
+\begin{tabular}{|l|c|c|c|c|c|c|}
 \hline
-\textbf{Dependency Type} & \textbf{Nr. Of} & \textbf{Entities} & \textbf{MQ} & \textbf{MoJo} \\
-\textbf{[Strength thresh.]} & \textbf{clusters} & \textbf{Count} &  &  \\
+\textbf{Dependency Type} & \textbf{Nr. of} & \textbf{Entities} & \textbf{System} & \textbf{MQ} & \textbf{MoJo} \\
+\textbf{[strength thresh.]} & \textbf{clusters} & \textbf{Count} & \textbf{Cover (\%)} &  &  \\
 \hline
-\textbf{SD} & \textbf{14} & \textbf{517} & \textbf{0.085} & \textbf{181} \\
+SD & 14 & 517 & 100.00 & 0.081 & 203 \\
 \hline
-LD [10] & 75 & 320 & 0.047 & 301 \\
-LD [20] & 53 & 215 & 0.040 & 361 \\
-LD [30] & 44 & 174 & 0.036 & 384 \\
-LD [40] & 40 & 152 & 0.034 & 401 \\
-LD [50] & 35 & 138 & 0.030 & 407 \\
-LD [60] & 34 & 120 & 0.029 & 423 \\
-LD [70] & 32 & 106 & 0.027 & 432 \\
-LD [80] & 29 & 92 & 0.024 & 443 \\
-LD [90] & 24 & 79 & 0.021 & 451 \\
-LD [100] & 19 & 64 & 0.019 & 461 \\
+LD [10] & 56 & 320 & 61.90 & 0.506 & 89 \\
+LD [20] & 53 & 215 & 41.59 & 0.547 & 60 \\
+LD [30] & 44 & 174 & 33.66 & 0.558 & 47 \\
+LD [40] & 40 & 152 & 29.40 & 0.580 & 41 \\
+LD [50] & 35 & 138 & 26.69 & 0.604 & 33 \\
+LD [60] & 34 & 120 & 23.21 & 0.587 & 32 \\
+LD [70] & 32 & 106 & 20.50 & 0.577 & 27 \\
+LD [80] & 29 & 92 & 17.79 & 0.576 & 25 \\
+LD [90] & 24 & 79 & 15.28 & 0.606 & 20 \\
+LD [100] & 19 & 64 & 12.38 & 0.611 & 15 \\
 \hline
-SD+LD [10] & 15 & 517 & 0.087 & 173 \\
-SD+LD [20] & 13 & 517 & 0.071 & 184 \\
-SD+LD [30] & 13 & 517 & 0.071 & 184 \\
-SD+LD [40] & 13 & 517 & 0.071 & 184 \\
-SD+LD [50] & 13 & 517 & 0.071 & 184 \\
-SD+LD [60] & 13 & 517 & 0.071 & 184 \\
-SD+LD [70] & 13 & 517 & 0.071 & 184 \\
-SD+LD [80] & 13 & 517 & 0.071 & 184 \\
-SD+LD [90] & 13 & 517 & 0.071 & 184 \\
-SD+LD [100] & 13 & 517 & 0.072 & 184 \\
+SD+LD [10] & 15 & 517 & 100.00 & \cellcolor[HTML]{C0C0C0}\textbf{0.144} & \cellcolor[HTML]{C0C0C0}\textbf{178} \\
+SD+LD [20] & 13 & 517 & 100.00 & 0.116 & 215 \\
+SD+LD [30] & 14 & 517 & 100.00 & 0.126 & 207 \\
+SD+LD [40] & 14 & 517 & 100.00 & 0.124 & 208 \\
+SD+LD [50] & 14 & 517 & 100.00 & 0.121 & 210 \\
+SD+LD [60] & 16 & 517 & 100.00 & 0.124 & 187 \\
+SD+LD [70] & 14 & 517 & 100.00 & 0.115 & 210 \\
+SD+LD [80] & 14 & 517 & 100.00 & 0.115 & 210 \\
+SD+LD [90] & 14 & 517 & 100.00 & 0.114 & 210 \\
+SD+LD [100] & 13 & 517 & 100.00 & 0.103 & 205 \\
 \hline
 \end{tabular}
 \end{table}
-
 
 \begin{table}
 \caption{Clustering results based on different dependency types and strength filter thresholds for repo: \href{https://github.com/apache/tomcat}{https://github.com/apache/tomcat}}
 \label{tab:clustering_results_tomcat}
 \centering
 \setlength{\tabcolsep}{3pt}
-\begin{tabular}{|l|c|c|c|c|}
+\begin{tabular}{|l|c|c|c|c|c|c|}
 \hline
-\textbf{Dependency Type} & \textbf{Nr. of} & \textbf{Entities} & \textbf{MQ} & \textbf{MoJo} \\
-\textbf{[Strength Thresh.]} & \textbf{Clusters} & \textbf{Count} &  &  \\
+\textbf{Dependency Type} & \textbf{Nr. of} & \textbf{Entities} & \textbf{System} & \textbf{MQ} & \textbf{MoJo} \\
+\textbf{[strength thresh.]} & \textbf{clusters} & \textbf{Count} & \textbf{Cover (\%)} &  &  \\
 \hline
-\textbf{SD} & \textbf{31} & \textbf{662} & \textbf{0.184} & \textbf{220} \\
+SD & 31 & 662 & 100.00 & 0.184 & 95 \\
 \hline
-LD [10] & 41 & 415 & 0.023 & 314 \\
-LD [20] & 46 & 308 & 0.026 & 425 \\
-LD [30] & 46 & 250 & 0.024 & 460 \\
-LD [40] & 42 & 209 & 0.022 & 488 \\
-LD [50] & 44 & 199 & 0.023 & 499 \\
-LD [60] & 45 & 178 & 0.024 & 521 \\
-LD [70] & 45 & 165 & 0.024 & 531 \\
-LD [80] & 36 & 127 & 0.020 & 557 \\
-LD [90] & 32 & 116 & 0.018 & 564 \\
-LD [100] & 30 & 110 & 0.018 & 568 \\
+LD [10] & 42 & 406 & 61.33 & 0.505 & 61 \\
+LD [20] & 45 & 303 & 45.77 & 0.538 & 59 \\
+LD [30] & 46 & 249 & 37.61 & 0.532 & 47 \\
+LD [40] & 42 & 208 & 31.42 & 0.590 & 40 \\
+LD [50] & 44 & 198 & 29.91 & 0.604 & 40 \\
+LD [60] & 45 & 177 & 26.74 & 0.601 & 41 \\
+LD [70] & 45 & 164 & 24.77 & 0.598 & 38 \\
+LD [80] & 36 & 127 & 19.18 & 0.618 & 30 \\
+LD [90] & 32 & 116 & 17.52 & 0.623 & 24 \\
+LD [100] & 30 & 110 & 16.62 & 0.640 & 21 \\
 \hline
-SD+LD [10] & 26 & 662 & 0.164 & 250 \\
-SD+LD [20] & 28 & 662 & 0.170 & 222 \\
-SD+LD [30] & 27 & 662 & 0.166 & 221 \\
-SD+LD [40] & 28 & 662 & 0.169 & 221 \\
-SD+LD [50] & 28 & 662 & 0.170 & 222 \\
-SD+LD [60] & 28 & 662 & 0.169 & 224 \\
-SD+LD [70] & 26 & 662 & 0.173 & 232 \\
-SD+LD [80] & 29 & 662 & 0.171 & 223 \\
-SD+LD [90] & 29 & 662 & 0.171 & 223 \\
-SD+LD [100] & 29 & 662 & 0.171 & 223 \\
+SD+LD [10] & 27 & 662 & 100.00 & 0.255 &  \cellcolor[HTML]{C0C0C0}\textbf{71} \\
+SD+LD [20] & 28 & 662 & 100.00 &  \cellcolor[HTML]{C0C0C0}\textbf{0.265} & 81 \\
+SD+LD [30] & 28 & 662 & 100.00 & 0.253 & 88 \\
+SD+LD [40] & 28 & 662 & 100.00 & 0.243 & 89 \\
+SD+LD [50] & 30 & 662 & 100.00 & 0.248 & 91 \\
+SD+LD [60] & 30 & 662 & 100.00 & 0.237 & 87 \\
+SD+LD [70] & 27 & 662 & 100.00 & 0.232 & 92 \\
+SD+LD [80] & 30 & 662 & 100.00 & 0.225 & 95 \\
+SD+LD [90] & 30 & 662 & 100.00 & 0.222 & 90 \\
+SD+LD [100] & 30 & 662 & 100.00 & 0.222 & 90 \\
 \hline
 \end{tabular}
 \end{table}
@@ -429,34 +434,36 @@ SD+LD [100] & 29 & 662 & 0.171 & 223 \\
 \label{tab:clustering_results_hibernate}
 \centering
 \setlength{\tabcolsep}{3pt}
-\begin{tabular}{|l|c|c|c|c|}
+\begin{tabular}{|l|c|c|c|c|c|c|}
 \hline
-\textbf{Dependency Type} & \textbf{Nr. of} & \textbf{Entities} & \textbf{MQ} & \textbf{MoJo} \\
-\textbf{[Strength Thresh.]} & \textbf{Clusters} & \textbf{Count} &  &  \\
+\textbf{Dependency Type} & \textbf{Nr. of} & \textbf{Entities} & \textbf{System} & \textbf{MQ} & \textbf{MoJo} \\
+\textbf{[strength thresh.]} & \textbf{clusters} & \textbf{Count} & \textbf{Cover (\%)} &  &  \\
 \hline
 \textbf{SD} & \textbf{26} & \textbf{4414} & \textbf{0.073} & \textbf{2668} \\
 \hline
-LD [10] & 46 & 1469 & 0.004 & 3992 \\
-LD [20] & 64 & 1343 & 0.004 & 3991 \\
-LD [30] & 68 & 1242 & 0.004 & 3996 \\
-LD [40] & 87 & 933 & 0.005 & 4020 \\
-LD [50] & 90 & 917 & 0.005 & 4020 \\
-LD [60] & 89 & 866 & 0.005 & 4074 \\
-LD [70] & 93 & 474 & 0.005 & 4108 \\
-LD [80] & 96 & 465 & 0.005 & 4117 \\
-LD [90] & 97 & 447 & 0.005 & 4128 \\
-LD [100] & 86 & 370 & 0.005 & 4174 \\
+SD & 26 & 4414 & 100.00 & 0.073 & 1963 \\
 \hline
-SD+LD [10] & 30 & 4414 & 0.070 & 2596 \\
-SD+LD [20] & 29 & 4414 & 0.073 & 2577 \\
-SD+LD [30] & 29 & 4414 & 0.073 & 2606 \\
-SD+LD [40] & 29 & 4414 & 0.079 & 2648 \\
-SD+LD [50] & 29 & 4414 & 0.079 & 2649 \\
-SD+LD [60] & 30 & 4414 & 0.078 & 2625 \\
-SD+LD [70] & 30 & 4414 & 0.072 & 2559 \\
-SD+LD [80] & 30 & 4414 & 0.072 & 2559 \\
-SD+LD [90] & 30 & 4414 & 0.072 & 2559 \\
-SD+LD [100] & 30 & 4414 & 0.072 & 2559 \\
+LD [10] & 47 & 1450 & 32.85 & 0.414 & 674 \\
+LD [20] & 64 & 1325 & 30.02 & 0.399 & 551 \\
+LD [30] & 66 & 1222 & 27.68 & 0.374 & 483 \\
+LD [40] & 86 & 915 & 20.73 & 0.414 & 350 \\
+LD [50] & 88 & 900 & 20.39 & 0.401 & 358 \\
+LD [60] & 87 & 848 & 19.21 & 0.402 & 334 \\
+LD [70] & 90 & 459 & 10.40 & 0.512 & 148 \\
+LD [80] & 92 & 450 & 10.19 & 0.502 & 150 \\
+LD [90] & 93 & 432 & 9.79 & 0.488 & 146 \\
+LD [100] & 81 & 356 & 8.07 & 0.524 & 123 \\
+\hline
+SD+LD [10] & 27 & 4414 & 100.00 & 0.124 &  \cellcolor[HTML]{C0C0C0}\textbf{1842} \\
+SD+LD [20] & 28 & 4414 & 100.00 & 0.144 & 1868 \\
+SD+LD [30] & 28 & 4414 & 100.00 &  \cellcolor[HTML]{C0C0C0}\textbf{0.149}& 1870 \\
+SD+LD [40] & 30 & 4414 & 100.00 & 0.131 & 1859 \\
+SD+LD [50] & 31 & 4414 & 100.00 & 0.140 & 1913 \\
+SD+LD [60] & 31 & 4414 & 100.00 & 0.113 & 1913 \\
+SD+LD [70] & 30 & 4414 & 100.00 & 0.105 & 1917 \\
+SD+LD [80] & 28 & 4414 & 100.00 & 0.093 & 1924 \\
+SD+LD [90] & 28 & 4414 & 100.00 & 0.093 & 1924 \\
+SD+LD [100] & 28 & 4414 & 100.00 & 0.067 & 1924 \\
 \hline
 \end{tabular}
 \end{table}
@@ -467,34 +474,34 @@ SD+LD [100] & 30 & 4414 & 0.072 & 2559 \\
 \label{tab:clustering_results_gson}
 \centering
 \setlength{\tabcolsep}{3pt}
-\begin{tabular}{|l|c|c|c|c|}
+\begin{tabular}{|l|c|c|c|c|c|c|}
 \hline
-\textbf{Dependency Type} & \textbf{Nr. of} & \textbf{Entities} & \textbf{MQ} & \textbf{MoJo} \\
-\textbf{[Strength Thresh.]} & \textbf{Clusters} & \textbf{Count} &  &  \\
+\textbf{Dependency Type} & \textbf{Nr. of} & \textbf{Entities} & \textbf{System} & \textbf{MQ} & \textbf{MoJo} \\
+\textbf{[strength thresh.]} & \textbf{clusters} & \textbf{Count} & \textbf{Cover (\%)} &  &  \\
 \hline
-\textbf{SD} & \textbf{10} & \textbf{210} & \textbf{0.144} & \textbf{83} \\
+SD & 10 & 210 & 100.00 & 0.139 & 44 \\
 \hline
-LD [10] & 10 & 67 & 0.018 & 164 \\
-LD [20] & 11 & 50 & 0.022 & 177 \\
-LD [30] & 12 & 41 & 0.027 & 182 \\
-LD [40] & 8 & 31 & 0.022 & 186 \\
-LD [50] & 8 & 31 & 0.022 & 186 \\
-LD [60] & 8 & 28 & 0.021 & 189 \\
-LD [70] & 7 & 26 & 0.018 & 190 \\
-LD [80] & 5 & 18 & 0.014 & 196 \\
-LD [90] & 5 & 18 & 0.014 & 196 \\
-LD [100] & 5 & 18 & 0.014 & 196 \\
+LD [10] & 10 & 66 & 31.43 & 0.571 & 27 \\
+LD [20] & 11 & 50 & 23.81 & 0.547 & 16 \\
+LD [30] & 12 & 41 & 19.52 & 0.544 & 10 \\
+LD [40] & 8 & 31 & 14.76 & 0.635 & 5 \\
+LD [50] & 8 & 31 & 14.76 & 0.600 & 5 \\
+LD [60] & 8 & 28 & 13.33 & 0.552 & 6 \\
+LD [70] & 7 & 26 & 12.38 & 0.579 & 5 \\
+LD [80] & 5 & 18 & 8.57 & 0.590 & 3 \\
+LD [90] & 5 & 18 & 8.57 & 0.590 & 3 \\
+LD [100] & 5 & 18 & 8.57 & 0.590 & 3 \\
 \hline
-SD+LD [10] & 10 & 210 & 0.144 & 83 \\
-SD+LD [20] & 10 & 210 & 0.139 & 78 \\
-SD+LD [30] & 10 & 210 & 0.139 & 78 \\
-SD+LD [40] & 10 & 210 & 0.139 & 78 \\
-SD+LD [50] & 10 & 210 & 0.139 & 78 \\
-SD+LD [60] & 10 & 210 & 0.139 & 78 \\
-SD+LD [70] & 10 & 210 & 0.139 & 78 \\
-SD+LD [80] & 10 & 210 & 0.139 & 78 \\
-SD+LD [90] & 10 & 210 & 0.139 & 78 \\
-SD+LD [100] & 10 & 210 & 0.139 & 78 \\
+SD+LD [10] & 11 & 210 & 100.00 & \cellcolor[HTML]{C0C0C0}\textbf{0.215} & \cellcolor[HTML]{C0C0C0}\textbf{21} \\
+SD+LD [20] & 10 & 210 & 100.00 & 0.182 & 22 \\
+SD+LD [30] & 10 & 210 & 100.00 & 0.165 & 22 \\
+SD+LD [40] & 10 & 210 & 100.00 & 0.165 & 22 \\
+SD+LD [50] & 10 & 210 & 100.00 & 0.165 & 22 \\
+SD+LD [60] & 10 & 210 & 100.00 & 0.164 & 22 \\
+SD+LD [70] & 10 & 210 & 100.00 & 0.164 & 22 \\
+SD+LD [80] & 11 & 210 & 100.00 & 0.188 & 42 \\
+SD+LD [90] & 11 & 210 & 100.00 & 0.188 & 42 \\
+SD+LD [100] & 11 & 210 & 100.00 & 0.188 & 42 \\
 \hline
 \end{tabular}
 \end{table}
@@ -506,8 +513,9 @@ We present the clustering results based on different dependency types and streng
 Each table includes the following columns:
 \begin{itemize}
 \item \textbf{Dependency Type:} The type of dependency used in the clustering (SD - Structural Dependencies, LD - Logical Dependencies with various strength thresholds, and combined SD+LD).
-\item \textbf{Nr. of Clusters:} The number of clusters from the clustering solution.
-\item \textbf{Entities Count:} The total number of software entities (such as classes, interfaces, enums) involved in the clustering.
+\item \textbf{Nr. of Clusters:} The number of clusters from the clustering solution obtained.
+\item \textbf{Entities Count:} The total number of software entities (such as classes, interfaces, enums) involved in clustering.
+\item \textbf{System Cover:} Considering that the total number of entities extracted from the code base is the maximum number of entities in the system (first line of each table), we calculated the percentage of entities contained in the other inputs relative to the number of entities from the code base.
 \item \textbf{MQ (Modularization Quality):} The result obtained when applying the MQ evaluation metric to the clustering solution.
 \item \textbf{MoJo:} The result obtained when applying the MoJo evaluation metric to the clustering solution.
 \end{itemize}
@@ -518,7 +526,13 @@ The rows in each table represent different dependency types and strength filter 
 \section{Evaluation}
 \label{sec:evaluation}
 
-Not yet done, need advice
+In evaluating the clustering results, we use two metrics: MoJo and MQ. The MoJo metric measures how close the generated clustering solution is to our manually generated clustering solution. A smaller MoJo value indicates that fewer move and join operations are required to transform the generated clusters into the expected clusters.
+
+The MQ metric's value ranges between -1 and 1. A value of -1 means that the clusters have more connections between the clusters than within the clusters, while a value of 1 means that there are more connections within clusters than between clusters. A good clustering solution should have an MQ value close to 1, since this indicates that the clusters are more cohesive internally and have fewer connections to other clusters.
+
+The overall analysis of all the results from subsection \ref{subsec:results} indicates that combining structural and logical dependencies (SD+LD) provides better clustering solutions than using structural dependencies (SD) alone. Additionally, SD+LD offers 100\% coverage of the system, meaning that no entity is missed during cluster generation. On the other hand, logical dependencies (LD) alone often result in better clustering quality metrics compared to both SD and SD+LD, but they do not cover the entire system.
+
+The best results for SD+LD are observed with a strength threshold between 10-30\%. For LD only, the best results are obtained at a 100\% strength threshold.
 
 \section{Conclusion}
 \label{sec:conclusion}
@@ -538,6 +552,7 @@ Because it wanted to be a purr-fessor!
 \bibitem{b8} Blondel, Vincent \& Guillaume, Jean-Loup \& Lambiotte, Renaud \& Lefebvre, Etienne. (2008). Fast Unfolding of Communities in Large Networks. Journal of Statistical Mechanics Theory and Experiment. 2008. 10.1088/1742-5468/2008/10/P10008. 
 \bibitem{b9} Newman, Mark. (2006). Newman MEJ.. Modularity and community structure in networks. Proc Natl Acad Sci USA 103: 8577-8582. Proceedings of the National Academy of Sciences of the United States of America. 103. 8577-82. 10.1073/pnas.0601602103. 
 \bibitem{b10} S. Mancoridis, B. S. Mitchell, Y. Chen and E. R. Gansner, "Bunch: a clustering tool for the recovery and maintenance of software system structures," Proceedings IEEE International Conference on Software Maintenance - 1999 (ICSM'99). 'Software Maintenance for Business Change' (Cat. No.99CB36360), Oxford, UK, 1999, pp. 50-59, doi: 10.1109/ICSM.1999.792498.
+\bibitem{b101} S. Mancoridis, B. S. Mitchell, C. Rorres, Y. Chen and E. R. Gansner, "Using automatic clustering to produce high-level system organizations of source code," Proceedings. 6th International Workshop on Program Comprehension. IWPC'98 (Cat. No.98TB100242), Ischia, Italy, 1998, pp. 45-52, doi: 10.1109/WPC.1998.693283.
 \bibitem{b11} Zhihua Wen and V. Tzerpos, "An effectiveness measure for software clustering algorithms," Proceedings. 12th IEEE International Workshop on Program Comprehension, 2004., Bari, Italy, 2004, pp. 194-203, doi: 10.1109/WPC.2004.1311061.
 \bibitem{b12} Şora, Ioana. (2013). Software Architecture Reconstruction through Clustering: Finding the Right Similarity Factors. 45-54. 10.5220/0004599600450054. 
 \bibitem{b13} A. Corazza, S. Di Martino, V. Maggio and G. Scanniello, "Investigating the use of lexical information for software system clustering," 2011 15th European Conference on Software Maintenance and Reengineering, Oldenburg, Germany, 2011, pp. 35-44, doi: 10.1109/CSMR.2011.8.
@@ -545,6 +560,7 @@ Because it wanted to be a purr-fessor!
 \bibitem{b15} Oliva, Gustavo \& Gerosa, Marco Aurelio. (2012). A Method for the Identification of Logical Dependencies. Proceedings - 2012 IEEE 7th International Conference on Global Software Engineering Workshops, ICGSEW 2012. 70-72. 10.1109/ICGSEW.2012.19. 
 \bibitem{b16} Silva, Luciana \& Valente, Marco \& Maia, Marcelo. (2015). Co-change Clusters: Extraction and Application on Assessing Software Modularity. Transactions on Aspect-Oriented Software Development. 10.1007/978-3-662-46734-3\_3. 
 \bibitem{b17} Murtagh, Fionn \& Contreras, Pedro. (2012). Algorithms for hierarchical clustering: An overview. Wiley Interdisc. Rew.: Data Mining and Knowledge Discovery. 2. 86-97. 10.1002/widm.53. 
+\bibitem{b18} Amarjeet Prajapati, Anshu Parashar, Amit Rathee. Multi-dimensional information-driven many-objective software remodularization approach. Frontiers of Computer Science in China, 17(3):173209, 2023.
 
 
 \end{thebibliography}
