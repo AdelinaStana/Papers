@@ -356,7 +356,7 @@ We mostly chose projects with more than 10,000 commits in their commit history, 
 \subsubsection{Detailed Results}
 
 \begin{table}
-\caption{Clustering results based on different dependency types and strength filter thresholds for repo: \url{https://github.com/apache/ant}}
+\caption{Clustering results based on different dependency types and strength filter thresholds for repository: \url{https://github.com/apache/ant}}
 \label{tab:clustering_results_ant}
 \centering
 \setlength{\tabcolsep}{3pt}
@@ -393,7 +393,7 @@ SD+LD [100] & 13 & 517 & 100.00 & 0.103 & 205 \\
 \end{table}
 
 \begin{table}
-\caption{Clustering results based on different dependency types and strength filter thresholds for repo: \href{https://github.com/apache/tomcat}{https://github.com/apache/tomcat}}
+\caption{Clustering results based on different dependency types and strength filter thresholds for repository: \href{https://github.com/apache/tomcat}{https://github.com/apache/tomcat}}
 \label{tab:clustering_results_tomcat}
 \centering
 \setlength{\tabcolsep}{3pt}
@@ -430,7 +430,7 @@ SD+LD [100] & 30 & 662 & 100.00 & 0.222 & 90 \\
 \end{table}
 
 \begin{table}
-\caption{Clustering results based on different dependency types and strength filter thresholds for repo: \href{https://github.com/hibernate/hibernate-orm}{https://github.com/hibernate/hibernate-orm}}
+\caption{Clustering results based on different dependency types and strength filter thresholds for repository: \href{https://github.com/hibernate/hibernate-orm}{https://github.com/hibernate/hibernate-orm}}
 \label{tab:clustering_results_hibernate}
 \centering
 \setlength{\tabcolsep}{3pt}
@@ -470,7 +470,7 @@ SD+LD [100] & 28 & 4414 & 100.00 & 0.067 & 1924 \\
 
 
 \begin{table}
-\caption{Clustering results based on different dependency types and strength filter thresholds for repo: \href{https://github.com/google/gson}{https://github.com/google/gson}}
+\caption{Clustering results based on different dependency types and strength filter thresholds for repository: \href{https://github.com/google/gson}{https://github.com/google/gson}}
 \label{tab:clustering_results_gson}
 \centering
 \setlength{\tabcolsep}{3pt}
@@ -530,9 +530,75 @@ In evaluating the clustering results, we use two metrics: MoJo and MQ. The MoJo 
 
 The MQ metric's value ranges between -1 and 1. A value of -1 means that the clusters have more connections between the clusters than within the clusters, while a value of 1 means that there are more connections within clusters than between clusters. A good clustering solution should have an MQ value close to 1, since this indicates that the clusters are more cohesive internally and have fewer connections to other clusters.
 
-The overall analysis of all the results from subsection \ref{subsec:results} indicates that combining structural and logical dependencies (SD+LD) provides better clustering solutions than using structural dependencies (SD) alone. Additionally, SD+LD offers 100\% coverage of the system, meaning that no entity is missed during cluster generation. On the other hand, logical dependencies (LD) alone often result in better clustering quality metrics compared to both SD and SD+LD, but they do not cover the entire system.
+The overall analysis of all the results from subsection \ref{subsec:results} indicates that combining structural and logical dependencies (SD+LD) provides better clustering solutions than using structural dependencies (SD) alone, with 100\% coverage of the system, meaning that no entity is missed during cluster generation. On the other hand, logical dependencies (LD) alone result in better clustering quality metrics compared to both SD and SD+LD, but they do not cover the entire system.
 
-The best results for SD+LD are observed with a strength threshold between 10-30\%. For LD only, the best results are obtained at a 100\% strength threshold.
+The best results for SD+LD are observed with a strength threshold between 10-30\%. For LD only, the best results are obtained at a 100\% strength threshold. The overall trend shows that for LD only, the MQ metric increases in value with a higher strength threshold, indicating more cohesive clusters, while the MoJo metric decreases, indicating that fewer transformations are needed to reach the expected clustering. For SD+LD, the best MQ and MoJo values are obtained at lower strength thresholds, and then both metrics indicate less effective clustering solution obtained with higher strength thresholds.
+
+In the sections below, we analyze each project in detail.
+
+\subsection{Analysis of clustering results}
+
+\subsubsection{Apache Ant}
+
+The clustering results for Apache Ant (Table \ref{tab:clustering_results_ant}) show that the combined structural and logical dependencies (SD+LD) achieved the best values with a strength threshold of 10, resulting in an MQ of 0.144 and a MoJo of 178.
+
+Compared with the SD only results, where we have an MQ of 0.081 and a MoJo of 203, all SD+LD clustering solutions have better MQ metric. The MoJo metric is not always better than the SD MoJo, but the values obtained are close to the SD result.
+
+Logical dependencies (LD) alone produced the highest MQ value (MQ = 0.611) and the lowest MoJo value (MoJo = 15) at the 100\% strength threshold, but the percentage of entities covered is significantly lower (LD[100] covers only 12.38\% of the system). On the other hand, even at the LD 10\% strength threshold (LD[10] covers only 61.9\% of the system), both metrics are performing better than SD only or SD+LD[10].
+
+An interesting observation is that based on the LD only results, where the metric results improve with a higher strength threshold, the SD+LD results do not follow the same pattern. On the contrary, the SD+LD metric results decline with a higher strength threshold. The explanation for this behavior may lie in the overlapping between structural and logical dependencies. As presented in the Figure \ref{fig:ant_correlation}, the interaction between these dependencies might influence the clustering outcomes differently when combined than when applied separately.
+
+\begin{figure}[t!]
+  \centering
+  \includegraphics[width=\columnwidth]{ant_correlation.png}
+  \caption{\textbf{Overlap between structural and logical dependencies and its impact on clustering metrics.}}
+  \label{fig:ant_correlation}
+\end{figure}
+
+\subsubsection{Apache Tomcat}
+
+In the case of the Apache Tomcat repository (Table \ref{tab:clustering_results_tomcat}), the SD+LD combination with a strength threshold of 20 resulted in an MQ value of 0.265 and a MoJo of 81. Additionally, the SD+LD with a strength threshold of 10 achieved a MoJo of 71. These results show that integrating both structural and logical dependencies provides an accurate representation of the system's architecture.
+
+The MoJo metric alone for SD+LD[10] and SD+LD[20] shows that fewer transformations are required compared to other configurations. The correlation between the MQ and MoJo metrics confirms that better modular quality often corresponds to fewer transformations needed.
+
+Logical dependency (LD) only lines show high MQ values, such as LD[100] with an MQ of 0.640, but coverage remains an issue, as LD[100] covers only 16.62\% of the system. Despite this, the high MQ values indicate effective clustering. The higher MoJo values suggest that more transformations are needed to achieve the expected clustering  \ref{fig:catalina_correlation}.
+
+\begin{figure}[t!]
+  \centering
+  \includegraphics[width=\columnwidth]{catalina_correlation.png}
+  \caption{\textbf{Overlap between structural and logical dependencies and its impact on clustering metrics.}}
+  \label{fig:catalina_correlation}
+\end{figure}
+
+\subsubsection{Hibernate ORM}
+
+For the Hibernate ORM repository (Table \ref{tab:clustering_results_hibernate}), the SD+LD combination with a strength threshold of 30 achieved an MQ value of 0.149 and a MoJo of 1870. Additionally, the SD+LD with a strength threshold of 10 resulted in a MoJo of 1842. These results suggest that the combined approach is beneficial for producing high-quality clusters.
+
+The MoJo metric for these configurations indicates fewer move and join operations are needed, reinforcing the clustering quality suggested by the MQ values. The correlation between MQ and MoJo in these cases highlights the advantage of combining structural and logical dependencies for clustering.
+
+Logical dependency (LD) only lines produced high MQ values (e.g., LD[100] with an MQ of 0.524), but entity coverage is limited, with LD[100] covering only 8.07\% of the system. Despite this, the results indicate effective clustering. The higher MoJo values for these configurations suggest more transformations are necessary to align the clusters with the expected structure  \ref{fig:hibernate_correlation}.
+
+\begin{figure}[t!]
+  \centering
+  \includegraphics[width=\columnwidth]{hibernate_correlation.png}
+  \caption{\textbf{Overlap between structural and logical dependencies and its impact on clustering metrics.}}
+  \label{fig:hibernate_correlation}
+\end{figure}
+
+\subsubsection{Google Gson}
+
+For the Google Gson repository (Table \ref{tab:clustering_results_gson}), the SD+LD combination with a strength threshold of 10 achieved an MQ value of 0.215 and a MoJo of 21. This demonstrates the effectiveness of combining both types of dependencies for clustering.
+
+The MoJo metric alone for SD+LD[10] indicates very few transformations are needed, reflecting the high clustering quality. The correlation between MQ and MoJo is evident, as the high MQ value corresponds to a low MoJo value.
+
+Logical dependency (LD) only lines show high MQ values, such as LD[40] with an MQ of 0.635, but coverage is limited, with LD[40] covering only 14.76\% of the system. Despite the limited coverage, the high MQ values suggest effective clustering. The higher MoJo values for these configurations indicate more transformations are needed to achieve the expected clustering  \ref{fig:gson_correlation}.
+
+\begin{figure}[t!]
+  \centering
+  \includegraphics[width=\columnwidth]{gson_correlation.png}
+  \caption{\textbf{Overlap between structural and logical dependencies and its impact on clustering metrics.}}
+  \label{fig:gson_correlation}
+\end{figure}
 
 \section{Conclusion}
 \label{sec:conclusion}
