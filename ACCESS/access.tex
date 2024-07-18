@@ -582,11 +582,14 @@ So, we believe that the reason why SD+LD clustering solutions decline in perform
 
 \subsubsection{Apache Tomcat}
 
-In the case of the Apache Tomcat repository (Table \ref{tab:clustering_results_tomcat}), the SD+LD combination with a strength threshold of 20 resulted in an MQ value of 0.265 and a MoJo of 81. Additionally, the SD+LD with a strength threshold of 10 achieved a MoJo of 71. These results show that integrating both structural and logical dependencies provides an accurate representation of the system's architecture.
+For Apache Tomcat (Table \ref{tab:clustering_results_tomcat}), the SD+LD[20] combination achieved the best results for the MQ metric (MQ = 0.265), while SD+LD[10] achieved the best value for MoJo (MoJo = 71).
 
-The MoJo metric alone for SD+LD[10] and SD+LD[20] shows that fewer transformations are required compared to other configurations. The correlation between the MQ and MoJo metrics confirms that better modular quality often corresponds to fewer transformations needed.
+In comparison with Apache Ant, where both metrics reached their best value at the same strength threshold, there is a difference of one strength step between the metrics' best results for Apache Tomcat. Even so, the MoJo metric for SD+LD[10] and SD+LD[20] indicates that fewer transformations are required compared to SD-only or other SD+LD combinations.
 
-Logical dependency (LD) only lines show high MQ values, such as LD[100] with an MQ of 0.640, but coverage remains an issue, as LD[100] covers only 16.62\% of the system. Despite this, the high MQ values indicate effective clustering. The higher MoJo values suggest that more transformations are needed to achieve the expected clustering  \ref{fig:catalina_correlation}.
+The LD-only lines show the best MQ and MoJo values for LD[100], with an MQ of 0.640 and a MoJo of 21, but coverage remains an issue, as LD[100] covers only 16.62\% of the system. On the other hand, LD[10] covers 61.33\% of the system and still provides better clustering solutions according to the MQ and MoJo results.
+
+We observe the same decline in results with a stricter strength threshold for SD+LD, and as with the previous system, these results can be linked to the percentage of LD that are also SD, as shown in Figure \ref{fig:catalina_correlation}. LD filtered with a 10\% strength threshold overlaps with SD approximately by 22\%, and with a 100\% strength threshold, the overlap is approximately 39\%.
+
 
 \begin{figure}[t!]
   \centering
@@ -595,13 +598,12 @@ Logical dependency (LD) only lines show high MQ values, such as LD[100] with an 
   \label{fig:catalina_correlation}
 \end{figure}
 
+Compared with all the other systems, Apache Tomcat has the highest number of commits involved in LD extraction (Table \ref{tab:project_info}), totaling 22,698. Due to this larger information base for LD extraction, the use of logical dependencies results in better MQ values compared to other systems, as seen in Tables \ref{tab:clustering_results_ant}, \ref{tab:clustering_results_hibernate}, and \ref{tab:clustering_results_gson}.
+
+The high number of commits leads to more effective clustering results. This highlights the importance of having a substantial commit history to enhance the quality of logical dependencies used and, consequently, the clustering solutions generated.
+
+
 \subsubsection{Hibernate ORM}
-
-For the Hibernate ORM repository (Table \ref{tab:clustering_results_hibernate}), the SD+LD combination with a strength threshold of 30 achieved an MQ value of 0.149 and a MoJo of 1870. Additionally, the SD+LD with a strength threshold of 10 resulted in a MoJo of 1842. These results suggest that the combined approach is beneficial for producing high-quality clusters.
-
-The MoJo metric for these configurations indicates fewer move and join operations are needed, reinforcing the clustering quality suggested by the MQ values. The correlation between MQ and MoJo in these cases highlights the advantage of combining structural and logical dependencies for clustering.
-
-Logical dependency (LD) only lines produced high MQ values (e.g., LD[100] with an MQ of 0.524), but entity coverage is limited, with LD[100] covering only 8.07\% of the system. Despite this, the results indicate effective clustering. The higher MoJo values for these configurations suggest more transformations are necessary to align the clusters with the expected structure  \ref{fig:hibernate_correlation}.
 
 \begin{figure}[t!]
   \centering
@@ -610,13 +612,30 @@ Logical dependency (LD) only lines produced high MQ values (e.g., LD[100] with a
   \label{fig:hibernate_correlation}
 \end{figure}
 
+Hibernate ORM is the second largest in terms of the number of commits analyzed, with 16,609 commits considered for LD extraction. Additionally, it is the largest in terms of system size, with 4,414 entities (Table \ref{tab:project_info}).
+
+Based on the results from Table \ref{tab:clustering_results_hibernate}, the SD+LD combination with a strength threshold of 30 achieved the best MQ value of 0.149 and a MoJo of 1870. The SD+LD with a strength threshold of 10 achieved the best MoJo of 1842. Similar to Apache Tomcat, the best values for both metrics are not at the same strength threshold, but even so, SD+LD[10] has a better MoJo value than SD-only.
+
+LD-only produced the best MQ and MoJo values at 100\%, but the system coverage is again limited, with LD[100] covering only 8.07\% of the system, the lowest percentage among all systems studied. This low percentage can be connected to the number of commits compared to the number of entities. For Apache Tomcat, we had 22,698 commits and 662 entities, for Hibernate, we have 16,609 commits and 4,414 entities. This most probably means that not all entities had a chance to be updated in the versioning system.
+
+This can also be connected to the fact that Hibernate is the only system among those studied that reaches a lower MQ value than SD-only for the SD+LD combination. Meanwhile, all other systems maintain a slightly better MQ value for SD+LD compared to SD-only, even at the highest strength threshold.
+
+
+Hibernate also has the lowest overlapping percentages between LD and SD, as shown in Figure \ref{fig:hibernate_correlation}. Similar to the other systems, the MQ and MoJo performance decreases for SD+LD as the strength threshold values become stricter.
+
+The results for Hibernate highlight the challenge of achieving better clustering in larger systems with fewer commits relative to their size.
+
+
+
 \subsubsection{Google Gson}
 
-For the Google Gson repository (Table \ref{tab:clustering_results_gson}), the SD+LD combination with a strength threshold of 10 achieved an MQ value of 0.215 and a MoJo of 21. This demonstrates the effectiveness of combining both types of dependencies for clustering.
+Gson has the smallest number of commits analyzed, with 1,772 commits considered for LD extraction, and it is also the smallest in terms of system size, with 210 entities involved in clustering (Table \ref{tab:project_info}).
 
-The MoJo metric alone for SD+LD[10] indicates very few transformations are needed, reflecting the high clustering quality. The correlation between MQ and MoJo is evident, as the high MQ value corresponds to a low MoJo value.
+Based on the results from Table \ref{tab:clustering_results_gson}, the SD+LD combination with a strength threshold of 10 achieved the best MQ value of 0.215 and the best MoJo of 21. Similar to Apache Ant, the best values for both metrics are at the same strength threshold, and all SD+LD combinations have a better MQ value than SD-only.
 
-Logical dependency (LD) only lines show high MQ values, such as LD[40] with an MQ of 0.635, but coverage is limited, with LD[40] covering only 14.76\% of the system. Despite the limited coverage, the high MQ values suggest effective clustering. The higher MoJo values for these configurations indicate more transformations are needed to achieve the expected clustering  \ref{fig:gson_correlation}.
+LD-only produced the best MQ value at 40\%, with an MQ of 0.635 and the best MoJo value at 80\%, 90\%, and 100\%. It is the only system that produces a better result for MQ at a lower strength threshold than 100\% for LD-only. This is likely caused by the very low number of entities remaining in the system at 100\% (only 18 out of 210).
+
+It can also be observed that Gson has the exact same metric values for MQ and MoJo for multiple strength threshold values. Again, the small number of commits and the size of the system contribute to the constant values of these metrics. This stability in the metrics suggests that smaller systems might not benefit as much from the combination of SD and LD as larger systems do.
 
 \begin{figure}[t!]
   \centering
@@ -624,6 +643,12 @@ Logical dependency (LD) only lines show high MQ values, such as LD[40] with an M
   \caption{\textbf{Google Gson: Overlap between structural and logical dependencies and its correlation with clustering metrics.}}
   \label{fig:gson_correlation}
 \end{figure}
+
+Gson has relatively high overlapping rates between LD and SD compared to the other systems, as shown in Figure \ref{fig:gson_correlation}. Despite the constant values, the trend of performance decreasing with a stricter strength filtering for LD is also present for Gson.
+
+The results for the system highlight the challenge of achieving better clustering solutions using logical dependencies in smaller systems with fewer commits. For such a small system as Gson, an improvement is still visible when using logical dependencies. However, the filtering should be done with less strict thresholds since there is a high chance of losing additional new information about the system after filtering.
+
+
 
 \section{Conclusion}
 \label{sec:conclusion}
