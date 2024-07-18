@@ -177,8 +177,26 @@ We are interested in extracting dependencies from code commits that involve feat
 One scenario where this issue arises is the first commit of a software system when it is ported from one versioning system to another. This commit will contain many changed code files, but these changes do not originate from any functionality change, so they generate numerous irrelevant co-changes for the system.
 
 A similar scenario occurs with merge commits. A merge commit is created automatically when you perform a merge operation to integrate changes from one branch into another. After integration, all commits from the branch are added to the target branch, and on top of that, there is the merge commit containing all changes from the commits merged into a single commit. Since this commit contains only a merge of multiple smaller, related issues/features solved, it is better to gather information from the smaller commits rather than from the overall merge commit.
+What both scenarios above have in common is the large number of files involved in the commits. Based on our previous research and measurements regarding the number of files involved in a commit, we chose to set a threshold of 20 files \cite{b4}, \cite{b5}. Therefore, all co-changes that originate from commits with more than 20 changed code files are filtered out.
 
-What both scenarios above have in common is the large number of files involved in the commits. Based on our previous research and measurements regarding the number of files involved in a commit, we chose to set a threshold of 10 files \cite{b4}, \cite{b5}. Therefore, all co-changes that originate from commits with more than 10 changed code files are filtered out.
+
+Table \ref{tab:commit_statistics} presents the commit statistics for the studied projects. The columns represent the percentage of commits that modified under 5 files, between 5 and 10 files, between 10 and 20 files, and above 20 files. The last column indicates the average number of files changed per commit. We can observe that most of the commits have under 5 files changed, with Apache Tomcat having more than 90\% of the commits with less than 5 files changed. On the opposite side, only a few commits involve more than 20 files changed, Hibernate ORM having the highest percentage at 8.39\%. Overall, filtering based on commit size does not significantly reduce the number of commits considered.
+
+\begin{table}[ht]
+    \centering
+    \caption{Commit statistics for studied projects}
+    \label{tab:commit_statistics}
+    \begin{tabular}{|l|c|c|c|c|c|}
+        \hline
+ \textbf{Project Name} & \textbf{Under 5} & \textbf{5-10} & \textbf{10-20} & \textbf{Above 20} & \textbf{Avg. Files} \\ 
+        & \textbf{Files} & \textbf{Files} & \textbf{Files} & \textbf{Files} & \textbf{Changed} \\ \hline
+        Apache Ant & 83.83\% & 7.50\% & 4.17\% & 4.50\% & 5.77 \\ \hline
+        Apache Tomcat & 90.95\% & 5.44\% & 2.04\% & 1.58\% & 2.89 \\ \hline
+        Hibernate ORM & 71.74\% & 12.37\% & 7.50\% & 8.39\% & 11.98 \\ \hline
+        Gson & 83.63\% & 9.85\% & 3.70\% & 2.81\% & 4.07 \\ \hline
+    \end{tabular}
+\end{table}
+
 
 \subsubsection{Strength Filter}
 
@@ -216,7 +234,7 @@ We refer to this addition to the original calculation formula as strength metric
 
 \subsubsection{Filter Application Process}
 
-The overall filter application process is illustrated in Fig. \ref{fig:filtering}.  We begin by extracting all co-changes from the versioning system, and the first filter applied is the commit size filter. The commit size filter has a strict threshold of 10 files, meaning that any co-changes from commits involving more than 10 files are filtered out.
+The overall filter application process is illustrated in Fig. \ref{fig:filtering}.  We begin by extracting all co-changes from the versioning system, and the first filter applied is the commit size filter. The commit size filter has a strict threshold of 20 files, meaning that any co-changes from commits involving more than 20 files are filtered out.
 
 The co-changes that remain after applying the commit size filter are then processed using the strength filter. The strength filter uses multiple thresholds, specifically 10 different thresholds. We start with a threshold of 10 and increment it by 10 until we reach a maximum value of 100. The reason for not using a fixed threshold is to assess how different strength thresholds affect our cluster generation. 
 
@@ -546,14 +564,21 @@ Compared with the SD only results, where we have an MQ of 0.081 and a MoJo of 20
 
 Logical dependencies (LD) alone produced the highest MQ value (MQ = 0.611) and the lowest MoJo value (MoJo = 15) at the 100\% strength threshold, but the percentage of entities covered is significantly lower (LD[100] covers only 12.38\% of the system). On the other hand, even at the LD 10\% strength threshold (LD[10] covers only 61.9\% of the system), both metrics are performing better than SD only or SD+LD[10].
 
-An interesting observation is that based on the LD only results, where the metric results improve with a higher strength threshold, the SD+LD results do not follow the same pattern. On the contrary, the SD+LD metric results decline with a higher strength threshold. The explanation for this behavior may lie in the overlapping between structural and logical dependencies. As presented in the Figure \ref{fig:ant_correlation}, the interaction between these dependencies might influence the clustering outcomes differently when combined than when applied separately.
+An interesting observation is that, based on the LD-only results, where the metric results improve with a higher strength threshold, the SD+LD results do not follow the same pattern. On the contrary, the SD+LD metric results decline with a higher strength threshold. The explanation for this behavior may lie in the overlap between structural and logical dependencies. As presented in Figure \ref{fig:ant_correlation}, the overlap between structural and logical dependencies might influence the clustering outcomes differently when combined than when applied separately.
 
 \begin{figure}[t!]
   \centering
   \includegraphics[width=\columnwidth]{ant_correlation.png}
-  \caption{\textbf{Overlap between structural and logical dependencies and its impact on clustering metrics.}}
+  \caption{\textbf{Apache Ant: Overlap between structural and logical dependencies and its correlation with clustering metrics.}}
   \label{fig:ant_correlation}
 \end{figure}
+
+In our previous works (\cite{b4}, \cite{b5}), we studied how these two types of dependencies overlap. The reason behind this study was to check how much new information we can get from using logical dependencies and how much is already present via structural dependencies.
+
+Our overall findings were that with stricter filtering of logical dependencies, we obtain a higher percentage of overlap between the two dependencies, reaching at most 50\% of logical dependencies that are also structural dependencies.
+
+So, we believe that the reason why SD+LD clustering solutions decline in performance with a higher strength threshold is that there is less and less new additional information being added to the system (logical dependencies that are not structural dependencies), causing the clustering solution to start resembling the performance of the SD-only solution. This redundancy between logical and structural dependencies might not introduce new meaningful information to the clustering algorithm and can instead introduce noise.
+
 
 \subsubsection{Apache Tomcat}
 
@@ -566,7 +591,7 @@ Logical dependency (LD) only lines show high MQ values, such as LD[100] with an 
 \begin{figure}[t!]
   \centering
   \includegraphics[width=\columnwidth]{catalina_correlation.png}
-  \caption{\textbf{Overlap between structural and logical dependencies and its impact on clustering metrics.}}
+  \caption{\textbf{Apache Tomcat: Overlap between structural and logical dependencies and its correlation with clustering metrics.}}
   \label{fig:catalina_correlation}
 \end{figure}
 
@@ -581,7 +606,7 @@ Logical dependency (LD) only lines produced high MQ values (e.g., LD[100] with a
 \begin{figure}[t!]
   \centering
   \includegraphics[width=\columnwidth]{hibernate_correlation.png}
-  \caption{\textbf{Overlap between structural and logical dependencies and its impact on clustering metrics.}}
+  \caption{\textbf{Hibernate ORM: Overlap between structural and logical dependencies and its correlation with clustering metrics.}}
   \label{fig:hibernate_correlation}
 \end{figure}
 
@@ -596,7 +621,7 @@ Logical dependency (LD) only lines show high MQ values, such as LD[40] with an M
 \begin{figure}[t!]
   \centering
   \includegraphics[width=\columnwidth]{gson_correlation.png}
-  \caption{\textbf{Overlap between structural and logical dependencies and its impact on clustering metrics.}}
+  \caption{\textbf{Google Gson: Overlap between structural and logical dependencies and its correlation with clustering metrics.}}
   \label{fig:gson_correlation}
 \end{figure}
 
