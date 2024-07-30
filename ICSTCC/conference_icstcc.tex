@@ -69,7 +69,7 @@ In our previous research, we examined several software systems and determined th
 
 Additionally, the reliability of co-changes is another problem; certain entities may only change together once throughout the entire versioning history, making them less reliable than entities that change together hundreds of times, for instance. 
 
-Previous research uses two known metrics in order to solve this problems: \textit{support} and \textit{confidence}, defined as in equations (1)  and (2) \cite{DBLP:conf/issre/OlivaG15}, \cite{DBLP:journals/jss/AjienkaC17}, \cite{Zimmermann:2004:MVH:998675.999460} . Given a dependency where $A \rightarrow B$, the support metric measures the frequency of updates that two entities share within the versioning system. The confidence metric calculates the proportion of updates between two entities relative to the total updates of the antecedent (A) or consequent (B) entity.
+Previous research uses two known metrics in order to solve this problems: \textit{support} and \textit{confidence}, defined as in equations (1) and (2) \cite{DBLP:conf/issre/OlivaG15}, \cite{DBLP:journals/jss/AjienkaC17}, \cite{Zimmermann:2004:MVH:998675.999460} . Given a dependency where $A \rightarrow B$, the support metric measures the frequency of updates that two entities share within the versioning system. The confidence metric calculates the proportion of updates between two entities relative to the total updates of the antecedent (A) or consequent (B) entity.
 
 \begin{equation}
 \small
@@ -118,7 +118,7 @@ A more recent approach involves using data from the system's historical changes 
 
 Prajapati et al. used structural dependencies, lexical dependencies and co-changes from the versioning system to enhance system modularization \cite{clustering-ld-lexical}.
 
-When it comes to evaluating the obatined clustering solutions,  if a reference solution exists, metrics can be applied to evaluate the similarity between the reference clustering solution and the obtained clusterings. One such metric is the MOJO distance, MOJO measures the minimum number of Move and Join operations required to transform one clustering solution into another \cite{mojo-tzerpos}. 
+When it comes to evaluating the obatined clustering solutions, if a reference solution exists, metrics can be applied to evaluate the similarity between the reference clustering solution and the obtained clusterings. One such metric is the MOJO distance, MOJO measures the minimum number of Move and Join operations required to transform one clustering solution into another \cite{mojo-tzerpos}. 
 
 
 If no reference solution exists, then metrics that evaluate the cohesion of the clustering solution, based on the input graph, can be used. One such metric is the Modularization Quality (MQ) metric. As defined by Mitchell and Mancoridis \cite{mqmetric}, \cite{mqmetric2}, is extensively used to assess the results of clustering techniques. While it is primarily applied to clusters formed from structural dependencies \cite{Bunch1},\cite{Bunch2},\cite{Bunch3}, it can be used also for evaluating clusters derived from other types of dependencies \cite{clustering-ld-lexical}.
@@ -174,22 +174,19 @@ Table \ref{tab:clustering-results1} presents the results when using only logical
   \caption{Louvain clustering results for LD only vs SD only}
   \label{tab:clustering-results1}
   \begin{tabular}{lc|c|c}
-    \toprule
-    \textbf{Dataset} & \textbf{Entities} & \textbf{Cluster} & \textbf{MQ } \\
-    & \textbf{Count} & \textbf{count} &  \textbf{metric} \\
+ \midrule
+    SD only & 517 & 12 & 0.08 \\
     \midrule
-    SD only & 517 & 14 &  0.085  \\
-    \midrule
-LD  strength    10\%    &   320 &   75  &   0.383   \\
-LD  strength    20\%    &   215 &   53  &   0.547   \\
-LD  strength    30\%    &   174 &   44  &   0.558   \\
-LD  strength    40\%    &   152 &   40  &   0.58    \\
-LD  strength    50\%    &   138 &   35  &   0.604   \\
-LD  strength    60\%    &   120 &   34  &   0.587   \\
-LD  strength    70\%    &   106 &   32  &   0.577   \\
-LD  strength    80\%    &   92  &   29  &   0.576   \\
-LD  strength    90\%    &   79  &   24  &   0.606   \\
-LD  strength    100\%   &   64  &   19  &   0.611   \\
+    LD strength 10\% & 320 & 56 & 0.506 \\
+    LD strength 20\% & 215 & 53 & 0.547 \\
+    LD strength 30\% & 174 & 44 & 0.558 \\
+    LD strength 40\% & 152 & 40 & 0.58 \\
+    LD strength 50\% & 138 & 35 & 0.604 \\
+    LD strength 60\% & 120 & 34 & 0.587 \\
+    LD strength 70\% & 106 & 32 & 0.577 \\
+    LD strength 80\% & 92 & 29 & 0.576 \\
+    LD strength 90\% & 79 & 24 & 0.606 \\
+    LD strength 100\% & 64 & 19 & 0.611 \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -208,19 +205,18 @@ In both tables, the second column shows the total count of different entities fo
     \textbf{Dataset} & \textbf{Entities} & \textbf{Cluster} & \textbf{MQ } \\
     & \textbf{Count} & \textbf{count} &  \textbf{metric} \\
     \midrule
-    SD only & 517 & 14 &  0.085  \\
+    SD only & 517 & 12 & 0.08 \\
     \midrule
-SD  LD  strength    10\%    &   517 &   15  &   0.087   \\
-SD  LD  strength    20\%    &   517 &   13  &   0.071   \\
-SD  LD  strength    30\%    &   517 &   13  &   0.071   \\
-SD  LD  strength    40\%    &   517 &   13  &   0.071   \\
-SD  LD  strength    50\%    &   517 &   13  &   0.071   \\
-SD  LD  strength    60\%    &   517 &   13  &   0.071   \\
-SD  LD  strength    70\%    &   517 &   13  &   0.071   \\
-SD  LD  strength    80\%    &   517 &   13  &   0.071   \\
-SD  LD  strength    90\%    &   517 &   13  &   0.071   \\
-SD  LD  strength    100\%   &   517 &   13  &   0.072   \\
-
+    SD LD strength 10\% & 517 & 13 & 0.191 \\
+    SD LD strength 20\% & 517 & 13 & 0.176 \\
+    SD LD strength 30\% & 517 & 15 & 0.227 \\
+    SD LD strength 40\% & 517 & 16 & 0.214 \\
+    SD LD strength 50\% & 517 & 15 & 0.213 \\
+    SD LD strength 60\% & 517 & 16 & 0.211 \\
+    SD LD strength 70\% & 517 & 16 & 0.211 \\
+    SD LD strength 80\% & 517 & 15 & 0.21 \\
+    SD LD strength 90\% & 517 & 12 & 0.124 \\
+    SD LD strength 100\% & 517 & 13 & 0.137 \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -267,11 +263,11 @@ As the cluster number itself is not significant and may vary across different sc
 
 \subsection{taskdefs.Concat and its inner classes}
 
-To  have a better overview into how and why entities are transferred between clusters, we depicted Concat's logical and structural connections in Figure \ref{fig:dep_concat}. Additionally, Figure \ref{fig:clusterAconcat} illustrates connections within Cluster A, while Figure \ref{fig:clusterBconcat} does the same for Cluster B.
+To have a better overview into how and why entities are transferred between clusters, we depicted Concat's logical and structural connections in Figure \ref{fig:dep_concat}. Additionally, Figure \ref{fig:clusterAconcat} illustrates connections within Cluster A, while Figure \ref{fig:clusterBconcat} does the same for Cluster B.
 
 In Cluster A, the Concat class and its inner classes (Concat\$1, Concat\$MultiReader, Concat\$TextElement) are placed together with conditions like Available, And, Or, IsTrue, Equals, IsReference, Contains.
 
-On the other hand, in Cluster B are placed with classes associated with file manipulation and archive operations such as Ear, Jar, War, and Zip, as well as utility classes for file handling like FileUtils and JavaEnvUtils, and entities for zip file processing (ZipEntry, ZipFile).  This placement is due to the logical dependencies that Concat class has with FileUtils and FileSet in the versioning system.
+On the other hand, in Cluster B are placed with classes associated with file manipulation and archive operations such as Ear, Jar, War, and Zip, as well as utility classes for file handling like FileUtils and JavaEnvUtils, and entities for zip file processing (ZipEntry, ZipFile). This placement is due to the logical dependencies that Concat class has with FileUtils and FileSet in the versioning system.
 
 To assess whether the placement of Concat in Cluster B is better then in Cluster A, we referred to the official Ant documentation. According to the documentation: "This class contains the 'concat' task, used to concatenate a series of files into a single stream" \cite{ant_concat}. Therefore, judging by its usage and purpose according to the documentation, positioning the Concat class along with its inner classes in Cluster B is more suitable than in Cluster A.
 
@@ -356,7 +352,7 @@ Also, the cluster from figure \ref{fig:clusterAreplace} is the 14th cluster that
 \label{conclusion}
 
 Based the outcomes from Section \ref{results} and the analysis from Section \ref{discussion}, it is clear that incorporating logical dependencies improves the quality of clustering solutions. 
-This reinforces the idea that dependencies extracted from the versioning system contribute with new information that isn't otherwise available through code analysis.  Our current findings are that using logical dependencies combined with structural dependencies improves the quality of the software clustering solution. Using only logical dependencies as input for software clustering does not attain the same quality as with structural dependencies, but it could be an alternative solution if the analysis of the source code is not possible.
+This reinforces the idea that dependencies extracted from the versioning system contribute with new information that isn't otherwise available through code analysis. Our current findings are that using logical dependencies combined with structural dependencies improves the quality of the software clustering solution. Using only logical dependencies as input for software clustering does not attain the same quality as with structural dependencies, but it could be an alternative solution if the analysis of the source code is not possible.
 
 In our forthcoming work, we intend to expand the project list for our software clustering analysis to better understand the effectiveness of integrating both structural and logical dependencies. Additionally, we'll explore alternative metrics besides MQ to validate the improved quality of these solutions compared to those based solely on structural dependencies.
 
