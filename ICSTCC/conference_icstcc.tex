@@ -221,35 +221,32 @@ In both tables, the second column shows the total count of different entities fo
   \end{tabular}
 \end{table}
 
-Can be observed in Table \ref{tab:clustering-results1} that the MQ results for clustering solutions based solely on logical dependencies (LD) are not better than those based solely on structural dependencies (SD). In Column 2, it is noticeable that the total number of entities used decreases as the strength threshold increases. This trend is expected because stricter thresholds filter out more entities. But it is noticeable that this affects the overall quality of the clustering solutions obtained.
+It can be observed in Table \ref{tab:clustering-results1} that the MQ results for clustering solutions based solely on logical dependencies (LD) are better than those based solely on structural dependencies (SD). The results are also better than the results obtained for logical dependencies (LD) combined with structural dependencies (SD) from Table \ref{tab:clustering-results2}. However, in Column 2, it is noticeable that the total number of entities used decreases as the strength threshold increases. This trend is expected because stricter thresholds filter out more entities.
 
 In a scenario where structural dependencies aren't accessible for extraction, logical dependencies can be used as a substitute, but with less strict filtering compared to when they're intended to be combined with structural dependencies.
 
-
-On the other hand, in Table \ref{tab:clustering-results2} can be observed that starting with the strength threshold of 20\% the MQ results for clustering solutions based on logical dependencies (LD) combined with structural dependencies (SD) are better than those based solely on structural dependencies (SD). 
-
+On the other hand, in Table \ref{tab:clustering-results2}, it can be observed that starting with the strength threshold of 10\%, the MQ results for clustering solutions based on logical dependencies (LD) combined with structural dependencies (SD) are better than those based solely on structural dependencies (SD).
 
 \section{Discussion}
 \label{discussion}
 
-Based on the results from table \ref{tab:clustering-results2}, we can observe that the combined approach of structural dependencies and logical dependencies gives a Modularity Quality (MQ) metric of 0.071, which is an improvement over the 0.085 MQ metric obtained when considering only structural dependencies. 
+Based on the results from Table \ref{tab:clustering-results2}, we can observe that the combined approach of structural dependencies and logical dependencies gives the highest Modularity Quality (MQ) metric of 0.227 with a strength threshold of 30\%, which is an improvement over the 0.08 MQ metric obtained when considering only structural dependencies.
 
 Beyond the positive result indicated by the MQ metric, we searched for further validation by human software engineering expert opinion. After thoroughly studying and understanding the analyzed system source code and documentation, we evaluated the remodularization proposals resulting from the two clustering solutions.
 
-The two clustering solutions compared are the clustering solution obtained only from structural dependencies, in comparison to the clustering solution obtained from using both structural and logical dependencies, filtered with a threshold of 20\% for strength.
+The two clustering solutions compared are the clustering solution obtained only from structural dependencies, in comparison to the clustering solution obtained from using both structural and logical dependencies, filtered with a threshold of 30\% for strength.
 
-The clustering solution relying solely on structural dependencies consists of 14 clusters, while the solution using both structural and logical dependencies consists of 13 clusters, both solutions involve the same number of entities (517). The entities listed below are placed in different clusters: 
-
+The clustering solution relying solely on structural dependencies consists of 12 clusters, while the solution using both structural and logical dependencies consists of 15 clusters. Both solutions involve the same number of entities (517). The entities listed below are placed in different clusters:
 
 \begin{itemize}
     \item taskdefs.Available\$FileDir
-    \item taskdefs.Concat and its inner classes taskdefs.Concat\$1, taskdefs.Concat\$ MultiReader, taskdefs.Concat\$ TextElement
+    \item taskdefs.Concat and its inner classes taskdefs.Concat\$1, taskdefs.Concat\$MultiReader, taskdefs.Concat\$ TextElement
     \item taskdefs.Javadoc\$AccessType
     \item util.WeakishReference and its inner class util.WeakishReference\$HardReference
-    \item taskdefs.Replace and its inner classes taskdefs.Replace\$ NestedString, taskdefs.Replace\$ Replacefilter
+    \item taskdefs.Replace and its inner classes taskdefs.Replace\$ NestedString, taskdefs.Replace\$Replacefilter
 \end{itemize}
 
-The migration of entities between clusters is ilustared in Figure \ref{fig:clustersmigration}. Given that the inner classes are shifted from one cluster to another in identical way as the outer class, we omitted the inner classes from the diagram.
+The migration of entities between clusters is illustrated in Figure \ref{fig:clustersmigration}. Given that the inner classes are shifted from one cluster to another in the same way as the outer class, we omitted the inner classes from the diagram.
 
 As the cluster number itself is not significant and may vary across different script runs (labels might vary), we will refer to each individual cluster resulting from structural dependencies as \textit{Cluster A} and to the ones resulting from both logical and structural dependencies as \textit{Cluster B}.
 
@@ -263,13 +260,13 @@ As the cluster number itself is not significant and may vary across different sc
 
 \subsection{taskdefs.Concat and its inner classes}
 
-To have a better overview into how and why entities are transferred between clusters, we depicted Concat's logical and structural connections in Figure \ref{fig:dep_concat}. Additionally, Figure \ref{fig:clusterAconcat} illustrates connections within Cluster A, while Figure \ref{fig:clusterBconcat} does the same for Cluster B.
+To have a better overview of how and why entities are transferred between clusters, we depicted Concat's logical and structural connections in Figure \ref{fig:dep_concat}. Additionally, Figure \ref{fig:clusterAconcat} illustrates connections within Cluster A, while Figure \ref{fig:clusterBconcat} does the same for Cluster B.
 
 In Cluster A, the Concat class and its inner classes (Concat\$1, Concat\$MultiReader, Concat\$TextElement) are placed together with conditions like Available, And, Or, IsTrue, Equals, IsReference, Contains.
 
-On the other hand, in Cluster B are placed with classes associated with file manipulation and archive operations such as Ear, Jar, War, and Zip, as well as utility classes for file handling like FileUtils and JavaEnvUtils, and entities for zip file processing (ZipEntry, ZipFile). This placement is due to the logical dependencies that Concat class has with FileUtils and FileSet in the versioning system.
+On the other hand, in Cluster B, they are placed with classes associated with file manipulation and archive operations such as Ear, Jar, War, and Zip, as well as utility classes for file handling like FileUtils and JavaEnvUtils, and entities for zip file processing (ZipEntry, ZipFile). This placement is due to the logical dependencies that Concat class has with FileUtils and FileSet in the versioning system.
 
-To assess whether the placement of Concat in Cluster B is better then in Cluster A, we referred to the official Ant documentation. According to the documentation: "This class contains the 'concat' task, used to concatenate a series of files into a single stream" \cite{ant_concat}. Therefore, judging by its usage and purpose according to the documentation, positioning the Concat class along with its inner classes in Cluster B is more suitable than in Cluster A.
+To assess whether the placement of Concat in Cluster B is better than in Cluster A, we referred to the official Ant documentation. According to the documentation: "This class contains the 'concat' task, used to concatenate a series of files into a single stream" \cite{ant_concat}. Therefore, judging by its usage and purpose according to the documentation, positioning the Concat class along with its inner classes in Cluster B is more suitable than in Cluster A.
 
 
 \begin{figure}
@@ -343,8 +340,7 @@ Replace and its inner classes are placed in Cluster B with entities with which t
 
 The movement of entities from Cluster A to Cluster B was influenced by the strong logical dependency between 'taskdefs.Replace' and 'taskdefs.MatchingTask'.
 
-
-Also, the cluster from figure \ref{fig:clusterAreplace} is the 14th cluster that is missing from the clustering solution based on logical and structural dependencies. We obtained 14 clusters from structural dependecies only and 13 from logical combined with structural dependencies. This particular cluster is essentially comprised of two unrelated entities: Replace and WeakishReference. Due to their logical dependencies, both entities are grouped within larger clusters that share similar functionalities in the SD and LD solution.
+The cluster from figure \ref{fig:clusterAreplace} is the 12th cluster from the clustering solution based on structural dependencies. We obtained 12 clusters from structural dependecies and 15 from logical combined with structural dependencies. This particular cluster is essentially comprised of two unrelated entities: Replace and WeakishReference. Due to their logical dependencies, both entities are grouped within larger clusters that share similar functionalities in the SD and LD solution.
 
 
 
@@ -352,7 +348,7 @@ Also, the cluster from figure \ref{fig:clusterAreplace} is the 14th cluster that
 \label{conclusion}
 
 Based the outcomes from Section \ref{results} and the analysis from Section \ref{discussion}, it is clear that incorporating logical dependencies improves the quality of clustering solutions. 
-This reinforces the idea that dependencies extracted from the versioning system contribute with new information that isn't otherwise available through code analysis. Our current findings are that using logical dependencies combined with structural dependencies improves the quality of the software clustering solution. Using only logical dependencies as input for software clustering does not attain the same quality as with structural dependencies, but it could be an alternative solution if the analysis of the source code is not possible.
+This reinforces the idea that dependencies extracted from the versioning system contribute with new information that isn't otherwise available through code analysis. Our current findings are that using logical dependencies combined with structural dependencies improves the quality of the software clustering solution. Using only logical dependencies as input for software clustering does cover the entire system, but it could be an alternative solution if the analysis of the source code is not possible.
 
 In our forthcoming work, we intend to expand the project list for our software clustering analysis to better understand the effectiveness of integrating both structural and logical dependencies. Additionally, we'll explore alternative metrics besides MQ to validate the improved quality of these solutions compared to those based solely on structural dependencies.
 
