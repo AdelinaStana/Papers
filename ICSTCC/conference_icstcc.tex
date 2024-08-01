@@ -1,5 +1,4 @@
-\documentclass[conference]{IEEEtran}
-\IEEEoverridecommandlockouts
+\documentclass[conference, a4paper]{IEEEtran}
 % The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
 \usepackage{cite}
 \usepackage{amsmath,amssymb,amsfonts}
@@ -17,6 +16,7 @@
 
 \graphicspath{ {./images/} }
 
+\renewcommand\IEEEkeywordsname{Keywords}
 \begin{document}
 
 \title{Integrating Logical Dependencies in Software Clustering: A case study on Apache Ant}
@@ -174,7 +174,10 @@ Table \ref{tab:clustering-results1} presents the results when using only logical
   \caption{Louvain clustering results for LD only vs SD only}
   \label{tab:clustering-results1}
   \begin{tabular}{lc|c|c}
- \midrule
+    \toprule
+    \textbf{Dataset} & \textbf{Entities} & \textbf{Cluster} & \textbf{MQ } \\
+    & \textbf{Count} & \textbf{count} &  \textbf{metric} \\
+    \midrule
     SD only & 517 & 12 & 0.08 \\
     \midrule
     LD strength 10\% & 320 & 56 & 0.506 \\
@@ -340,7 +343,7 @@ Replace and its inner classes are placed in Cluster B with entities with which t
 
 The movement of entities from Cluster A to Cluster B was influenced by the strong logical dependency between 'taskdefs.Replace' and 'taskdefs.MatchingTask'.
 
-The cluster from figure \ref{fig:clusterAreplace} is the 12th cluster from the clustering solution based on structural dependencies. We obtained 12 clusters from structural dependecies and 15 from logical combined with structural dependencies. This particular cluster is essentially comprised of two unrelated entities: Replace and WeakishReference. Due to their logical dependencies, both entities are grouped within larger clusters that share similar functionalities in the SD and LD solution.
+The cluster from figure \ref{fig:clusterAreplace} is the 12th cluster from the clustering solution based on structural dependencies. This particular cluster is essentially comprised of two unrelated entities: Replace and WeakishReference. Due to their logical dependencies, both entities are grouped within larger clusters that share similar functionalities in the SD and LD solution.
 
 
 
@@ -348,7 +351,7 @@ The cluster from figure \ref{fig:clusterAreplace} is the 12th cluster from the c
 \label{conclusion}
 
 Based the outcomes from Section \ref{results} and the analysis from Section \ref{discussion}, it is clear that incorporating logical dependencies improves the quality of clustering solutions. 
-This reinforces the idea that dependencies extracted from the versioning system contribute with new information that isn't otherwise available through code analysis. Our current findings are that using logical dependencies combined with structural dependencies improves the quality of the software clustering solution. Using only logical dependencies as input for software clustering does cover the entire system, but it could be an alternative solution if the analysis of the source code is not possible.
+This reinforces the idea that dependencies extracted from the versioning system contribute with new information that isn't otherwise available through code analysis. Our current findings are that using logical dependencies combined with structural dependencies improves the quality of the software clustering solution. Using only logical dependencies as input for software clustering does not cover the entire system, but it could be an alternative solution if the analysis of the source code is not possible.
 
 In our forthcoming work, we intend to expand the project list for our software clustering analysis to better understand the effectiveness of integrating both structural and logical dependencies. Additionally, we'll explore alternative metrics besides MQ to validate the improved quality of these solutions compared to those based solely on structural dependencies.
 
