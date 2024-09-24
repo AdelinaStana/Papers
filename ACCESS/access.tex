@@ -161,11 +161,13 @@ The structural dependencies are obtained using a tool from our previous research
 \centering
 \begin{tabular}{|c|l|}
 \hline
-\textbf{Weight} & \textbf{Dependency categories} \\ \hline
-4 & Interface realization \\ \hline
-3 & Inheritance, parameter, return type, field, cast, type binding \\ \hline
-2 & Method call, field access, instantiation \\ \hline
-1 & Local variable \\ \hline
+\textbf{Weight} & \textbf{Dependency categories} \\ 
+\hline
+4 & Interface realization \\
+3 & Inheritance, parameter, return type, field, cast, type binding \\ 
+2 & Method call, field access, instantiation \\ 
+1 & Local variable \\ 
+ \hline
 \end{tabular}
 \caption{Weights assigned to different dependency types.}
 \end{table}
@@ -338,56 +340,68 @@ After both evaluations are done, we export the clustering result, the cluster co
 \section{Experimental Plan and Results}
 \label{sec:experiment}
 
-\begin{figure}[t!]
-  \centering
-  \includegraphics[width=\columnwidth]{scenario.png}
-  \caption{ \textbf{Scenarios for results}}
-  \label{fig:scenatrio}
-\end{figure}
+
+\subsection{Experimental Plan}
+\label{subsec:plan}
+
+\subsubsection{Overview of projects used}
 
 \begin{table*}
 \centering
 \caption{Overview of projects used in experimental analysis}
 \label{tab:project_info}
 \setlength{\tabcolsep}{7pt} 
-\begin{tabular}{|l|l|c|l|p{4cm}|}
+\begin{tabular}{|l|l|c|l|p{4.7cm}|}
 \hline
-\textbf{Project Name} & \textbf{Release Tag} & \textbf{Number of Commits} & \textbf{GitHub Repository Link} & \textbf{Repository Description} \\ \hline
+\textbf{Project Name} & \textbf{Release Tag} & \textbf{Commits} & \textbf{GitHub Repository Link} & \textbf{Repository Description} \\ 
+ &  & \textbf{Number} & &  \\ \hline
 Apache Ant & \href{https://github.com/apache/ant/tree/rel/1.10.13}{rel/1.10.13} & 14917 & \href{https://github.com/apache/ant}{https://github.com/apache/ant} & Apache Ant is a Java-based build tool. \\ \hline
-Apache Tomcat & \href{https://github.com/apache/tomcat/tree/8.5.93}{8.5.93} & 22698 & \href{https://github.com/apache/tomcat}{https://github.com/apache/tomcat} & Apache Tomcat software powers numerous large-scale, mission-critical web applications across a diverse range of industries and organizations. \\ \hline
-Hibernate ORM & \href{https://github.com/hibernate/hibernate-orm/tree/6.2.14}{6.2.14} & 16609 & \href{https://github.com/hibernate/hibernate-orm}{https://github.com/hibernate/hibernate-orm} & Hibernate ORM is a powerful object/relational mapping solution for Java. \\ \hline
+Apache Tomcat & \href{https://github.com/apache/tomcat/tree/8.5.93}{8.5.93} & 22698 & \href{https://github.com/apache/tomcat}{https://github.com/apache/tomcat} & Apache Tomcat software powers numerous large-scale web applications across a diverse range of industries and organizations. \\ \hline
+Hibernate ORM & \href{https://github.com/hibernate/hibernate-orm/tree/6.2.14}{6.2.14} & 16609 & \href{https://github.com/hibernate/hibernate-orm}{https://github.com/hibernate/hibernate-orm} & Hibernate ORM is an object/relational mapping solution for Java. \\ \hline
 Gson & \href{https://github.com/google/gson/tree/gson-parent-2.10.1}{gson-parent-2.10.1} & 1772 & \href{https://github.com/google/gson}{https://github.com/google/gson} & A Java serialization/deserialization library to convert Java Objects into JSON and back. \\ \hline
 \end{tabular}
 \end{table*}
 
-\subsection{Experimental Plan}
-\label{subsec:plan}
+In Table \ref{tab:project_info}, we have synthesized all the information about the four projects used in our experiments. The 'Project Name' column contains the names of the software projects sourced from GitHub. The 'Release Tag' column contains the specific release tag of the project that was analyzed. For logical dependency extraction, we processed all the commits starting from the first commit up to the commit associated with the specified tag. For structural dependencies, we extracted the dependencies from the code of that specific tag. The 'Number of Commits' column provides the total number of commits used for logical dependencies extraction. The 'GitHub Repository Link' column includes the URL link to the project's repository on GitHub. Finally, the 'Repository Description' column provides a brief description of the project's purpose and functionality.
 
-\subsubsection{Tool Runs}
-The objective of our research is to evaluate how the quality of software clustering solutions is impacted by logical dependencies.
-To assess the impact, we run the tool presented in Section \ref{subsec:tool_workflow} in three different scenarios. All three scenarios are illustrated in Fig. \ref{fig:scenatrio}.
+We mostly chose projects with more than 10,000 commits in their commit history, so that the logical dependencies extraction can be done on a larger information base. However, we selected 'Gson', which has a relatively small commit history (1,772 commits), to determine if our experiments work with a smaller information base.
+
+\subsubsection{Tool runs}
+
+To assess the impact of logical dependencies and to answer the research questions from section \ref{sec:introduction}, we run the tool presented in Section \ref{subsec:tool_workflow} in three different scenarios for all the projects from table \ref{tab:project_info}. All three scenarios are illustrated in Fig. \ref{fig:scenatrio}.
 
 In the first scenario, we run the tool once, providing only the structural dependencies of the system as input for the clustering algorithm.
 
 In the second scenario, we run the tool ten times, using only logical dependencies as input. We perform ten runs because we generate logical dependencies with different threshold values for the strength filter. We start with a threshold of 10 and increase it in steps of 10 up to 100, where 100 is the maximum value for the threshold.
 
-In the third scenario, we combine logical with structural dependencies. Again, we run the tool ten times, each time using structural dependencies and logical dependencies generated with different strength thresholds.
+In the third scenario, we combine logical with structural dependencies. Similar to the second scenario, we run the tool ten times, each time using structural dependencies and logical dependencies generated with different strength thresholds.
 
-
-
+\begin{figure}[t!]
+  \centering
+  \includegraphics[width=\columnwidth]{scenario.png}
+  \caption{ \textbf{Experimental scenarios for analyzing the impact of logical dependencies on clustering quality}}
+  \label{fig:scenatrio}
+\end{figure}
 
 \subsection{Results}
 \label{subsec:results}
 
-\subsubsection{Overview of projects used}
-
-
-In Table \ref{tab:project_info}, we have synthesized all the information about the four projects used in our experiments. The 'Project Name' column contains the names of the software projects sourced from GitHub. The 'Release Tag' column contains the specific release tag of the project that was analyzed. For logical dependency extraction, we processed all the commits starting from the first commit up to the commit associated with the specified tag. For structural dependencies, we extracted the dependencies from the code of that specific tag. The 'Number of Commits' column provides the total number of commits used for logical dependencies extraction. The 'GitHub Repository Link' column includes the URL link to the project's repository on GitHub. Finally, the 'Repository Description' column offers a brief description of the project's purpose and functionality.
-
-
-We mostly chose projects with more than 10,000 commits in their commit history, so that the logical dependencies extraction can be done on a larger information base. However, we selected 'Gson', which has a relatively small commit history (1,772 commits), to determine if our experiments work with a smaller information base.
-
 \subsubsection{Detailed Results}
+
+The experimental results are presented in this subsection in four tables, each corresponding to a different project. Table \ref{tab:clustering_results_ant} presents the results for Apache Ant, Table \ref{tab:clustering_results_tomcat} presents the results for Apache Tomcat, Table \ref{tab:clustering_results_hibernate} presents the results for Hibernate ORM, and Table \ref{tab:clustering_results_gson} presents the results for Gson.
+
+Each table includes the following columns:
+\begin{itemize}
+\item \textbf{Dependency Type:} The types of dependencies used are as follows: SD for Structural Dependencies, LD for Logical Dependencies, and SD+LD for their combination. The strength threshold used is specified in parentheses right after LD.
+\item \textbf{Entities Count:} The total number of software entities (such as classes, interfaces, enums) involved in clustering.
+\item \textbf{System Cover:} Considering that the total number of entities extracted from the code base is the maximum number of entities in the system (first line of each table), we calculated the percentage of entities contained in the other inputs relative to the number of entities from the code base.
+\item \textbf{Louvain/ Leiden/ DBSCAN:} The clustering algorithms used in the experiments.
+\item \textbf{Nr. of Clusters:} The number of clusters from the clustering solution.
+\item \textbf{MQ (Modularization Quality):} The result obtained when applying the MQ evaluation metric to the clustering solution.
+\item \textbf{MoJoFM:} The result obtained when applying the MoJoFM evaluation metric to the clustering solution.
+\end{itemize}
+
+The rows in each table represent different dependency types and strength filter thresholds used in the clustering experiments.
 
 \begin{table*}[htbp]
 \centering
@@ -426,8 +440,6 @@ We mostly chose projects with more than 10,000 commits in their commit history, 
 \hline
 \end{tabular}
 \end{table*}
-
-
 
 
 
@@ -553,22 +565,15 @@ We mostly chose projects with more than 10,000 commits in their commit history, 
 \end{table*}
 
 
-We present the clustering results based on different dependency types and strength filter thresholds in four tables, each corresponding to a different project. These tables provide an overview of the clustering results, underlining how various dependency types impact the clustering results. Table \ref{tab:clustering_results_ant} shows the results for Apache Ant, Table \ref{tab:clustering_results_tomcat} presents the results for Apache Tomcat, Table \ref{tab:clustering_results_hibernate} presents the results for Hibernate ORM, and Table \ref{tab:clustering_results_gson} presents the results for Gson.
-
-Each table includes the following columns:
-\begin{itemize}
-\item \textbf{Dependency Type:} The type of dependency used in the clustering (SD - Structural Dependencies, LD - Logical Dependencies with various strength thresholds, and combined SD+LD).
-\item \textbf{Nr. of Clusters:} The number of clusters from the clustering solution obtained.
-\item \textbf{Entities Count:} The total number of software entities (such as classes, interfaces, enums) involved in clustering.
-\item \textbf{System Cover:} Considering that the total number of entities extracted from the code base is the maximum number of entities in the system (first line of each table), we calculated the percentage of entities contained in the other inputs relative to the number of entities from the code base.
-\item \textbf{MQ (Modularization Quality):} The result obtained when applying the MQ evaluation metric to the clustering solution.
-\item \textbf{MoJo:} The result obtained when applying the MoJo evaluation metric to the clustering solution.
-\end{itemize}
-
-The rows in each table represent different dependency types and strength filter thresholds used in the clustering experiments.
 
 
-\subsection{Experiment on weights}
+
+\subsubsection{Additional experiment on the impact of logical dependency weights}
+
+
+We conducted an additional experiment focused on the impact of logical dependency weights on the final results. In this experiment, we increased the weight assigned to each logical dependency for Apache Tomcat to observe the changes it produces in the MQ and MoJoFM metrics.
+
+Table \ref{tab:systems_weights} presents the average dependency weights for all the projects used. The first row contains the average weights for structural dependencies, while the other rows show the average weights for logical dependencies with different strength thresholds.
 
 \begin{table}[htbp]
 \centering
@@ -588,19 +593,25 @@ The rows in each table represent different dependency types and strength filter 
 \textbf{LD(100)} & 33.93 & 37.04 & 12.00 & 43.00 \\
  \hline
 \end{tabular}
-\caption{Average weights of Structural Dependencies (SD) and Logical Dependencies (LD) across different thresholds for the systems.}
+\caption{Average weights of Structural Dependencies (SD) and Logical Dependencies (LD).}
+\label{tab:systems_weights}
 \end{table}
 
-
+Table \ref{tab:clustering_results_multiplication} contains most of the columns used for the main experiments. In addition, we added two more columns:
+\begin{itemize}
+    \item \textbf{Multiplication Factor:} The value by which each logical dependency is multiplied.
+    \item \textbf{Avg Weight:} The average weight assigned to each type of dependency used.
+\end{itemize}
 
 \begin{table*}[htbp]
 \centering
 \setlength{\tabcolsep}{7pt} 
 \begin{tabular}{|l|c|c|ccc|ccc|ccc|}
 \hline
-\textbf{Multiplication} & \multicolumn{2}{c|}{\textbf{Avg weight}} & \multicolumn{3}{c|}{\textbf{Louvain}} & \multicolumn{3}{c|}{\textbf{Leiden}} & \multicolumn{3}{c|}{\textbf{DBSCAN}} \\
+\textbf{Multiplication} & \multicolumn{2}{c|}{\textbf{Avg. weight}} & \multicolumn{3}{c|}{\textbf{Louvain}} & \multicolumn{3}{c|}{\textbf{Leiden}} & \multicolumn{3}{c|}{\textbf{DBSCAN}} \\
 \cline{4-12}
-\textbf{Factor} & \textbf{SD} & \textbf{LD} & \textbf{Clusters} & \textbf{MQ} & \textbf{Mojo FM} & \textbf{Clusters} & \textbf{MQ} & \textbf{Mojo FM} & \textbf{Clusters} & \textbf{MQ} & \textbf{Mojo FM} \\
+\textbf{Factor} & \textbf{SD} & \textbf{LD} & \textbf{Nr. of} & \textbf{MQ} & \textbf{Mojo FM} & \textbf{Nr. of} & \textbf{MQ} & \textbf{Mojo FM} & \textbf{Nr. of} & \textbf{MQ} & \textbf{Mojo FM} \\
+ &  &  & \textbf{clusters} & &  & \textbf{clusters} & && \textbf{clusters} &  & \\
 \hline
 1 & 6.91  & 37.04  & 31 & 0.311 & 78.83 & 31 & 0.305 & 78.37 & 43 & 0.153 & 73.31 \\ 
 2 & 6.91  & 74.08  & 33 & 0.295 & 73.57 & 30 & 0.301 & 72.33 & 43 & 0.153 & 73.31 \\
@@ -609,7 +620,8 @@ The rows in each table represent different dependency types and strength filter 
 5 & 6.91  & 185.20 & 34 & 0.306 & 73.88 & 33 & 0.308 & 72.18 & 43 & 0.153 & 73.31 \\ 
 \hline
 \end{tabular}
-\caption{Comparison of different clustering methods for multiplication factors applied for LD(100)}
+\caption{Comparison of different clustering methods for multiplication factors applied for LD(100) for Tomcat}
+\label{tab:clustering_results_multiplication}
 \end{table*}
 
 \section{Evaluation}
