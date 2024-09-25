@@ -49,10 +49,11 @@
 
 
 \begin{abstract}
-Version control systems primarily offer support for tracking and managing changes in software code, but they can also provide valuable information about the managed software. Changes in multiple software entities simultaneously can imply that these entities are connected. Software entities that change at the same time (code co-changes) are treated as a distinct category of software dependencies. In some cases, these co-changes are used together with other types of dependencies, such as structural dependencies or lexical dependencies, to enhance the understanding of a software system.
+Version control systems are important for tracking and managing changes in software code, but they also offer information about the relationships between software entities. When multiple software entities (e.g., classes, interfaces) are modified together, it may indicate an underlying connection. These code co-changes represent a type of software dependency that can be used together with structural or lexical dependencies to improve the understanding of a system's architecture.
 
+In this paper, we explore using code co-changes as input for software clustering for architectural reconstruction. Since structural dependencies are the most commonly used dependencies in software clustering, we investigate whether integrating them with code co-changes provides better results than using either dependency type alone.
 
-This paper proposes using code co-changes in software clustering for architectural reconstruction. Structural dependencies are the most commonly used type of dependencies in software clustering for architectural reconstruction, so we will use clustering solutions obtained from structural dependencies as the baseline for our evaluations. Our approach will be applied to four open-source projects found on GitHub. For each of the projects, we will compare and evaluate the clustering obtained by using only co-changes and the clustering obtained by using co-changes combined with structural dependencies with the baseline clustering generated solely from structural dependencies.
+Our experiments are applied to four open-source Java projects from GitHub. For each project, we apply three distinct clustering algorithms (Louvain, Leiden, and DBSCAN) and evaluate their performance using two clustering evaluation metrics. These metrics allow us to compare the effectiveness of clustering based on code co-changes alone or clustering that combines co-changes with structural dependencies, offering a better understanding of how these co-changes influence software architecture reconstruction.
 \end{abstract}
 
 \begin{keywords}
@@ -66,17 +67,26 @@ Architectural reconstruction, code co-changes, logical dependencies, software cl
 \section{Introduction}
 \label{sec:introduction}
 
-Software systems often face a lack of documentation. Even if there was original documentation at the beginning of development, over the years it may become outdated or lost. Additionally, the original developers may leave the company, taking with them knowledge about how the software was designed. This situation challenges the teams when it comes to maintenance or modernization. In this context, recovering the system's architecture is essential. Understanding the system's architecture helps developers better evaluate and understand the nature and impact of changes they need to make. One technique to aid in reconstructing the system architecture is software clustering. Software clustering involves creating cohesive groups (modules) of software entities based on their dependencies and interactions.
+Software systems often face a lack of documentation. Even if there was original documentation at the beginning of development, over the years it may become outdated or lost. Additionally, the original developers may leave the company, taking with them knowledge about how the software was designed. This situation challenges the teams when it comes to maintenance or modernization. In this context, recovering the system's architecture is essential. Understanding the system's architecture helps developers better evaluate and understand the nature and impact of changes they need to make. One technique to aid reconstructing the system architecture is software clustering. Software clustering involves creating cohesive groups (modules) of software entities based on their dependencies and interactions.
 
-Among the dependencies that can be used for software clustering are structural dependencies (relationships between entities based on code analysis), lexical dependencies (relationships based on naming conventions), and code co-changes/logical dependencies (relationships between entities extracted from the version control system), among others. Combining multiple types of dependencies, rather than relying on just one type, can be a good approach to generate better results. However, it requires fine-tuning the amount of dependencies used from each category and scaling the coefficients attached to them. Combining dependencies without considering these aspects might lead to results that are less effective than using an individual type of dependency alone.
+Among the dependencies that can be used for software clustering are structural dependencies (relationships between entities based on code analysis), lexical dependencies (relationships based on naming conventions), and code co-changes/logical dependencies (relationships between entities extracted from the version control system), among others. 
 
-In this paper, we assess whether using structural dependencies combined with logical dependencies can provide better results than using each type of dependency alone. The structural dependencies are used as they are extracted from static code analysis. The logical dependencies are filtered co-changes from the version control system \cite{b15}. The reason behind filtering the co-changes and not using them as they are in the versioning system is to enhance their quality and make them easier to combine with structural dependencies, as their size can outnumber the structural dependencies \cite{b1}.
+In this paper, we assess whether using structural dependencies combined with logical dependencies can provide better results than using each type of dependency alone. The structural dependencies are used as they are extracted from static code analysis, and the logical dependencies are filtered co-changes from the version control system \cite{b15}. The reason behind filtering the co-changes and not using them as they are in the versioning system is to enhance their reliability and make them easier to combine with structural dependencies, as their number can far exceed the structural dependencies number \cite{b1}.
 
-To evaluate the results, we generate software clustering on four open-source projects and use two types of metrics for comparison. One of the metrics is MQ (Modularization Quality), which evaluates the modularization quality based on the interaction between the modules and does not require any additional input besides the clustering result \cite{b2}. The other is the MoJo (Move and Join) metric, a commonly used metric for evaluating the similarity between two different software clustering results \cite{b3}. For this metric, we manually generate a base of comparison for the clustering result and compare the results against this baseline.
+The following research questions guide our investigation:
+
+\begin{itemize}
+    \item \textbf{RQ1:} Does using structural dependencies (SD) combined with logical dependencies (LD) improve software clustering results compared to traditional approaches using only structural dependencies (SD)?
+    \item \textbf{RQ2:} Can using only logical dependencies (LD) produce good software clustering results?
+    \item \textbf{RQ3:} How do different filtering settings for logical dependencies (LD) impact clustering results, and which filtering settings provide the best performance?
+\end{itemize}
+
+To answer these research questions, we apply three different clustering algorithms (Louvain, Leiden, and DBSCAN) to each of the four open-source projects. We then evaluate the results using two metrics, MQ (Modularization Quality) and MoJoFM (Move and Join eFfectiveness Measure)\cite{b11}. These metrics allow us to compare the effectiveness of using structural dependencies alone, logical dependencies alone, and a combination of both, providing a better understanding of how different dependency types and filtering settings impact the clustering results.
+
 
 In Section \ref{sec:related_work}, we review the related work and previous studies that used various dependencies for software clustering and their metrics for evaluation.
 Section \ref{sec:workflow_implementation} details the workflow and implementation of our approach, including the extraction and filtering of dependencies, and the clustering algorithm used.
-The plan and results of our experiments on four open-source projects are presented in Section \ref{sec:experiment}. Section \ref{sec:evaluation} evaluates our results by using the Modularization Quality (MQ) metric and the Move and Join (MoJo) metric. We also manually analyze some of the clustering solutions.
+The plan and results of our experiments on four open-source projects are presented in Section \ref{sec:experiment}. Section \ref{sec:evaluation} evaluates our results by using the Modularization Quality (MQ) metric and the MoJoFM metric. We also manually analyze some of the clustering solutions.
 Finally, Section \ref{sec:conclusion} contains our conclusions and findings.
 
 \subsection{Abbreviations and Acronyms}
@@ -87,7 +97,7 @@ The following abbreviations and acronyms are used throughout this article:
     \item \textbf{LD}: Logical Dependencies
     \item \textbf{SD}: Structural Dependencies
     \item \textbf{MQ}: Modularization Quality Metric
-    \item \textbf{MoJo}: Move and Join Metric
+    \item \textbf{MoJoFM}: Move and Join Effectiveness Measure Metric
 \end{itemize}
 
 
@@ -145,18 +155,13 @@ Silva et al. \cite{b16} & Co-change dependencies & Agglomerative Hierarchical Cl
 \end{table}
 
 
-
-
-\section{Theoretical Background, Workflow, and Implementation}
-\label{sec:workflow_implementation}
-
-To achieve our goal of evaluating how the quality of clustering solutions is impacted by logical dependencies, we developed a Python tool capable of using any type of dependency, either alone or combined with other types of dependencies, as long as they are provided in CSV format. The tool clusters and evaluates software clustering solutions using either the MQ metric or the MoJo metric. In the following subsections, we present how we obtain the structural dependencies and logical dependencies used, the type of clustering algorithm we use, and the tool's workflow.
+\section{Structural and Logical Dependencies in Software Clustering}
+\label{sec:dependencies}
 
 \subsection{Structural Dependencies}
-\label{subsec:sd}
-
-The structural dependencies are obtained using a tool from our previous research. While the tool primarily exports the key class ranking of a software system, it also has the capability to export the data in CSV format. The exported dependencies are directed and weighted based on the type of dependency they represent.
-
+Details on how structural dependencies are extracted using a tool from previous research.
+\subsubsection{Weighting Structural Dependencies}
+Discussion on how different types of structural dependencies are weighted.
 \begin{table}[htbp]
 \centering
 \begin{tabular}{|c|l|}
@@ -169,11 +174,9 @@ The structural dependencies are obtained using a tool from our previous research
 1 & Local variable \\ 
  \hline
 \end{tabular}
-\caption{Weights assigned to different dependency types.}
+\caption{Weights assigned to different structural dependency types.}
 \end{table}
 
-\Figure[t!](topskip=0pt, botskip=0pt, midskip=0pt)[width=\textwidth]{codegraph.png}
-{ \textbf{Combine SD and LD.}\label{fig:codegraph}}
 
 \subsection{Logical Dependencies}
 \label{subsec:ld}
@@ -262,6 +265,30 @@ The co-changes that remain after applying the commit size filter are then proces
   \caption{ \textbf{Filter application process}}
   \label{fig:filtering}
 \end{figure}
+
+\subsection{Comparison and Combination of Dependencies}
+Overview of how structural and logical dependencies are combined in the clustering process.
+
+
+\Figure[t!](topskip=0pt, botskip=0pt, midskip=0pt)[width=\textwidth]{codegraph.png}
+{ \textbf{Combine SD and LD.}\label{fig:codegraph}}
+
+
+
+
+
+
+\section{Theoretical Background, Workflow, and Implementation}
+\label{sec:workflow_implementation}
+
+To achieve our goal of evaluating how the quality of clustering solutions is impacted by logical dependencies, we developed a Python tool capable of using any type of dependency, either alone or combined with other types of dependencies, as long as they are provided in CSV format. The tool clusters and evaluates software clustering solutions using either the MQ metric or the MoJo metric. In the following subsections, we present how we obtain the structural dependencies and logical dependencies used, the type of clustering algorithm we use, and the tool's workflow.
+
+\subsection{Structural Dependencies}
+\label{subsec:sd}
+
+The structural dependencies are obtained using a tool from our previous research. While the tool primarily exports the key class ranking of a software system, it also has the capability to export the data in CSV format. The exported dependencies are directed and weighted based on the type of dependency they represent.
+
+\subsection{Logical Dependencies}
 
 To extract and filter the co-changes, we used a previously developed tool \cite{b4}. This tool takes as input the GitHub repository address and the threshold values for commit and strength filters. The tool clones the repository, downloads all commit diffs starting from the first commit, examines all files changed in each commit to identify which entities have changed in those files, and creates undirected co-change dependencies between all changed entities within a commit.
 
@@ -571,10 +598,6 @@ The rows in each table represent different dependency types and strength filter 
 \subsubsection{Additional experiment on the impact of logical dependency weights}
 
 
-We conducted an additional experiment focused on the impact of logical dependency weights on the final results. In this experiment, we increased the weight assigned to each logical dependency for Apache Tomcat to observe the changes it produces in the MQ and MoJoFM metrics.
-
-Table \ref{tab:systems_weights} presents the average dependency weights for all the projects used. The first row contains the average weights for structural dependencies, while the other rows show the average weights for logical dependencies with different strength thresholds.
-
 \begin{table}[htbp]
 \centering
 \begin{tabular}{|c|c|c|c|c|}
@@ -597,9 +620,20 @@ Table \ref{tab:systems_weights} presents the average dependency weights for all 
 \label{tab:systems_weights}
 \end{table}
 
-Table \ref{tab:clustering_results_multiplication} contains most of the columns used for the main experiments. In addition, we added two more columns:
+We conducted an additional experiment to evaluate whether our weight calculation strategy for logical dependencies is suitable for scenarios where they are combined with the weights from structural dependencies.
+
+Table \ref{tab:systems_weights} presents the average dependency weights across all the projects. The first row shows the average weights for structural dependencies, while the other rows show the average weights for logical dependencies at different strength thresholds.
+
+It can be observed that the average weights for logical dependencies increase as the strength threshold rises. This led us to question whether we are assigning sufficient weight to the logical dependencies in our system.
+
+Therefore, in this experiment, we increased the weight assigned to each logical dependency filtered with a 100\% strength threshold from the Apache Tomcat system and re-ran scenario III from Fig. \ref{fig:scenatrio}.
+
+We wanted to see whether the weights assigned to logical dependencies are suitable to be combined with the weights from structural dependencies in the same directed graph by observing how the two metrics (MQ and MoJoFM) change once we increase the weights of the logical dependencies.
+
+
+The results of this experiment can be found in Table \ref{tab:clustering_results_multiplication}. To maintain consistency, we used the same columns as in the other result tables (\ref{tab:clustering_results_ant}, \ref{tab:clustering_results_tomcat}, \ref{tab:clustering_results_hibernate}, \ref{tab:clustering_results_gson}), with the addition of two new columns:
 \begin{itemize}
-    \item \textbf{Multiplication Factor:} The value by which each logical dependency is multiplied.
+    \item \textbf{Multiplication Factor:} The value by which each logical dependency weight is multiplied.
     \item \textbf{Avg Weight:} The average weight assigned to each type of dependency used.
 \end{itemize}
 
@@ -620,7 +654,7 @@ Table \ref{tab:clustering_results_multiplication} contains most of the columns u
 5 & 6.91  & 185.20 & 34 & 0.306 & 73.88 & 33 & 0.308 & 72.18 & 43 & 0.153 & 73.31 \\ 
 \hline
 \end{tabular}
-\caption{Comparison of different clustering methods for multiplication factors applied for LD(100) for Tomcat}
+\caption{Impact of multiplication factors on clustering results for LD(100) in Apache Tomcat}
 \label{tab:clustering_results_multiplication}
 \end{table*}
 
