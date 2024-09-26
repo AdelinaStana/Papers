@@ -69,7 +69,7 @@ Architectural reconstruction, code co-changes, logical dependencies, software cl
 
 Software systems often face a lack of documentation. Even if there was original documentation at the beginning of development, over the years it may become outdated or lost. Additionally, the original developers may leave the company, taking with them knowledge about how the software was designed. This situation challenges the teams when it comes to maintenance or modernization. In this context, recovering the system's architecture is essential. Understanding the system's architecture helps developers better evaluate and understand the nature and impact of changes they need to make. One technique to aid reconstructing the system architecture is software clustering. Software clustering involves creating cohesive groups (modules) of software entities based on their dependencies and interactions.
 
-Among the dependencies that can be used for software clustering are structural dependencies (relationships between entities based on code analysis), lexical dependencies (relationships based on naming conventions), and code co-changes/logical dependencies (relationships between entities extracted from the version control system), among others. 
+Among the dependencies that can be used for software clustering are structural dependencies (relationships between entities based on code analysis), lexical dependencies (relationships based on naming conventions),  and code co-changes/logical dependencies (relationships between entities extracted from the version control system), among others. 
 
 In this paper, we assess whether using structural dependencies combined with logical dependencies can provide better results than using each type of dependency alone. The structural dependencies are used as they are extracted from static code analysis, and the logical dependencies are filtered co-changes from the version control system \cite{b15}. The reason behind filtering the co-changes and not using them as they are in the versioning system is to enhance their reliability and make them easier to combine with structural dependencies, as their number can far exceed the structural dependencies number \cite{b1}.
 
@@ -96,25 +96,14 @@ The following abbreviations and acronyms are used throughout this article:
 \begin{itemize}
     \item \textbf{LD}: Logical Dependencies
     \item \textbf{SD}: Structural Dependencies
-    \item \textbf{MQ}: Modularization Quality Metric
-    \item \textbf{MoJoFM}: Move and Join Effectiveness Measure Metric
+    \item \textbf{MQ}: Modularization Quality
+    \item \textbf{MoJoFM}: Move and Join Effectiveness Measure
 \end{itemize}
-
-
-Logical Dependencies (LD) refer to the relationships between software entities that have been extracted and filtered from the versioning system. If these entities are not filtered, they are simply referred to as co-changes. 
-Structural Dependencies (SD), on the other hand, refer to the relationships between software entities extracted from static code analysis.
-Modularization Quality Metric (MQ) and Move and Join Metric (MoJo) are metrics used to evaluate software clustering results.
 
 \section{Related Work}
 \label{sec:related_work}
 
 Software clustering for architectural reconstruction is used to place software entities in meaningful modules (clusters). Various approaches and metrics have been used to improve the quality of clustering solutions. This section presents some of the works related to the use of dependencies, clustering algorithms, and evaluation metrics.
-
-\subsection{Dependency Types}
-
-Software clustering relies on various types of dependencies to identify relationships between software entities. \textit{Structural dependencies}, extracted from static code analysis, have been mostly used due to their reliability \cite{b12}. However, recent research has started incorporating other types of dependencies besides structural dependencies.
-
-Among the additional types of dependencies used in software clustering are \textit{lexical dependencies}, which can be obtained from code comments \cite{b13} or the names of source files \cite{b14}, and \textit{logical dependencies}, which are derived from co-change information in version control systems \cite{b16}.
 
 \subsection{Clustering Algorithms}
 
@@ -155,18 +144,26 @@ Silva et al. \cite{b16} & Co-change dependencies & Agglomerative Hierarchical Cl
 \end{table}
 
 
-\section{Structural and Logical Dependencies in Software Clustering}
+\section{Structural and Logical Dependencies in software clustering}
 \label{sec:dependencies}
 
+Software clustering relies on various types of dependencies to identify relationships between software entities. Structural dependencies, have been mostly used due to their reliability \cite{b12}. However, recent research has started incorporating other types of dependencies besides structural dependencies \cite{b13}, \cite{b14}, \cite{b18}.  In this section, we will present an overview of structural and logical dependencies, focusing on how they are extracted and used in software clustering.
+
 \subsection{Structural Dependencies}
-Details on how structural dependencies are extracted using a tool from previous research.
-\subsubsection{Weighting Structural Dependencies}
-Discussion on how different types of structural dependencies are weighted.
+
+Structural dependencies are important for understanding the architecture of a software system because they reveal how different modules interact at the code level. In our research, we extract structural dependencies using a tool from our previous work \cite{b4}. This tool analyzes the source code to identify various types of relationships between software entities.
+
+Not all structural dependencies have the same impact on the architecture and behavior of a software system. To reflect their importance, we assign weights to different types of dependencies. This weighting ensures that more important relationships have a greater influence on the clustering process.
+
+The dependency types and weights were previously defined in related works on clustering \cite{b19}, \cite{b20}.
+
+Table \ref{tab:structural_weights} shows the weights assigned to different categories of structural dependencies, as proposed in previous works.
+
 \begin{table}[htbp]
 \centering
 \begin{tabular}{|c|l|}
 \hline
-\textbf{Weight} & \textbf{Dependency categories} \\ 
+\textbf{Weight} & \textbf{Dependency types} \\ 
 \hline
 4 & Interface realization \\
 3 & Inheritance, parameter, return type, field, cast, type binding \\ 
@@ -174,8 +171,20 @@ Discussion on how different types of structural dependencies are weighted.
 1 & Local variable \\ 
  \hline
 \end{tabular}
-\caption{Weights assigned to different structural dependency types.}
+\caption{Weights assigned to different structural dependency types. \cite{b20}}
+\label{tab:structural_weights}
 \end{table}
+
+The weights are assigned based on the following considerations:
+
+\textit{Weight 4 – Interface Realization:} Assigned the highest weight because it signifies a strong architectural relationship. Implementing an interface means classes are expected to provide specific functionalities.
+
+\textit{Weight 3 – Inheritance, Parameter, Return Type, Field, Cast, Type Binding:} These dependencies represent significant connections between entities. They include inheritance relationships and shared data or types, which affect the behavior and properties of entities.
+
+\textit{Weight 2 – Method Call, Field Access, Instantiation:} These indicate interactions between classes but are less impactful than higher weights. They involve using methods or fields of other classes or creating instances.
+
+\textit{Weight 1 – Local Variable:} Given the lowest weight, local variables are the most basic level of interaction.
+
 
 
 \subsection{Logical Dependencies}
@@ -201,7 +210,7 @@ A similar scenario occurs with merge commits. A merge commit is created automati
 What both scenarios above have in common is the large number of files involved in the commits. Based on our previous research and measurements regarding the number of files involved in a commit, we chose to set a threshold of 20 files \cite{b4}, \cite{b5}. Therefore, all co-changes that originate from commits with more than 20 changed code files are filtered out.
 
 
-Table \ref{tab:commit_statistics} presents the commit statistics for the studied projects. The columns represent the percentage of commits that modified under 5 files, between 5 and 10 files, between 10 and 20 files, and above 20 files. The last column indicates the average number of files changed per commit. We can observe that most of the commits have under 5 files changed, with Apache Tomcat having more than 90\% of the commits with less than 5 files changed. On the opposite side, only a few commits involve more than 20 files changed, Hibernate ORM having the highest percentage at 8.39\%. Overall, filtering based on commit size does not significantly reduce the number of commits considered.
+Table \ref{tab:commit_statistics} presents the commit statistics for the studied projects. The columns represent the percentage of commits that modified under 5 files, between 5 and 10 files, between 10 and 20 files, and above 20 files. We can observe that most of the commits have under 5 files changed, with Apache Tomcat having more than 90\% of the commits with less than 5 files changed. On the opposite side, only a few commits involve more than 20 files changed, Hibernate ORM having the highest percentage at 8.39\%. Overall, filtering based on commit size does not significantly reduce the number of commits considered.
 
 \begin{table}[ht]
     \centering
@@ -209,12 +218,13 @@ Table \ref{tab:commit_statistics} presents the commit statistics for the studied
     \label{tab:commit_statistics}
     \begin{tabular}{|l|c|c|c|c|c|}
         \hline
- \textbf{Project Name} & \textbf{Under 5} & \textbf{5-10} & \textbf{10-20} & \textbf{Above 20} & \textbf{Avg. Files} \\ 
-        & \textbf{Files} & \textbf{Files} & \textbf{Files} & \textbf{Files} & \textbf{Changed} \\ \hline
-        Apache Ant & 83.83\% & 7.50\% & 4.17\% & 4.50\% & 5.77 \\ \hline
-        Apache Tomcat & 90.95\% & 5.44\% & 2.04\% & 1.58\% & 2.89 \\ \hline
-        Hibernate ORM & 71.74\% & 12.37\% & 7.50\% & 8.39\% & 11.98 \\ \hline
-        Gson & 83.63\% & 9.85\% & 3.70\% & 2.81\% & 4.07 \\ \hline
+	 \textbf{Project Name} & \multicolumn{4}{c|}{\textbf{{Number of files changed} }}  \\ 
+	\cline{2-5}
+         & \textbf{Under 5} & \textbf{5-10} & \textbf{10-20} & \textbf{Above 20} \\ \hline
+        Apache Ant & 83.83\% & 7.50\% & 4.17\% & 4.50\% \\ 
+        Apache Tomcat & 90.95\% & 5.44\% & 2.04\% & 1.58\%  \\ 
+        Hibernate ORM & 71.74\% & 12.37\% & 7.50\% & 8.39\%  \\ 
+        Gson & 83.63\% & 9.85\% & 3.70\% & 2.81\%  \\ \hline
     \end{tabular}
 \end{table}
 
@@ -266,7 +276,19 @@ The co-changes that remain after applying the commit size filter are then proces
   \label{fig:filtering}
 \end{figure}
 
-\subsection{Comparison and Combination of Dependencies}
+\subsubsection{Tool}
+To extract and filter the co-changes, we used a previously developed tool \cite{b4}. This tool takes as input the GitHub repository address and the threshold values for commit and strength filters. The tool clones the repository, downloads all commit diffs starting from the first commit, examines all files changed in each commit to identify which entities have changed in those files, and creates undirected co-change dependencies between all changed entities within a commit.
+
+The commit size filter is applied to these undirected co-change dependencies, since the metric value for $(A \rightarrow B)$ is the same as for $(B \rightarrow A)$. For the strength filter, each co-change dependency is converted into a directed co-change dependency, so for each $(A \rightarrow B)$ dependency we have both $(A \rightarrow B)$ and $(B \rightarrow A)$. This conversion is necessary because, as mentioned in the previous section, the confidence filter, upon which the strength filter is built, evaluates the antecedent of the rule. Thus, the metric value for $(A \rightarrow B)$ differs from the metric value for $(B \rightarrow A)$.
+
+The remaining dependencies after applying the strength filter are then exported to a CSV file for further use.
+
+\Figure[t!](topskip=0pt, botskip=0pt, midskip=0pt)[width=\textwidth]{workflow-tool.png}
+{ \textbf{Tool workflow overview: input, processing and output.}\label{fig:tool}}
+
+
+
+\subsection{Combination of Dependencies}
 Overview of how structural and logical dependencies are combined in the clustering process.
 
 
@@ -290,14 +312,7 @@ The structural dependencies are obtained using a tool from our previous research
 
 \subsection{Logical Dependencies}
 
-To extract and filter the co-changes, we used a previously developed tool \cite{b4}. This tool takes as input the GitHub repository address and the threshold values for commit and strength filters. The tool clones the repository, downloads all commit diffs starting from the first commit, examines all files changed in each commit to identify which entities have changed in those files, and creates undirected co-change dependencies between all changed entities within a commit.
-
-The commit size filter is applied to these undirected co-change dependencies, since the metric value for $(A \rightarrow B)$ is the same as for $(B \rightarrow A)$. For the strength filter, each co-change dependency is converted into a directed co-change dependency, so for each $(A \rightarrow B)$ dependency we have both $(A \rightarrow B)$ and $(B \rightarrow A)$. This conversion is necessary because, as mentioned in the previous section, the confidence filter, upon which the strength filter is built, evaluates the antecedent of the rule. Thus, the metric value for $(A \rightarrow B)$ differs from the metric value for $(B \rightarrow A)$.
-
-The remaining dependencies after applying the strength filter are then exported to a CSV file for further use.
-
-\Figure[t!](topskip=0pt, botskip=0pt, midskip=0pt)[width=\textwidth]{workflow-tool.png}
-{ \textbf{Tool workflow overview: input, processing and output.}\label{fig:tool}}
+what here?
 
 \subsection{Louvain Clustering Algorithm}
 \label{subsec:louvain}
@@ -578,6 +593,7 @@ The rows in each table represent different dependency types and strength filter 
 \textbf{gson LD (90)} & 18 & 8.57 & 5 & 0.590 & 60.00 & 5 & 0.590 & 60.00 & 4 & 0.544 & 40.00 \\
 \textbf{gson LD (100)} & 18 & 8.57 & 5 & 0.590 & 60.00 & 5 & 0.590 & 60.00 & 4 & 0.544 & 40.00 \\
 \textbf{gson SD+LD(10)} & 210 & 100.00 & 11 & \cellcolor[HTML]{fef9e4}0.317 & \cellcolor[HTML]{fef9e4}64.36 & 11 & \cellcolor[HTML]{fef9e4}0.317 & \cellcolor[HTML]{fef9e4}64.36 & 20 & \cellcolor[HTML]{fef9e4}0.172 & \cellcolor[HTML]{fef9e4}63.86 \\
+\hline
 \textbf{gson SD+LD(20)} & 210 & 100.00 & 11 & 0.259 & 61.39 & 11 & 0.259 & 61.39 & 17 & 0.136 & 53.96 \\
 \textbf{gson SD+LD(30)} & 210 & 100.00 & 11 & 0.277 & 61.39 & 11 & 0.277 & 61.39 & 20 & 0.136 & 55.94 \\
 \textbf{gson SD+LD(40)} & 210 & 100.00 & 10 & 0.277 & 61.39 & 10 & 0.277 & 61.39 & 20 & 0.135 & 55.94 \\
@@ -794,7 +810,8 @@ Because it wanted to be a purr-fessor!
 \bibitem{b16} Silva, Luciana \& Valente, Marco \& Maia, Marcelo. (2015). Co-change Clusters: Extraction and Application on Assessing Software Modularity. Transactions on Aspect-Oriented Software Development. 10.1007/978-3-662-46734-3\_3. 
 \bibitem{b17} Murtagh, Fionn \& Contreras, Pedro. (2012). Algorithms for hierarchical clustering: An overview. Wiley Interdisc. Rew.: Data Mining and Knowledge Discovery. 2. 86-97. 10.1002/widm.53. 
 \bibitem{b18} Amarjeet Prajapati, Anshu Parashar, Amit Rathee. Multi-dimensional information-driven many-objective software remodularization approach. Frontiers of Computer Science in China, 17(3):173209, 2023.
-
+\bibitem{b19} I. Şora, G. Glodean and M. Gligor, "Software architecture reconstruction: An approach based on combining graph clustering and partitioning," 2010 International Joint Conference on Computational Cybernetics and Technical Informatics, Timisoara, Romania, 2010, pp. 259-264, doi: 10.1109/ICCCYB.2010.5491289.
+\bibitem{b20} Ioana Şora, Ciprian-Bogdan Chirila, “Finding Key Classes in Object-Oriented Software Systems by Techniques Based on Static Analysis”  Information and Software Technology, 2019.
 
 \end{thebibliography}
 
