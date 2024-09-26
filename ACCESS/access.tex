@@ -81,11 +81,11 @@ The following research questions guide our investigation:
     \item \textbf{RQ3:} How do different filtering settings for logical dependencies (LD) impact clustering results, and which filtering settings provide the best performance?
 \end{itemize}
 
-To answer these research questions, we apply three different clustering algorithms (Louvain, Leiden, and DBSCAN) to each of the four open-source projects. We then evaluate the results using two metrics, MQ (Modularization Quality) and MoJoFM (Move and Join eFfectiveness Measure)\cite{b11}. These metrics allow us to compare the effectiveness of using structural dependencies alone, logical dependencies alone, and a combination of both, providing a better understanding of how different dependency types and filtering settings impact the clustering results.
+To answer these research questions, we apply three different clustering algorithms (Louvain, Leiden, and DBSCAN) to each of the four open-source projects. We then evaluate the results using two metrics, MQ (Modularization Quality)\cite{b10} and MoJoFM (Move and Join e\textbf{F}fectiveness \textbf{M}easure)\cite{mojofm}. These metrics allow us to compare the effectiveness of using structural dependencies alone, logical dependencies alone, and a combination of both, providing a better understanding of how different dependency types and filtering settings impact the clustering results.
 
 
 In Section \ref{sec:related_work}, we review the related work and previous studies that used various dependencies for software clustering and their metrics for evaluation.
-Section \ref{sec:workflow_implementation} details the workflow and implementation of our approach, including the extraction and filtering of dependencies, and the clustering algorithm used.
+Section \ref{sec:methodology_implementation} details the workflow and implementation of our approach, including the extraction and filtering of dependencies, and the clustering algorithm used.
 The plan and results of our experiments on four open-source projects are presented in Section \ref{sec:experiment}. Section \ref{sec:evaluation} evaluates our results by using the Modularization Quality (MQ) metric and the MoJoFM metric. We also manually analyze some of the clustering solutions.
 Finally, Section \ref{sec:conclusion} contains our conclusions and findings.
 
@@ -144,6 +144,8 @@ Silva et al. \cite{b16} & Co-change dependencies & Agglomerative Hierarchical Cl
 \end{table}
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Structural and Logical Dependencies in software clustering}
 \label{sec:dependencies}
 
@@ -151,7 +153,7 @@ Software clustering relies on various types of dependencies to identify relation
 
 \subsection{Structural Dependencies}
 
-Structural dependencies are important for understanding the architecture of a software system because they reveal how different modules interact at the code level. In our research, we extract structural dependencies using a tool from our previous work \cite{b4}. This tool analyzes the source code to identify various types of relationships between software entities.
+Structural dependencies are important for understanding the architecture of a software system because they reveal how different modules interact at the code level. In our research, we extract structural dependencies using a tool from our previous work \cite{b4}. This tool analyzes the source code to identify various types of relationships between software entities and exports them in CSV format.
 
 Not all structural dependencies have the same impact on the architecture and behavior of a software system. To reflect their importance, we assign weights to different types of dependencies. This weighting ensures that more important relationships have a greater influence on the clustering process.
 
@@ -276,55 +278,88 @@ The co-changes that remain after applying the commit size filter are then proces
   \label{fig:filtering}
 \end{figure}
 
-\subsubsection{Tool}
+\subsubsection{Dependency Extraction and Filtering Tool}
+
 To extract and filter the co-changes, we used a previously developed tool \cite{b4}. This tool takes as input the GitHub repository address and the threshold values for commit and strength filters. The tool clones the repository, downloads all commit diffs starting from the first commit, examines all files changed in each commit to identify which entities have changed in those files, and creates undirected co-change dependencies between all changed entities within a commit.
 
-The commit size filter is applied to these undirected co-change dependencies, since the metric value for $(A \rightarrow B)$ is the same as for $(B \rightarrow A)$. For the strength filter, each co-change dependency is converted into a directed co-change dependency, so for each $(A \rightarrow B)$ dependency we have both $(A \rightarrow B)$ and $(B \rightarrow A)$. This conversion is necessary because, as mentioned in the previous section, the confidence filter, upon which the strength filter is built, evaluates the antecedent of the rule. Thus, the metric value for $(A \rightarrow B)$ differs from the metric value for $(B \rightarrow A)$.
+The commit size filter is applied to these undirected co-change dependencies, since the metric value for $(A \rightarrow B)$ is the same as for $(B \rightarrow A)$. For the strength filter, each co-change dependency is converted into a directed co-change dependency, so for each $(A \rightarrow B)$ dependency, we have both $(A \rightarrow B)$ and $(B \rightarrow A)$. This conversion is necessary because, as mentioned in the previous section, the confidence filter evaluates the antecedent of the rule. Thus, the metric value for $(A \rightarrow B)$ differs from the metric value for $(B \rightarrow A)$. 
 
-The remaining dependencies after applying the strength filter are then exported to a CSV file for further use.
+The remaining dependencies after applying the filters are then exported to a CSV file for further use.
 
-\Figure[t!](topskip=0pt, botskip=0pt, midskip=0pt)[width=\textwidth]{workflow-tool.png}
-{ \textbf{Tool workflow overview: input, processing and output.}\label{fig:tool}}
-
+It is important to note that the strength metric is only used for filtering and is \textit{not considered as a weight} of the dependencies. The \textit{weight assigned to each dependency is the number of commits in which both entities were updated together}.
 
 
-\subsection{Combination of Dependencies}
-Overview of how structural and logical dependencies are combined in the clustering process.
-
+\subsubsection{Combining Structural and Logical Dependencies}
 
 \Figure[t!](topskip=0pt, botskip=0pt, midskip=0pt)[width=\textwidth]{codegraph.png}
-{ \textbf{Combine SD and LD.}\label{fig:codegraph}}
+{ \textbf{Dependency Graph: Combining structural and logical dependencies.}\label{fig:codegraph}}
+
+When combining structural dependencies (SD) and logical dependencies (LD) in software clustering, both types of relationships are represented within the same graph.
+
+Each entity in the system is represented as a node in the graph, and the dependencies between them are represented as directed, weighted edges.
+
+\textit{SD and LD weights are combined} when the same pair of entities appears in both types of dependencies. In this case, the weights from SD and LD are summed, giving more influence to those entity pairs. When a pair of entities appears only in SD or only in LD, the edge is added to the graph together with its corresponding weight.
+
+Figure \ref{fig:codegraph} illustrates the process of combining structural and logical dependencies in the same dependency graph. The structural dependencies between \texttt{House}, \texttt{OrangeCat}, and \texttt{CatBehavior} entities are visible from the source code analysis, showing relationships like interface implementation and method calls.
+
+However, the combination of SD and LD reveals additional insights. One important observation is the logical dependency between \texttt{House} and \texttt{OrangeCat}, which is not observed from the structural analysis. This connection is extracted from version control and is further filtered using a 60\% strength filter. The filter reveals that \texttt{House} and \texttt{OrangeCat} have a significant co-change strength of 75.0, suggesting a strong logical relationship.
+
+When SD and LD overlap, such as between \texttt{OrangeCat} and \texttt{CatBehavior}, their weights are summed. This summation process highlights relationships that are both structurally and logically significant.
 
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
+\section{Methodology and Implementation}
+\label{sec:methodology_implementation}
 
-\section{Theoretical Background, Workflow, and Implementation}
-\label{sec:workflow_implementation}
+In this section, we present the methodology used to evaluate the impact of logical dependencies on the quality of software clustering solutions.
 
-To achieve our goal of evaluating how the quality of clustering solutions is impacted by logical dependencies, we developed a Python tool capable of using any type of dependency, either alone or combined with other types of dependencies, as long as they are provided in CSV format. The tool clusters and evaluates software clustering solutions using either the MQ metric or the MoJo metric. In the following subsections, we present how we obtain the structural dependencies and logical dependencies used, the type of clustering algorithm we use, and the tool's workflow.
+First, we describe the clustering algorithms used in our experiments: Louvain, Leiden, and DBSCAN. Next, we introduce the evaluation metrics used to assess the quality of the clustering results. Finally, we present the workflow and implementation of the tool developed for this research, which is built to process structural and logical dependencies, apply the selected clustering algorithms, and compute the evaluation metrics.
 
-\subsection{Structural Dependencies}
-\label{subsec:sd}
+\subsection{Clustering Algorithms}
+\subsubsection{Louvain}
+\label{subsubsec:louvain}
 
-The structural dependencies are obtained using a tool from our previous research. While the tool primarily exports the key class ranking of a software system, it also has the capability to export the data in CSV format. The exported dependencies are directed and weighted based on the type of dependency they represent.
+The Louvain algorithm was originally developed by Blondel et al. and is used for finding community partitions (clusters) in large networks. The algorithm begins with a weighted network of N nodes, initially assigning each node to its own cluster, resulting in N clusters. For each node, the algorithm evaluates the modularity gain from moving the node to the cluster of each of its neighbors. Based on the results, the node is moved to the cluster with the maximum positive modularity gain. This process is repeated for all nodes until no further improvement in modularity is possible \cite{b8}, \cite{b9}.
 
-\subsection{Logical Dependencies}
+\subsubsection{Leiden}
+\label{subsubsec:leiden}
 
-what here?
+The Leiden algorithm, developed by Traag et al., is an improvement over the Louvain algorithm for community detection in large networks. Like Louvain, the Leiden algorithm begins with each node assigned to its own cluster and iteratively moves nodes between clusters to optimize modularity. However, the Leiden algorithm addresses some problems of the Louvain method, particularly regarding badly connected communities and runtime performance issues \cite{leiden}.
 
-\subsection{Louvain Clustering Algorithm}
-\label{subsec:louvain}
+The Leiden algorithm introduces a refinement phase that ensures communities are locally optimally clustered and well-connected. This refinement step distinguishes the Leiden algorithm from Louvain.
 
-The Louvain algorithm was originally developed by Blondel et al. and is used for finding community partitions (clusters) in large networks. The algorithm begins with a weighted network of N nodes, initially assigning each node to its own cluster, resulting in N clusters. For each node, the algorithm evaluates the modularity gain from moving the node to the cluster of each of its neighbors. Based on the results, the node is moved to the cluster with the maximum positive modularity gain. This process is repeated for all nodes until no further improvement in modularity is possible \cite{b8}.
 
-The modularity of a cluster is a value that ranges from -1 to 1, which measures the density of connections inside clusters compared to connections between clusters \cite{b9}.
+\subsubsection{DBSCAN}
+\label{subsubsec:dbscan}
+
+The Density-Based Spatial Clustering of Applications with Noise (DBSCAN) algorithm, introduced by Ester et al., is a density-based clustering algorithm for identifying clusters of arbitrary shape and detecting noise in data \cite{dbscan}.
+
+DBSCAN operates based on two main parameters:
+
+\begin{itemize}
+    \item \textbf{Eps}: It defines the radius within which to search for neighboring points.
+    \item \textbf{MinPts}: The minimum number of points required for a dense region. It determines the minimum number of neighbors a point must have to be considered a core point.
+\end{itemize}
+
+The algorithm classifies points into three categories:
+
+\begin{enumerate}
+    \item \textbf{Core Points}: Points that have at least \textit{MinPts} neighbors within a radius of \textit{Eps}. These points are located in the interior of a cluster.
+    \item \textbf{Border Points}: Points that have fewer than \textit{MinPts} neighbors within a radius of \textit{Eps} but are in the Eps-neighborhood of a core point. They are located on the edge of a cluster.
+    \item \textbf{Noise}: Points that are neither core points nor border points.
+\end{enumerate}
+
+The DBSCAN algorithm starts by visiting an arbitrary point in the dataset. If the point is a core point, the algorithm starts a new cluster and retrieves all points that are reachable from this core point. All points are then marked as part of the cluster. If the point is a border point, it moves to the next point in the dataset. This process is repeated until all points have been visited.
+
+For software clustering, DBSCAN can be applied by considering software entities as data points. A distance measure based on dependency weights can be used to compute the neighborhood between entities.
 
 \subsection{Clustering Result Evaluation}
 \label{subsec:evaluation_def}
 
-To evaluate the clustering results, we use two metrics: the Modularity Quality (MQ) metric and the Move and Join (MoJo) metric. Each of these metrics provides a different perspective on the quality of the clustering solutions. Both metrics are integrated into our tool and receive as input the generated clustering solution.
+To evaluate the clustering results, we use two metrics: the Modularity Quality (MQ) metric and the Move and Join Effectiveness Measure (MoJoFM) metric. Each of these metrics provides a different perspective on the quality of the clustering solutions. 
 
 \subsubsection{Modularity Quality Metric}
 
@@ -337,13 +372,13 @@ MQ = \left( \frac{1}{k} \sum_{i=1}^{k} A_i \right) - \left( \frac{1}{k(k-1)} \su
 \label{eq:mq}
 \end{equation}
 
-The MQ metric outputs a value between -1 and 1, where -1 indicates that there is no cohesion between the clusters of the clustering solution, and 1 indicates that there is no coupling between them.
+The MQ metric's value ranges between -1 and 1. A value of -1 means that the clusters have more connections between the clusters than within the clusters, while a value of 1 means that there are more connections within clusters than between clusters. A good clustering solution should have an MQ value close to 1, since this indicates that the clusters are more cohesive internally and have fewer connections to other clusters.
 
 The MQ metric is useful because it does not require any additional input besides the clustering result itself. It relies on the structure of the clustered entities and their interactions. 
 
-\subsubsection{MoJo Metric}
+\subsubsection{MoJoFM Metric}
 
-The Move and Join (MoJo) metric was introduced by Tzerpos et al. to evaluate the similarity between two different software clustering results. The metric measures the effort required to transform one clustering solution into another through move and join operations \cite{b3}, \cite{b11}.
+The MoJoFM metric was introduced by Tzerpos et al. to evaluate the similarity between two different software clustering results. The metric measures the effort required to transform one clustering solution into another through move and join operations \cite{mojofm}, \cite{b3}, \cite{b11}.
 
 To use the MoJo metric, we first generate a baseline clustering solution for comparison. This baseline is manually created based on our analysis of the code base. The MoJo metric then calculates the minimal number of move and join operations needed to convert the generated clustering solution into the baseline clustering solution.
 
@@ -360,13 +395,19 @@ By using the MoJo metric, we can evaluate the similarity between the generated c
 \subsection{Tool Workflow Overview}
 \label{subsec:tool_workflow}
 
+To achieve our goal of evaluating how the quality of clustering solutions is impacted by logical dependencies, we developed a Python tool capable of using any type of dependency, either alone or combined with other types of dependencies, as long as they are provided in CSV format. The tool clusters and evaluates software clustering solutions using either the MQ metric or the MoJo metric. 
+
+
+\Figure[t!](topskip=0pt, botskip=0pt, midskip=0pt)[width=\textwidth]{workflow-tool.png}
+{ \textbf{Tool workflow overview: input, processing and output.}\label{fig:tool}}
+
 To generate the cluster solutions and evaluate the results, we created a tool in Python. The entire workflow of the tool is presented in Fig. \ref{fig:tool}.
 
 \subsubsection{Input}
 
-The tool takes as input one or multiple dependency CSV files and the baseline solution required for the MoJo metric. We designed the tool to accept multiple dependency files so that we can generate clustering solutions based on either a single type of dependency (structural or logical) or a combination of both.
+The tool takes as input one or multiple dependency CSV files and the baseline solution required for the MoJoFM metric. We designed the tool to accept multiple dependency files so that we can generate clustering solutions based on either a single type of dependency (structural or logical) or a combination of both.
 
-Since the MoJo metric requires a baseline solution to evaluate the generated solution, we manually inspected the code and created baseline clustering solutions, which we then provide as input for the tool.
+Since the MoJoFM metric requires a baseline solution to evaluate the generated solution, we manually inspected the code and created baseline clustering solutions, which we then provide as input for the tool.
 
 \subsubsection{Processing}
 
@@ -679,7 +720,7 @@ The results of this experiment can be found in Table \ref{tab:clustering_results
 
 In evaluating the clustering results, we use two metrics: MoJo and MQ. The MoJo metric measures how close the generated clustering solution is to our manually generated clustering solution. A smaller MoJo value indicates that fewer move and join operations are required to transform the generated clusters into the expected clusters.
 
-The MQ metric's value ranges between -1 and 1. A value of -1 means that the clusters have more connections between the clusters than within the clusters, while a value of 1 means that there are more connections within clusters than between clusters. A good clustering solution should have an MQ value close to 1, since this indicates that the clusters are more cohesive internally and have fewer connections to other clusters.
+Delete:The MQ metric's value ranges between -1 and 1. A value of -1 means that the clusters have more connections between the clusters than within the clusters, while a value of 1 means that there are more connections within clusters than between clusters. A good clustering solution should have an MQ value close to 1, since this indicates that the clusters are more cohesive internally and have fewer connections to other clusters.
 
 The overall analysis of all the results from subsection \ref{subsec:results} indicates that combining structural and logical dependencies (SD+LD) provides better clustering solutions than using structural dependencies (SD) alone, with 100\% coverage of the system, meaning that no entity is missed during cluster generation. On the other hand, logical dependencies (LD) alone result in better clustering quality metrics compared to both SD and SD+LD, but they do not cover the entire system.
 
@@ -794,15 +835,18 @@ Because it wanted to be a purr-fessor!
 \bibitem{b1} Ajienka, Nemitari \& Capiluppi, Andrea. (2017). Understanding the Interplay between the Logical and Structural Coupling of Software Classes. Journal of Systems and Software. 134. 10.1016/j.jss.2017.08.042.
 \bibitem{b2} S. Mancoridis, B. Mitchell, C. Rorres, Y. Chen, and E. Gansner, “Using automatic clustering to produce high-level system organizations of source code,” in Proceedings. 6th International Workshop on Program Comprehension. IWPC’98 (Cat. No.98TB100242), 1998, pp. 45–52.
 \bibitem{b3} V. Tzerpos and R. C. Holt, "MoJo: a distance metric for software clusterings," Sixth Working Conference on Reverse Engineering (Cat. No.PR00303), Atlanta, GA, USA, 1999, pp. 187-193, doi: 10.1109/WCRE.1999.806959.
+\bibitem{mojofm} Zhihua Wen and V. Tzerpos, "An effectiveness measure for software clustering algorithms," Proceedings. 12th IEEE International Workshop on Program Comprehension, 2004., Bari, Italy, 2004, pp. 194-203, doi: 10.1109/WPC.2004.1311061.
 \bibitem{b4} Stana, Adelina-Diana \& Şora, Ioana. (2023). Logical dependencies: Extraction from the versioning system and usage in key classes detection. Computer Science and Information Systems. 20. 25-25. 10.2298/CSIS220518025S. 
 \bibitem{b5} Stana, Adelina-Diana \& Şora, Ioana. (2019). Analyzing information from versioning systems to detect logical dependencies in software systems. 000015-000020. 10.1109/SACI46893.2019.9111582. 
 \bibitem{b6} Stana, Adelina-Diana \& Şora, Ioana. (2019). Identifying Logical Dependencies from Co-Changing Classes. 486-493. 10.5220/0007758104860493. 
 \bibitem{b7} T. Zimmermann, P. Weibgerber, S. Diehl and A. Zeller, "Mining version histories to guide software changes," Proceedings. 26th International Conference on Software Engineering, Edinburgh, UK, 2004, pp. 563-572, doi: 10.1109/ICSE.2004.1317478.
 \bibitem{b8} Blondel, Vincent \& Guillaume, Jean-Loup \& Lambiotte, Renaud \& Lefebvre, Etienne. (2008). Fast Unfolding of Communities in Large Networks. Journal of Statistical Mechanics Theory and Experiment. 2008. 10.1088/1742-5468/2008/10/P10008. 
-\bibitem{b9} Newman, Mark. (2006). Newman MEJ.. Modularity and community structure in networks. Proc Natl Acad Sci USA 103: 8577-8582. Proceedings of the National Academy of Sciences of the United States of America. 103. 8577-82. 10.1073/pnas.0601602103. 
+\bibitem{b9} Lancichinetti, Andrea \& Fortunato, Santo. (2009). Community Detection Algorithms: A Comparative Analysis. Physical review. E, Statistical, nonlinear, and soft matter physics. 80. 056117. 10.1103/PhysRevE.80.056117. 
+\bibitem{leiden} Traag, V. \& Waltman, L. \& van Eck, Nees Jan. (2019). From Louvain to Leiden: guaranteeing well-connected communities. Scientific Reports. 9. 5233. 10.1038/s41598-019-41695-z. 
 \bibitem{b10} S. Mancoridis, B. S. Mitchell, Y. Chen and E. R. Gansner, "Bunch: a clustering tool for the recovery and maintenance of software system structures," Proceedings IEEE International Conference on Software Maintenance - 1999 (ICSM'99). 'Software Maintenance for Business Change' (Cat. No.99CB36360), Oxford, UK, 1999, pp. 50-59, doi: 10.1109/ICSM.1999.792498.
 \bibitem{b101} S. Mancoridis, B. S. Mitchell, C. Rorres, Y. Chen and E. R. Gansner, "Using automatic clustering to produce high-level system organizations of source code," Proceedings. 6th International Workshop on Program Comprehension. IWPC'98 (Cat. No.98TB100242), Ischia, Italy, 1998, pp. 45-52, doi: 10.1109/WPC.1998.693283.
 \bibitem{b11} Zhihua Wen and V. Tzerpos, "An effectiveness measure for software clustering algorithms," Proceedings. 12th IEEE International Workshop on Program Comprehension, 2004., Bari, Italy, 2004, pp. 194-203, doi: 10.1109/WPC.2004.1311061.
+\bibitem{dbscan} Martin Ester, Hans-Peter Kriegel, Jörg Sander, and Xiaowei Xu. 1996. A density-based algorithm for discovering clusters in large spatial databases with noise. In Proceedings of the Second International Conference on Knowledge Discovery and Data Mining (KDD'96). AAAI Press, 226–231.
 \bibitem{b12} Şora, Ioana. (2013). Software Architecture Reconstruction through Clustering: Finding the Right Similarity Factors. 45-54. 10.5220/0004599600450054. 
 \bibitem{b13} A. Corazza, S. Di Martino, V. Maggio and G. Scanniello, "Investigating the use of lexical information for software system clustering," 2011 15th European Conference on Software Maintenance and Reengineering, Oldenburg, Germany, 2011, pp. 35-44, doi: 10.1109/CSMR.2011.8.
 \bibitem{b14} Anquetil, Nicolas \& Lethbridge, Timothy. (1998). File Clustering Using Naming Conventions for Legacy Systems. 10.1145/782010.782012. 
