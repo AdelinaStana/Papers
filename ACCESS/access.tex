@@ -105,14 +105,22 @@ The following abbreviations and acronyms are used throughout this article:
 
 \section{Related Work}
 \label{sec:related_work}
-NOT YET DONE :(
 
-Several studies have explored the use of different types of dependencies in software clustering, applying various algorithms to improve clustering results. Corazza et al.~\cite{b13} used lexical dependencies derived from code comments, and Hierarchical Agglomerative Clustering (HAC) to group related entities. 
+Several studies have explored the use of different types of dependencies in software clustering, applying different algorithms to improve clustering results and using various metrics to evaluate the results obtained.
 
-Anquetil et al.~\cite{b14} also used lexical information, including file names, routine names, included files, and comments. They applied n-gram-based clustering methods to capture semantic similarities among entities, proving that lexical analysis can influence the clustering process.
+Corazza et al. \cite{b13}, \cite{corazza2} used lexical dependencies derived from code comments, class names, attribute names, and parameter names, applying Hierarchical Agglomerative Clustering (HAC) to group related entities. For evaluating the results, the authors used a metric based on MoJo distance and NED (Non-Extremity Cluster Distribution), which measures that the formed clusters are not too large or too small.
 
-Mancoridis et al.~\cite{b10}, \cite{b101} used structural dependencies extracted from source code analysis. They applied search-based algorithms using hill-climbing techniques to optimize the modularization quality according to the MQ metric. 
+Andritsos and Tzerpos ~\cite{tzerpos1} used structural dependencies and nonstructural attributes, such as file names and developer names, and proposed the LIMBO algorithm, a hierarchical clustering algorithm for clustering software systems. To evaluate the output of the algorithm, they used the MoJo distance metric.
 
+Anquetil et al.~\cite{b14} also used lexical information, including file names, routine names, included files, and comments. They applied an n-gram-based clustering approach to detect semantic similarities between entities and evaluated the results using precision and recall metrics.
+
+Maletic and Marcus \cite{maletic} propose an approach to software clustering that uses semantic dependencies extracted using Latent Semantic Indexing (LSI), a technique for identifying similarities between software components. They apply the minimal spanning tree (MST) algorithm for clustering, and evaluate the results using metrics based on both semantic and structural information.
+
+Wu et al. \cite{wu} conducted a comparative study of six clustering algorithms, using structural dependencies on five software systems. Four of the algorithms are based on agglomerative clustering, one on program comprehension patterns, and the one  algorithm is a customized version of Bunch \cite{b10}. The performance of these algorithms was evaluated using the MoJo metric and NED (Non-Extreme Distribution).
+
+ Mancoridis and Mitchell ~\cite{b10}, \cite{b101}, \cite{bunch} developed the Bunch tool for software clustering and used structural dependencies as input. The tool applies clustering algorithms to the structural dependency graph and outputs the system's organization. For evaluation, the authors introduced the Modularization Quality (MQ) metric, which is described in more detail in Section \ref{subsec:mq}, and is also used in our current experiments as an evaluation metric.
+
+%
 Şora et al.~\cite{b12} applied various algorithms, including minimum spanning tree-based methods, metric-based clustering, and hierarchical clustering, using structural dependencies to reconstruct software architecture.
 
 Prajapati et al.~\cite{b18} considered structural, lexical, and change-history dependencies in their approach. They applied a many-objective optimization algorithm to balance various quality attributes in the clustering solution, demonstrating the benefits of a comprehensive dependency analysis.
@@ -338,8 +346,9 @@ For software clustering, DBSCAN can be applied by considering software entities 
 To evaluate the clustering results, we use two metrics: the Modularity Quality (MQ) metric and the Move and Join Effectiveness Measure (MoJoFM) metric. Each of these metrics provides a different perspective on the quality of the clustering solutions. 
 
 \subsubsection{Modularity Quality Metric}
+\label{subsec:mq}
 
-Mancoridis et al. introduced the Modularity Quality (MQ) metric to evaluate the modularization quality of a clustering solution based on the interaction between modules (clusters) \cite{b2},\cite{b10}. It evaluates the difference between connections within clusters and connections between different clusters.
+Mancoridis et al. introduced the Modularity Quality (MQ) metric to evaluate the modularization quality of a clustering solution based on the interaction between modules (clusters) \cite{b101},\cite{b10}. It evaluates the difference between connections within clusters and connections between different clusters.
 
 The MQ of a graph partitioned into \( k \) clusters, where \( A_i \) is the Intra-Connectivity of the \( i \)-th cluster and \( E_{ij} \) is the Inter-Connectivity between the \( i \)-th and \( j \)-th clusters, is calculated using Equation \eqref{eq:mq} \cite{b2}.
 
@@ -866,14 +875,18 @@ It is what it is
 \bibitem{b6} Stana, Adelina-Diana \& Şora, Ioana. (2019). Identifying Logical Dependencies from Co-Changing Classes. 486-493. 10.5220/0007758104860493. 
 \bibitem{b7} T. Zimmermann, P. Weibgerber, S. Diehl and A. Zeller, "Mining version histories to guide software changes," Proceedings. 26th International Conference on Software Engineering, Edinburgh, UK, 2004, pp. 563-572, doi: 10.1109/ICSE.2004.1317478.
 \bibitem{b8} Blondel, Vincent \& Guillaume, Jean-Loup \& Lambiotte, Renaud \& Lefebvre, Etienne. (2008). Fast Unfolding of Communities in Large Networks. Journal of Statistical Mechanics Theory and Experiment. 2008. 10.1088/1742-5468/2008/10/P10008. 
+\bibitem{maletic} J. I. Maletic and A. Marcus, "Supporting program comprehension using semantic (lexical) and structural information," Proceedings of the 23rd International Conference on Software Engineering. ICSE 2001, Toronto, ON, Canada, 2001, pp. 103-112, doi: 10.1109/ICSE.2001.919085.
 \bibitem{b9} Lancichinetti, Andrea \& Fortunato, Santo. (2009). Community Detection Algorithms: A Comparative Analysis. Physical review. E, Statistical, nonlinear, and soft matter physics. 80. 056117. 10.1103/PhysRevE.80.056117. 
 \bibitem{leiden} Traag, V. \& Waltman, L. \& van Eck, Nees Jan. (2019). From Louvain to Leiden: guaranteeing well-connected communities. Scientific Reports. 9. 5233. 10.1038/s41598-019-41695-z. 
 \bibitem{b10} S. Mancoridis, B. S. Mitchell, Y. Chen and E. R. Gansner, "Bunch: a clustering tool for the recovery and maintenance of software system structures," Proceedings IEEE International Conference on Software Maintenance - 1999 (ICSM'99). 'Software Maintenance for Business Change' (Cat. No.99CB36360), Oxford, UK, 1999, pp. 50-59, doi: 10.1109/ICSM.1999.792498.
+\bibitem{wu} Wu, A. E. Hassan and R. C. Holt, "Comparison of clustering algorithms in the context of software evolution," 21st IEEE International Conference on Software Maintenance (ICSM'05), Budapest, Hungary, 2005, pp. 525-535, doi: 10.1109/ICSM.2005.31.
 \bibitem{b101} S. Mancoridis, B. S. Mitchell, C. Rorres, Y. Chen and E. R. Gansner, "Using automatic clustering to produce high-level system organizations of source code," Proceedings. 6th International Workshop on Program Comprehension. IWPC'98 (Cat. No.98TB100242), Ischia, Italy, 1998, pp. 45-52, doi: 10.1109/WPC.1998.693283.
+\bibitem{bunch} B. S. Mitchell and S. Mancoridis, "On the automatic modularization of software systems using the Bunch tool," in IEEE Transactions on Software Engineering, vol. 32, no. 3, pp. 193-208, March 2006, doi: 10.1109/TSE.2006.31. 
 \bibitem{b11} Zhihua Wen and V. Tzerpos, "An effectiveness measure for software clustering algorithms," Proceedings. 12th IEEE International Workshop on Program Comprehension, 2004., Bari, Italy, 2004, pp. 194-203, doi: 10.1109/WPC.2004.1311061.
 \bibitem{dbscan} Martin Ester, Hans-Peter Kriegel, Jörg Sander, and Xiaowei Xu. 1996. A density-based algorithm for discovering clusters in large spatial databases with noise. In Proceedings of the Second International Conference on Knowledge Discovery and Data Mining (KDD'96). AAAI Press, 226–231.
 \bibitem{b12} Şora, Ioana. (2013). Software Architecture Reconstruction through Clustering: Finding the Right Similarity Factors. 45-54. 10.5220/0004599600450054. 
 \bibitem{b13} A. Corazza, S. Di Martino, V. Maggio and G. Scanniello, "Investigating the use of lexical information for software system clustering," 2011 15th European Conference on Software Maintenance and Reengineering, Oldenburg, Germany, 2011, pp. 35-44, doi: 10.1109/CSMR.2011.8.
+\bibitem{corazza2} Corazza, Anna \& Di Martino, Sergio \& Scanniello, Giuseppe. (2010). A Probabilistic Based Approach towards Software System Clustering. CSMR. 88 - 96. 10.1109/CSMR.2010.36. 
 \bibitem{b14} Anquetil, Nicolas \& Lethbridge, Timothy. (1998). File Clustering Using Naming Conventions for Legacy Systems. 10.1145/782010.782012. 
 \bibitem{b15} Oliva, Gustavo \& Gerosa, Marco Aurelio. (2012). A Method for the Identification of Logical Dependencies. Proceedings - 2012 IEEE 7th International Conference on Global Software Engineering Workshops, ICGSEW 2012. 70-72. 10.1109/ICGSEW.2012.19. 
 \bibitem{b16} Silva, Luciana \& Valente, Marco \& Maia, Marcelo. (2015). Co-change Clusters: Extraction and Application on Assessing Software Modularity. Transactions on Aspect-Oriented Software Development. 10.1007/978-3-662-46734-3\_3. 
@@ -881,7 +894,7 @@ It is what it is
 \bibitem{b18} Amarjeet Prajapati, Anshu Parashar, Amit Rathee. Multi-dimensional information-driven many-objective software remodularization approach. Frontiers of Computer Science in China, 17(3):173209, 2023.
 \bibitem{b19} I. Şora, G. Glodean and M. Gligor, "Software architecture reconstruction: An approach based on combining graph clustering and partitioning," 2010 International Joint Conference on Computational Cybernetics and Technical Informatics, Timisoara, Romania, 2010, pp. 259-264, doi: 10.1109/ICCCYB.2010.5491289.
 \bibitem{b20} Ioana Şora, Ciprian-Bogdan Chirila, “Finding Key Classes in Object-Oriented Software Systems by Techniques Based on Static Analysis”  Information and Software Technology, 2019.
-
+\bibitem{tzerpos1} P. Andritsos and V. Tzerpos, "Information-theoretic software clustering," in IEEE Transactions on Software Engineering, vol. 31, no. 2, pp. 150-165, Feb. 2005, doi: 10.1109/TSE.2005.25. 
 \end{thebibliography}
 
 \begin{IEEEbiographynophoto}{First} Add text here
