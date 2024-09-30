@@ -6,6 +6,9 @@
 \usepackage{textcomp}
 \usepackage{hyperref}
 \usepackage[table]{xcolor}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
 
 \usepackage{bm}
 \makeatletter
@@ -102,46 +105,19 @@ The following abbreviations and acronyms are used throughout this article:
 
 \section{Related Work}
 \label{sec:related_work}
+NOT YET DONE :(
 
-Software clustering for architectural reconstruction is used to place software entities in meaningful modules (clusters). Various approaches and metrics have been used to improve the quality of clustering solutions. This section presents some of the works related to the use of dependencies, clustering algorithms, and evaluation metrics.
+Several studies have explored the use of different types of dependencies in software clustering, applying various algorithms to improve clustering results. Corazza et al.~\cite{b13} used lexical dependencies derived from code comments, and Hierarchical Agglomerative Clustering (HAC) to group related entities. 
 
-\subsection{Clustering Algorithms}
+Anquetil et al.~\cite{b14} also used lexical information, including file names, routine names, included files, and comments. They applied n-gram-based clustering methods to capture semantic similarities among entities, proving that lexical analysis can influence the clustering process.
 
-Various clustering algorithms are used to group software entities into modules. These include hierarchical clustering for building clusters based on their hierarchical relationships \cite{b12}, \cite{b16}, K-Means clustering for partitioning entities based on their nearest mean \cite{b17}, graph-based clustering for identifying densely connected subgraphs, density-based clustering, such as DBSCAN, for grouping entities based on neighborhood density. The Louvain algorithm, which we will use in our experiments, was developed by Blondel et al., and it is a community detection algorithm commonly used for finding partitions in large networks \cite{b8}, \cite{b9}.
+Mancoridis et al.~\cite{b10}, \cite{b101} used structural dependencies extracted from source code analysis. They applied search-based algorithms using hill-climbing techniques to optimize the modularization quality according to the MQ metric. 
 
-\subsection{Evaluation Metrics}
+Şora et al.~\cite{b12} applied various algorithms, including minimum spanning tree-based methods, metric-based clustering, and hierarchical clustering, using structural dependencies to reconstruct software architecture.
 
-Evaluating the quality of clustering solutions is important for assessing the effectiveness of both the clustering algorithm and the inputs to the clustering algorithm. Mancoridis et al. introduced the Modularity Quality (MQ) metric, which evaluates the difference between connections within clusters and connections between different clusters \cite{b10}.
+Prajapati et al.~\cite{b18} considered structural, lexical, and change-history dependencies in their approach. They applied a many-objective optimization algorithm to balance various quality attributes in the clustering solution, demonstrating the benefits of a comprehensive dependency analysis.
 
-The Move and Join (MoJo) metric, introduced by Tzerpos et al., measures the effort required to transform one clustering solution into another through move and join operations. This metric provides a measure of similarity between the obtained clustering solution and a baseline clustering solution \cite{b11}.
-
-\subsection{Overview}
-
- Table \ref{tab:related_work} provides a summary of related works that use various types of dependencies in software clustering and the algorithms applied.
-
-\begin{table}[h]
-\caption{Summary of Related Work}
-\label{tab:related_work}
-\centering
-\setlength{\tabcolsep}{3pt}
-\begin{tabular}{|l|p{2cm}|p{3cm}|}
-\hline
-\textbf{Paper Ref.} & \textbf{Types of Dependencies Used} & \textbf{Clustering Algorithm} \\
-\hline
-Corazza et al. \cite {b13} & Lexical dependencies (Code Comments) & Hierarchical Agglomerative Clustering (HAC)  \\
-\hline
-Anquetil et al.  \cite {b14} & Lexical dependencies (File Names, Routine Names, Included Files, Comments) & N-grams based clustering   \\
-\hline
-Mancoridis et al. \cite {b10}, \cite{b101} & Structural dependencies & Search based algorithm (Hill-climbing)   \\
-\hline
-Sora et al. \cite{b12} & Structural dependencies  & Minimum Spanning Tree based algorithms; Metric Based; Search based algorithm (Hill-climbing); Hierarchical clustering\\
-\hline
-Prajapati et al. \cite{b18} & Structural, Lexical, and Changed-history dependencies & Many objective optimization algorithm\\
-\hline
-Silva et al. \cite{b16} & Co-change dependencies & Agglomerative Hierarchical Clustering (Chameleon algorithm)\\
-\hline
-\end{tabular}
-\end{table}
+Silva et al.~\cite{b16} investigated the use of co-change dependencies and the Chameleon algorithm, an agglomerative hierarchical clustering method, to identify clusters based on these dependencies. Their findings suggest that incorporating historical change information can improve the relevance of the clustering solution.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -377,48 +353,71 @@ The MQ metric's value ranges between -1 and 1. A value of -1 means that the clus
 The MQ metric is useful because it does not require any additional input besides the clustering result itself. It relies on the structure of the clustered entities and their interactions. 
 
 \subsubsection{MoJoFM Metric}
+The MoJoFM metric was introduced by Wen and Tzerpos to evaluate the similarity between two different software clustering results \cite{mojofm}. The metric is based on the MoJo metric, which measures the absolute minimum number of \textit{Move} and \textit{Join} operations required to transform one clustering solution into another \cite{b3}, \cite{b11}. However, MoJoFM provides a similarity measure ranging between 0\% and 100\%, where 100\% indicates identical clustering solutions.
 
-The MoJoFM metric was introduced by Tzerpos et al. to evaluate the similarity between two different software clustering results. The metric measures the effort required to transform one clustering solution into another through move and join operations \cite{mojofm}, \cite{b3}, \cite{b11}.
+The MoJoFM metric is calculated using Equation \eqref{eq:mojofm}:
 
-To use the MoJo metric, we first generate a baseline clustering solution for comparison. This baseline is manually created based on our analysis of the code base. The MoJo metric then calculates the minimal number of move and join operations needed to convert the generated clustering solution into the baseline clustering solution.
-
-The formula for the MoJo metric is represented in Equation \eqref{eq:mojo}, where \( \text{mnr}(A, B) \) is the minimum number of operations to transform cluster \( A \) into cluster \( B \) and \( \text{mnr}(B, A) \) is the minimum number of operations to transform cluster \( B \) into cluster \( A \) \cite{b3}. 
-
-
-\begin{equation}
-\text{MoJo}(A, B) = \min(\text{mnr}(A, B), \text{mnr}(B, A))
-\label{eq:mojo}
+\begin{equation} 
+\text{MoJoFM}(A, B) = \left(1 - \frac{\text{mno}(A, B)}{\max(\text{mno}(\forall A, B))}\right) \times 100\%
+\label{eq:mojofm}
 \end{equation}
 
-By using the MoJo metric, we can evaluate the similarity between the generated clustering solutions and the expected clustering structure. We consider this metric useful when combining multiple types of dependencies because it clearly measures the similarity between the obtained clustering solutions and the same baseline.
+where:
 
-\subsection{Tool Workflow Overview}
+\begin{itemize}
+    \item $\text{mno}(A, B)$ is the minimum number of \textit{Move} and \textit{Join} operations required to transform clustering solution $A$ into clustering solution $B$.
+    \item $\max(\text{mno}(\forall A, B))$ is the maximum possible number of such operations required to transform any clustering $A$ into clustering $B$.
+\end{itemize}
+
+To use the metric, we first need to generate a reference clustering solution for comparison. This reference is manually created based on our analysis of the codebase.
+
+By using the MoJoFM metric, we can evaluate the similarity between the generated clustering solutions and the reference clustering solution. We consider this metric useful when combining multiple types of dependencies because it clearly measures the similarity between the obtained clustering solutions and the same reference.
+
+
+\subsection{Workflow for Software Clustering and Evaluation}
 \label{subsec:tool_workflow}
-
-To achieve our goal of evaluating how the quality of clustering solutions is impacted by logical dependencies, we developed a Python tool capable of using any type of dependency, either alone or combined with other types of dependencies, as long as they are provided in CSV format. The tool clusters and evaluates software clustering solutions using either the MQ metric or the MoJo metric. 
-
 
 \Figure[t!](topskip=0pt, botskip=0pt, midskip=0pt)[width=\textwidth]{workflow-tool.png}
 { \textbf{Tool workflow overview: input, processing and output.}\label{fig:tool}}
 
-To generate the cluster solutions and evaluate the results, we created a tool in Python. The entire workflow of the tool is presented in Fig. \ref{fig:tool}.
+To achieve our goal of evaluating how the quality of clustering solutions is impacted by logical dependencies, we developed a Python tool capable of using any type of dependency, either alone or combined with other types of dependencies, as long as they are provided in CSV format. The tool clusters and evaluates software clustering solutions using either the MQ metric or the MoJoFM metric.  The entire workflow of the tool is presented in Fig. \ref{fig:tool}.
+
+
 
 \subsubsection{Input}
 
-The tool takes as input one or multiple dependency CSV files and the baseline solution required for the MoJoFM metric. We designed the tool to accept multiple dependency files so that we can generate clustering solutions based on either a single type of dependency (structural or logical) or a combination of both.
+The tool takes as input one or multiple dependency CSV files and the reference solution required for the MoJoFM metric. We designed the tool to accept multiple dependency files so that we can generate clustering solutions based on either a single type of dependency (structural or logical) or a combination of both.
 
-Since the MoJoFM metric requires a baseline solution to evaluate the generated solution, we manually inspected the code and created baseline clustering solutions, which we then provide as input for the tool.
+Since the MoJoFM metric requires a reference solution to evaluate the obtained clustering solutions, we manually inspected the code and created reference clustering solutions, which we then provide as input for the tool.
 
 \subsubsection{Processing}
 
-The dependencies are saved in the CSV file in the following format: antecedent of a dependency, consequent of a dependency, weight. The tool reads each line, adds the antecedent and consequent as nodes in a directed graph, and creates an edge between them, with the weight from the CSV file becoming the edge weight. If multiple dependency files are processed and the same dependency is found in multiple files, the edge weights are summed.
+The dependencies are saved in the CSV file in the following format: \texttt{antecedent of a dependency, consequent of a dependency, weight}. The tool reads each line, adds the antecedent and consequent as nodes in a directed graph, and creates an edge between them, with the weight from the CSV file becoming the edge weight. If multiple dependency files are processed and the same dependency is found in multiple files, the edge weights are summed.
+
+The workflow of applying the clustering algorithms and performing the evaluations is shown in Algorithm \ref{alg:clustering_evaluation}. After all dependencies are read, the directed graph is passed to the clustering algorithms: Louvain, Leiden, and DBSCAN. Each algorithm generates its own clustering result. The results from each algorithm are then evaluated using the MQ metric and the MoJoFM metric. The MQ metric requires the directed graph and the clustering result, while the MoJoFM metric requires the reference clustering solution provided as input and the clustering result. 
 
 
-After all dependencies are read, the directed graph is passed to the Louvain clustering algorithm to generate the clustering result. The clustering result is then evaluated. The MQ metric requires the directed graph and the clustering result, while the MoJo metric requires the baseline clustering solution provided as input and the clustering result.
+\begin{algorithm}
+\caption{Clustering and Evaluation Workflow}
+\label{alg:clustering_evaluation}
+\begin{algorithmic}[1]
+
+\FOR{each clustering algorithm $A$ in $\{Louvain, Leiden, DBSCAN\}$}
+    \STATE Apply algorithm $A$ to graph $G$ to generate clustering result $C$
+    \STATE Compute the number of clusters from clustering result $C$
+    \STATE Evaluate $C$ using the MQ metric with graph $G$ and result $C$
+    \STATE Evaluate $C$ using the MoJoFM metric with reference solution $R$ and result $C$
+\ENDFOR
+
+\end{algorithmic}
+\end{algorithm}
 
 \subsubsection{Output}
 
-After both evaluations are done, we export the clustering result, the cluster count, and the values for both metrics.
+After applying each clustering algorithm and completing both evaluations, we export the clustering result, the number of clusters from the clustering solution, and the values for both the MQ and MoJoFM metrics.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Experimental Plan and Results}
 \label{sec:experiment}
@@ -495,23 +494,23 @@ The rows in each table represent different dependency types and strength filter 
 \hline
  \textbf{Dependency} &  \textbf{Entities} & \textbf{System} & \multicolumn{3}{c|}{\textbf{Louvain}} & \multicolumn{3}{c|}{\textbf{Leiden}} & \multicolumn{3}{c|}{\textbf{DBSCAN}} \\
 \cline{4-12}
-\textbf{Type (strength } &  \textbf{Count} & \textbf{Cover} & \textbf{Nr. of } & \textbf{MQ} & \textbf{Mojo} & \textbf{Nr. of} & \textbf{MQ} & \textbf{Mojo FM} & \textbf{Nr. of} & \textbf{MQ} & \textbf{Mojo FM}  \\
+\textbf{Type (strength } &  \textbf{Count} & \textbf{Cover} & \textbf{Nr. of } & \textbf{MQ} & \textbf{MojoFM} & \textbf{Nr. of} & \textbf{MQ} & \textbf{MojoFM} & \textbf{Nr. of} & \textbf{MQ} & \textbf{MojoFM}  \\
 \textbf{threshold)} &  & \textbf{(\%)} & \textbf{clusters} & & & \textbf{clusters} & &  & \textbf{clusters} & &\\
 \hline
 \rowcolor[HTML]{ECECEC} \textbf{SD} & 517 & 100.00 & 14 & 0.114 & 46.02 & 14 & 0.101 & 52.99 & 34 & 0.144 & 25.1  \\
-\textbf{LD (10)} & 320 & 32.85 & 55 & 0.506 & 65.57 & 55 & 0.506 & 65.57 & 30 & 0.435 & 39.02 \\
-\textbf{LD (20)} & 215 & 30.02 & 53 & 0.547 & 68 & 53 & 0.547 & 68 & 23 & 0.505 & 53.5 \\
-\textbf{LD (30)} & 174 & 27.68 & 44 & 0.558 & 71.7 & 44 & 0.558 & 71.7 & 19 & 0.585 & 50 \\
-\textbf{LD (40)} & 152 & 20.73 & 40 & 0.580 & 71.53 & 40 & 0.580 & 71.53 & 19 & 0.602 & 53.06 \\
-\textbf{LD (50)} & 138 & 20.39 & 35 & 0.604 & 73.98 & 35 & 0.604 & 73.98 & 17 & 0.633 & 56.1 \\
-\textbf{LD (60)} & 120 & 19.21 & 34 & 0.587 & 70.48 & 34 & 0.587 & 70.48 & 14 & 0.650 & 51.43 \\
-\textbf{LD (70)} & 106 & 10.40 & 32 & 0.577 & 71.43 & 32 & 0.577 & 71.43 & 11 & 0.661 & 51.65 \\
-\textbf{LD (80)} & 92 & 10.19 & 29 & 0.576 & 70.13 & 29 & 0.576 & 70.13 & 9 & \cellcolor[HTML]{FEF9E4}0.709 & 50.65 \\
-\textbf{LD (90)} & 79 & 9.79 & 24 & 0.606 & 71.88 & 24 & 0.606 & 71.88 & 8 & 0.705 & 56.6 \\
-\textbf{LD (100)} & 64 & 8.07 & 19 & \cellcolor[HTML]{FEF9E4}0.611 & \cellcolor[HTML]{FEF9E4}75.51 & 19 & \cellcolor[HTML]{FEF9E4}0.611 & \cellcolor[HTML]{FEF9E4}75.51 & 6 & 0.691 & \cellcolor[HTML]{FEF9E4}56.93 \\
+\textbf{LD (10)} & 320 & 61.89 & 55 & 0.506 & 65.57 & 55 & 0.506 & 65.57 & 30 & 0.435 & 39.02 \\
+\textbf{LD (20)} & 215 & 41.58 & 53 & 0.547 & 68 & 53 & 0.547 & 68 & 23 & 0.505 & 53.5 \\
+\textbf{LD (30)} & 174 & 33.65 & 44 & 0.558 & 71.7 & 44 & 0.558 & 71.7 & 19 & 0.585 & 50 \\
+\textbf{LD (40)} & 152 & 29.40 & 40 & 0.580 & 71.53 & 40 & 0.580 & 71.53 & 19 & 0.602 & 53.06 \\
+\textbf{LD (50)} & 138 & 26.69 & 35 & 0.604 & 73.98 & 35 & 0.604 & 73.98 & 17 & 0.633 & 56.1 \\
+\textbf{LD (60)} & 120 & 23.21 & 34 & 0.587 & 70.48 & 34 & 0.587 & 70.48 & 14 & 0.650 & 51.43 \\
+\textbf{LD (70)} & 106 & 20.50 & 32 & 0.577 & 71.43 & 32 & 0.577 & 71.43 & 11 & 0.661 & 51.65 \\
+\textbf{LD (80)} & 92 & 17.79 & 29 & 0.576 & 70.13 & 29 & 0.576 & 70.13 & 9 & \cellcolor[HTML]{FEF9E4}0.709 & 50.65 \\
+\textbf{LD (90)} & 79 & 15.28 & 24 & 0.606 & 71.88 & 24 & 0.606 & 71.88 & 8 & 0.705 & 56.6 \\
+\textbf{LD (100)} & 64 & 12.37 & 19 & \cellcolor[HTML]{fef9e4}0.611 & \cellcolor[HTML]{fef9e4}75.51 & 19 & \cellcolor[HTML]{fef9e4}0.611 & \cellcolor[HTML]{fef9e4}75.51 & 6 & 0.691 & \cellcolor[HTML]{fef9e4}56.93 \\
 \hline
-\textbf{SD+LD (10)} & 517 & 100.00 & 18 & \cellcolor[HTML]{fef9e4}0.355 & \cellcolor[HTML]{FEF9E4}55.18 & 15 & 0.254 & \cellcolor[HTML]{FEF9E4}54.98 & 37 & 0.147 & 25.9 \\
-\textbf{SD+LD (20)} & 517 & 100.00 & 17 & 0.318 & 52.39 & 19 & \cellcolor[HTML]{fef9e4}0.365 & 53.78 & 32 & 0.149 & \cellcolor[HTML]{FEF9E4}26.49 \\
+\textbf{SD+LD (10)} & 517 & 100.00 & 18 & \cellcolor[HTML]{fef9e4}0.355 & \cellcolor[HTML]{fef9e4}55.18 & 15 & 0.254 & \cellcolor[HTML]{fef9e4}54.98 & 37 & 0.147 & 25.9 \\
+\textbf{SD+LD (20)} & 517 & 100.00 & 17 & 0.318 & 52.39 & 19 & \cellcolor[HTML]{fef9e4}0.365 & 53.78 & 32 & 0.149 & \cellcolor[HTML]{fef9e4}26.49 \\
 \textbf{SD+LD (30)} & 517 & 100.00 & 16 & 0.282 & 53.19 & 16 & 0.265 & 54.78 & 30 & \cellcolor[HTML]{FEF9E4}0.159 & 24.5 \\
 \textbf{SD+LD (40)} & 517 & 100.00 & 17 & 0.340 & 51.99 & 17 & 0.317 & 53.19 & 31 & 0.146 & 24.7 \\
 \textbf{SD+LD (50)} & 517 & 100.00 & 15 & 0.248 & 52.59 & 19 & 0.298 & 56.77 & 31 & 0.146 & 24.7 \\
@@ -535,7 +534,7 @@ The rows in each table represent different dependency types and strength filter 
 \hline
  \textbf{Dependency} &  \textbf{Entities} & \textbf{System} & \multicolumn{3}{c|}{\textbf{Louvain}} & \multicolumn{3}{c|}{\textbf{Leiden}} & \multicolumn{3}{c|}{\textbf{DBSCAN}} \\
 \cline{4-12}
-\textbf{Type (strength } &  \textbf{Count} & \textbf{Cover} & \textbf{Nr. of } & \textbf{MQ} & \textbf{Mojo} & \textbf{Nr. of} & \textbf{MQ} & \textbf{Mojo FM} & \textbf{Nr. of} & \textbf{MQ} & \textbf{Mojo FM}  \\
+\textbf{Type (strength } &  \textbf{Count} & \textbf{Cover} & \textbf{Nr. of } & \textbf{MQ} & \textbf{MojoFM} & \textbf{Nr. of} & \textbf{MQ} & \textbf{MojoFM} & \textbf{Nr. of} & \textbf{MQ} & \textbf{MojoFM}  \\
 \textbf{threshold)} &  & \textbf{(\%)} & \textbf{clusters} & & & \textbf{clusters} & &  & \textbf{clusters} & &\\
 \hline
 \rowcolor[HTML]{ECECEC} \textbf{SD} & 662 & 100.00 & 26 & 0.186 & 77.76 & 24 & 0.184 & 76.99 & 43 & 0.142 & 73.31  \\
@@ -576,7 +575,7 @@ The rows in each table represent different dependency types and strength filter 
 \hline
  \textbf{Dependency} &  \textbf{Entities} & \textbf{System} & \multicolumn{3}{c|}{\textbf{Louvain}} & \multicolumn{3}{c|}{\textbf{Leiden}} & \multicolumn{3}{c|}{\textbf{DBSCAN}} \\
 \cline{4-12}
-\textbf{Type (strength } &  \textbf{Count} & \textbf{Cover} & \textbf{Nr. of } & \textbf{MQ} & \textbf{Mojo} & \textbf{Nr. of} & \textbf{MQ} & \textbf{Mojo FM} & \textbf{Nr. of} & \textbf{MQ} & \textbf{Mojo FM}  \\
+\textbf{Type (strength } &  \textbf{Count} & \textbf{Cover} & \textbf{Nr. of } & \textbf{MQ} & \textbf{MojoFM} & \textbf{Nr. of} & \textbf{MQ} & \textbf{MojoFM} & \textbf{Nr. of} & \textbf{MQ} & \textbf{MojoFM}  \\
 \textbf{threshold)} &  & \textbf{(\%)} & \textbf{clusters} & & & \textbf{clusters} & &  & \textbf{clusters} & &\\
 \hline
 \rowcolor[HTML]{ECECEC} \textbf{SD} & 4414 & 100.00 & 30 & 0.09 & 52.23 & 23 & 0.071 & 52.44 & 373 & 0.128 & 46.32  \\
@@ -619,7 +618,7 @@ The rows in each table represent different dependency types and strength filter 
 \hline
  \textbf{Dependency} &  \textbf{Entities} & \textbf{System} & \multicolumn{3}{c|}{\textbf{Louvain}} & \multicolumn{3}{c|}{\textbf{Leiden}} & \multicolumn{3}{c|}{\textbf{DBSCAN}} \\
 \cline{4-12}
-\textbf{Type (strength } &  \textbf{Count} & \textbf{Cover} & \textbf{Nr. of } & \textbf{MQ} & \textbf{Mojo} & \textbf{Nr. of} & \textbf{MQ} & \textbf{Mojo FM} & \textbf{Nr. of} & \textbf{MQ} & \textbf{Mojo FM}  \\
+\textbf{Type (strength } &  \textbf{Count} & \textbf{Cover} & \textbf{Nr. of } & \textbf{MQ} & \textbf{MojoFM} & \textbf{Nr. of} & \textbf{MQ} & \textbf{MojoFM} & \textbf{Nr. of} & \textbf{MQ} & \textbf{MojoFM}  \\
 \textbf{threshold)} &  & \textbf{(\%)} & \textbf{clusters} & & & \textbf{clusters} & &  & \textbf{clusters} & &\\
 \hline
 \rowcolor[HTML]{ECECEC} \textbf{gson SD} & 210 & 100.00 & 10 & 0.139 & 53.47 & 9 & 0.129 & 55.94 & 23 & 0.127 & 51.88 \\
@@ -633,8 +632,8 @@ The rows in each table represent different dependency types and strength filter 
 \textbf{gson LD (80)} & 18 & 8.57 & 5 & 0.590 & 60.00 & 5 & 0.590 & 60.00 & 4 & 0.544 & 40.00 \\
 \textbf{gson LD (90)} & 18 & 8.57 & 5 & 0.590 & 60.00 & 5 & 0.590 & 60.00 & 4 & 0.544 & 40.00 \\
 \textbf{gson LD (100)} & 18 & 8.57 & 5 & 0.590 & 60.00 & 5 & 0.590 & 60.00 & 4 & 0.544 & 40.00 \\
-\textbf{gson SD+LD(10)} & 210 & 100.00 & 11 & \cellcolor[HTML]{fef9e4}0.317 & \cellcolor[HTML]{fef9e4}64.36 & 11 & \cellcolor[HTML]{fef9e4}0.317 & \cellcolor[HTML]{fef9e4}64.36 & 20 & \cellcolor[HTML]{fef9e4}0.172 & \cellcolor[HTML]{fef9e4}63.86 \\
 \hline
+\textbf{gson SD+LD(10)} & 210 & 100.00 & 11 & \cellcolor[HTML]{fef9e4}0.317 & \cellcolor[HTML]{fef9e4}64.36 & 11 & \cellcolor[HTML]{fef9e4}0.317 & \cellcolor[HTML]{fef9e4}64.36 & 20 & \cellcolor[HTML]{fef9e4}0.172 & \cellcolor[HTML]{fef9e4}63.86 \\
 \textbf{gson SD+LD(20)} & 210 & 100.00 & 11 & 0.259 & 61.39 & 11 & 0.259 & 61.39 & 17 & 0.136 & 53.96 \\
 \textbf{gson SD+LD(30)} & 210 & 100.00 & 11 & 0.277 & 61.39 & 11 & 0.277 & 61.39 & 20 & 0.136 & 55.94 \\
 \textbf{gson SD+LD(40)} & 210 & 100.00 & 10 & 0.277 & 61.39 & 10 & 0.277 & 61.39 & 20 & 0.135 & 55.94 \\
@@ -652,7 +651,7 @@ The rows in each table represent different dependency types and strength filter 
 
 
 
-\subsubsection{Additional experiment on the impact of logical dependency weights}
+\subsubsection{Experiment on the impact of logical dependency weights}
 
 
 \begin{table}[htbp]
@@ -701,7 +700,7 @@ The results of this experiment can be found in Table \ref{tab:clustering_results
 \hline
 \textbf{Multiplication} & \multicolumn{2}{c|}{\textbf{Avg. weight}} & \multicolumn{3}{c|}{\textbf{Louvain}} & \multicolumn{3}{c|}{\textbf{Leiden}} & \multicolumn{3}{c|}{\textbf{DBSCAN}} \\
 \cline{4-12}
-\textbf{Factor} & \textbf{SD} & \textbf{LD} & \textbf{Nr. of} & \textbf{MQ} & \textbf{Mojo FM} & \textbf{Nr. of} & \textbf{MQ} & \textbf{Mojo FM} & \textbf{Nr. of} & \textbf{MQ} & \textbf{Mojo FM} \\
+\textbf{Factor} & \textbf{SD} & \textbf{LD} & \textbf{Nr. of} & \textbf{MQ} & \textbf{MojoFM} & \textbf{Nr. of} & \textbf{MQ} & \textbf{MojoFM} & \textbf{Nr. of} & \textbf{MQ} & \textbf{MojoFM} \\
  &  &  & \textbf{clusters} & &  & \textbf{clusters} & && \textbf{clusters} &  & \\
 \hline
 1 & 6.91  & 37.04  & 31 & 0.311 & 78.83 & 31 & 0.305 & 78.37 & 43 & 0.153 & 73.31 \\ 
@@ -718,13 +717,9 @@ The results of this experiment can be found in Table \ref{tab:clustering_results
 \section{Evaluation}
 \label{sec:evaluation}
 
-In evaluating the clustering results, we use two metrics: MoJo and MQ. The MoJo metric measures how close the generated clustering solution is to our manually generated clustering solution. A smaller MoJo value indicates that fewer move and join operations are required to transform the generated clusters into the expected clusters.
+The overall analysis of all the results from subsection \ref{subsec:results} indicates that combining structural and logical dependencies (SD+LD) provides better clustering solutions than using structural dependencies (SD) alone, covering 100\% of the system, meaning that no entity is missed during cluster generation. On the other hand, logical dependencies (LD) alone result in better clustering quality metrics compared to both SD and SD+LD, but they do not cover the entire system.
 
-Delete:The MQ metric's value ranges between -1 and 1. A value of -1 means that the clusters have more connections between the clusters than within the clusters, while a value of 1 means that there are more connections within clusters than between clusters. A good clustering solution should have an MQ value close to 1, since this indicates that the clusters are more cohesive internally and have fewer connections to other clusters.
-
-The overall analysis of all the results from subsection \ref{subsec:results} indicates that combining structural and logical dependencies (SD+LD) provides better clustering solutions than using structural dependencies (SD) alone, with 100\% coverage of the system, meaning that no entity is missed during cluster generation. On the other hand, logical dependencies (LD) alone result in better clustering quality metrics compared to both SD and SD+LD, but they do not cover the entire system.
-
-The best results for SD+LD are observed with a strength threshold between 10-30\%. For LD only, the best results are obtained at a 100\% strength threshold. The overall trend shows that for LD only, the MQ metric increases in value with a higher strength threshold, indicating more cohesive clusters, while the MoJo metric decreases, indicating that fewer transformations are needed to reach the expected clustering. For SD+LD, the best MQ and MoJo values are obtained at lower strength thresholds, and then both metrics indicate less effective clustering solution obtained with higher strength thresholds.
+The best results for SD+LD are observed with a strength threshold between 10-40\%. For LD only, the best results are obtained at a 100\% strength threshold. The overall trend shows that for LD only, the MQ metric increases in value with a higher strength threshold, indicating more cohesive clusters, while the MoJo metric decreases, indicating that fewer transformations are needed to reach the expected clustering. For SD+LD, the best MQ and MoJo values are obtained at lower strength thresholds, and then both metrics indicate less effective clustering solution obtained with higher strength thresholds.
 
 In the sections below, we analyze each project in detail.
 
@@ -732,13 +727,17 @@ In the sections below, we analyze each project in detail.
 
 \subsubsection{Apache Ant}
 
-The clustering results for Apache Ant (Table \ref{tab:clustering_results_ant}) show that the combined structural and logical dependencies (SD+LD) achieved the best values with a strength threshold of 10, resulting in an MQ of 0.144 and a MoJo of 178.
+The clustering results for Apache Ant (Table \ref{tab:clustering_results_ant}) show that the combined structural and logical dependencies (SD+LD) achieved the best values with a strength threshold between 10\% and 30\%. The highest value for the MQ metric is reached with Leiden (MQ=0.365), at a strength threshold of 20\%, and the highest value for MoJoFM is also reached with Leiden (MoJoFM=54.98), at a strength threshold of 10\%.
 
-Compared with the SD only results, where we have an MQ of 0.081 and a MoJo of 203, all SD+LD clustering solutions have better MQ metric. The MoJo metric is not always better than the SD MoJo, but the values obtained are close to the SD result.
+Compared with the SD-only results, all SD+LD clustering solutions for all algorithms show better MQ metric values, with the highest MQ value for SD+LD being more than three times greater than the corresponding SD-only value. The MoJoFM metric does not always outperform the SD-only MoJoFM, but the values obtained are close to the SD-only results.
 
-Logical dependencies (LD) alone produced the highest MQ value (MQ = 0.611) and the lowest MoJo value (MoJo = 15) at the 100\% strength threshold, but the percentage of entities covered is significantly lower (LD[100] covers only 12.38\% of the system). On the other hand, even at the LD 10\% strength threshold (LD[10] covers only 61.9\% of the system), both metrics are performing better than SD only or SD+LD[10].
+Logical dependencies (LD) alone produced the highest MQ and MoJoFM values at the 100\% strength threshold for both Leiden and Louvain, with the obtained metric values being higher than those of SD-only and SD+LD. However, the percentage of entities covered is significantly lower (LD(100) covers only 12.37\% of the system).
+If we look at LD(10), where there is a 61.89\% coverage of the system, which is more compared to LD(100), both metrics still perform better than SD-only and SD+LD(10). However, there is still a gap until 100\% coverage.
 
-An interesting observation is that, based on the LD-only results, where the metric results improve with a higher strength threshold, the SD+LD results do not follow the same pattern. On the contrary, the SD+LD metric results decline with a higher strength threshold. The explanation for this behavior may lie in the overlap between structural and logical dependencies. As presented in Figure \ref{fig:ant_correlation}, the overlap between structural and logical dependencies might influence the clustering outcomes differently when combined than when applied separately.
+From the clustering algorithm performance point of view, Leiden obtains the best evaluation metrics for all scenarios, followed by Louvain and DBSCAN.
+
+An interesting observation is that, based on the LD-only results, where the metric results improve with a higher strength threshold, the SD+LD results do not follow the same pattern. On the contrary, the SD+LD metric results decline with a higher strength threshold. The explanation for this behavior may lie in the overlap between structural and logical dependencies. As presented in Figure \ref{fig:ant_correlation}, the number of LD decreases with a stricter strength threshold compared to the number of SD, and the overlap between the two types of dependencies increases.
+
 
 \begin{figure}[t!]
   \centering
@@ -747,22 +746,22 @@ An interesting observation is that, based on the LD-only results, where the metr
   \label{fig:ant_correlation}
 \end{figure}
 
-In our previous works (\cite{b4}, \cite{b5}), we studied how these two types of dependencies overlap. The reason behind this study was to check how much new information we can get from using logical dependencies and how much is already present via structural dependencies.
+In our previous works, we studied how these two types of dependencies overlap \cite{b4}, \cite{b5}. The reason behind those studies was to check how much new information we can get from using logical dependencies and how much is already present via structural dependencies.
 
 Our overall findings were that with stricter filtering of logical dependencies, we obtain a higher percentage of overlap between the two dependencies, reaching at most 50\% of logical dependencies that are also structural dependencies.
 
-So, we believe that the reason why SD+LD clustering solutions decline in performance with a higher strength threshold is that there is less and less new additional information being added to the system (logical dependencies that are not structural dependencies), causing the clustering solution to start resembling the performance of the SD-only solution. This redundancy between logical and structural dependencies might not introduce new meaningful information to the clustering algorithm and can instead introduce noise.
+So, we consider that the reason why SD+LD clustering solutions decline in performance with a higher strength threshold is that less and less new additional information is added to the system (logical dependencies that are not structural dependencies), causing the clustering solution to start resembling the performance of the SD-only solution. In Figure \ref{fig:ant_correlation}, we can see that LD(10) represents 61\% of the quantity of SD, while LD(100) is only at 12\%, with half of them being duplicated with SD.
 
 
 \subsubsection{Apache Tomcat}
 
-For Apache Tomcat (Table \ref{tab:clustering_results_tomcat}), the SD+LD[20] combination achieved the best results for the MQ metric (MQ = 0.265), while SD+LD[10] achieved the best value for MoJo (MoJo = 71).
+For Apache Tomcat (Table \ref{tab:clustering_results_tomcat}), the best results for SD+LD were obtained with strength thresholds between 10\% and 40\% across all algorithms. The Leiden algorithm achieved the best result for the MQ metric (MQ = 0.326) at a strength threshold of 40\%, while the best MoJoFM result was obtained at a threshold of 20\% (MoJoFM = 80.06), also with the Leiden algorithm. Compared with the SD-only results, the peak MQ values almost double the SD-only values. Similar to Apache Ant, the MQ values for all strength thresholds are higher than those for SD-only. While MoJoFM is not better for all thresholds, it still shows an improvement compared with the SD-only results.
 
-In comparison with Apache Ant, where both metrics reached their best value at the same strength threshold, there is a difference of one strength step between the metrics' best results for Apache Tomcat. Even so, the MoJo metric for SD+LD[10] and SD+LD[20] indicates that fewer transformations are required compared to SD-only or other SD+LD combinations.
+The LD-only results show the highest MQ and MoJoFM values at LD(100), with an MQ of 0.640 and a MoJoFM of 85.00 for the Louvain and Leiden algorithms. However, as with the Apache Ant results, coverage remains an issue. LD(100) covers only 16.62\% of the system, lower than the coverage from SD-only or SD+LD combinations. On the other hand, LD(10), which covers 61.33\% of the system, still has better clustering solutions compared to SD-only, based on both MQ and MoJoFM results. 
 
-The LD-only lines show the best MQ and MoJo values for LD[100], with an MQ of 0.640 and a MoJo of 21, but coverage remains an issue, as LD[100] covers only 16.62\% of the system. On the other hand, LD[10] covers 61.33\% of the system and still provides better clustering solutions according to the MQ and MoJo results.
 
-We observe the same decline in results with a stricter strength threshold for SD+LD, and as with the previous system, these results can be linked to the percentage of LD that are also SD, as shown in Figure \ref{fig:catalina_correlation}. LD filtered with a 10\% strength threshold overlaps with SD approximately by 22\%, and with a 100\% strength threshold, the overlap is approximately 39\%.
+We observe the same decline in results with a stricter strength threshold for SD+LD, and as with the previous system, these results can again be connected to the percentage of LD that also overlap with SD, as well as the decreasing number of LD compared to SD once the strength threshold becomes stricter. As shown in Figure \ref{fig:catalina_correlation}, LD filtered with a 10\% strength threshold overlaps with SD by approximately 22\%, while at a 100\% strength threshold, the overlap increases to approximately 39\%.
+
 
 
 \begin{figure}[t!]
@@ -772,12 +771,27 @@ We observe the same decline in results with a stricter strength threshold for SD
   \label{fig:catalina_correlation}
 \end{figure}
 
-Compared with all the other systems, Apache Tomcat has the highest number of commits involved in LD extraction (Table \ref{tab:project_info}), totaling 22,698. Due to this larger information base for LD extraction, the use of logical dependencies results in better MQ values compared to other systems, as seen in Tables \ref{tab:clustering_results_ant}, \ref{tab:clustering_results_hibernate}, and \ref{tab:clustering_results_gson}.
 
-The high number of commits leads to more effective clustering results. This highlights the importance of having a substantial commit history to enhance the quality of logical dependencies used and, consequently, the clustering solutions generated.
+To ensure that the decline in performance for SD+LD with a stricter strength threshold is indeed caused by the fact that LD are significantly fewer compared to SD, and that part of them is duplicated by SD at higher thresholds, we added an additional experiment to our study. In this experiment, whose results can be found in Table \ref{tab:clustering_results_multiplication}, we increased the weights associated with LD(100) for Apache Tomcat to confirm that we are dealing with an LD quantity problem rather than a weight problem.
+
+In Table \ref{tab:systems_weights}, which presents the average weights associated with the dependencies across all systems, we can see that for Tomcat, the average weight for LD(10) is already almost double than SD average weight. For LD(100), the average weight is approximately five times higher than that of SD. Still, we wanted to ensure that the issue comes from the LD quantity and not the weights, so we multiplied the LD weights by values ranging from 1 to 5, where 1 is the baseline (since multiplying by 1 does not change the LD weights).
+
+Based on the metric values obtained for multiplication factors of 2 to 5, we can see that after increasing the weights assigned to LD, the metric values improve only slightly, with changes recorded at the second decimal: a 0.02 improvement for Louvain and 0.07 for Leiden. The results for DBSCAN remain unchanged due to the fixed values of MinPts and Eps and the already high LD weights for LD(100). 
+
+From the experiment with weights, we can conclude that the issue is the quantity of dependencies. SD outnumbers LD, making LD information less impactful on the overall clustering solution.
 
 
 \subsubsection{Hibernate ORM}
+
+
+
+Hibernate ORM is the second largest system after Apache Tomcat in terms of the number of commits analyzed, with 16,609 commits considered for LD extraction. Additionally, it is the largest in terms of system size, with 4,414 entities (Table \ref{tab:project_info}).
+
+Based on the results from Table \ref{tab:clustering_results_hibernate}, the SD+LD combination with a strength threshold of 40 performs best for this system. Louvain achieves the best MQ metric with a value of 0.182, while Leiden achieves the best MoJoFM metric with a value of 55.89. 
+
+LD-only produced the best MQ values at 100\% strength and the best MoJoFM values at 70\% strength for both Louvain and Leiden. Compared to the previous systems, where both best values were recorded at the same strength threshold, Hibernate shows an earlier peak for MoJoFM. The system coverage is likely a factor contributing to this. Hibernate’s LD[100] covers only 8.07\% of the system, the lowest percentage among all systems studied. This low percentage can be linked to the number of commits compared to the number of entities. For Apache Tomcat, there were 22,698 commits and 662 entities, while for Hibernate, there were 16,609 commits and 4,414 entities. This indicates that not all entities had a chance to be updated in the version control system.
+
+This observation is also reflected in Table \ref{tab:systems_weights}, where Hibernate has the lowest average weights for LD compared to SD across all systems. In other systems, LD(10) starts with almost double the average weight compared to SD, while Hibernate's LD(10) average weight is less than half of the SD average weight.
 
 \begin{figure}[t!]
   \centering
@@ -786,30 +800,14 @@ The high number of commits leads to more effective clustering results. This high
   \label{fig:hibernate_correlation}
 \end{figure}
 
-Hibernate ORM is the second largest in terms of the number of commits analyzed, with 16,609 commits considered for LD extraction. Additionally, it is the largest in terms of system size, with 4,414 entities (Table \ref{tab:project_info}).
+Hibernate also has the lowest overlap percentage between LD and SD, as shown in Figure \ref{fig:hibernate_correlation}. Similar to the other systems, the performance for MQ and MoJoFM decreases for SD+LD as the strength threshold becomes more stricter.
 
-Based on the results from Table \ref{tab:clustering_results_hibernate}, the SD+LD combination with a strength threshold of 30 achieved the best MQ value of 0.149 and a MoJo of 1870. The SD+LD with a strength threshold of 10 achieved the best MoJo of 1842. Similar to Apache Tomcat, the best values for both metrics are not at the same strength threshold, but even so, SD+LD[10] has a better MoJo value than SD-only.
-
-LD-only produced the best MQ and MoJo values at 100\%, but the system coverage is again limited, with LD[100] covering only 8.07\% of the system, the lowest percentage among all systems studied. This low percentage can be connected to the number of commits compared to the number of entities. For Apache Tomcat, we had 22,698 commits and 662 entities, for Hibernate, we have 16,609 commits and 4,414 entities. This most probably means that not all entities had a chance to be updated in the versioning system.
-
-This can also be connected to the fact that Hibernate is the only system among those studied that reaches a lower MQ value than SD-only for the SD+LD combination. Meanwhile, all other systems maintain a slightly better MQ value for SD+LD compared to SD-only, even at the highest strength threshold.
-
-
-Hibernate also has the lowest overlapping percentages between LD and SD, as shown in Figure \ref{fig:hibernate_correlation}. Similar to the other systems, the MQ and MoJo performance decreases for SD+LD as the strength threshold values become stricter.
-
-The results for Hibernate highlight the challenge of achieving better clustering in larger systems with fewer commits relative to their size.
+The results for Hibernate highlight the challenge of achieving better clustering in larger systems that have fewer commits relative to their size.
 
 
 
 \subsubsection{Google Gson}
 
-Gson has the smallest number of commits analyzed, with 1,772 commits considered for LD extraction, and it is also the smallest in terms of system size, with 210 entities involved in clustering (Table \ref{tab:project_info}).
-
-Based on the results from Table \ref{tab:clustering_results_gson}, the SD+LD combination with a strength threshold of 10 achieved the best MQ value of 0.215 and the best MoJo of 21. Similar to Apache Ant, the best values for both metrics are at the same strength threshold, and all SD+LD combinations have a better MQ value than SD-only.
-
-LD-only produced the best MQ value at 40\%, with an MQ of 0.635 and the best MoJo value at 80\%, 90\%, and 100\%. It is the only system that produces a better result for MQ at a lower strength threshold than 100\% for LD-only. This is likely caused by the very low number of entities remaining in the system at 100\% (only 18 out of 210).
-
-It can also be observed that Gson has the exact same metric values for MQ and MoJo for multiple strength threshold values. Again, the small number of commits and the size of the system contribute to the constant values of these metrics. This stability in the metrics suggests that smaller systems might not benefit as much from the combination of SD and LD as larger systems do.
 
 \begin{figure}[t!]
   \centering
@@ -818,17 +816,44 @@ It can also be observed that Gson has the exact same metric values for MQ and Mo
   \label{fig:gson_correlation}
 \end{figure}
 
-Gson has relatively high overlapping rates between LD and SD compared to the other systems, as shown in Figure \ref{fig:gson_correlation}. Despite the constant values, the trend of performance decreasing with a stricter strength filtering for LD is also present for Gson.
+Gson has the smallest number of commits analyzed, with 1,772 commits considered for LD extraction, and it is also the smallest in terms of system size, with 210 entities involved in clustering (Table \ref{tab:project_info}).
 
-The results for the system highlight the challenge of achieving better clustering solutions using logical dependencies in smaller systems with fewer commits. For such a small system as Gson, an improvement is still visible when using logical dependencies. However, the filtering should be done with less strict thresholds since there is a high chance of losing additional new information about the system after filtering.
+Based on the results from Table \ref{tab:clustering_results_gson}, the SD+LD combination with a strength threshold of 10 achieved the best MQ value of 0.317 for both Louvain and Leiden, and the best MoJoFM value of 64.36 for the same algorithms. Similar to Apache Ant and Tomcat, all SD+LD combinations achieve a better MQ value than SD-only.
 
+LD-only produced the best MQ value at 40\% for both Louvain and Leiden, with an MQ of 0.635, and the best MoJoFM value at the same threshold for the same algorithms. It is the only system where the best MQ result for LD-only occurs at a lower strength threshold than 100\%. This is due to the very low number of entities remaining in the system at 100\% (only 18 out of 210).
+
+In this particular system, it is more visible that in some scenarios, the Leiden clustering algorithm does not improve the Louvain algorithm. This observation is based on the fact that the values obtained for both MQ and MoJoFM metrics are the same in most cases for the Gson system for both algorithms.
+
+It can also be observed that Gson has identical metric values for MQ and MoJoFM across multiple strength thresholds. Again, the small number of commits and the size of the system contribute to the stability of these metrics. 
+
+Gson also has relatively high overlap rates between LD and SD compared to the other systems, as shown in Figure \ref{fig:gson_correlation}. Despite the constant values, the trend of decreasing performance for SD+LD with stricter strength filtering for LD is also present in Gson.
+
+The results for this system highlight the difficulty of achieving better clustering solutions using logical dependencies in smaller systems with fewer commits. However, even for a small system like Gson, an improvement is still visible when using logical dependencies.
+
+\subsection{Research Questions and Findings}
+
+In this section, we will answer our research questions based on the results from our experiments. 
+
+The following research questions guided our investigation:
+
+\begin{itemize}
+    \item \textbf{RQ1:} Does using structural dependencies (SD) combined with logical dependencies (LD) improve software clustering results compared to traditional approaches using only structural dependencies (SD)?
+    \item \textbf{RQ2:} Can using only logical dependencies (LD) produce good software clustering results?
+    \item \textbf{RQ3:} How do different filtering settings for logical dependencies (LD) impact clustering results, and which filtering settings provide the best performance?
+\end{itemize}
+
+\textbf{RQ1:} Based on the results from all four systems analyzed, the combination of SD and LD generally performed better than SD-only according to the MQ and MoJoFM metrics, confirming that using SD+LD improves software clustering results. Across different strength thresholds, SD+LD achieved higher MQ values for all clustering algorithms, indicating better modularization quality. In most cases, the MoJoFM metric also showed improvement, although not always across all LD strength thresholds. These results suggest that combining SD with LD leads to better clustering, as the logical dependencies indeed provide additional information about the relationships between software entities.
+
+
+\textbf{RQ2:} Using LD-only also produced good clustering results, especially at higher strength thresholds. LD(100) produced the highest MQ and MoJoFM values for most systems. However, the coverage of LD-only is significantly lower at higher thresholds. Despite this, the metric results for LD(10) are, in most cases, still better than those for SD-only and SD+LD. For Ant and Tomcat, LD(10) covers more than 60\% of the system, while for Hibernate and Gson, the coverage is slightly above 30\%.
+
+
+\textbf{RQ3:} The impact of different filtering settings on clustering performance was observed across all systems. For LD-only, lower strength thresholds, such as LD(10), provided better system coverage but resulted in lower MQ and MoJoFM values compared to higher thresholds like LD(100), where the best results were often achieved. The best performance for SD+LD was generally observed with strength thresholds between 10\% and 40\%, covering the entire system.
 
 
 \section{Conclusion}
 \label{sec:conclusion}
-Why did the cat get a PhD?
-
-Because it wanted to be a purr-fessor!
+It is what it is
 
 \begin{thebibliography}{00}
 
