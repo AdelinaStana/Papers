@@ -74,7 +74,7 @@ Software systems often face a lack of documentation. Even if there was original 
 
 Among the dependencies that can be used for software clustering are structural dependencies (relationships between entities based on code analysis), lexical dependencies (relationships based on naming conventions),  and code co-changes/logical dependencies (relationships between entities extracted from the version control system), among others. 
 
-In this paper, we assess whether using structural dependencies combined with logical dependencies can provide better results than using each type of dependency alone. The structural dependencies are used as they are extracted from static code analysis, and the logical dependencies are filtered co-changes from the version control system \cite{b15}. The reason behind filtering the co-changes and not using them as they are in the versioning system is to enhance their reliability and make them easier to combine with structural dependencies, as their number can far exceed the structural dependencies number \cite{b1}.
+In this paper, we assess the impact of logical dependencies, alone and in combination with structural dependencies, in software clustering. The structural dependencies are used as they are extracted from static code analysis, while the logical dependencies are filtered co-changes obtained from the version control system \cite{b15}. The co-changes are filtered to enhance their reliability and to remove noise caused by large commits with many files that are not related to development activities (e.g., formatting changes) or rare co-changes that may not indicate a true dependency \cite{b1}.
 
 The following research questions guide our investigation:
 
@@ -84,10 +84,11 @@ The following research questions guide our investigation:
     \item \textbf{RQ3:} How do different filtering settings for logical dependencies (LD) impact clustering results, and which filtering settings provide the best performance?
 \end{itemize}
 
-To answer these research questions, we apply three different clustering algorithms (Louvain, Leiden, and DBSCAN) to each of the four open-source projects. We then evaluate the results using two metrics, MQ (Modularization Quality)\cite{b10} and MoJoFM (Move and Join e\textbf{F}fectiveness \textbf{M}easure)\cite{mojofm}. These metrics allow us to compare the effectiveness of using structural dependencies alone, logical dependencies alone, and a combination of both, providing a better understanding of how different dependency types and filtering settings impact the clustering results.
+To answer these research questions, we apply three different clustering algorithms (Louvain, Leiden, and DBSCAN) to different open-source projects. We then evaluate the results using two metrics: MQ (Modularization Quality) \cite{b10} and MoJoFM (Move and Join e\textbf{F}fectiveness \textbf{M}easure) \cite{mojofm}. The MoJoFM metric is used for external evaluation, evaluating against the perspective of the system’s architect or developers, while the MQ metric is used for internal evaluation, based on the software structure itself. These two metrics allow us to compare the effectiveness of using structural dependencies alone, logical dependencies alone, and a combination of both, providing a better understanding of how different dependency types and filtering settings impact the clustering results.
 
 
 In Section \ref{sec:related_work}, we review the related work and previous studies that used various dependencies for software clustering and their metrics for evaluation.
+Section \ref{sec:dependencies} provides an overview of structural and logical dependencies used in our approach, explaining how these dependencies are extracted. 
 Section \ref{sec:methodology_implementation} details the workflow and implementation of our approach, including the extraction and filtering of dependencies, and the clustering algorithm used.
 The plan and results of our experiments on four open-source projects are presented in Section \ref{sec:experiment}. Section \ref{sec:evaluation} evaluates our results by using the Modularization Quality (MQ) metric and the MoJoFM metric. We also manually analyze some of the clustering solutions.
 Finally, Section \ref{sec:conclusion} contains our conclusions and findings.
@@ -106,7 +107,7 @@ The following abbreviations and acronyms are used throughout this article:
 \section{Related Work}
 \label{sec:related_work}
 
-Several studies have explored the use of different types of dependencies in software clustering, applying different algorithms to improve clustering results and using various metrics to evaluate the results obtained..
+Several studies have explored the use of different types of dependencies in software clustering, applying different algorithms to improve clustering results and using various metrics to evaluate the results obtained.
 
 Tzerpos and Holt developed ACDC (Algorithm for Comprehension-Driven Clustering), a pattern-driven clustering algorithm that uses subsystem structures such as source file patterns, directory patterns, system graph patterns, and support library patterns to detect similarities and create clusters \cite{acdc}. For result evaluation, the authors introduced the MoJo metric, which counts the minimum number of move and join operations required to transform one clustering result into another, assessing how close one clustering solution is to another \cite{b3}, \cite{tzerpos1}. Later, Wen and Tzerpos introduced the MoJoFM metric, an enhanced version of the original MoJo distance metric for more effective measurements, as presented in more detail in subsection \ref{subsec:mojofm} \cite{mojofm}.
 
@@ -123,7 +124,7 @@ Wu et al. \cite{wu} conducted a comparative study of six clustering algorithms, 
  Mancoridis and Mitchell ~\cite{b10}, \cite{b101}, \cite{bunch} developed the Bunch tool for software clustering and used structural dependencies as input. The tool applies clustering algorithms to the structural dependency graph and outputs the system's organization. For evaluation, the authors introduced the Modularization Quality (MQ) metric, which is described in more detail in Section \ref{subsec:mq}, and is also used in our current experiments as an evaluation metric.
 
 
-Prajapati et al.~\cite{b18} propose a many-objective SBSR (search-based software remodularization) approach with an improved definition of objective functions based on lexical, structural, and change-history dependencies. The authors evaluate their approach on several open-source software systems using the MoJoFM metric for external evaluation (evaluation from a developer's perspective) and the MQ metric for internal evaluation (evaluation from a software structure perspective).
+Prajapati et al.~\cite{b18} propose a many-objective SBSR (search-based software remodularization) approach with an improved definition of objective functions based on lexical, structural, and change-history dependencies. The authors evaluate their approach on several open-source software systems using the MoJoFM metric for external evaluation and the MQ metric for internal evaluation.
 
 Şora et al.~\cite{b12}, \cite{b19} developed the ARTs (Architecture Reconstruction Tool Suite) for their experiments on improving software architecture reconstruction through clustering. The tool suite implements various clustering algorithms, such as minimum spanning tree-based clustering, metric-based clustering, search-based clustering, and hierarchical clustering, primarily using structural dependencies as input. The research focuses on identifying the right factors for direct coupling between classes, indirect coupling, and layered architecture. The results of applying these different factors are evaluated using the MoJo distance metric.
 
@@ -132,10 +133,10 @@ Silva et al.~\cite{b16} investigated the use of solely co-change dependencies as
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Structural and Logical Dependencies in software clustering}
+\section{Structural and Logical Dependencies}
 \label{sec:dependencies}
 
-Software clustering relies on various types of dependencies to identify relationships between software entities. Structural dependencies, have been mostly used due to their reliability \cite{b12}. However, recent research has started incorporating other types of dependencies besides structural dependencies \cite{b13}, \cite{b14}, \cite{b18}.  In this section, we will present an overview of structural and logical dependencies, focusing on how they are extracted and used in software clustering.
+Software clustering relies on various types of dependencies to identify relationships between software entities. Structural dependencies, have been mostly used due to their reliability \cite{b12}. However, recent research has started incorporating other types of dependencies besides structural dependencies \cite{b13}, \cite{b14}, \cite{b18}.  In this section, we will present an overview of structural and logical dependencies, focusing on how they are extracted.
 
 \subsection{Structural Dependencies}
 
@@ -169,7 +170,7 @@ The weights are assigned based on the following considerations:
 
 \textit{Weight 3 – Inheritance, Parameter, Return Type, Field, Cast, Type Binding:} These dependencies represent significant connections between entities. They include inheritance relationships and shared data or types, which affect the behavior and properties of entities.
 
-\textit{Weight 2 – Method Call, Field Access, Instantiation:} These indicate interactions between classes but are less impactful than higher weights. They involve using methods or fields of other classes or creating instances.
+\textit{Weight 2 – Method Call, Field Access, Instantiation:} These indicate interactions between classes but are less impactful than higher weights. They involve using methods or fields of other classes or creating instances. When a method call, field access, or instantiation occurs multiple times between the same pair of entities, the weight is multiplied by the number of occurrences. For example, if Class A calls a method in Class B three times, the assigned weight would be 6 (weight 2 multiplied by 3).
 
 \textit{Weight 1 – Local Variable:} Given the lowest weight, local variables are the most basic level of interaction.
 
@@ -392,7 +393,7 @@ By using the MoJoFM metric, we can evaluate the similarity between the generated
 \Figure[t!](topskip=0pt, botskip=0pt, midskip=0pt)[width=\textwidth]{workflow-tool.png}
 { \textbf{Tool workflow overview: input, processing and output.}\label{fig:tool}}
 
-To achieve our goal of evaluating how the quality of clustering solutions is impacted by logical dependencies, we developed a Python tool capable of using any type of dependency, either alone or combined with other types of dependencies, as long as they are provided in CSV format. The tool clusters and evaluates software clustering solutions using either the MQ metric or the MoJoFM metric.  The entire workflow of the tool is presented in Fig. \ref{fig:tool}.
+To achieve our goal of evaluating how the quality of clustering solutions is impacted by logical dependencies, we developed a Python tool capable of using any type of dependency, either alone or combined with other types of dependencies, as long as they are provided in CSV format. The tool clusters and evaluates software clustering solutions using either the MQ metric or the MoJoFM metric.
 
 
 
@@ -406,23 +407,8 @@ Since the MoJoFM metric requires a reference solution to evaluate the obtained c
 
 The dependencies are saved in the CSV file in the following format: \texttt{antecedent of a dependency, consequent of a dependency, weight}. The tool reads each line, adds the antecedent and consequent as nodes in a directed graph, and creates an edge between them, with the weight from the CSV file becoming the edge weight. If multiple dependency files are processed and the same dependency is found in multiple files, the edge weights are summed.
 
-The workflow of applying the clustering algorithms and performing the evaluations is shown in Algorithm \ref{alg:clustering_evaluation}. After all dependencies are read, the directed graph is passed to the clustering algorithms: Louvain, Leiden, and DBSCAN. Each algorithm generates its own clustering result. The results from each algorithm are then evaluated using the MQ metric and the MoJoFM metric. The MQ metric requires the directed graph and the clustering result, while the MoJoFM metric requires the reference clustering solution provided as input and the clustering result. 
+The workflow of applying the clustering algorithms and performing the evaluations is shown in Figure \ref{fig:tool}. After all dependencies are read, the directed graph is passed to the clustering algorithms: Louvain, Leiden, and DBSCAN. Each algorithm generates its own clustering result. The results from each algorithm are then evaluated using the MQ metric and the MoJoFM metric. The MQ metric requires the directed graph and the clustering result, while the MoJoFM metric requires the reference clustering solution provided as input and the clustering result. 
 
-
-\begin{algorithm}
-\caption{Clustering and Evaluation Workflow}
-\label{alg:clustering_evaluation}
-\begin{algorithmic}[1]
-
-\FOR{each clustering algorithm $A$ in $\{Louvain, Leiden, DBSCAN\}$}
-    \STATE Apply algorithm $A$ to graph $G$ to generate clustering result $C$
-    \STATE Compute the number of clusters from clustering result $C$
-    \STATE Evaluate $C$ using the MQ metric with graph $G$ and result $C$
-    \STATE Evaluate $C$ using the MoJoFM metric with reference solution $R$ and result $C$
-\ENDFOR
-
-\end{algorithmic}
-\end{algorithm}
 
 \subsubsection{Output}
 
@@ -488,7 +474,7 @@ Each table includes the following columns:
 \begin{itemize}
 \item \textbf{Dependency Type:} The types of dependencies used are as follows: SD for Structural Dependencies, LD for Logical Dependencies, and SD+LD for their combination. The strength threshold used is specified in parentheses right after LD.
 \item \textbf{Entities Count:} The total number of software entities (such as classes, interfaces, enums) involved in clustering.
-\item \textbf{System Cover:} Considering that the total number of entities extracted from the code base is the maximum number of entities in the system (first line of each table), we calculated the percentage of entities contained in the other inputs relative to the number of entities from the code base.
+\item \textbf{System Coverage:} Considering that the total number of entities extracted from the codebase — which represents the entities forming structural dependencies (SD) — constitutes the entire set of entities in the system (the first line of each table), we calculated the percentage of entities present in the filtered logical dependencies (LD) relative to the total number of known codebase entities.
 \item \textbf{Louvain/ Leiden/ DBSCAN:} The clustering algorithms used in the experiments.
 \item \textbf{Nr. of Clusters:} The number of clusters from the clustering solution.
 \item \textbf{MQ (Modularization Quality):} The result obtained when applying the MQ evaluation metric to the clustering solution.
@@ -496,6 +482,8 @@ Each table includes the following columns:
 \end{itemize}
 
 The rows in each table represent different dependency types and strength filter thresholds used in the clustering experiments.
+
+
 
 \begin{table*}[htbp]
 \centering
@@ -506,7 +494,7 @@ The rows in each table represent different dependency types and strength filter 
 \hline
  \textbf{Dependency} &  \textbf{Entities} & \textbf{System} & \multicolumn{3}{c|}{\textbf{Louvain}} & \multicolumn{3}{c|}{\textbf{Leiden}} & \multicolumn{3}{c|}{\textbf{DBSCAN}} \\
 \cline{4-12}
-\textbf{Type (strength } &  \textbf{Count} & \textbf{Cover} & \textbf{Nr. of } & \textbf{MQ} & \textbf{MojoFM} & \textbf{Nr. of} & \textbf{MQ} & \textbf{MojoFM} & \textbf{Nr. of} & \textbf{MQ} & \textbf{MojoFM}  \\
+\textbf{Type (strength } &  \textbf{Count} & \textbf{Coverage} & \textbf{Nr. of } & \textbf{MQ} & \textbf{MojoFM} & \textbf{Nr. of} & \textbf{MQ} & \textbf{MojoFM} & \textbf{Nr. of} & \textbf{MQ} & \textbf{MojoFM}  \\
 \textbf{threshold)} &  & \textbf{(\%)} & \textbf{clusters} & & & \textbf{clusters} & &  & \textbf{clusters} & &\\
 \hline
 \rowcolor[HTML]{ECECEC} \textbf{SD} & 517 & 100.00 & 14 & 0.114 & 46.02 & 14 & 0.101 & 52.99 & 34 & 0.144 & 25.1  \\
@@ -546,7 +534,7 @@ The rows in each table represent different dependency types and strength filter 
 \hline
  \textbf{Dependency} &  \textbf{Entities} & \textbf{System} & \multicolumn{3}{c|}{\textbf{Louvain}} & \multicolumn{3}{c|}{\textbf{Leiden}} & \multicolumn{3}{c|}{\textbf{DBSCAN}} \\
 \cline{4-12}
-\textbf{Type (strength } &  \textbf{Count} & \textbf{Cover} & \textbf{Nr. of } & \textbf{MQ} & \textbf{MojoFM} & \textbf{Nr. of} & \textbf{MQ} & \textbf{MojoFM} & \textbf{Nr. of} & \textbf{MQ} & \textbf{MojoFM}  \\
+\textbf{Type (strength } &  \textbf{Count} & \textbf{Coverage} & \textbf{Nr. of } & \textbf{MQ} & \textbf{MojoFM} & \textbf{Nr. of} & \textbf{MQ} & \textbf{MojoFM} & \textbf{Nr. of} & \textbf{MQ} & \textbf{MojoFM}  \\
 \textbf{threshold)} &  & \textbf{(\%)} & \textbf{clusters} & & & \textbf{clusters} & &  & \textbf{clusters} & &\\
 \hline
 \rowcolor[HTML]{ECECEC} \textbf{SD} & 662 & 100.00 & 26 & 0.186 & 77.76 & 24 & 0.184 & 76.99 & 43 & 0.142 & 73.31  \\
@@ -587,7 +575,7 @@ The rows in each table represent different dependency types and strength filter 
 \hline
  \textbf{Dependency} &  \textbf{Entities} & \textbf{System} & \multicolumn{3}{c|}{\textbf{Louvain}} & \multicolumn{3}{c|}{\textbf{Leiden}} & \multicolumn{3}{c|}{\textbf{DBSCAN}} \\
 \cline{4-12}
-\textbf{Type (strength } &  \textbf{Count} & \textbf{Cover} & \textbf{Nr. of } & \textbf{MQ} & \textbf{MojoFM} & \textbf{Nr. of} & \textbf{MQ} & \textbf{MojoFM} & \textbf{Nr. of} & \textbf{MQ} & \textbf{MojoFM}  \\
+\textbf{Type (strength } &  \textbf{Count} & \textbf{Coverage} & \textbf{Nr. of } & \textbf{MQ} & \textbf{MojoFM} & \textbf{Nr. of} & \textbf{MQ} & \textbf{MojoFM} & \textbf{Nr. of} & \textbf{MQ} & \textbf{MojoFM}  \\
 \textbf{threshold)} &  & \textbf{(\%)} & \textbf{clusters} & & & \textbf{clusters} & &  & \textbf{clusters} & &\\
 \hline
 \rowcolor[HTML]{ECECEC} \textbf{SD} & 4414 & 100.00 & 30 & 0.09 & 52.23 & 23 & 0.071 & 52.44 & 373 & 0.128 & 46.32  \\
@@ -660,12 +648,6 @@ The rows in each table represent different dependency types and strength filter 
 \end{table*}
 
 
-
-
-
-\subsubsection{Experiment on the impact of logical dependency weights}
-
-
 \begin{table}[htbp]
 \centering
 \begin{tabular}{|c|c|c|c|c|}
@@ -688,43 +670,10 @@ The rows in each table represent different dependency types and strength filter 
 \label{tab:systems_weights}
 \end{table}
 
-We conducted an additional experiment to evaluate whether our weight calculation strategy for logical dependencies is suitable for scenarios where they are combined with the weights from structural dependencies.
 
-Table \ref{tab:systems_weights} presents the average dependency weights across all the projects. The first row shows the average weights for structural dependencies, while the other rows show the average weights for logical dependencies at different strength thresholds.
-
-It can be observed that the average weights for logical dependencies increase as the strength threshold rises. This led us to question whether we are assigning sufficient weight to the logical dependencies in our system.
-
-Therefore, in this experiment, we increased the weight assigned to each logical dependency filtered with a 100\% strength threshold from the Apache Tomcat system and re-ran scenario III from Fig. \ref{fig:scenatrio}.
-
-We wanted to see whether the weights assigned to logical dependencies are suitable to be combined with the weights from structural dependencies in the same directed graph by observing how the two metrics (MQ and MoJoFM) change once we increase the weights of the logical dependencies.
+To better understand the impact of different dependency types on software clustering, we also analyzed the average weights assigned to structural dependencies (SD) and logical dependencies (LD) across the studied projects. Table \ref{tab:systems_weights} presents these average dependency weights. The first row shows the average weights for SD, which remain constant across all strength thresholds, while the other rows show the average weights for logical dependencies at different strength thresholds.
 
 
-The results of this experiment can be found in Table \ref{tab:clustering_results_multiplication}. To maintain consistency, we used the same columns as in the other result tables (\ref{tab:clustering_results_ant}, \ref{tab:clustering_results_tomcat}, \ref{tab:clustering_results_hibernate}, \ref{tab:clustering_results_gson}), with the addition of two new columns:
-\begin{itemize}
-    \item \textbf{Multiplication Factor:} The value by which each logical dependency weight is multiplied.
-    \item \textbf{Avg Weight:} The average weight assigned to each type of dependency used.
-\end{itemize}
-
-\begin{table*}[htbp]
-\centering
-\setlength{\tabcolsep}{7pt} 
-\begin{tabular}{|l|c|c|ccc|ccc|ccc|}
-\hline
-\textbf{Multiplication} & \multicolumn{2}{c|}{\textbf{Avg. weight}} & \multicolumn{3}{c|}{\textbf{Louvain}} & \multicolumn{3}{c|}{\textbf{Leiden}} & \multicolumn{3}{c|}{\textbf{DBSCAN}} \\
-\cline{4-12}
-\textbf{Factor} & \textbf{SD} & \textbf{LD} & \textbf{Nr. of} & \textbf{MQ} & \textbf{MojoFM} & \textbf{Nr. of} & \textbf{MQ} & \textbf{MojoFM} & \textbf{Nr. of} & \textbf{MQ} & \textbf{MojoFM} \\
- &  &  & \textbf{clusters} & &  & \textbf{clusters} & && \textbf{clusters} &  & \\
-\hline
-1 & 6.91  & 37.04  & 31 & 0.311 & 78.83 & 31 & 0.305 & 78.37 & 43 & 0.153 & 73.31 \\ 
-2 & 6.91  & 74.08  & 33 & 0.295 & 73.57 & 30 & 0.301 & 72.33 & 43 & 0.153 & 73.31 \\
-3 & 6.91  & 111.12 & 34 & 0.313 & 74.19 & 33 & 0.309 & 72.80 & 43 & 0.153 & 73.31 \\ 
-4 & 6.91  & 148.16 & 34 & 0.312 & 73.88 & 33 & 0.312 & 72.49 & 43 & 0.153 & 73.31 \\ 
-5 & 6.91  & 185.20 & 34 & 0.306 & 73.88 & 33 & 0.308 & 72.18 & 43 & 0.153 & 73.31 \\ 
-\hline
-\end{tabular}
-\caption{Impact of multiplication factors on clustering results for LD(100) in Apache Tomcat}
-\label{tab:clustering_results_multiplication}
-\end{table*}
 
 \section{Evaluation}
 \label{sec:evaluation}
@@ -786,6 +735,38 @@ We observe the same decline in results with a stricter strength threshold for SD
 
 To ensure that the decline in performance for SD+LD with a stricter strength threshold is indeed caused by the fact that LD are significantly fewer compared to SD, and that part of them is duplicated by SD at higher thresholds, we added an additional experiment to our study. In this experiment, whose results can be found in Table \ref{tab:clustering_results_multiplication}, we increased the weights associated with LD(100) for Apache Tomcat to confirm that we are dealing with an LD quantity problem rather than a weight problem.
 
+
+Therefore, in this experiment, we increased the weight assigned to each logical dependency filtered with a 100\% strength threshold from the Apache Tomcat system and re-ran scenario III from Fig. \ref{fig:scenatrio}.
+
+
+To maintain consistency, we used the same columns as in the other result tables (\ref{tab:clustering_results_ant}, \ref{tab:clustering_results_tomcat}, \ref{tab:clustering_results_hibernate}, \ref{tab:clustering_results_gson}), with the addition of two new columns:
+\begin{itemize}
+    \item \textbf{Multiplication Factor:} The value by which each logical dependency weight is multiplied.
+    \item \textbf{Avg Weight:} The average weight assigned to each type of dependency used.
+\end{itemize}
+
+\begin{table*}[htbp]
+\centering
+\setlength{\tabcolsep}{7pt} 
+\begin{tabular}{|l|c|c|ccc|ccc|ccc|}
+\hline
+\textbf{Multiplication} & \multicolumn{2}{c|}{\textbf{Avg. weight}} & \multicolumn{3}{c|}{\textbf{Louvain}} & \multicolumn{3}{c|}{\textbf{Leiden}} & \multicolumn{3}{c|}{\textbf{DBSCAN}} \\
+\cline{4-12}
+\textbf{Factor} & \textbf{SD} & \textbf{LD} & \textbf{Nr. of} & \textbf{MQ} & \textbf{MojoFM} & \textbf{Nr. of} & \textbf{MQ} & \textbf{MojoFM} & \textbf{Nr. of} & \textbf{MQ} & \textbf{MojoFM} \\
+ &  &  & \textbf{clusters} & &  & \textbf{clusters} & && \textbf{clusters} &  & \\
+\hline
+1 & 6.91  & 37.04  & 31 & 0.311 & 78.83 & 31 & 0.305 & 78.37 & 43 & 0.153 & 73.31 \\ 
+2 & 6.91  & 74.08  & 33 & 0.295 & 73.57 & 30 & 0.301 & 72.33 & 43 & 0.153 & 73.31 \\
+3 & 6.91  & 111.12 & 34 & 0.313 & 74.19 & 33 & 0.309 & 72.80 & 43 & 0.153 & 73.31 \\ 
+4 & 6.91  & 148.16 & 34 & 0.312 & 73.88 & 33 & 0.312 & 72.49 & 43 & 0.153 & 73.31 \\ 
+5 & 6.91  & 185.20 & 34 & 0.306 & 73.88 & 33 & 0.308 & 72.18 & 43 & 0.153 & 73.31 \\ 
+\hline
+\end{tabular}
+\caption{Impact of multiplication factors on clustering results for LD(100) in Apache Tomcat}
+\label{tab:clustering_results_multiplication}
+\end{table*}
+
+
 In Table \ref{tab:systems_weights}, which presents the average weights associated with the dependencies across all systems, we can see that for Tomcat, the average weight for LD(10) is already almost double than SD average weight. For LD(100), the average weight is approximately five times higher than that of SD. Still, we wanted to ensure that the issue comes from the LD quantity and not the weights, so we multiplied the LD weights by values ranging from 1 to 5, where 1 is the baseline (since multiplying by 1 does not change the LD weights).
 
 Based on the metric values obtained for multiplication factors of 2 to 5, we can see that after increasing the weights assigned to LD, the metric values improve only slightly, with changes recorded at the second decimal: a 0.02 improvement for Louvain and 0.07 for Leiden. The results for DBSCAN remain unchanged due to the fixed values of MinPts and Eps and the already high LD weights for LD(100). 
@@ -794,8 +775,6 @@ From the experiment with weights, we can conclude that the issue is the quantity
 
 
 \subsubsection{Hibernate ORM}
-
-
 
 Hibernate ORM is the second largest system after Apache Tomcat in terms of the number of commits analyzed, with 16,609 commits considered for LD extraction. Additionally, it is the largest in terms of system size, with 4,414 entities (Table \ref{tab:project_info}).
 
