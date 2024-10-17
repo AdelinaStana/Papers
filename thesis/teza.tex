@@ -1,0 +1,108 @@
+\documentclass[12pt, a4paper, twoside]{report}
+\usepackage{amsmath, amssymb}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{titlesec}
+\usepackage{fontspec}
+\usepackage{tocloft} 
+
+% Page settings
+\geometry{
+    a4paper,
+    top=5cm,
+    bottom=4.8cm,
+    left=3.7cm,
+    right=3.7cm,
+    headheight=4.3cm, % Header height set to 4.3 cm
+     headsep=0.5cm, % Adjust this value if needed to control spacing between header and text
+    footskip=0cm % No extra space for footer
+}
+
+
+% Font settings
+\setmainfont{Verdana}
+\newfontface\symbolsfont{Symbol} % For unsupported mathematical symbols
+
+% Title and section fonts with sizes
+\titleformat{\chapter}[hang]{\fontsize{14pt}{14pt}\selectfont\bfseries}{\thechapter.}{20pt}{\fontsize{14pt}{14pt}\selectfont\bfseries}
+\titleformat{\section}[hang]{\fontsize{11pt}{11pt}\selectfont\bfseries}{\thesection.}{12pt}{\fontsize{11pt}{11pt}\selectfont\bfseries}
+\titleformat{\subsection}[hang]{\fontsize{10pt}{10pt}\selectfont\bfseries}{\thesubsection.}{10pt}{\fontsize{10pt}{10pt}\selectfont\bfseries}
+
+
+% Paragraph indent and spacing
+\setlength{\parindent}{1.27cm} % Tabs equivalent to 1.27 cm
+\setlength{\parskip}{9pt} % Spacing between paragraphs
+% Fancy header settings
+
+\pagestyle{fancy}
+\fancyhf{} % Clear all header and footer fields
+
+% Header settings
+
+\fancyhead[RO]{\fontsize{9pt}{11pt}\selectfont  \thechapter \hspace{0.1em} - \hspace{0.1em} \rightmark \hspace{1em} \thepage}  % Odd pages: Section title on the right, then page number
+\fancyhead[LE]{\fontsize{9pt}{11pt}\selectfont \thepage \hspace{1em} \leftmark \hspace{0.1em} - \hspace{0.1em} \thechapter}  % Even pages: Page number on the left, then chapter title
+
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}} % Only chapter title in the header
+\renewcommand{\sectionmark}[1]{\markright{#1}}
+
+
+% TOC, List of Figures, and List of Tables Customizations
+
+% Suppress the default ToC, LoF, LoT titles by making them empty
+\renewcommand{\contentsname}{}
+\renewcommand{\listfigurename}{}
+\renewcommand{\listtablename}{}
+
+% Manually insert a centered, bold, uppercase title in the respective pages
+\addtocontents{toc}{\protect\begin{center}\MakeUppercase{\bfseries\fontsize{9pt}{14pt}\selectfont Contents}\protect\end{center}\vspace*{-1em}\vspace{1\baselineskip}}
+\addtocontents{lof}{\protect\begin{center}\MakeUppercase{\bfseries\fontsize{9pt}{14pt}\selectfont List of Figures}\protect\end{center}\vspace*{-1em}\vspace{1\baselineskip}}
+\addtocontents{lot}{\protect\begin{center}\MakeUppercase{\bfseries\fontsize{9pt}{14pt}\selectfont List of Tables}\protect\end{center}\vspace*{-1em}\vspace{1\baselineskip}}
+
+% Ensure entries in the Table of Contents, List of Figures, and List of Tables are in normal font
+\renewcommand{\cftchapfont}{\normalfont\fontsize{9pt}{11pt}\selectfont} % Chapter entries in normal font
+\renewcommand{\cftsecfont}{\normalfont\fontsize{9pt}{11pt}\selectfont} % Section entries in normal font
+\renewcommand{\cftsubsecfont}{\normalfont\fontsize{9pt}{11pt}\selectfont} % Subsection entries in normal font
+\renewcommand{\cftchappagefont}{\normalfont\fontsize{9pt}{11pt}\selectfont} % Page numbers for chapters in normal font
+\renewcommand{\cftsecpagefont}{\normalfont\fontsize{9pt}{11pt}\selectfont} % Page numbers for sections in normal font
+\renewcommand{\cftsubsecpagefont}{\normalfont\fontsize{9pt}{11pt}\selectfont} % Page numbers for subsections in normal font
+\renewcommand{\cftdotsep}{1} % Set dot separation for entries to be closer together
+
+
+% Title and section fonts with sizes
+\titleformat{\chapter}[block]
+  {\centering\normalfont\fontsize{14pt}{14pt}\selectfont\bfseries}
+  {\thechapter.} 
+  {0.5em} 
+  {\MakeUppercase} 
+  [\vspace{0pt}] 
+
+% Spacing before and after chapters and sections to control vertical positioning
+\titlespacing*{\chapter}{0pt}{27pt}{18pt} % 3 spaces of 9pt before chapter, 2 spaces of 9pt after chapter title
+\titlespacing*{\section}{1.27cm}{18pt}{9pt} % 2 spaces of 9pt before section, 1 space of 9pt after section title
+\titlespacing*{\subsection}{1.27cm}{9pt}{9pt} % 1 space of 9pt before and after subsection
+% Custom citation style
+\renewcommand{\cite}[1]{[\ref{#1}]}
+
+
+
+
+
+\renewcommand{\normalsize}{\fontsize{9pt}{11pt}\selectfont}
+\normalsize 
+
+
+\begin{document}
+
+
+\newpage
+\tableofcontents
+
+\newpage
+\listoftables
+
+\newpage
+\listoffigures
+
+
+\end{document}
