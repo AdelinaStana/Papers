@@ -8,7 +8,7 @@
 \usepackage{tocloft} 
 \usepackage{natbib}
 \usepackage{float}
-
+\usepackage{colortbl}
 
 \graphicspath{ {./images/} }
 
@@ -24,6 +24,13 @@
     footskip=0cm % No extra space for footer
 }
 
+
+\definecolor{lightgreen}{rgb}{0.82, 0.94, 0.75}
+\definecolor{lightorange}{rgb}{0.98, 0.84, 0.65}
+\newcolumntype{L}{>{\centering\arraybackslash}m{10cm}}
+\newcolumntype{l}{>{\centering\arraybackslash}m{7cm}}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
 % Font settings
 \setmainfont{Verdana}
@@ -277,132 +284,261 @@ It involves obtaining and interpreting evidence by experimentation, systematic o
 
 
 
-\chapter{Current status of doctoral research}
-\label{ld}
+\chapter{Extracting software dependencies}
+\label{extraction}
+
+
+\section{Extracting structural dependencies}
+\label{sec:sd_extraction}
+A dependency is created between two elements that are in a relationship and indicates that an element of the relationship, in some manner, depends on the other element of the relationship \cite{Booch:2004:OAD:975416}, \cite{Cataldo2009SoftwareDW}.
+
+Structural dependencies can be found by analyzing the source code \cite{Sangal:2005:UDM:1094811.1094824}, \cite{CalloArias2011}, \cite{structdep}. A structural dependency between two classes A and B is given by the fact that A statically depends on B, meaning that A cannot be compiled without knowing about B. In object oriented systems, this dependency can be given by many types of relationships between the two classes: A extends B, A implements B, A has attributes of type B, A has methods which have type B in their signature, A uses local variables of type B, A calls methods of B.
+
+
+ We use an external tool called srcML \cite{srcML} to convert all source code files from the current release into XML files. All the information about classes, methods, calls to other classes are extracted by parsing the XML files and building a dependency data structure \cite{2003:XLC:851042.857028},
+\cite{Collard:2011:LTF:2067850.2068011}. We choose the srcML format because it has the same markup for different programming languages and can ease the parsing of source code written in various programming languages such as Java, C++, and C\#.
+
+
+\section{Extracting co-changing pairs}
+\label{sec:copairs_extraction}
+
+\textit{Logical dependencies} (a.k.a logical coupling) can be found by software history analysis and can reveal relationships that are not always present in the source code (structural dependencies).  
+
+The concepts of logical coupling and logical dependencies were first used in different analysis tasks, all related to changes: for software change impact analysis \cite{1553643}, for identifying the potential ripple effects caused by software changes during software maintenance and evolution \cite{DBLP:conf/issre/OlivaG15}, \cite{Oliva:2011:ISL:2067853.2068086}, \cite{Poshyvanyk2009}, \cite{posh2010} or for their link to deffects \cite{wiese}, \cite{Zimmermann:2004:MVH:998675.999460}.
+
+Software engineering practice has shown that sometimes modules which do not present structural dependencies still can be related \cite{articleEvolution}. Co-evolution represents the phenomenon when one component changes in response to a change in another component \cite{Yu:2007:UCC:1231330.1231370}, \cite{5166450}. Those changes can be found in the software change history from the versioning system. Gall \cite{Gall:1998:DLC:850947.853338}, \cite{Gall:2003:CRH:942803.943741} identified as logical coupling between two modules the fact that these modules \textit{repeatedly} change together during the historical evolution of the software system \cite{6606615}.
+
+
+The versioning system contains the long-term change history of every file. Each project change made by an individual at a certain point of time is contained into a commit \cite{7471284}. All the commits are stored in the versioning system chronologically and each commit has a parent. The parent commit is the baseline from which development began, the only exception to this rule is the first commit which has no parent \cite{svn}. 
+
+
+Currently there is no set of rules or best practices that can be applied to the extracted class co-changes and can guarantee their filtering into a set of logical dependencies.
+This is mainly because not all the updates made in the versioning system are code related. For example, a commit that has as participants a big number of files can indicate that a merge with another branch or a folder renaming has been made. In this case, a series of irrelevant co-changing pairs of entities can be introduced. So, in order to exclude this kind of situations the information extracted from the versioning system has to be filtered first and then used. Surveys also show that historical information is rarely used due to the size of the extracted information \cite{Shtern:2012:CMS:2332427.2332428}, \cite{sar}.
+
+Other works have tried to filter co-changes \cite{Oliva:2011:ISL:2067853.2068086}, \cite{DBLP:journals/jss/AjienkaC17}, \cite{DBLP:conf/issre/OlivaG15}. One of the used co-changes filter is the commit size.The commit size is the number of code files changed in that particular commit. 
+Ajienka and Capiluppi established a threshold of 10 for the maximum accepted size for a commit \cite{DBLP:journals/jss/AjienkaC17}. This means that all the commits that had more than 10 code files changed where discarded from the research. But setting a harcoded threshold for the commit size is debatable because in order to say that a commit is big or small you have to look first at the size of the system and at the trends from the versioning system. Even thought the best practices encourage small and often commits, the developers culture is the one that influences the most the trending size of commits from one system.
+
+Filtering only after commit size is not enough, this type of filtering can indeed have an impact on the total number of extracted co-changes, but will only shrink the number of co-changes extracted without actually guaranteeing that the remaining ones have more relevancy and are more linked.
+
+Although, some unrelated files can be updated by human error in small commits, for example: one file was forgot to be commited in the current commit and will be commited in the next one among some unrelated files. This kind of situation can introduce a set of co-changing pairs that are definitely not logical liked. In order to avoid this kind of situation a filter for the occurrence rate of co-changing pairs can be introduced. Co-changing pairs that occur multiple times are more prone to be logically dependent than the ones that occur only once. Currently there are no concrete examples of how the threshold for this type of filter can be calculated. In order to do that, incrementing the threshold by a certain step will be the start and then studying the impact on the remaining co-changing pairs for different systems. 
+
+Nevertheless, logical dependencies should integrate harmoniously with structural dependencies in an unitary dependency model: valid logical dependencies should not be omitted from the dependency model, but structural dependencies should not be engulfed by questionable logical dependencies generated by casual co-changes.  Thus, in order to add logical dependencies besides structural dependencies in dependency models, class co-changes must be filtered until they remain only a reduced but relevant set of valid logical dependencies. 
 
 \section{Tool for measuring software dependencies}
 \label{sec:tool}
 
-In order to build structural and logical dependencies we have developed a tool that takes as input the source code repository and builds the required software dependencies \cite{DepSACI}. The workflow can be delimited by three major steps as it follows (Figure \ref{fig:fig3}):\\ \\
-\textit{\textbf{Step 1:} Extracting structural dependencies.}\\
-\textit{\textbf{Step 2:} Extracting logical dependencies.}\\
-\textit{\textbf{Step 3:} Processing the information extracted.}
+To establish structural and logical dependencies, we developed a tool that takes as input the source code repository URL of a given system and extracts from it the software dependencies \cite{DepSACI}. 
+From a workflow point of view, we can identify 3 major types of activities that the tool does: downloads the required data from the git repository, extracts from the source code the structural dependencies and, extracts and filters the co-changing pairs from the repository's commit history. Figure \ref{fig:figworkflow} represents the activities mentioned above. Each block represents a different activity. 
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{fig3.png}
-\caption{Processing phases}
-\label{fig:fig3}
+\includegraphics[width=\textwidth]{tool_workflow.png}
+\caption{Tool workflow and major activities.}
+\label{fig:figworkflow}
 \end{figure}
 
 
-\subsection{ Extracting structural dependencies}
+\textbf{Download git data.}
 
-A structural dependency between two classes A and B is given by the fact that A statically depends on B, meaning that A cannot be compiled without knowing about B. In object oriented system, this dependency can be given by many types of relationships between the two classes: A extends B, A implements B, A has attributes of type B, A has methods which have type B in their signature, A uses local variables of type B, A calls methods of B.
+The source code repository provides us all the needed information to extract both types of dependencies. It holds the code of the system but also the change history of the system. We use the source code for structural dependencies extraction and the change history for co-changing pairs extraction.
+To get the source code files and the change history, we first need to know the repository URL from GitHub (GitHub is a Git repository cloud-based hosting service). With the GitHub URL and a series of Git commands, the tool can download all the necessary data for dependencies extraction.
 
-
- We use an external tool called srcML \cite{2003:XLC:851042.857028},
-\cite{Collard:2011:LTF:2067850.2068011} to convert all source code files from the current release into XML files. All the information about classes, methods, calls to other classes are afterwards extracted by our tool parsing the XML files and building a dependencies data structure. We have chosen to rely on srcML as a preprocessing tool because it reduces a significant number of syntactic differences from different programming languages and can make easier the parsing of source code written in different programming languages such as Java, C++ and C\#.    
-
-\subsection{Extracting logical dependencies}
-
-The versioning system contains the long-term change history of every file. Each project change made by an individual at a certain point of time is contained into a commit \cite{svn}. All the commits are stored in the versioning system chronologically and each commit has a parent. The parent commit is the baseline from which development began, the only exception to this rule is the first commit which has no parent. We will take into consideration only \textit{commits that have a parent} since the first commit can include source code files that are already in development (migration from one versioning system to another) and this can introduce redundant logical links \cite{DBLP:journals/jss/AjienkaC17}. 
-
-The tool looks through the main branch of the project and gets all the existing commits. For each commit a diff against the parent will be made and stored. Here we have the option to ignore commits that contain more files than a threshold value for commit size. Also, we have the option to check whether the differences are in actual code or if they affect only parts of source files that are only comments.  Finally after all the difference files are stored, all the files are parsed and logical dependencies are build. For a group of files that are committed together, logical dependencies are added between all pairs formed by members of the group. Adding a logical dependency increases an occurrence counter for the logical link. \\
+As we can see in figure \ref{fig:figgitdata}, the \textit{"clone"} command will download a Git repository to your local computer, including the source code files. The \textit{"diff"} command will get the differences between two existing commits in the Git repository. 
+The tool gets the Git repository and the source code files by executing the "clone" command. Afterward, it gets all the existing commits within the Git repository. The commits are ordered by date, beginning with the oldest one and ending with the most recent one. The tool executes the "diff" command between each commit and its parent (the previous commit). The "diff" command generates a text file that contains the differences between the two commits: code differences, the number of files changed and changed file names.
 
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{gitdata.png}
+\caption{Commands used to download the required data from GitHub.}
+\label{fig:figgitdata}
+\end{figure}
+
+\textbf{Extract structural dependencies.}
+
+To extract the structural dependencies from the source code files the tool converts each source code file into srcML format using an open-source tool called srcML. The srcML format is an XML representation for source code. Each markup tag identifies elements of the abstract syntax for the language \cite{srcML}. 
+After conversion, the tool parses each file and identifies all the defined entities (class, interface, enum, struct) within the file. It also identifies all the entities that are used by the entities defined.  The connection between both types of entities mentioned above constitutes a structural dependency.
+
+\textbf{Extract and filter co-changing pairs.}
+
+The process of extracting and filtering the co-changing pairs is represented in figure \ref{fig:figfiltering}.
+For co-changing pairs extraction, the tool parses each generated diff file.
+For each file, the tool gets the number of changed files and the name of the files. 
+After structural dependencies extraction, the tool knows all the software entities contained in a file. Two entities from two changed files form a co-changing pair. After all the co-changing pairs of one diff file are extracted, the tool moves to the next diff file and extracts the set of co-changing pairs.
+
+As will be presented in more details in sections \ref{sec:filtercommit}, \ref{sec:filterocc}, and \ref{sec:filterstrength}, not every co-changing pair extracted is a logical dependency. For a co-changing pair to be labeled as a logical dependency, it has to meet some criteria. Each criterion constitutes a filter that a co-changing pair has to pass in order to be called logical dependency.
+The filters are implemented in the tool and can be combined. The input for each filter is the set of co-changing pairs extracted, and the output is the remaining co-changing pairs that respect the filter criterion.
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{pairs_filtering.png}
+\caption{Co-changing pairs extraction and filtering.}
+\label{fig:figfiltering}
+\end{figure}
+
+
+\chapter {Filtering extracted co-changing pairs in order to obtain logical dependencies}
+
+\section{Data set used}
+\label{sec:dataset}
 We have analyzed a set of open-source projects found on GitHub\footnote{http://github.com/} \cite{Kalliamvakou2016} in order to extract the structural and logical dependencies between classes. Table \ref{table:1} enumerates all the systems studied. The 1st column assigns the projects IDs; 2nd column shows the project name; 3rd column shows the number of entities(classes and interfaces) extracted; 4th column shows the number of most recent commits analyzed from the active branch of each project and the 5th shows the language in which the project was developed.
-\begin{table}[H]
+
+
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1}
 \caption{Summary of open source projects studied.}
 \label{table:1}
 \centering
+\scalebox{0.9}{
 \begin{tabular}{|c|c|c|c|c|c|}
 \hline
    ID  & Project    & Nr. of & Nr. of& Type\\
      &     & entites & commits & \\
 \hline
-1	&	bluecove	&	586	&	894	&	java	\\
-2	&	aima-java	&	987	&	818	&	java	\\
-3	&	powermock	&	1084	&	893	&	java	\\
-4	&	restfb	&	783	&	1188	&	java	\\
-5	&	rxjava	&	2673	&	2468	&	java	\\
-6	&	metro-jax-ws	&	1103	&	2222	&	java	\\
-7	&	mockito	&	1409	&	1572	&	java	\\
-8	&	grizzly	&	1592	&	3122	&	java	\\
-9	&	shipkit	&	242	&	1483	&	java	\\
-10	&	OpenClinica	&	1653	&	3749	&	java	\\
-11	&	robolectric	&	2050	&	5029	&	java	\\
-12	&	aeron	&	541	&	5101	&	java	\\
-13	&	antlr4	&	1381	&	3449	&	java	\\
-14	&	mcidasv	&	805	&	3668	&	java	\\
-15	&	ShareX	&	919	&	2505	&	csharp	\\
-16	&	aspnetboilerplate	&	2353	&	1615	&	csharp	\\
-17	&	orleans	&	3485	&	3353	&	csharp	\\
-18	&	cli	&	767	&	2397	&	csharp	\\
-19	&	cake	&	2250	&	1853	&	csharp	\\
-20	&	Avalonia	&	1677	&	2445	&	csharp	\\
-21	&	EntityFramework	&	7107	&	2443	&	csharp	\\
-22	&	jellyfin	&	2179	&	4065	&	csharp	\\
-23	&	PowerShell	&	861	&	2033	&	csharp	\\
-24	&	WeiXinMPSDK	&	2029	&	2723	&	csharp	\\
-25	&	ArchiSteamFarm	&	117	&	2181	&	csharp	\\
-26	&	VisualStudio	&	1016	&	4417	&	csharp	\\
-27	&	CppSharp	&	259	&	3882	&	csharp	\\
+1	&	bluecove	&	2685	&	894	&	java	\\
+2	&	aima-java	&	5232	&	1006	&	java	\\
+3	&	powermock	&	2801	&	949	&	java	\\
+4	&	restfb	&	3350	&	1391	&	java	\\
+5	&	rxjava	&	21097	&	4398	&	java	\\
+6	&	metro-jax-ws	&	6482	&	2927	&	java	\\
+7	&	mockito	&	5189	&	3330	&	java	\\
+8	&	grizzly	&	10687	&	3113	&	java	\\
+9	&	shipkit	&	639	&	1563	&	java	\\
+10	&	OpenClinica	&	9655	&	3276	&	java	\\
+11	&	robolectric	&	8922	&	5912	&	java	\\
+12	&	aeron	&	4159	&	5977	&	java	\\
+13	&	antlr4	&	4747	&	4431	&	java	\\
+14	&	mcidasv	&	3272	&	4136	&	java	\\
+15	&	ShareX	&	4289	&	5485	&	csharp	\\
+16	&	aspnetboilerplate	&	9712	&	4323	&	csharp	\\
+17	&	orleans	&	16963	&	3995	&	csharp	\\
+18	&	cli	&	2063	&	4488	&	csharp	\\
+19	&	cake	&	12260	&	2518	&	csharp	\\
+20	&	Avalonia	&	16732	&	5264	&	csharp	\\
+21	&	EntityFrameworkCore	&	50179	&	5210	&	csharp	\\
+22	&	jellyfin	&	8764	&	5433	&	csharp	\\
+23	&	PowerShell	&	2405	&	3250	&	csharp	\\
+24	&	WeiXinMPSDK	&	7075	&	5729	&	csharp	\\
+25	&	ArchiSteamFarm	&	702	&	2497	&	csharp	\\
+26	&	VisualStudio	&	4869	&	5039	&	csharp	\\
+27	&	CppSharp	&	17060	&	4522	&	csharp	\\
+
 \hline
 \end{tabular}
+}
 \end{table}
 
 
 
 \section{Filtering based on the size of commit transactions}
+\label{sec:filtercommit}
 
-A big commit transaction can indicate that a merge with another branch or that a renaming has been made.
-In this case, a series of irrelevant logical dependencies can be introduced since not all the files are updated in the same time for a development reason. Different works have chosen fixed threshold values for the maximum number of files accepted in a commit. Cappiluppi and Ajienka, in their works \cite{DBLP:journals/jss/AjienkaC17}, \cite{DBLP:journals/ese/AjienkaCC18} only take into consideration commits with less then 10 source code files changed in building the logical dependencies.
+As presented in section \ref{sec:copairs_extraction}, according to surveys,  co-changing pairs are not used because of their size. One system can have millions of co-changing pairs.
+With this filtering type, we not only want to decrease the total size of the extracted co-changing pairs. But also to be one step closer to the identification of the logical dependencies among the co-changing pairs.
+In this step, we want to filter the co-changing pairs extracted after commit size (cs). This means that the co-changing pairs are extracted only from commits that involve fewer files than an established threshold number. 
+
+Different works have chosen fixed threshold values for the maximum number of files accepted in a commit. Cappiluppi and Ajienka, in their works \cite{DBLP:journals/jss/AjienkaC17}, \cite{DBLP:journals/ese/AjienkaCC18} only take into consideration commits with less then 10 source code files changed in building the logical dependencies.
 
 The research of Beck et al \cite{Beck:2011:CMC:2025113.2025162} only takes in consideration transactions with up to 25 files. The research \cite{Oliva:2011:ISL:2067853.2068086} provided also a quantitative analysis of the number of files per revision; Based on the analysis of 40,518 revisions, the mean value obtained for the number of files in a revision is 6 files. However, standard deviation value shows that the dispersion is high. 
 
-We analyzed the overall transaction size trend for 27 open-source cpp and java systems. The results are presented in Figure \ref{fig:fig_cs}, based on them we can say that 90\% of the total commit transactions made are with less than 10 source code files changed. This percent allows us to say that setting a threshold of 10 files for the maximum size of the commit transactions will not affect so much the total number of commit transactions from the systems since it will still remain 90\% of the commit transactions from where we can extract logical dependencies \cite{DepSACI}.
+We analyzed the overall transaction size trend for 27 open-source csharp and java systems with a total of 74 332 commits. The results are presented in Figure \ref{fig:fig_cs} and in table \ref{table:cs_values}, based on them we can say that 90\% of the total commit transactions made are with less than 10 source code files changed. This percent allows us to say that setting a threshold of 10 files for the maximum size of the commit transactions will not affect so much the total number of commit transactions from the systems since it will still remain 90\% of the commit transactions from where we can extract co-changing pairs \cite{DepSACI}.
 
 
-\begin{figure}[h]
+\begin{figure}[!h]
 \centering
-\includegraphics{fig_cs.png}
-\caption{Commit transaction size(cs) trend in percentages}
+\includegraphics[width=\textwidth]{commit_distribution.png}
+\caption{Commit transaction size(cs) trend in percentages.}
 \label{fig:fig_cs}
 \centering
 \end{figure}
 
 
-\begin{figure}[h]
+\begin{figure}[!h]
 \centering
-\includegraphics[scale=0.9]{fig_ld_ts.png}
-\caption{Percentages of LD extracted from each commit transaction size(cs) group}
-\label{fig:fig_ld_ts}
+\includegraphics[width=\textwidth]{ld_distribution.png}
+\caption{Percentages of LD extracted from each commit transaction size(cs) group.}
+\label{fig:fig_ld_cs}
 \centering
 \end{figure}
 
-As we can see in Figure \ref{fig:fig_ld_ts} even though only 5\% of the commit transactions have more than 20 files changed ($20<cs<inf$) they generate in average 80\% of the total amount of logical dependencies extracted from the systems.
-The high number of logical dependencies extracted from such a small number of commit transactions is caused by big commit transactions. 
-One single big commit transaction can lead to a large amount of logical dependencies. For example in RxJava we have a very few commit transactions with 1030 source code files, this means that those files can generate 
-$\Comb{n}{k}=\frac{n!}{k!(n-k)!} = \frac{1030!}{2!(1028)!} = 529 935$ logical dependencies. By setting a threshold on the commit transaction size we can avoid the introduction of those logical dependencies into the system.
+As we can see in Figure \ref{fig:fig_ld_cs} even though only 5\% of the commit transactions have more than 20 files changed ($20<cs<inf$) they generate in average 80\% of the total amount of co-changing pairs extracted from the systems.
+The high number of co-changing pairs extracted from such a small number of commit transactions is caused by the number of files involved in those commit transactions. 
 
-So filtering 10\% of the total amount of commit transactions can indeed lead to a significant decrease of the amount of logical dependencies and that is why we choose the value of 10 files as our fixed threshold for the maximum size of a commit transaction \cite{DepSACI}.
-
-
-
-\section{Filtering based on the number of occurrences}
-One occurrence of a co-change between two software entities can be a valid logical dependency, but can also be a coincidence. Taking into consideration only co-changes with multiple occurrences as valid dependencies can lead to more accurate logical dependencies and more accurate results. On the other hand, if the project studied has a relatively small amount of commits, the probability to find multiple updates of the same classes in the same time can be small, so filtering after the number of occurrences can lead to filtering all the logical dependencies extracted. Giving the fact that we will study multiple projects of different sizes and number of commits, we will analyze also the impact of this filtering on different projects.
-
-We have performed a series of analysis on the test systems, incrementing the threshold value occ from 1 to 4. In each of the cases the extracted logical dependencies from commit transaction with less or equal to 10 changed source code files were also filtered by the minimum number of occurrences established and all the logical dependencies that did not exceeded the minimum number of occurrences were discarded. 
-
-The results of the analysis are presented in Table \ref{table:sd_percentages} as percentages of logical dependencies (LD) that are also structural dependencies and Table \ref{table:ld_ratio} as ratio of the number of logical dependencies (LD) to the number of structural dependencies (SD).
+One single commit transaction can lead to a large amount of co-changing pairs. For example in RxJava we have commit transactions with 1030 source code files, this means that those commits can generate 
+$\Comb{n}{k}=\frac{n!}{k!(n-k)!} = \frac{1030!}{2!(1028)!} = 529 935$ logical dependencies. By setting a threshold on the commit transaction size we can avoid the introduction of those co-changing pairs into the system.
 
 
 
-\begin{table}[H]
-\caption{Percentage of LD that are also SD}
+So filtering 10\% of the total amount of commit transactions can lead to a significant decrease of the amount of co-changing pairs and that is why we choose the value of 10 files as our fixed threshold for the maximum size of a commit transaction \cite{DepSACI}.
+
+
+
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1}
+\caption{Commit transaction size(cs) trend and average per system.}
+\label{table:cs_values}
+\centering
+\scalebox{0.9}{
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+Nr.	  & Project    &	$cs\leq 5$	&	$cs\leq 10$	&	$cs\leq 20$	&	$cs<\infty$ & Avg	\\ 
+\hline
+1	&	bluecove	&	738	&	97	&	37	&	22	&	4.9	\\
+2	&	aima-java	&	733	&	134	&	74	&	65	&	7.24	\\
+3	&	powermock	&	685	&	128	&	66	&	70	&	9.61	\\
+4	&	restfb	&	1160	&	127	&	44	&	60	&	9.9	\\
+5	&	rxjava	&	3395	&	447	&	253	&	303	&	8.46	\\
+6	&	metro-jax-ws	&	2583	&	198	&	78	&	68	&	4.33	\\
+7	&	mockito	&	2522	&	433	&	222	&	153	&	6.33	\\
+8	&	grizzly	&	2487	&	302	&	180	&	144	&	5.28	\\
+9	&	shipkit	&	1311	&	151	&	64	&	37	&	4.26	\\
+10	&	OpenClinica	&	2837	&	250	&	119	&	70	&	3.31	\\
+11	&	robolectric	&	4827	&	503	&	264	&	318	&	7.43	\\
+12	&	aeron	&	4844	&	684	&	300	&	149	&	4.6	\\
+13	&	antlr4	&	3426	&	437	&	304	&	264	&	8.5	\\
+14	&	mcidasv	&	3996	&	81	&	35	&	24	&	2.47	\\
+15	&	ShareX	&	4731	&	529	&	145	&	80	&	4.69	\\
+16	&	aspnetboilerplate	&	3208	&	569	&	321	&	225	&	6.61	\\
+17	&	orleans	&	2780	&	518	&	369	&	328	&	8.95	\\
+18	&	cli	&	3377	&	551	&	308	&	252	&	6.43	\\
+19	&	cake	&	1785	&	359	&	174	&	200	&	9.89	\\
+20	&	Avalonia	&	3806	&	641	&	371	&	446	&	8.43	\\
+21	&	EntityFrameworkCore	&	2866	&	878	&	644	&	822	&	15.38	\\
+22	&	jellyfin	&	4007	&	662	&	419	&	345	&	6.25	\\
+23	&	PowerShell	&	2702	&	224	&	133	&	191	&	7.33	\\
+24	&	WeiXinMPSDK	&	4604	&	526	&	296	&	303	&	9.01	\\
+25	&	ArchiSteamFarm	&	2357	&	92	&	28	&	20	&	2.24	\\
+26	&	VisualStudio	&	3902	&	521	&	295	&	321	&	6.71	\\
+27	&	CppSharp	&	3870	&	390	&	203	&	59	&	3.28	\\
+\hline
+\end{tabular}
+}
+\end{table}
+
+
+
+
+
+\section{Filtering based on number of occurrences}
+\label{sec:filterocc}
+
+In the previous section, we filtered the co-changing pairs based on the commit size. Even though the number of extracted co-changing pairs was reduced, this type of filtering will not guarantee that the remaining co-changing pairs can pass as logical dependencies. 
+One occurrence of a co-change pair can be a valid logical dependency, but can also be a coincidence. 
+
+Taking into consideration only co-changing pairs with multiple occurrences as valid dependencies can lead to more accurate results. But, if the project studied has a relatively small amount of commits, the probability to find multiple updates of the same classes at the same time is less likely to happen, so filtering after the number of occurrences can lead to filtering all the co-changes extracted.
+
+We have performed a series of analyses on the test systems, incrementing the threshold value occurrence (occ) from 1 to 4. The co-changing pairs are extracted only for commits with the commit transaction size less or equal to 10. For each threshold mentioned above, the extracted co-changing pairs are filtered again by the occurrence threshold established. All the co-changing pairs that do not exceed the minimum number of occurrences are discarded.
+
+The results of the analysis are presented in Table \ref{table:sd_percentages} as percentages of co-changing pairs that are also structural dependencies and Table \ref{table:ld_ratio} as ratio of the number of co-changing pairs to the number of structural dependencies (SD).
+
+
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1}
+\caption{Percentage of co-changing pairs that are also structural dependencies.}
 \label{table:sd_percentages}
 \centering
+\scalebox{0.9}{
 \begin{tabular}{|c|c|c|c|c|}
 \hline
     ID  & $occ\geq 1$ & $occ\geq 2$ & $occ\geq 3$ & $occ\geq 4$  \\
@@ -438,13 +574,16 @@ The results of the analysis are presented in Table \ref{table:sd_percentages} as
 Avg	&	8,93	&	11,88	&	14,23	&	15,55	\\
 \hline
 \end{tabular}
+}
 \end{table}
 
 
-\begin{table}[H]
-\caption{Ratio of number of LD to number of SD}
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1}
+\caption{Ratio of number of co-changing pairs to number of structural dependencies. }
 \label{table:ld_ratio}
 \centering
+\scalebox{0.9}{
 \begin{tabular}{|c|c|c|c|c|}
 \hline
     ID  & $occ\geq 1$ & $occ\geq 2$ & $occ\geq 3$ & $occ\geq 4$  \\
@@ -480,44 +619,181 @@ Avg	&	8,93	&	11,88	&	14,23	&	15,55	\\
 Avg	&	5,67	&	3,43	&	2,51	&	2,15	\\
 \hline
 \end{tabular}
+}
+\end{table}
+
+Based on Table \ref{table:sd_percentages} we can say that only a small percentage of the extracted co-changing pairs are also structural dependencies. This is consistent with the findings of related works \cite{DBLP:journals/jss/AjienkaC17}, \cite{DBLP:journals/ese/AjienkaCC18}. 
+The percentage of co-changing pairs that are also structural dependencies increases with the minimum number of occurrences because the number of co-changing pairs from the systems decreases with the minimum number of occurrences. 
+We calculate the overlapping between co-changing pairs and structural dependencies not only because we want to get an idea of how many structural dependencies are reflected in the versioning system through co-changing pairs, but also because we want to eliminate co-changing pairs that are structural dependencies since they don't bring any new information about the system.
+
+We stopped the minimum occurrences threshold to 4 because we observed that for systems with ID 2, 6, 10, and 16 from Table \ref{table:ld_ratio} the ratio number is lower than 1, which means that the number of structural dependencies is higher than the number of co-changing pairs. On the other hand, for systems with ID 4, 11, 25, 27, the threshold of 4 for a minimum number of occurrences does not change the discrepancy between the number of co-changing pairs and structural dependencies.
+
+If we try to go higher with the occurrences threshold, we will risk filtering all the existing co-changing pairs for some systems.
+So, filtering with a threshold of 4 for the minimum number of occurrences will indeed filter the logical dependencies, but for some of the systems, the remaining number of co-changing pairs will still be significantly higher compared to the number of structural dependencies.
+
+
+
+
+\section{Filtering based on connection strength}
+\label{sec:filterstrength}
+
+In section \ref{sec:filtercommit} we filtered the co-changing pairs extracted from the versioning system history based on the commit size. Based on the results obtained, we decided to filter out all co-changing pairs extracted from commits with more than 10 files changed. 
+
+In section \ref{sec:filterocc}, we added a new filtering rule based on the occurrence of a co-changing pair. The new filter is applied to the co-changing pairs resulted after commit size filtering. In this case, the filtering method proved insufficient due to the size diversity of the systems. One important conclusion drawn from the occurrence number filtering is that setting a hard threshold for a filter is not always a good idea. One threshold value can be too much for a small-sized system and too little for a medium-sized system. 
+
+To avoid the above problem, we decided to introduce another filter complementary to the commit size filter described in section \ref{sec:filtercommit}.
+This filter focuses on the connection strength of a co-changing pair. In this section, we will filter out all the co-changing pairs that are not strongly connected.
+
+To determine the connection strength of a pair, we first need to calculate the connection factors for both entities that form a co-changing pair.
+Assuming that we have a co-changing pair formed by entities A and B, the connection factor of entity A with entity B is the percentage from the total commits involving A that contains entity B. The connection factor of entity B with entity A is the percentage from the total commits involving B that contain also entity A.
+
+\begin{equation}
+ connection\ factor\ for\ A = \frac{100 * commits\ involving\ A\ and\ B}{total\ nr\ of\ commits\ involving\ A}
+\end{equation}
+
+\begin{equation}
+ connection\ factor\ for\ B = \frac{100 * commits\ involving\ A\ and\ B}{total\ nr\ of\ commits\ involving\ B}
+\end{equation}
+
+As a practical example, if the pair formed by A and B update together 7 times and the total number of commits involving A is 20 and involving B is 7. The factor for A is 35 and for B is 100. The factor of 100 is the maximum factor that you can have and means that in all the commits involving B, also A is present.
+
+Due to the fact that the factors obtained can vary from 0 to 100, for this filter, we begin with a threshold value of 10 and increment it by 10 until we reach 100. 
+
+The co-changing pairs are filtered out based on two scenarios:
+\begin{itemize}
+	\item factor A and factor B $\geq threshold \%$ 
+	\item factor A or factor B $\geq threshold \%$ 
+\end{itemize}
+
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1}
+\caption{Ratio of number of filtered co-changing pairs to number of SD, when factor A and factor B $\geq threshold \%$ }
+\label{tab:commitstrengthAND}
+\centering
+\scalebox{0.8}{
+\begin{tabular}{|c|cccccccccc|c|}
+\hline
+Project &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$	 \\
+\hline
+bluecove	&	1.326	&	0.658	&	0.433	&	0.401	&	0.244	&	0.199	&	0.195	&	0.022	&	0.011	&	0.011	\\
+aima-java	&	0.266	&	0.137	&	0.070	&	0.044	&	0.036	&	0.019	&	0.005	&	0.004	&	0.003	&	0.003	\\
+powermock	&	0.505	&	0.243	&	0.147	&	0.086	&	0.061	&	0.031	&	0.031	&	0.031	&	0.031	&	0.031	\\
+restfb	&	0.822	&	0.163	&	0.045	&	0.017	&	0.011	&	0.002	&	0.001	&	0.001	&	0.001	&	0.001	\\
+rxjava	&	0.234	&	0.119	&	0.054	&	0.037	&	0.034	&	0.018	&	0.013	&	0.011	&	0.007	&	0.007	\\
+metro-jax-ws	&	0.227	&	0.155	&	0.101	&	0.077	&	0.070	&	0.036	&	0.018	&	0.017	&	0.016	&	0.016	\\
+mockito	&	1.590	&	0.804	&	0.357	&	0.288	&	0.215	&	0.088	&	0.052	&	0.036	&	0.032	&	0.032	\\
+grizzly	&	2.073	&	0.293	&	0.170	&	0.111	&	0.093	&	0.050	&	0.039	&	0.034	&	0.021	&	0.007	\\
+shipkit	&	1.495	&	0.479	&	0.271	&	0.142	&	0.108	&	0.059	&	0.047	&	0.011	&	0.008	&	0.008	\\
+OpenClinica	&	0.253	&	0.135	&	0.093	&	0.078	&	0.062	&	0.042	&	0.024	&	0.019	&	0.019	&	0.017	\\
+robolectric	&	0.114	&	0.086	&	0.064	&	0.037	&	0.027	&	0.025	&	0.001	&	0.000	&	0.000	&	0.000	\\
+aeron	&	0.277	&	0.136	&	0.085	&	0.069	&	0.053	&	0.045	&	0.039	&	0.015	&	0.007	&	0.004	\\
+antlr4	&	11.363	&	0.721	&	0.031	&	0.010	&	0.007	&	0.004	&	0.000	&	0.000	&	0.000	&	0.000	\\
+mcidasv	&	3.225	&	0.805	&	0.660	&	0.533	&	0.493	&	0.454	&	0.386	&	0.356	&	0.005	&	0.005	\\
+ShareX	&	6.097	&	0.725	&	0.663	&	0.564	&	0.500	&	0.242	&	0.176	&	0.170	&	0.001	&	0.001	\\
+aspnetboilerplate	&	1.302	&	0.333	&	0.219	&	0.146	&	0.094	&	0.045	&	0.014	&	0.008	&	0.007	&	0.007	\\
+orleans	&	0.816	&	0.640	&	0.551	&	0.503	&	0.496	&	0.196	&	0.159	&	0.152	&	0.142	&	0.142	\\
+cli	&	1.676	&	0.233	&	0.159	&	0.118	&	0.102	&	0.062	&	0.058	&	0.029	&	0.026	&	0.026	\\
+cake	&	2.335	&	0.753	&	0.614	&	0.337	&	0.075	&	0.021	&	0.007	&	0.004	&	0.004	&	0.004	\\
+Avalonia	&	0.846	&	0.117	&	0.098	&	0.018	&	0.013	&	0.002	&	0.001	&	0.001	&	0.001	&	0.001	\\
+EntityFrameworkCore	&	3.377	&	1.691	&	1.608	&	1.584	&	1.576	&	1.310	&	0.001	&	0.001	&	0.001	&	0.001	\\
+jellyfin	&	0.132	&	0.006	&	0.003	&	0.002	&	0.002	&	0.000	&	0.000	&	0.000	&	0.000	&	0.000	\\
+PowerShell	&	1.732	&	1.299	&	0.158	&	0.053	&	0.007	&	0.001	&	0.000	&	0.000	&	0.000	&	0.000	\\
+WeiXinMPSDK	&	3.295	&	0.334	&	0.188	&	0.061	&	0.017	&	0.006	&	0.003	&	0.001	&	0.000	&	0.000	\\
+ArchiSteamFarm	&	0.897	&	0.479	&	0.429	&	0.423	&	0.412	&	0.403	&	0.339	&	0.009	&	0.001	&	0.000	\\
+VisualStudio	&	1.281	&	0.090	&	0.053	&	0.028	&	0.020	&	0.013	&	0.006	&	0.001	&	0.001	&	0.001	\\
+CppSharp	&	99.528	&	1.020	&	0.992	&	0.980	&	0.972	&	0.927	&	0.078	&	0.075	&	0.073	&	0.072	\\
+
+\hline
+\end{tabular}
+}
 \end{table}
 
 
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1}
+\caption{Ratio of number of filtered co-changing pairs to number of SD,
+ when factor A or factor B $\geq threshold \%$ }
+\label{tab:commitstrengthOR}
+\centering
+\scalebox{0.8}{
+\begin{tabular}{|c|cccccccccc|c|}
+\hline
+Project &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$	 \\
+\hline
+bluecove	&	1.312	&	1.181	&	0.700	&	0.599	&	0.419	&	0.235	&	0.219	&	0.046	&	0.045	&	0.045	\\
+aima-java	&	0.430	&	0.280	&	0.176	&	0.118	&	0.103	&	0.056	&	0.022	&	0.020	&	0.020	&	0.020	\\
+powermock	&	0.508	&	0.328	&	0.234	&	0.179	&	0.150	&	0.092	&	0.091	&	0.091	&	0.091	&	0.091	\\
+restfb	&	0.662	&	0.336	&	0.122	&	0.067	&	0.059	&	0.016	&	0.015	&	0.015	&	0.015	&	0.015	\\
+rxjava	&	0.279	&	0.206	&	0.145	&	0.100	&	0.099	&	0.047	&	0.044	&	0.039	&	0.034	&	0.034	\\
+metro-jax-ws	&	0.271	&	0.261	&	0.204	&	0.172	&	0.160	&	0.106	&	0.082	&	0.081	&	0.080	&	0.080	\\
+mockito	&	2.481	&	1.521	&	0.904	&	0.623	&	0.411	&	0.199	&	0.128	&	0.107	&	0.101	&	0.101	\\
+grizzly	&	1.332	&	0.838	&	0.515	&	0.320	&	0.288	&	0.142	&	0.117	&	0.106	&	0.090	&	0.076	\\
+shipkit	&	1.376	&	1.083	&	0.725	&	0.515	&	0.424	&	0.191	&	0.149	&	0.105	&	0.094	&	0.094	\\
+OpenClinica	&	0.830	&	0.434	&	0.314	&	0.256	&	0.217	&	0.130	&	0.093	&	0.082	&	0.080	&	0.072	\\
+robolectric	&	0.366	&	0.122	&	0.088	&	0.046	&	0.031	&	0.027	&	0.003	&	0.002	&	0.002	&	0.002	\\
+aeron	&	0.781	&	0.449	&	0.265	&	0.190	&	0.160	&	0.096	&	0.062	&	0.031	&	0.021	&	0.018	\\
+antlr4	&	11.363	&	0.798	&	0.055	&	0.022	&	0.011	&	0.007	&	0.002	&	0.002	&	0.002	&	0.002	\\
+mcidasv	&	1.932	&	1.203	&	0.858	&	0.682	&	0.579	&	0.473	&	0.396	&	0.365	&	0.013	&	0.013	\\
+ShareX	&	2.681	&	1.292	&	0.916	&	0.730	&	0.593	&	0.287	&	0.210	&	0.201	&	0.017	&	0.017	\\
+aspnetboilerplate	&	1.055	&	0.759	&	0.493	&	0.364	&	0.273	&	0.130	&	0.067	&	0.050	&	0.046	&	0.046	\\
+orleans	&	1.120	&	0.962	&	0.849	&	0.750	&	0.744	&	0.559	&	0.482	&	0.476	&	0.466	&	0.466	\\
+cli	&	1.676	&	0.762	&	0.560	&	0.434	&	0.375	&	0.269	&	0.237	&	0.149	&	0.142	&	0.142	\\
+cake	&	1.883	&	1.197	&	1.001	&	0.541	&	0.185	&	0.103	&	0.019	&	0.013	&	0.013	&	0.013	\\
+Avalonia	&	0.510	&	0.224	&	0.138	&	0.037	&	0.028	&	0.011	&	0.006	&	0.003	&	0.003	&	0.003	\\
+EntityFrameworkCore	&	2.636	&	1.888	&	1.695	&	1.623	&	1.608	&	1.317	&	0.006	&	0.006	&	0.006	&	0.006	\\
+jellyfin	&	0.132	&	0.030	&	0.016	&	0.011	&	0.008	&	0.003	&	0.002	&	0.002	&	0.002	&	0.002	\\
+PowerShell	&	3.454	&	1.648	&	0.232	&	0.081	&	0.021	&	0.004	&	0.003	&	0.003	&	0.003	&	0.003	\\
+WeiXinMPSDK	&	1.342	&	0.603	&	0.327	&	0.144	&	0.080	&	0.047	&	0.015	&	0.008	&	0.007	&	0.007	\\
+ArchiSteamFarm	&	5.472	&	1.416	&	0.830	&	0.677	&	0.575	&	0.450	&	0.353	&	0.023	&	0.016	&	0.014	\\
+VisualStudio	&	1.281	&	0.236	&	0.142	&	0.092	&	0.060	&	0.040	&	0.031	&	0.020	&	0.019	&	0.019	\\
+CppSharp	&	55.038	&	1.343	&	1.106	&	1.044	&	1.030	&	0.983	&	0.449	&	0.443	&	0.441	&	0.439	\\
 
 
-Based on Table \ref{table:sd_percentages} we can say that only a small percentage of the extracted logical dependencies are also structural dependencies. This is consistent with the findings of related works \cite{DBLP:journals/jss/AjienkaC17}, \cite{DBLP:journals/ese/AjienkaCC18}. The percentage of LD which are also SD  increases with the minimum number of occurrences because the number of logical dependencies from the systems decreases with the minimum number of occurrences. 
-We calculate the overlapping between logical and structural dependencies not only because we want to get an idea of how many structural dependencies are reflected in the versioning system through logical dependencies but also because we want to eliminate logical dependencies that are also structural dependencies since they don't bring any new information to the systems.
-
-We stopped the minimum occurrences threshold to 4 because we observed that for systems with ID 2, 6, 10 and 16 from Table \ref{table:ld_ratio} the ratio number is lower than 1 which means that the number of SD is higher than the number of LD. On the other hand for systems with ID 4, 11, 25, 27 the threshold of 4 for minimum number of occurrences does not change the discrepancy between the number of logical and structural dependencies.
-If we try to go higher with the occurrences threshold we will risk to filter all the existing logical dependencies for some of the systems.
-So, filtering with a threshold of 4 for the minimum number of occurrences will indeed filter the logical dependencies but for some of the systems the remaining number of logical dependencies will still be significantly higher compared to the number of structural dependencies.
+\hline
+\end{tabular}
+}
+\end{table}
 
 
+In table \ref{tab:commitstrengthAND} we have on the columns the ratio between the number of structural dependencies and the number of co-changing pairs that resulted after filtering out pairs that have at least one factor below the specified threshold in the column header.
+In table \ref{tab:commitstrengthOR} we have on the columns the ratio between the number of structural dependencies and the number of co-changing pairs that resulted after filtering out pairs that have both factors below the specified threshold in the column header.
 
-\section{Overlaps between structural and logical dependencies}
+We calculate the ratio number between the co-changing pairs and the structural dependencies because we want to evaluate the size of the extracted co-changing pairs compared to the size of the structural dependencies from the system. 
+According to surveys \cite{Shtern:2012:CMS:2332427.2332428}, \cite{sar}, the main reason why logical dependencies (a.k.a filtered co-changes) are not used together with structural dependencies is because of their size. So, it is important to us to get at each filtering step an overview regarding the ratio between co-changes size and structural dependencies size.
+
+From the results presented in tables \ref{tab:commitstrengthAND} and \ref{tab:commitstrengthOR} we conclude that the number of co-changing pairs is drastically reduced. In most cases, the number of structural dependencies surpasses the number of co-changing pairs that remain after filtering. But, we do the filtering not only to reduce the size of the co-changing pairs extracted. We do the filtering of co-changing pairs extracted to make sure that the remaining co-changing pairs are indeed logically dependent.
+
+If we filter out all the co-changing pairs that do not update at least half of the time together (factor A and factor B $\geq 50 \%$ ) we remain with a decent quantity of co-changing pairs. Given the size of the output and the connection strength of the co-changing pairs, the remaining co-changing pairs can be considered, at this point, to be logically dependent. 
+
+
+
+
+\section{Overlaps between structural and co-changing pairs}
+\label{sec:overlaps}
+
 A logical dependency can be also a structural dependency and vice-versa, so studying the overlapping between logical and structural dependencies while filtering is important since the intention is to introduce those logical dependencies among with structural dependencies in architectural reconstruction systems. Current studies have shown a relatively small percentage of overlapping between them with and without any kind of filtering \cite{DBLP:journals/jss/AjienkaC17}. This means that a lot of non related entities update together in the versioning system, the goal here is to establish the factors that determine such a small percentage of overlapping \cite{enase19}.
 
-
-In the main series of experiments, for each system, we extracted the structural dependencies and the logical dependencies and determined the overlap between the two dependencies sets, in various experimental conditions. 
+Since we are first extracting co-changing pairs and only after various filters we call the remaining co-changing pairs logically dependent, we will be studying the overlapping between the remaining co-changing pairs after each filtering stage and the structural dependencies. 
+For each system, we extracted the structural dependencies and the co-changing pairs and determined the overlap between the two dependencies sets, in various experimental conditions. 
 
 One variable experimental condition is whether changes located in comments contribute towards logical dependencies. This condition distinguishes between two different cases: 
 \begin{itemize}
-	\item with comments: a change in source code files is counted towards a logical dependency, even if the change is inside comments in all files
-	\item without comments: commits that changed source code files only by editing comments are ignored as logical dependencies
+	\item with comments: a change in source code files is counted as a co-changing pair, even if the change is inside comments in all files
+	\item without comments: commits that changed source code files only by editing comments are ignored
 \end{itemize}
 
 In all cases, we varied the following threshold values: 
  \begin{itemize}
-	\item commit size ($cs$): the maximum size of commit transactions which are accepted to generate logical dependencies. The values for this threshold were 5, 10, 20 and no threshold (infinity).  
+	\item commit size ($cs$): the maximum size of commit transactions which are accepted to generate co-changes. The values for this threshold were 5, 10, 20 and no threshold (infinity).  
 	\item number of occurrences ($occ$): the minimum number of repeated occurrences for a co-change to be counted as logical dependency. The values for this threshold were 1, 2, 3 and 4.  
 \end{itemize}
 
 The six tables below present the synthesis of our experiments. 
 We have computed the following  values:
 \begin{itemize}
-	\item the mean ratio of the number of logical dependencies  (LD) to the number of structural dependencies (SD)
-   \item the mean percentage of structural dependencies that are also logical dependencies (calculated from the number of overlaps divided to the number of structural dependencies)	
-		\item the mean percentage of logical dependencies that are also structural dependencies (calculated from the number of overlaps divided to the number of logical dependencies)
+	\item the mean ratio of the number of co-changes to the number of structural dependencies (SD)
+   	\item the mean percentage of structural dependencies that are also co-changes (calculated from the number of overlaps divided to the number of structural dependencies)	
+	\item the mean percentage of co-changes that are also structural dependencies (calculated from the number of overlaps divided to the number of co-changes)
 \end{itemize}
 
 In all the six tables, \ref{tab:ratio:comm}, \ref{tab:ratio:nocomm}, \ref{tab:percSD:comm}, \ref{tab:percSD:nocomm},
@@ -526,7 +802,7 @@ In all the six tables, \ref{tab:ratio:comm}, \ref{tab:ratio:nocomm}, \ref{tab:pe
 \begin{table}[!h]
 %% increase table row spacing, adjust to taste
 \renewcommand{\arraystretch}{1}
-\caption{Ratio of number of LD to number of SD, case with comments}
+\caption{Ratio of number of co-changes to number of SD, case with comments}
 \label{tab:ratio:comm}
 \centering
 
@@ -545,7 +821,7 @@ $occ\geq 4$	&	0,90	&	2,16	&	2,88	&	33,47	\\
 \begin{table}[!h]
 %% increase table row spacing, adjust to taste
 \renewcommand{\arraystretch}{1}
-\caption{Ratio of number of LD to number of SD, case without comments}
+\caption{Ratio of number of co-changes to number of SD, case without comments}
 \label{tab:ratio:nocomm}
 \centering
 
@@ -564,7 +840,7 @@ $occ\geq 4$	&	0,43	&	1,26	&	1,93	&	22,15	\\
 \begin{table}[!h]
 %% increase table row spacing, adjust to taste
 \renewcommand{\arraystretch}{1}
-\caption{Percentage of SD that are also LD, case with comments}
+\caption{Percentage of SD that are also co-changes, case with comments}
 \label{tab:percSD:comm}
 \centering
 
@@ -583,7 +859,7 @@ $occ\geq 4$	&	6,58	&	10,95	&	15,76	&	47,12	\\
 \begin{table}[!h]
 %% increase table row spacing, adjust to taste
 \renewcommand{\arraystretch}{1}
-\caption{Percentage of SD that are also LD, case without comments}
+\caption{Percentage of SD that are also co-changes, case without comments}
 \label{tab:percSD:nocomm}
 \centering
 
@@ -602,7 +878,7 @@ $occ\geq 4$	&	5,85	&	9,94	&	14,27	&	39,07	\\
 \begin{table}[!h]
 %% increase table row spacing, adjust to taste
 \renewcommand{\arraystretch}{1}
-\caption{Percentage of LD that are also SD, case with comments}
+\caption{Percentage of co-changes that are also SD, case with comments}
 \label{tab:percLD:comm}
 \centering
 
@@ -621,7 +897,7 @@ $occ\geq 4$	&	18,96	&	15,28	&	12,94	&	3,67	\\
 \begin{table}[!h]
 %% increase table row spacing, adjust to taste
 \renewcommand{\arraystretch}{1}
-\caption{Percentage of LD that are also SD, case without comments}
+\caption{Percentage of co-changes that are also SD, case without comments}
 \label{tab:percLD:nocomm}
 \centering
 \begin{tabular}{|c|c|c|c|c|}
@@ -636,15 +912,877 @@ $occ\geq 4$	&	19,22	&	15,59	&	13,30	&	4,21	\\
 \end{tabular}
 \end{table}
 
+
+
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1}
+\caption{Percentage of SD that are also co-changing pairs after connection strength filtering. }
+\label{tab:percSDstrength}
+\centering
+\scalebox{0.8}{
+\begin{tabular}{|c|cccccccccc|c|}
+\hline
+Condition &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$	 \\
+\hline
+							
+factor A and factor B	&	11.20	&	6.80		&	4.44	&	3.25	&	2.58	&	1.74		&	1.16	&	0.57	&	0.35	&	0.33	\\
+factor A or factor B	&	15.94	&	11.02	&	7.56	&	5.59		&	4.52	&	2.90	&	2.00	&	1.33	&	1.04	&	1.02	\\
+								
+\hline
+\end{tabular}
+}
+\end{table}
+
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1}
+\caption{Percentage of co-changing pairs that are SD after connection strength filtering. }
+\label{tab:percLDtrength}
+\centering
+\scalebox{0.8}{
+\begin{tabular}{|c|cccccccccc|c|}
+\hline
+Condition &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$	 \\
+\hline
+factor A and factor B	&	10.95	&	20.61	&	23.73	&	26.75	&	28.57	&	33.31	&	33.43	&	38.34	&	42.52	&	39.41	\\
+factor A or factor B		&	12.19	&   16.85	&	19.41	&	20.70	&	21.63	&	22.84	&	21.86	&	23.08	&	24.00	&	22.73	\\						
+
+\hline
+\end{tabular}
+}
+\end{table}
+
 In order to assess the influence of comments, we compare pairwise Tables \ref{tab:ratio:comm} and \ref{tab:ratio:nocomm},  
 Tables \ref{tab:percSD:comm} and \ref{tab:percSD:nocomm} and Tables \ref{tab:percLD:comm} and \ref{tab:percLD:nocomm}. 
 We observe that, although there are some differences between pairs of measurements done in similar conditions with and without comments, the differences are not significant.
 
-On the other hand, the overlap between structural and logical dependencies is given by the number of pairs of classes that have both structural and logical dependencies. We evaluate this overlap as a percentage relative to the number of structural dependencies in Tables \ref{tab:percSD:comm} and \ref{tab:percSD:nocomm}, respectively as  a percentage relative to the number of logical dependencies in Tables \ref{tab:percLD:comm} and \ref{tab:percLD:nocomm}.
+On the other hand, the overlap between structural and co-changes is given by the number of pairs of classes that have both structural and co-change dependencies. We evaluate this overlap as a percentage relative to the number of structural dependencies in Tables \ref{tab:percSD:comm},\ref{tab:percSD:nocomm} and \ref{tab:percSDstrength}, respectively as a percentage relative to the number of co-changes in Tables \ref{tab:percLD:comm},\ref{tab:percLD:nocomm}, \ref{tab:percLDtrength}.
 
-A first observation from Tables \ref{tab:percSD:comm} and \ref{tab:percSD:nocomm} is that not all pairs of classes with structural dependencies co-change. The biggest value for the percentage of structural dependencies that are also logical dependencies is 76.5\% obtained in the case when no filterings are done.
+A first observation from Tables \ref{tab:percSD:comm}, \ref{tab:percSD:nocomm}, and \ref{tab:percSDstrength} is that not all pairs of classes with structural dependencies co-change. The biggest value for the percentage of structural dependencies that are also co-changes is 76.5\% obtained in the case when no filterings are done.
 
-From Tables \ref{tab:percLD:comm} and \ref{tab:percLD:nocomm} we notice that the percentage of logical dependencies which are also structural is always low to very low. This means that most co-changes are recorded between classes that have no structural dependencies to each other \cite{enase19}.   
+From Tables \ref{tab:percLD:comm}, \ref{tab:percLD:nocomm}, and \ref{tab:percLDtrength} we notice that the percentage of co-changes which are also structural is always low to very low. This means that most co-changes are recorded between classes that have no structural dependencies to each other \cite{enase19}.   
+ 
+
+
+\chapter{State of the art in key classes detection and results evaluation}
+\label{cap:state_of_art}
+
+\section{Definition}
+\label{sec:definition}
+Zaidman et al \cite{ZaidmanJurnal} were the first to introduce the concept of key classes and it refers to classes that can be found in documents written to provide an architectural overview of the system or an introduction to the system structure. 
+Tahvildari and Kontogiannis have a more detailed definition regarding key classes concept: “Usually, the most important concepts of a system are implemented by very few key classes which can be characterized by the specific properties. These classes, which we refer to as key classes, manage many other classes or use them in order to implement their functionality. The key classes are tightly coupled with other parts of the system. Additionally, they tend to be rather complex, since they implement much of the legacy system’s functionality” \cite{Tahvildari2004ImprovingDQ}.
+Also, other researchers use a similar concept as the one defined by Zaidman but under different terms like important classes  \cite{Meyer2014IdentifyingIC} or central software classes \cite{CentralClassesSteidl}.
+
+
+The key class identification can be done by using different algorithms with different inputs. In the research of Osman et al., the key class identification is made by using a machine learning algorithm and class diagrams as input for the algorithm \cite{6676885}. Thung et al. builds on top of Osman et al.’s approach and adds network metrics and optimistic classification in order to detect key classes \cite{rocclasification}.  
+
+Zaidman et al. use a webmining algorithm and dynamic analysis of the source code to identify the key classes \cite{ZaidmanJurnal}.
+
+Sora et al. use a page ranking algorithm for finding key classes and static analysis of the source code \cite{PagerankENASE}, \cite{enase15}, \cite{SoraSpringer}, \cite{PagerankSACI}. In \cite{Finding-key-classes} the authors use in addition to the previous research also other class attributes to identify important classes.
+The page ranking algorithm is a customization of PageRank, the algorithm used to rank web pages \cite{ilprints422}.
+The PageRank algorithm works based on a recommendation system. If one node has a connection with another node, then it recommends the second node. In previous works, connections are established based on structural dependencies extracted from static code analysis. If A has a structural dependency with B, then A recommends B, and also B recommends A.
+
+The ranking algorithm ranks all the classes from the source code of the system analyzed according to their importance. To identify the important classes from the rest of the classes a threshold for TOP classes from the top of the ranking is set. The TOP threshold value can go from 1 to the total number of classes found in the system. 
+
+Some researchers \cite{ZaidmanJurnal}, \cite{Ding2016AnIA}, \cite{PAN2018188} consider that 15\% of the total number of classes of the system is a suited value for the TOP threshold. Other researchers \cite{Finding-key-classes} consider that 15\% of the total number of classes is a too high value for the TOP threshold and suggest that a value in the range of 20–30 is better.
+
+
+\section{Metrics for results evaluation}
+\label{sec:evalmetrics}
+To evaluate the quality of the key classes ranking algorithm and solution produced, the key classes found by the algorithm are compared with a reference solution.
+
+The reference solution is extracted from the developer documentation.  Classes mentioned in the documentation are considered key classes and form the reference solution (ground truth) used for validation \cite{7551990}. 
+
+
+For the comparison between both solutions, is used a classification model. The quality of the solution produced is evaluated by using metrics that evaluate the performance of the classification model, such as Precision-Recall and Receiver Operating Characteristic Area Under Curve (ROC-AUC).
+
+A classification model (or "classifier") is a mapping between expected results and predicted results \cite{ROCIntro}, \cite{ROCBRADLEY19971145}. Both results can be labeled as positive or negative, which leads us to the confusion matrix from figure \ref{fig:confusion}. 
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.9]{confusion.png}
+\caption{Confusion matrix}
+\label{fig:confusion}
+\centering
+\end{figure}
+The confusion matrix has the following outcomes:
+		\begin{itemize}
+			\item \textit{true positive}, if the expected result is positive and the predicted result is also positive.
+			\item \textit{false positive}, if the expected result is positive but the predicted result is negative.
+			\item \textit{false negative}, if the expected result is negative but the predicted result is positive.
+			\item \textit{true negative}, if the expected result is negative and the predicted result is also negative.
+		\end{itemize}
+
+
+\textit{Precision-recall}
+
+
+Precision is the ratio of True Positives to all the positives of the result set.
+
+\begin{equation}
+ precision = \frac{TP}{TP+FN}
+\end{equation}
+The recall is the ratio of True Positives to all the positives of the reference set.
+
+\begin{equation}
+ recall = \frac{TP}{TP+FP}
+\end{equation}
+
+As mentioned in section \ref{sec:definition}, to distinguish the key classes from the rest of the classes a TOP threshold is used. Some researchers consider that 15\% of the total classes is the best value for the TOP threshold and others consider that the value should be in the range of 20-30. 
+
+The precision-recall metric is suited if the threshold value is fixed. If the threshold value is variable, then metrics that capture the behavior over all possible values must be used. Such metric is the Receiver Operating Characteristic metric.
+
+\textit{Receiver Operating Characteristic Area Under Curve}
+
+
+The ROC graph is a two-dimensional graph that has on the X-axis plotted the false positive rate and on the Y-axis the true positive rate. By plotting the true positive rate and the false positive rate at thresholds that vary between a minimum and a maximum possible value we obtain the ROC curve. The area under the ROC curve is called Area Under the Curve (AUC).
+
+The true positive rate of a classifier is calculated as the division between the number of true positive results identified and all the positive results identified:
+
+\begin{equation}
+ True\ positive\ rate (TPR) = \frac{TP}{TP+FN}
+\end{equation}
+The false positive rate of a classifier is calculated as the division between the number of false positive results identified and all the negative results identified:
+
+\begin{equation}
+ False\ positive\ rate (FPR) = \frac{FP}{FP+TN}
+\end{equation}
+
+
+In multiple related works, the ROC-AUC metric has been used to evaluate the results for finding key classes of software systems.
+For a classifier to be considered good, its ROC-AUC metric value should be as close to 1 as possible, when the value is 1 then the classifier is considered to be perfect.
+
+Osman et al. obtained in their research an average Area Under the Receiver Operating Characteristic Curve (ROC-AUC) score of 0.750 \cite{6676885}. Thung et al. obtained an average ROC-AUC score of 0.825 \cite{rocclasification}  and Sora et al. obtained an average ROC-AUC score of 0.894 \cite{Finding-key-classes}.
+
+\section{Baseline approach}
+\label{sec:previous_measurements}
+
+We use the research of I. Sora et al \cite{Finding-key-classes} as a baseline for our research involving the usage of logical dependencies to find key classes. 
+The baseline approach uses a tool that takes as an input the source code of the system and applies ranking strategies to rank the classes according to their importance. 
+
+In order to rank the classes according to their importance, different class metrics are used \cite{Ding2016AnIA}, \cite{ZaidmanJurnal}, \cite{PAN2018188}. Below are presented some of the class metrics used in the baseline approach in order to rank the classes according to their importance.
+
+
+
+\subsubsection{Class attributes that characterize key classes}
+The metrics used in the baseline research can be grouped into the following categories: 
+
+\begin{itemize}
+	\item class size metrics: number of fields (NoF),  number of methods (NoM), global size (Size = NoF+NoM).
+	\item class connection metrics, any structural dependency between two classes:
+		\begin{itemize}
+			\item CONN-IN, the number of distinct classes that use a class;
+			\item CONN-OUT, the total number of distinct classes that are used by a class;
+			\item CONN-TOTAL, the total number of distinct classes that a class uses or are used by a class (CONN-IN + CONN-OUT).
+			\item CONN-IN-W, the total weight of distinct classes that use a class. 
+			\item CONN-OUT-W, the total weight of distinct classes that are used by a class. 
+			\item CONN-TOTAL-W, the total weight of all connections of the class (CONN-IN-W + CONN-OUT-W) \cite{Finding-key-classes}.
+		\end{itemize}
+	\item class pagerank values, previous research use pagerank values computed on both directed and undirected, weighted and unweighted graphs:
+		\begin{itemize}
+			\item PR - value computed on the directed and unweighted graph;
+			\item PR-W - value computed on the directed and weighted graph;
+			\item PR-U - value computed on the undirected and unweighted graph;
+			\item PR-U-W - value computed on the undirected and weighted graph;
+			\item PR-U2-W - value computed on the weighted graph with back-recommendations \cite{PagerankENASE}, \cite{enase15}, \cite{Finding-key-classes}, \cite{PagerankSACI}.
+		\end{itemize}
+\end{itemize}
+
+
+Based on the class attributes presented, all the classes of the system are ranked. To differentiate the important (key) classes from the rest of the classes, a TOP threshold for the top classes found is set. 
+The threshold vary between 20 and 30 classes.
+
+
+
+The baseline approach not only identifies the key classes but also evaluates the performance of the solution produced. 
+The same approach as the one presented in section \ref{sec:evalmetrics} is used for the evaluation of the results. The key classes found by the ranking algorithm are compared with a reference solution that is extracted from the developer documentation by using a classification model.
+
+The true positives (TP) are the classes found in the reference solution and also in the top TOP ranked classes. False positives (FP) are the classes that are not in the reference solution but are in the TOP ranked classes.
+True Negatives (TN) are classes that are found neither in the reference solution nor in the TOP ranked classes. False Negatives (FN) are classes that are found in the reference solution but not found in the TOP ranked classes.
+
+
+Due to the fact that the TOP threshold is varied, the Receiver Operating Characteristic Area Under Curve metric is used for the evaluation of the results.
+
+The entire workflow of the baseline approach that was presented above is also presented in figure \ref{fig:baseline_approach}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{baseline_approach.PNG}
+\caption{Overview of the baseline approach. Reprinted from “Finding key classes in object-oriented
+software systems by techniques based on static analysis.” by Ioana Sora and Ciprian-Bogdan Chirila, 2019, Information and Software Technology, 116:106176. Reprinted with permission. }
+\label{fig:baseline_approach}
+\centering
+\end{figure}
+
+
+\chapter{Key classes detection using logical dependencies}
+\label{cap:usage}
+
+\section{Data set used}
+\label{sec:dataset}
+In this section, we will look over all the systems studied in the baseline research presented in section \ref{sec:previous_measurements}, and we will try to identify the systems that could be used also in our current research involving logical dependencies.
+
+
+The research of I. Sora et al \cite{Finding-key-classes} takes into consideration structural public dependencies that are extracted using static analysis techniques and was performed on the object-oriented systems presented in table \ref{tab:keyclass:overview}.
+
+The requirements for a system to qualify as suited for investigations using logical dependencies are: has to be on GitHub, has to have release tags to identify the version, and also has to have an increased number of commits. 
+From the total of 14 object-oriented systems listed in the paper \cite{Finding-key-classes}, 13 of them have repositories in Github \ref{tab:gitfoundsystems}. And from the found repositories we identified only 6 repositories that have the same release tag as the specified version from table \ref{tab:keyclass:overview}. It is important to identify the correct release tag for each repository to limit the commits further analyzed by date. Only commits that were made until the specified release are considered and analyzed.
+The commits number found on the remaining 6 repositories varies from 19108 commits for Tomcat Catalina to 149 commits for JHotDraw. In order to have more accurate results, we need a significant number of commits, so we reached the conclusion that only 3 systems can be used for key classes detection using logical dependencies: Apache Ant, Hibernate, and Tomcat Catalina.  From all the systems mentioned in table \ref{tab:keyclass:overview} Apache Ant is the most used and analyzed in other  works \cite{enase19}, \cite{7332515}, \cite{1402122}, \cite{Kamran2016IdentificationOC}.
+
+\begin{table}[H]
+\renewcommand{\arraystretch}{1}
+\caption{Analyzed software systems in previous research paper.}
+\label{tab:keyclass:overview}
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+ID	&	System	&	Description	&	Version	\\
+\hline
+Sl	&	Apache Ant	&	Java library and command line tool that drive the build processes as targets and extension points depending upon each other	&	1.6.1	\\
+S2	&	Argo UML	&	UML modelling tool with support for all UML diagrams.	&	0.9.5	\\
+S3	&	GWT Portlets	&	Open source web framework for building GWT (Google Web Toolkit) Applications.	&	0.9.5 beta	\\
+S4	&	Hibernate 	&	Persistence framework for Java.	&	5.2.12	\\
+S5	&	javaclient	&	Java distributed application for playing with robots	&	2.0.0	\\
+S6	&	jEdit	&	Java mature text editor for programmers.	&	5.1.0	\\
+S7	&	JGAP	&	Genetic Algorithms and Genetic Programming Java library.	&	3.6.3	\\
+S8	&	JHotDraw	&	JHotDraw is a two-dimensional graphics framework for structured drawing editors that is written in Java.	&	6.0b.1	\\
+S9	&	JMeter	&	JMeter is a Java application designed to load test functional behavior and measure performance	&	2.0.1	\\
+S10	&	Log4j	&	Logging Service	&	2.10.0	\\
+S11	&	Mars	&	The Mars Simulation Project is a Java project that models and simulates human settlements on Mars planet	&	3.06.0	\\
+S12	&	Maze	&	The Maze-solver project simulates an artificial intelligence algorithm on a maze	&	1.0.0	\\
+S13	&	Neuroph	&	Neuroph is a Java neural network framework.	&	2.2.0	\\
+S14	&	Tomcat Catalina	&	The Apache Tomcat project is an open-source implementation of JavaServlet and JavaServerPages technologies	&	9.0.4	\\
+S15	&	Wro4J	&	The Wro4J is a web resource (JS and CSS) optimizer for Java.	&	1.6.3	\\
+\hline
+\end{tabular}
+\end{table}
+
+
+
+\begin{table}[H]
+\renewcommand{\arraystretch}{1}
+\caption{Found systems and versions of the systems in GitHub. }
+\label{tab:gitfoundsystems}
+\centering
+\scalebox{0.8}{
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+ID	&	System	&	Version	&	Release Tag name	&	Commits number	\\
+\hline
+\rowcolor{lightgreen}
+Sl	&	Apache Ant	&	1.6.1	&	rel/1.6.1	&	6713	\\
+S2	&	Argo UML	&	0.9.5	&	not found	&	0	\\
+S3	&	GWT Portlets	&	0.9.5 beta	&	not found	&	0	\\
+\rowcolor{lightgreen}
+S4	&	Hibernate 	&	5.2.12	&	5.2.12	&	6733	\\
+S5	&	javaclient	&	2.0.0	&	not found	&	0	\\
+S6	&	jEdit	&	5.1.0	&	not found	&	0	\\
+S7	&	JGAP	&	3.6.3	&	not found	&	0	\\
+S8	&	JHotDraw	&	6.0b.1	&	not found	&	149	\\
+S9	&	JMeter	&	2.0.1	&	v2\_1\_1	&	2506	\\
+S10	&	Log4j	&	2.10.0	&	v1\_2\_10-recalled	&	634	\\
+S11	&	Mars	&	3.06.0	&	not found	&	0	\\
+S12	&	Maze	&	1.0.0	&	not found	&	0	\\
+S13	&	Neuroph	&	2.2.0	&	not found	&	0	\\
+\rowcolor{lightgreen}
+S14	&	Tomcat Catalina	&	9.0.4	&	9.0.4	&	19108	\\
+S15	&	Wro4J	&	1.6.3	&	v1.6.3	&	2871	\\
+\hline
+\end{tabular}
+}
+\end{table}
+
+
+
+\section{Measurements using logical dependencies}
+\label{sec:current_measurements}
+
+As we mentioned in the beginning the purpose is to check if the logical dependencies can improve key class detection. 
+
+As presented in section \ref{sec:previous_measurements}, and section \ref{sec:definition} the key class detection was done by using structural dependencies of the system. 
+In this section, we will use the same tool used in the baseline approach presented in section \ref{sec:previous_measurements}, and we will add a new input to it, the logical dependencies. 
+
+Below is a comparison between the new approach and baseline approach, how we collect the logical dependencies, the results obtained previously, and the new results obtained. 
+The new results are separated into two categories, the results obtained by using structural and logical dependencies and the results obtained by using only logical dependencies. 
+
+
+
+\subsection{Comparison with the baseline approach}
+\label{sec:comparison}
+
+The baseline approach uses a tool that takes as input the source code of the system to identify the key classes and the reference solution to evaluate the quality of the solution. 
+We modified the tool such that it can also take as input the logical dependencies. 
+
+In order to rank the classes according to their importance, the tool uses different class metrics. The list of the metrics used in the baseline approach is presented in section \ref{sec:previous_measurements}.  
+The difference in the metrics used compared with the baseline approach is that we use a subset of those metrics. The reason why we are not using all the metrics is that the extracted logical dependencies are undirected. The metrics used by the current approach are CONN-TOTAL, CONN-TOTAL-W, PR-U, PR-U-W, and PR-U2-W.
+
+We did not change the rest of the workflow of the tool. Meaning that the TOP threshold is varied between 20 and 30 and the resulting solution is evaluated by using the ROC-AUC metric. The goal being a ROC-AUC (Receiver Operating Characteristic - Area Under the Curve) metric value as close to 1 as possible.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{baseline_comparison.png}
+\caption{ Comparison between the new approach and the baseline }
+\label{fig:baseline_comparison}
+\centering
+\end{figure}
+
+\subsection{Logical dependencies collection and current workflow used}
+
+The logical dependencies are those co-changing pairs extracted from the versioning system history that remain after filtering. The filtering part consists of applying two filters: the filter based on commit size and the filter based on connection strength. 
+
+To determine the connection strength of a pair, we first need to calculate the connection factors for both entities that form a co-changing pair.
+Assuming that we have a co-changing pair formed by entities A and B, the connection factor of entity A with entity B is the percentage from the total commits involving A that contains entity B. The connection factor of entity B with entity A is the percentage from the total commits involving B that contain also entity A.
+
+\begin{equation}
+ connection\ factor\ for\ A = \frac{100 * commits\ involving\ A\ and\ B}{total\ nr\ of\ commits\ involving\ A}
+\end{equation}
+
+\begin{equation}
+ connection\ factor\ for\ B = \frac{100 * commits\ involving\ A\ and\ B}{total\ nr\ of\ commits\ involving\ B}
+\end{equation}
+
+We calculated the connection factor for each entity involved in a co-changing pair and filtered the co-changing pairs based on it. The rule set is that both entities had to have a connection factor with each other greater than the threshold value.
+
+After the filtering part, the remaining co-changing pairs, now called logical dependencies, are exported in CSV files.
+
+The entire process of extracting co-changing pairs from the versioning system, filter them, and export the remaining ones into CSV files is done with a tool written in Python.
+
+The next step is to use the exported logical dependencies for key classes detection. In order to do that we used the same key class detection tool used in the previous research presented in section \ref{sec:previous_measurements}. We adapted the tool to be able to process also logical dependencies because previously the tool used only structural dependencies extracted from the source code of the software systems. 
+The workflow is presented in figure \ref{fig:workflow_key}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{key_class_workflow.png}
+\caption{Workflow for key classes detection}
+\label{fig:workflow_key}
+\centering
+\end{figure}
+
+
+\subsection{Measurements using only the baseline approach}
+
+
+In table \ref{tab:previousresults} are presented the ROC-AUC values for different attributes computed for the systems Ant, Tomcat Catalina, and Hibernate by using the baseline approach. We intend to compare these values with the new values obtained by using also logical dependencies in key class detection.
+
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1}
+\caption{ROC-AUC metric values extracted. }
+\label{tab:previousresults}
+\centering
+\scalebox{0.9}{
+\begin{tabular}{|c|ccc|}
+\hline
+Metrics &	Ant	&	Tomcat Catalina	&	Hibernate	\\
+\hline
+
+PR\_U2\_W	&	0.95823	&	0.92341	&	0.95823	\\
+PR	&	0.94944	&	0.92670	&	0.94944	\\
+PR\_U	&	0.95060	&	0.93220	&	0.95060	\\
+CONN\_TOTAL\_W	&	0.94437	&	0.92595	&	0.94437	\\
+CONN\_TOTAL	&	0.94630	&	0.93903	&	0.94630	\\
+
+\hline
+\end{tabular}
+}
+\end{table}
+
+
+
+
+
+\subsection{Measurements using combined structural and logical dependencies}
+
+The tool used in the baseline approach runs a graph-ranking algorithm. 
+The graph used contains the structural dependencies extracted from static source code analysis.
+Each edge in the graph represents a dependency, the entities that form a structural dependency are represented as vertices in the graph. 
+As mentioned in section \ref{sec:comparison}, we modified the tool to read also logical dependencies and add them to the graph. 
+In this section, we add in the graph the logical dependencies together with the structural dependencies. 
+
+In tables \ref{tab:measurementscombined:ant}, \ref{tab:measurementscombined:tomcat}, and \ref{tab:measurementscombined:hibernate}, on each line, we have the metric that is calculated and on each column, we have the connection strength threshold that was applied to the logical dependencies used in identifying the key classes.
+We started with logical dependencies that have a connection strength greater than 10\%, which means that in at least 10\% of the commits involving A or B, A and B update together. Then we increased the threshold value by 10 until we remained only with entities that update in all the commits together. The last column contains the results obtained previously by the tool by only using structural dependencies.
+
+As for the new results obtained by combining structural and logical dependencies, highlighted with orange are the values that are close to the previously registered values but did not surpass them. Highlighted with green are values that are better than the previously registered values. At this step, we can also observe that for all three systems measured in tables \ref{tab:measurementscombined:ant}, \ref{tab:measurementscombined:tomcat}, and \ref{tab:measurementscombined:hibernate}, the best values obtained are for connection strength between 40-70\%.
+
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1}
+\caption{Measurements for Ant using structural and logical dependencies combined}
+\label{tab:measurementscombined:ant}
+\centering
+\scalebox{0.8}{
+\begin{tabular}{|c|cccccccccc|c|}
+\hline
+Metrics &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$		&	Baseline \\
+\hline
+
+PR\_U2\_W	&	0.924	&	0.925	&	0.926	&	0.927	&	0.927	&	0.927	&	\cellcolor{lightgreen}0.929	&	0.928	&	0.928	&	0.928	&	0.929	\\
+PR	&	0.914	&	0.854	&	0.851	&	\cellcolor{lightgreen}0.866	&	\cellcolor{lightgreen}0.876	&	\cellcolor{lightgreen}0.882	&	\cellcolor{lightgreen}0.887	&	0.854	&	0.852	&	0.852	&	0.855	\\
+PR\_U	&	0.910	&	0.930	&	0.933	&	0.933	&	\cellcolor{lightgreen}0.935	&	\cellcolor{lightgreen}0.934	&	\cellcolor{lightgreen}0.939	&	0.933	&	0.933	&	0.933	&	0.933	\\
+CON\_T\_W	&	0.924	&	0.928	&	0.931	&	0.932	&	0.933	&	0.934	&	\cellcolor{lightgreen}0.936	&	0.934	&	0.934	&	0.934	&	0.934	\\
+CON\_T	&	0.840	&	0.886	&	0.904	&	0.909	&	0.915	&	0.923	&	0.932	&	0.935	&	\cellcolor{lightorange}0.936	&	\cellcolor{lightorange}0.936	&	0.942	\\
+
+\hline
+\end{tabular}
+}
+\end{table}
+
+
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1}
+\caption{Measurements for Tomcat using structural and logical dependencies combined}
+\label{tab:measurementscombined:tomcat}
+\centering
+\scalebox{0.8}{
+\begin{tabular}{|c|cccccccccc|c|}
+\hline
+Metrics &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$		&	Baseline \\
+\hline
+
+PR\_U2\_W	&	0.910	&	0.917	&	0.923	&	\cellcolor{lightgreen}0.924	&	\cellcolor{lightgreen}0.924	&	\cellcolor{lightgreen}0.924	&	\cellcolor{lightgreen}0.924	&	\cellcolor{lightgreen}0.924	&	\cellcolor{lightgreen}0.924	&	\cellcolor{lightgreen}0.924	&	0.923	\\
+PR	&	0.811	&	0.800	&	0.815	&	0.834	&	0.847	&	0.852	&	0.853	&	0.858	&	0.858	&	0.858	&	0.927	\\
+PR\_U	&	0.910	&	0.921	&	0.931	&	\cellcolor{lightgreen}0.933	&	\cellcolor{lightgreen}0.933	&	0.932	&	\cellcolor{lightgreen}0.933	&	0.932	&	0.932	&	0.932	&	0.932	\\
+CON\_T\_W	&	0.914	&	0.920	&	0.924	&	\cellcolor{lightorange}0.926	&	0.926	&	0.926	&	0.926	&	0.926	&	0.926	&	0.926	&	0.926	\\
+CON\_T	&	0.868	&	0.906	&	0.930	&	0.936	&	0.937	&	\cellcolor{lightorange}0.938	&	0.938	&	0.938	&	0.938	&	0.938	&	0.939	\\
+																												
+
+\hline
+\end{tabular}
+}
+\end{table}
+
+
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1}
+\caption{Measurements for Hibernate using structural and logical dependencies combined}
+\label{tab:measurementscombined:hibernate}
+\centering
+\scalebox{0.8}{
+\begin{tabular}{|c|cccccccccc|c|}
+\hline
+Metrics &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$		&	Baseline \\
+\hline
+
+PR\_U2\_W	&	0.954	&	0.957	&	\cellcolor{lightorange}0.958	&	0.958	&	0.958	&	0.958	&	0.958	&	0.958	&	0.958	&	0.958	&	0.958	\\
+PR	&	0.929	&	0.929	&	0.933	&	0.939	&	0.939	&	0.946	&	\cellcolor{lightorange}0.947	&	0.947	&	0.947	&	0.947	&	0.949	\\
+PR\_U	&	0.942	&	0.947	&	0.948	&	0.949	&	0.949	&	\cellcolor{lightorange}0.950	&	0.950	&	0.950	&	0.950	&	0.950	&	0.951	\\
+CON\_T\_W	&	0.939	&	0.942	&	0.943	&	0.944	&	0.944	&	\cellcolor{lightgreen}0.945	&	\cellcolor{lightgreen}0.945	&	\cellcolor{lightgreen}0.945	&	\cellcolor{lightgreen}0.945	&	\cellcolor{lightgreen}0.945	&	0.944	\\
+CON\_T	&	0.924	&	0.933	&	0.938	&	0.941	&	0.941	&	0.944	&	\cellcolor{lightorange}0.945	&	0.945	&	0.945	&	0.945	&	0.946	\\
+
+
+\hline
+\end{tabular}
+}
+\end{table}
+
+
+
+
+
+\subsection{Measurements using only logical dependencies}
+In the previous section, we added in the graph based on which the ranking algorithm works the logical and structural dependencies. In the current section, we will add only the logical dependencies to the graph.
+
+In tables \ref{tab:measurementshistory:ant}, \ref{tab:measurementshistory:tomcat}, and \ref{tab:measurementshistory:hibernate}, are presented the results obtained by using only logical dependencies to detect key classes. The measurements obtained are not as good as using logical and structural dependencies combined or using only structural dependencies. But, all the values obtained are above 0.5, which means that a good part of the key classes is detected by only using logical dependencies.  As mentioned in section \ref{sec:evalmetrics}, a classifier is good if it has the ROC-AUC value as close to 1 as possible. 
+
+
+One possible explanation for the less performing results is that the key classes may have a better design than the rest of the classes, which means that are less prone to change. If the key classes are less prone to change, this implies that the number of dependencies extracted from the versioning system can be less than for other classes.
+
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1}
+\caption{Measurements for Ant using only logical dependencies}
+\label{tab:measurementshistory:ant}
+\centering
+\scalebox{0.8}{
+\begin{tabular}{|c|cccccccccc|c|}
+\hline
+Metrics &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$		&	Baseline \\
+\hline
+
+PR\_U2\_W	&	0.720	&	0.627	&	0.718	&	0.703	&	0.732	&	0.824	&	0.852	&	\cellcolor{lightorange}0.881	&	0.876	&	0.876	&	0.929	\\
+PR	&	0.720	&	0.627	&	0.718	&	0.703	&	0.732	&	0.824	&	0.852	&	\cellcolor{lightorange}0.881	&	0.876	&	0.876	&	0.855	\\
+PR\_U	&	0.720	&	0.627	&	0.718	&	0.703	&	0.732	&	0.824	&	0.852	&	\cellcolor{lightorange}0.881	&	0.876	&	0.876	&	0.933	\\
+CON\_T\_W	&	0.722	&	0.581	&	0.644	&	0.676	&	0.727	&	0.819	&	0.842	&	0.874	&	\cellcolor{lightorange}0.876	&	0.876	&	0.934	\\
+CON\_T	&	0.722	&	0.581	&	0.644	&	0.676	&	0.727	&	0.819	&	0.842	&	0.874	&	\cellcolor{lightorange}0.876	&	0.876	&	0.942	\\
+
+\hline
+\end{tabular}
+}
+\end{table}
+
+
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1}
+\caption{Measurements for Tomcat using only logical dependencies}
+\label{tab:measurementshistory:tomcat}
+\centering
+\scalebox{0.8}{
+\begin{tabular}{|c|cccccccccc|c|}
+\hline
+Metrics &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$		&	Previous \\
+\hline
+
+PR\_U2\_W	&	0.672	&	0.656	&	0.645	&	0.697	&	0.754	&	0.776	&	0.786	&	\cellcolor{lightorange}0.799	&	0.799	&	0.799	&	0.923	\\
+PR	&	0.685	&	0.643	&	0.642	&	0.697	&	0.754	&	0.776	&	0.786	&	\cellcolor{lightorange}0.799	&	0.799	&	0.799	&	0.927	\\
+PR\_U	&	0.685	&	0.643	&	0.644	&	0.697	&	0.754	&	0.776	&	0.786	&	\cellcolor{lightorange}0.799	&	0.799	&	0.799	&	0.932	\\
+CON\_T\_W	&	0.694	&	0.636	&	0.636	&	0.697	&	0.754	&	0.776	&	0.786	&	\cellcolor{lightorange}0.799	&	0.799	&	0.799	&	0.926	\\
+CON\_T	&	0.654	&	0.611	&	0.636	&	0.697	&	0.754	&	0.776	&	0.786	&	\cellcolor{lightorange}0.799	&	0.799	&	0.799	&	0.939	\\
+
+				
+\hline
+\end{tabular}
+}
+\end{table}
+
+
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1}
+\caption{Measurements for Hibernate using only logical dependencies}
+\label{tab:measurementshistory:hibernate}
+\centering
+\scalebox{0.8}{
+\begin{tabular}{|c|cccccccccc|c|}
+\hline
+Metrics &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$		&	Baseline \\
+\hline
+
+PR\_U2\_W	&	0.657	&	0.564	&	0.601	&	0.619	&	0.622	&	0.650	&	0.653	&	\cellcolor{lightorange}0.654	&	0.654	&	0.654	&	0.958	\\
+PR	&	0.644	&	0.564	&	0.601	&	0.619	&	0.622	&	0.650	&	0.653	&	\cellcolor{lightorange}0.654	&	0.654	&	0.654	&	0.949	\\
+PR\_U	&	0.644	&	0.564	&	0.601	&	0.619	&	0.622	&	0.650	&	0.653	&	\cellcolor{lightorange}0.654	&	0.654	&	0.654	&	0.951	\\
+CON\_T\_W	&	0.649	&	0.564	&	0.601	&	0.619	&	0.622	&	0.650	&	0.653	&	\cellcolor{lightorange}0.654	&	0.654	&	0.654	&	0.944	\\
+CON\_T	&	0.644	&	0.564	&	0.601	&	0.619	&	0.622	&	0.650	&	0.653	&	\cellcolor{lightorange}0.654	&	0.654	&	0.654	&	0.946	\\
+
+
+\hline
+\end{tabular}
+}
+\end{table}
+
+\section{Correlation between details of the systems and results}
+\label{sec:overlapping}
+
+In this section, we discuss about the correlation between the details of the systems and the results obtained in section \ref{sec:current_measurements}.
+
+The reason why we are doing this correlation is to find if there are some links between the details of the systems and the results obtained. 
+
+The results obtained are presented in figures \ref{fig:plot_sd_ld_ant} - \ref{fig:plot_ld_hibernate}. We are using plots to display the results obtained to have a clearer view of how the results fluctuate over different thresholds values.
+
+
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{ant_SD_LD.PNG}
+\caption{Variation of AUC score when varying connection strength threshold for Ant. Results for structural and logical dependencies combined. }
+\label{fig:plot_sd_ld_ant}
+\centering
+\end{figure}
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{tomcat_SD_LD.PNG}
+\caption{Variation of AUC score when varying connection strength threshold for Tomcat. Results for structural and logical dependencies combined. }
+\label{fig:plot_sd_ld_tomcat}
+\centering
+\end{figure}
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{hibernate_SD_LD.PNG}
+\caption{Variation of AUC score when varying connection strength threshold for Hibernate. Results for structural and logical dependencies combined. }
+\label{fig:plot_sd_ld_hibernate}
+\centering
+\end{figure}
+
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{ant_LD.PNG}
+\caption{Variation of AUC score when varying connection strength threshold for Ant. Results for logical dependencies only. }
+\label{fig:plot_ld_ant}
+\centering
+\end{figure}
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{tomcat_LD.PNG}
+\caption{Variation of AUC score when varying connection strength threshold for Tomcat. Results for logical dependencies only. }
+\label{fig:plot_ld_tomcat}
+\centering
+\end{figure}
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{hibernate_LD.PNG}
+\caption{Variation of AUC score when varying connection strength threshold for Hibernate. Results for logical dependencies only.}
+\label{fig:plot_ld_hibernate}
+\centering
+\end{figure}
+
+
+The details of the systems are presented in two tables.  In table \ref{tab:overlap} are the overlappings between structural and logical dependencies expressed in percentages. Each column represents the percentage of logical dependencies that are also structural, for each column the logical dependencies are obtained by applying a different connection strength filter. The connection strength filter begins at 10, meaning that in at least 10 \% of the total commits involving two entities, the entities update together. We increase the connection strength filter by 10 up until we reach 100, meaning that in all the commits that involve one entity, the other entity is present also.
+
+
+In table \ref{tab:ratio_sd_ld} are the ratio numbers between structural dependencies and logical dependencies. We added this table in order to highlight how different the total number of both dependencies is.
+
+
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1}
+\caption{Percentage of logical dependencies that are also structural dependencies}
+\label{tab:overlap}
+\centering
+\scalebox{0.8}{
+\begin{tabular}{|c|cccccccccc|}
+\hline
+System &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$ \\
+\hline
+Ant	&	25.202	&	34.419	&	36.385	&	34.656	&	33.528	&	33.333	&	28.659	&	33.333	&	35.294	&	35.294	\\
+Tomcat Catalina	&	4.059	&	22.089	&	25.000	&	25.758	&	25.926	&	37.525	&	47.368	&	55.285	&	75.000	&	76.923	\\
+Hibernate	&	6.546	&	26.607	&	29.565	&	32.374	&	32.543	&	45.170	&	44.980	&	42.473	&	42.473	&	42.473	\\
+\hline
+\end{tabular}
+}
+\end{table}
+
+
+
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1}
+\caption{Ratio between structural and logical dependencies (SD/LD)}
+\label{tab:ratio_sd_ld}
+\centering
+\scalebox{0.8}{
+\begin{tabular}{|c|cccccccccc|}
+\hline
+System &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$ \\
+\hline
+Ant	&	1.315	&	3.284	&	4.972	&	5.603	&	6.175	&	10.697	&	12.915	&	27.154	&	41.529	&	41.529	\\
+Tomcat Catalina	&	0.120	&	0.923	&	1.313	&	1.531	&	1.619	&	3.177	&	7.092	&	13.146	&	67.375	&	124.385	\\
+Hibernate	&	1.037	&	6.391	&	10.037	&	14.947	&	18.940	&	54.248	&	83.442	&	111.704	&	111.704	&	111.704	\\
+
+\hline
+\end{tabular}
+}
+\end{table}
+
+In figures \ref{fig:plot_sd_ld_ant}, \ref{fig:plot_sd_ld_tomcat} and \ref{fig:plot_sd_ld_hibernate} are the measurements obtained by using structural and logical dependencies combined. 
+In all three figures, the measurements at the beginning are smaller than the rest. Once with the increasing of the threshold value also the measurements begin to increase. Meaning that better results for key class detection are found. 
+The best measurements are when the threshold value is between 40 and 60, after that, the measurements tend to decrease a little bit and stay at that fixed value. 
+
+A possible explanation of the results fluctuation and then capping is that if we are looking at table \ref{tab:ratio_sd_ld} we can see that at the beginning, the total number of logical dependencies used is close to the number of existing structural dependencies. The high volume of logical dependencies introduced might cause an erroneous detection of the key classes, in consequence, smaller measurements. 
+When the threshold begins to be more restrictive and the total number of logical dependencies used begins to decrease, the key classes detection starts to improve. This improvement stops after the threshold value reaches 60\%. If we look again at table \ref{tab:ratio_sd_ld} we can see that after 60\% the number of structural dependencies outnumbers the number of logical dependencies up to 124 times in some cases. In addition, if we look at table \ref{tab:overlap} we can see that the remaining logical dependencies overlap a lot with the structural dependencies, so we are not introducing too much new information.
+
+ So, the number of logical dependencies used is so small that it doesn't influence the key class identification. Since the structural dependencies used don't change, we obtain the same results for different threshold values. 
+
+
+
+In figures \ref{fig:plot_ld_ant}, \ref{fig:plot_ld_tomcat} and \ref{fig:plot_ld_hibernate} are the measurements obtained by using only logical dependencies.
+Initially, we expected to see a Gaussian curve, but instead, we see a bell curve.  We think that in the beginning, we use a high number of logical dependencies in key class detection, among those logical dependencies is an important number of key classes and also an important number of other classes. But the number of other classes does not influence the key classes detection. When we start to increase the value of the threshold and filter more the logical dependencies, we also filter some of the initial detected key classes and remain with a significant number of other classes. In this case, the other classes that remain influence the measurements, causing the worst-performing solutions. 
+Some of the key classes are strongly connected in the versioning system, and even for higher threshold values don't get filtered out. Meanwhile, the rest of the classes that are not key classes get filtered out for higher threshold values which leads to better performing measurements when the threshold value are above 60\%. 
+
+
+
+\section{Comparison of the extracted data with fan-in and fan-out metric}
+\label{sec:metrics}
+
+Fan-in and fan-out are coupling metrics. The fan-in of entity A is the total number of entities that call functions of A. The fan-out of A is the total number of entities called by A \cite{5507329}.
+
+
+In tables \ref{tab:measurementsfan:ant}, \ref{tab:measurementsfan:catalina}, and \ref{tab:measurementsfan:hibernate} we can find the metrics detalis for each documented key class of each system.
+The first column represents the name of each key class, the second column represents the fan\_in values for each key class, the third column represents the fan\_out values, the fourth column represents the number of entities that call functions of that key class plus the number of entities that are called by the key class (fan\_in and fan\_out combined), and the fifth column represents the number of logical dependencies in which an entity is involved. 
+
+For Ant, we can see in table \ref{tab:measurementsfan:ant} that all the key classes have logical dependencies with other classes. The LD\_NUMBER means the number of logical dependencies of an entity. The key classes with the most LD number are Project and IntrospectionHelper, these two entities can be found also in table \ref{tab:measurementstop:ant} in which we did a top 10 entities that have a logical dependency with other entities. This means that some key classes are involved in software change quite often and can be observed via system history.
+
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1}
+\caption{Measurements for Ant key classes}
+\label{tab:measurementsfan:ant}
+\centering
+\scalebox{0.8}{
+\begin{tabular}{|c|ccccc|}
+\hline
+Nr.	&	Classname	&	FAN\_IN	&	FAN\_OUT	&	FAN\_TOTAL	&	LD\_NUMBER\\
+\hline
+1	&	Project	&	191	&	23	&	214	&	157	\\
+2	&	Target	&	28	&	6	&	34	&	78	\\
+3	&	UnknownElement	&	17	&	13	&	30	&	90	\\
+4	&	RuntimeConfigurable	&	17	&	13	&	30	&	118	\\
+5	&	IntrospectionHelper	&	18	&	24	&	42	&	143	\\
+6	&	Main	&	1	&	13	&	14	&	82	\\
+7	&	TaskContainer	&	11	&	1	&	12	&	21	\\
+8	&	ProjectHelper2\$ElementHandler	&	1	&	12	&	13	&	30	\\
+9	&	Task	&	110	&	7	&	117	&	88	\\
+10	&	ProjectHelper	&	16	&	8	&	24	&	101	\\
+\hline
+\end{tabular}
+}
+\end{table}
+
+
+For Tomcat Catalina, same as for Ant, we can see in table \ref{tab:measurementsfan:catalina} that all the key classes have logical dependencies.  The key classes with the most LD number are StandardContext and Request, these two entities can also be found in table \ref{tab:measurementstop:catalina} in which we did a top 10 entities that have the most logical dependencies with other entities for Tomcat Catalina.
+
+For Hibernate things are a little bit different, as we can see in table \ref{tab:measurementsfan:hibernate},  key classes like Criterion, Projection, or Transaction have 0 logical dependencies, meaning that those key classes are not involved in any software change. One possible explanation for this is that for Hibernate the architecture is designed in such way that the core is not often touched by change. 
+
+
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1}
+\caption{Measurements for Tomcat Catalina key classes.}
+\label{tab:measurementsfan:catalina}
+\centering
+\scalebox{0.8}{
+\begin{tabular}{|c|ccccc|}
+\hline
+Nr.	&	Classname	&	FAN\_IN	&	FAN\_OUT	&	FAN\_TOTAL	&	LD\_NUMBER \\
+\hline
+1	&	Context	&	74	&	8	&	82	&	126	\\
+2	&	Request	&	48	&	28	&	76	&	215	\\
+3	&	Container	&	51	&	8	&	59	&	64	\\
+4	&	Response	&	38	&	12	&	50	&	90	\\
+5	&	StandardContext	&	11	&	38	&	49	&	216	\\
+6	&	FANector	&	23	&	9	&	32	&	89	\\
+7	&	Session	&	29	&	2	&	31	&	28	\\
+8	&	Valve	&	29	&	2	&	31	&	19	\\
+9	&	Wrapper	&	29	&	1	&	30	&	36	\\
+10	&	Manager	&	25	&	3	&	28	&	31	\\
+11	&	Host	&	26	&	1	&	27	&	44	\\
+12	&	Service	&	20	&	6	&	26	&	51	\\
+13	&	Engine	&	23	&	2	&	25	&	1	\\
+14	&	Realm	&	18	&	6	&	24	&	21	\\
+15	&	CoyoteAdapter	&	1	&	22	&	23	&	140	\\
+16	&	StandardHost	&	8	&	15	&	23	&	88	\\
+17	&	LifecycleListener	&	21	&	1	&	22	&	3	\\
+18	&    StandardEngine	&	2	&	19	&	21	&	57	\\
+19	&	Pipeline	&	19	&	2	&	21	&	20	\\
+20	&	Server	&	16	&	4	&	20	&	49	\\
+21	&	HostConfig	&	3	&	15	&	18	&	79	\\
+22	&	StandardWrapper	&	5	&	13	&	18	&	92	\\
+23	&	StandardService	&	3	&	12	&	15	&	81	\\
+24	&	Catalina	&	2	&	13	&	15	&	94	\\
+25	&	Loader	&	14	&	1	&	15	&	18	\\
+26	&	StandardServer	&	2	&	12	&	14	&	94	\\
+27	&	StandardPipeline	&	1	&	10	&	11	&	62	\\
+28	&	Bootstrap	&	3	&	3	&	6	&	41	\\	
+\hline
+\end{tabular}
+}
+\end{table}
+
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1}
+\caption{Measurements for Hibernate key classes.}
+\label{tab:measurementsfan:hibernate}
+\centering
+\scalebox{0.8}{
+\begin{tabular}{|c|ccccc|}
+\hline
+Nr.	&	Classname	&	FAN\_IN	&	FAN\_OUT	&	FAN\_TOTAL	&	LD\_NUMBER \\
+\hline
+1	&	SessionFactoryImplementor	&	438	&	43	&	481	&	51	\\
+2	&	Type	&	444	&	5	&	449	&	0	\\
+3	&	Table	&	89	&	29	&	118	&	82	\\
+4	&	SessionImplementor	&	52	&	12	&	64	&	14	\\
+5	&	Criteria	&	45	&	12	&	57	&	15	\\
+6	&	Column	&	46	&	10	&	56	&	20	\\
+7	&	Session	&	31	&	21	&	52	&	52	\\
+8	&	Query	&	12	&	28	&	40	&	0	\\
+9	&	Configuration	&	1	&	38	&	39	&	115	\\
+10	&	SessionFactory	&	24	&	12	&	36	&	33	\\
+11	&	Criterion	&	30	&	3	&	33	&	0	\\
+12	&	Projection	&	11	&	3	&	14	&	0	\\
+13	&	FANectionProvider	&	12	&	2	&	14	&	0	\\
+14	&	Transaction	&	11	&	1	&	12	&	0	\\
+				
+\hline
+\end{tabular}
+}
+\end{table}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+In tables \ref{tab:measurementstop:ant}, \ref{tab:measurementstop:catalina}, and \ref{tab:measurementstop:hibernate} we can find the top 10 entities with logical dependencies. The first column represents the name of each top 10 entity, the second column represents the fan\_in values, the third column represents the fan\_out values, the fourth column represents the fan\_in and fan\_out combined, and the fifth column represents the number of logical dependencies in which the entity is involved.
+
+
+We did these top 10 tables to offer an overview of the highest registered numbers for LD for each system. As we mentioned before, some of the key classes are also present in these tables, but not all of them.
+
+In table \ref{tab:measurementstop:hibernate} we can find the top 10 measurements for Hibernate, most of the table is occupied by inner classes of AbstractEntityPersister. This is expected behavior since class AbstractEntityPersister is also present. This behavior is caused by the impossibility to separate the updates done for a class from its inner classes in the versioning system. So, each time AbstractEntityPersister records a change, also the inner classes are considered to have changed.
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1}
+\caption{Top 10 measurements for Ant. }
+\label{tab:measurementstop:ant}
+\centering
+\scalebox{0.8}{
+\begin{tabular}{|c|ccccc|}
+\hline
+Nr.	&	Classname	&	FAN\_IN	&	FAN\_OUT	&	FAN\_TOTAL	&	LD\_NUMBER \\
+\hline
+1	&	\cellcolor{lightorange}Project	&	191	&	23	&	214	&	157	\\
+2	&	Project\$AntRefTable	&	1	&	2	&	3	&	157	\\
+3	&	Path	&	39	&	13	&	52	&	147	\\
+4	&	Path\$PathElement	&	3	&	2	&	5	&	147	\\
+5	&	\cellcolor{lightorange}IntrospectionHelper	&	18	&	24	&	42	&	143	\\
+6	&	IntrospectionHelper\$AttributeSetter	&	8	&	1	&	9	&	143	\\
+7	&	IntrospectionHelper\$Creator	&	3	&	5	&	8	&	143	\\
+8	&	IntrospectionHelper\$NestedCreator	&	7	&	1	&	8	&	143	\\
+9	&	Ant	&	2	&	15	&	17	&	136	\\
+10	&	Ant\$Reference	&	3	&	1	&	4	&	136	\\
+\hline
+\end{tabular}
+}
+\end{table}
+
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1}
+\caption{Top 10 measurements for Tomcat Catalina. }
+\label{tab:measurementstop:catalina}
+\centering
+\scalebox{0.8}{
+\begin{tabular}{|c|ccccc|}
+\hline
+Nr.	&	Classname	&	FAN\_IN	&	FAN\_OUT	&	FAN\_TOTAL	&	LD\_NUMBER \\
+\hline
+1	&	\cellcolor{lightorange}StandardContext	&	11	&	38	&	49	&	216	\\
+2	&	StandardContext\$ContextFilterMaps	&	0	&	0	&	0	&	216	\\
+3	&	StandardContext\$NoPluggabilityServletContext	&	0	&	0	&	0	&	216	\\
+4	&	\cellcolor{lightorange}Request	&	48	&	28	&	76	&	215	\\
+5	&	Request\$SpecialAttributeAdapter	&	0	&	0	&	0	&	215	\\
+6	&	ApplicationContext	&	3	&	22	&	25	&	158	\\
+7	&	ApplicationContext\$DispatchData	&	0	&	0	&	0	&	158	\\
+8	&	ContextConfig	&	3	&	26	&	29	&	143	\\
+9	&	ContextConfig\$DefaultWebXmlCacheEntry	&	0	&	0	&	0	&	143	\\
+10	&	ContextConfig\$JavaClassCacheEntry	&	0	&	0	&	0	&	143	\\
+\hline
+\end{tabular}
+}
+\end{table}
+
+
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1}
+\caption{Top 10 measurements for Hibernate. }
+\label{tab:measurementstop:hibernate}
+\centering
+\scalebox{0.8}{
+\begin{tabular}{|c|ccccc|}
+\hline
+Nr.	&	Classname	&	FAN\_IN	&	FAN\_OUT	&	FAN\_TOTAL	&	LD\_NR \\
+\hline
+1	&	AvailableSettings	&	1	&	0	&	1	&	205	\\
+2	&	AbstractEntityPersister	&	9	&	143	&	152	&	190	\\
+3	&	AbstractEntityPersister\$CacheEntryHelper	&	0	&	0	&	0	&	190	\\
+4	&	AbstractEntityPersister\$InclusionChecker	&	0	&	0	&	0	&	190	\\
+5	&	AbstractEntityPersister\$NoopCacheEntryHelper	&	0	&	0	&	0	&	190	\\
+6	&	AbstractEntityPersister\$ReferenceCacheEntryHelper	&	0	&	0	&	0	&	190	\\
+7	&	AbstractEntityPersister\$StandardCacheEntryHelper	&	0	&	0	&	0	&	190	\\
+8	&	AbstractEntityPersister\$StructuredCacheEntryHelper	&	0	&	0	&	0	&	190	\\
+9	&	Dialect	&	265	&	104	&	369	&	176	\\
+10	&	SessionFactoryImpl\$SessionBuilderImpl	&	1	&	25	&	26	&	167	\\
+\hline
+\end{tabular}
+}
+\end{table}
+
+Overall, by looking at the comparisons between FAN\_IN, FAN\_OUT, FAN\_TOTAL, and the logical dependencies in which a class is involved we could not determine a direct connection between them. Nither we can say that one influences the other.  We consider that even though the metrics are not related directly, they could be all used together to get a better view of the system connections.
 
 \newpage
 \addcontentsline{toc}{section}{References}
