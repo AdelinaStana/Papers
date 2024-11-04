@@ -35,8 +35,8 @@
 \doi{10.1109/ACCESS.2024.0429000}
 
 \title{Refining Software Clustering: The Impact of Code Co-Changes on Architectural Reconstruction}
-\author{\uppercase{Stana Adelina Diana}\authorrefmark{1} and
-\uppercase{Sora Ioana}\authorrefmark{2}
+\author{\uppercase{Adelina Diana Stana}\authorrefmark{1} and
+\uppercase{Ioana Șora}\authorrefmark{2}
 }
 
 \address[1]{Computer Science and Engineering Department
@@ -314,7 +314,7 @@ The Louvain algorithm was originally developed by Blondel et al. and is used for
 \subsubsection{Leiden}
 \label{subsubsec:leiden}
 
-The Leiden algorithm, developed by Traag et al., is an improvement over the Louvain algorithm for community detection in large networks. Like Louvain, the Leiden algorithm begins with each node assigned to its own cluster and iteratively moves nodes between clusters to optimize modularity. However, the Leiden algorithm addresses some problems of the Louvain method, particularly regarding badly connected communities and runtime performance issues \cite{leiden}.
+The Leiden algorithm, developed by Traag et al., is an improvement over the Louvain algorithm for community detection in large networks. Like Louvain, the Leiden algorithm begins with each node assigned to its own cluster and iteratively moves nodes between clusters to optimize modularity. However, the Leiden algorithm addresses some problems of the Louvain method, particularly regarding badly connected communities and runtime performance issues \cite{leiden} \cite{scikit}.
 
 The Leiden algorithm introduces a refinement phase that ensures communities are locally optimally clustered and well-connected. This refinement step distinguishes the Leiden algorithm from Louvain.
 
@@ -322,7 +322,7 @@ The Leiden algorithm introduces a refinement phase that ensures communities are 
 \subsubsection{DBSCAN}
 \label{subsubsec:dbscan}
 
-The Density-Based Spatial Clustering of Applications with Noise (DBSCAN) algorithm, introduced by Ester et al., is a density-based clustering algorithm for identifying clusters of arbitrary shape and detecting noise in data \cite{dbscan}.
+The Density-Based Spatial Clustering of Applications with Noise (DBSCAN) algorithm, introduced by Ester et al., is a density-based clustering algorithm for identifying clusters of arbitrary shape and detecting noise in data \cite{dbscan}, \cite{scikit}.
 
 DBSCAN operates based on two main parameters:
 
@@ -436,9 +436,10 @@ After applying each clustering algorithm and completing both evaluations, we exp
 \textbf{Project Name} & \textbf{Release Tag} & \textbf{Commits} & \textbf{GitHub Repository Link} & \textbf{Repository Description} \\ 
  &  & \textbf{Number} & &  \\ \hline
 Apache Ant & \href{https://github.com/apache/ant/tree/rel/1.10.13}{rel/1.10.13} & 14917 & \href{https://github.com/apache/ant}{https://github.com/apache/ant} & Apache Ant is a Java-based build tool. \\ \hline
-Apache Tomcat & \href{https://github.com/apache/tomcat/tree/8.5.93}{8.5.93} & 22698 & \href{https://github.com/apache/tomcat}{https://github.com/apache/tomcat} & Apache Tomcat software powers numerous large-scale web applications across a diverse range of industries and organizations. \\ \hline
-Hibernate ORM & \href{https://github.com/hibernate/hibernate-orm/tree/6.2.14}{6.2.14} & 16609 & \href{https://github.com/hibernate/hibernate-orm}{https://github.com/hibernate/hibernate-orm} & Hibernate ORM is an object/relational mapping solution for Java. \\ \hline
-Gson & \href{https://github.com/google/gson/tree/gson-parent-2.10.1}{gson-parent-2.10.1} & 1772 & \href{https://github.com/google/gson}{https://github.com/google/gson} & A Java serialization/deserialization library to convert Java Objects into JSON and back. \\ \hline
+Apache Tomcat & \href{https://github.com/apache/tomcat/tree/8.5.93}{8.5.93} & 22698 & \href{https://github.com/apache/tomcat}{https://github.com/apache/tomcat} & 
+Apache Tomcat is an open-source Java web server and servlet container\\ \hline
+Hibernate ORM & \href{https://github.com/hibernate/hibernate-orm/tree/6.2.14}{6.2.14} & 16609 & \href{https://github.com/hibernate/hibernate-orm}{https://github.com/hibernate/hibernate-orm} & Hibernate ORM is a Java-based object-relational mapping (ORM) framework for managing database interactions. \\ \hline
+Gson & \href{https://github.com/google/gson/tree/gson-parent-2.10.1}{gson-parent-2.10.1} & 1772 & \href{https://github.com/google/gson}{https://github.com/google/gson} & A Java library for serialization and deserialization that converts Java objects to JSON and back. \\ \hline
 \end{tabular}
 \end{table*}
 
@@ -465,8 +466,6 @@ In the third scenario, we combine logical with structural dependencies. Similar 
 
 \subsection{Results}
 \label{subsec:results}
-
-\subsubsection{Detailed Results}
 
 The experimental results are presented in this subsection in four tables, each corresponding to a different project. Table \ref{tab:clustering_results_ant} presents the results for Apache Ant, Table \ref{tab:clustering_results_tomcat} presents the results for Apache Tomcat, Table \ref{tab:clustering_results_hibernate} presents the results for Hibernate ORM, and Table \ref{tab:clustering_results_gson} presents the results for Gson.
 
@@ -682,15 +681,15 @@ The overall analysis of all the results from subsection \ref{subsec:results} ind
 
 The best results for SD+LD are observed with a strength threshold between 10-40\%. For LD only, the best results are obtained at a 100\% strength threshold. The overall trend shows that for LD only, the MQ metric increases in value with a higher strength threshold, indicating more cohesive clusters, while the MoJo metric decreases, indicating that fewer transformations are needed to reach the expected clustering. For SD+LD, the best MQ and MoJo values are obtained at lower strength thresholds, and then both metrics indicate less effective clustering solution obtained with higher strength thresholds.
 
-In the sections below, we analyze each project in detail.
+In the sections below, we analyze each project in detail and address the research questions.
 
-\subsection{Analysis of clustering results}
+\subsection{Detailed results}
 
 \subsubsection{Apache Ant}
 
 The clustering results for Apache Ant (Table \ref{tab:clustering_results_ant}) show that the combined structural and logical dependencies (SD+LD) achieved the best values with a strength threshold between 10\% and 30\%. The highest value for the MQ metric is reached with Leiden at a strength threshold of 20\%, and the highest value for MoJoFM is also reached with Leiden at a strength threshold of 10\%.
 
-Compared with the SD-only results, all SD+LD clustering solutions for all algorithms show better MQ metric values, with the highest MQ value for SD+LD being more than three times greater than the corresponding SD-only value. The MoJoFM metric does not always outperform the SD-only MoJoFM, but the values obtained are close to the SD-only results.
+Compared with the SD-only results, all SD+LD clustering solutions for all algorithms show better MQ metric values, with the highest MQ value for SD+LD being more than three times greater than the corresponding SD-only value. Similarly, the MoJoFM metric shows better results than SD-only. However, it does not always outperform the MoJoFM metric applied to SD-only data.
 
 Logical dependencies (LD) alone produced the highest MQ and MoJoFM values at the 100\% strength threshold for both Leiden and Louvain, with the obtained metric values being higher than those of SD-only and SD+LD. However, the percentage of entities covered is significantly lower (LD(100) covers only 12.37\% of the system). 
 If we look at LD(10), where there is a 61.89\% coverage of the system, which is more compared to LD(100), both metrics still perform better than SD-only and SD+LD(10). However, there is still a gap until 100\% coverage.
@@ -729,7 +728,7 @@ We observe the same decline in results with a stricter strength threshold for SD
 
 To ensure that the decline in performance for SD+LD with a stricter strength threshold is indeed caused by the fact that LD are significantly fewer compared to SD, and that part of them is duplicated by SD at higher thresholds, we added an additional experiment to our study. In this experiment, whose results can be found in Table \ref{tab:clustering_results_multiplication}, we increased the weights associated with LD(100) for Apache Tomcat to confirm that we are dealing with an LD quantity problem rather than a weight problem.
 
-Therefore, in this experiment, we increased the weight assigned to each logical dependency filtered with a 100\% strength threshold from the Apache Tomcat system and re-ran scenario III from Fig. \ref{fig:scenatrio}.
+Therefore, in this experiment, we increased the weight assigned to each logical dependency filtered with a 100\% strength threshold from the Apache Tomcat system by values ranging from 1 to 5 and re-ran scenario III from Fig. \ref{fig:scenatrio}.
 
 
 To maintain consistency, we used the same columns as in the other result tables (\ref{tab:clustering_results_ant}, \ref{tab:clustering_results_tomcat}, \ref{tab:clustering_results_hibernate}, \ref{tab:clustering_results_gson}), with the addition of two new columns:
@@ -760,7 +759,7 @@ To maintain consistency, we used the same columns as in the other result tables 
 \end{table*}
 
 
-In Table \ref{tab:systems_weights}, which presents the average weights associated with the dependencies across all systems, we can see that for Tomcat, the average weight for LD(10) is already almost double than SD average weight. For LD(100), the average weight is approximately five times higher than that of SD. Still, we wanted to ensure that the issue comes from the LD quantity and not the weights, so we multiplied the LD weights by values ranging from 1 to 5, where 1 is the baseline (since multiplying by 1 does not change the LD weights).
+In Table \ref{tab:systems_weights}, which presents the average weights associated with the dependencies across all systems, we can see that for Tomcat, the average weight for LD(10) is already almost double than SD average weight. For LD(100), the average weight is approximately five times higher than that of SD. 
 
 Based on the metric values obtained for multiplication factors of 2 to 5, we can see that after increasing the weights assigned to LD, the metric values improve only slightly, with changes recorded at the second decimal: a 0.02 improvement for Louvain and 0.07 for Leiden. The results for DBSCAN remain unchanged due to the fixed values of MinPts and Eps and the already high LD weights for LD(100). 
 
@@ -817,26 +816,62 @@ The results for this system highlight the difficulty of achieving better cluster
 
 In this section, we will answer our research questions based on the results from our experiments. 
 
-The following research questions guided our investigation:
+\textit{ \textbf{RQ1:} Does using structural dependencies (SD) combined with logical dependencies (LD) improve software clustering results compared to traditional approaches using only structural dependencies (SD)?} 
 
-\begin{itemize}
-    \item \textbf{RQ1:} Does using structural dependencies (SD) combined with logical dependencies (LD) improve software clustering results compared to traditional approaches using only structural dependencies (SD)?
-    \item \textbf{RQ2:} Can using only logical dependencies (LD) produce good software clustering results?
-    \item \textbf{RQ3:} How do different filtering settings for logical dependencies (LD) impact clustering results, and which filtering settings provide the best performance?
-\end{itemize}
+Based on the results from all four systems analyzed, the combination of SD and LD performed better than SD-only according to the MQ and MoJoFM metrics, confirming that using SD+LD improves software clustering results. Across different strength thresholds, SD+LD achieved higher MQ and MoJoFM values for all clustering algorithms, indicating better modularization. 
+The effectiveness of combining SD and LD is influenced by the filtering thresholds applied to logical dependencies. Lower strength thresholds (10\% to 40\%) resulted in better MQ and MoJoFM values across all clustering algorithms compared with higher thresholds.
 
-\textbf{RQ1:} Based on the results from all four systems analyzed, the combination of SD and LD generally performed better than SD-only according to the MQ and MoJoFM metrics, confirming that using SD+LD improves software clustering results. Across different strength thresholds, SD+LD achieved higher MQ values for all clustering algorithms, indicating better modularization quality. In most cases, the MoJoFM metric also showed improvement, although not always across all LD strength thresholds. These results suggest that combining SD with LD leads to better clustering, as the logical dependencies indeed provide additional information about the relationships between software entities.
+At higher strength thresholds, the MQ and MoJoFM results decline. This decline occurs because the amount of logical dependencies is significantly reduced by the stricter strength thresholds. This reduction leads to fewer new relationships being introduced into the clustering process. Based on our previous research on the overlap between SD and LD, we observed that higher strength thresholds correlate with increased overlap between the two types of dependencies. This overlap indicates that at higher strength thresholds, not much new information is added to the system besides what is already introduced by structural dependencies, reducing the impact of logical dependencies on clustering results.
+
+However, when considering a lower strength threshold, the relationship between the system size and the number of commits in the version history becomes an important factor.
+
+In the case of Hibernate, a stricter strength threshold was needed to achieve the best metric values compared to other systems. Although at a 10\% strength threshold for LD, the metrics obtained are better than SD-only, the system reached peak metric values at a 40\% threshold across all algorithms.
+
+Hibernate, with 16,609 commits and 4,414 entities, has a significantly lower average number of commits per entity than Ant (14,917 commits and 517 entities) or Tomcat (22,698 commits and 662 entities). This lower ratio means that each entity in Hibernate is, on average, involved in fewer commits. As a result, the co-change data extracted for logical dependencies are sparser and contain more noise at lower strength thresholds.
+
+Applying a stricter strength threshold (e.g., 40\%) filters out these weaker logical dependencies.
+
+In contrast, systems like Ant and Tomcat, with higher ratios of commits to entities, obtain better results with logical dependencies at a 10\% strength threshold because entities participate in more commits on average.
+
+In conclusion, with an appropriate threshold, combining SD with LD leads to better clustering results than using SD alone.
 
 
-\textbf{RQ2:} Using LD-only also produced good clustering results, especially at higher strength thresholds. LD(100) produced the highest MQ and MoJoFM values for most systems. However, the coverage of LD-only is significantly lower at higher thresholds. Despite this, the metric results for LD(10) are, in most cases, still better than those for SD-only and SD+LD. For Ant and Tomcat, LD(10) covers more than 60\% of the system, while for Hibernate and Gson, the coverage is slightly above 30\%.
+\textit{\textbf{RQ2:} Can using only logical dependencies (LD) produce good software clustering results?} 
 
+Using LD-only produced good clustering results, especially at higher strength thresholds. LD(100) produced the highest MQ and MoJoFM values for most systems compared with SD-only and SD+LD. However, the coverage of LD-only is significantly lower at these higher thresholds. For all systems, after filtering with 100\% strength threshold, the system coverage of the remaining logical dependencies is less than 17\% of the total known dependencies in the system.
 
-\textbf{RQ3:} The impact of different filtering settings on clustering performance was observed across all systems. For LD-only, lower strength thresholds, such as LD(10), provided better system coverage but resulted in lower MQ and MoJoFM values compared to higher thresholds like LD(100), where the best results were often achieved. The best performance for SD+LD was generally observed with strength thresholds between 10\% and 40\%, covering the entire system.
+Thus, while LD(100) provides the highest metric results compared to SD+LD and SD-only, it represents only a small subset of the system's dependencies.
+
+On the other hand, the metric results for LD(10) are, in most cases, still better than those for SD-only and SD+LD. For Apache Ant and Tomcat, LD(10) covers more than 60\% of the system, while for Hibernate and Gson, the coverage is slightly above 30\%. 
+
+Therefore, LD(10) can serve as an alternative to SD-only or SD+LD, especially if structural dependencies are not available from the system.
+
+However, it's important to consider that the performance of LD-only at higher strength thresholds may vary depending on the system's characteristics, such as the number of commits and the number of entities. For example, in the case of Gson, the performance at a 100\% strength threshold is not as good as in other systems, reaching its peak at a 40\% threshold. This is due to the lower number of entities remaining at higher thresholds, with only 18 entities at the 80\% to 100\% strength thresholds, and the relatively small number of commits considered.
+
+In summary, while LD-only can produce good clustering results, especially at higher strength thresholds, its limited coverage reduces its usability, as the clustering is intended for the entire system, not just a small subset. At lower strength thresholds, LD-only offers a good alternative to SD-only, providing acceptable coverage.
+
+\textit{ \textbf{RQ3:} How do different filtering settings for logical dependencies (LD) impact clustering results, and which filtering settings provide the best performance?}
+
+The impact of different filtering settings on clustering performance was observed across all systems. For LD-only clustering, lower strength thresholds like 10\% provided good system coverage but had lower MQ and MoJoFM values compared to higher thresholds like 100\%, where the best metric results were often achieved. However, at these higher thresholds, the system coverage was significantly reduced.
+
+For the combination of SD and LD (SD+LD), the best performance was generally observed with strength thresholds between 10\% and 40\%. At these thresholds, the clustering solutions achieved higher MQ and MoJoFM values compared to using SD alone.
+
+Selecting the appropriate filtering threshold is important. Lower thresholds include more logical dependencies, introducing additional relationships that improve clustering results. However, a too-low threshold may introduce noise, especially in systems with a low commits-to-entities ratio. On the other side, higher thresholds reduce noise but may exclude valuable dependencies and decrease coverage.
+
+The optimal threshold may vary depending on system characteristics, so it is important to consider factors such as the number of commits, the size of the system, or whether it is used in combination with SD, when selecting the filtering settings.
 
 
 \section{Conclusion}
 \label{sec:conclusion}
-It is what it is
+Our findings indicate that using logical dependencies improves software clustering. Integrating LD with SD achieved higher MQ and MoJoFM values across all clustering algorithms and projects compared to the SD-only approach, indicating enhanced clustering due to the additional information provided by logical dependencies.
+
+Using logical dependencies alone achieved the highest MQ and MoJoFM values at certain strength thresholds when compared with SD-only and SD+LD combinations. However, these strength thresholds corresponded to low system coverage, meaning that a significant portion of software entities was excluded from the clustering process. This suggests that logical dependencies alone may not be sufficient when full system coverage is required.
+
+The impact of using logical dependencies is influenced by the filtering thresholds applied during their extraction. Lower strength thresholds (10\% to 40\%) provided a good trade-off between including meaningful co-change relationships and minimizing noise. At these thresholds, the combined SD+LD approach outperformed the SD-only approach. At higher strength thresholds (e.g., 100\%), the reduced coverage and increased overlap between LD and SD minimized the benefits of using logical dependencies.
+
+This highlights the importance of selecting appropriate filtering thresholds for logical dependencies. By using filtering settings according to the characteristics of the software system, users can benefit from logical dependencies to improve architectural reconstruction.
+
+In conclusion, logical dependencies, when appropriately filtered and combined with structural dependencies, enhance software clustering results while maintaining full system coverage. This integration helps improve system understanding and maintainability. In cases where structural dependencies are unavailable, logical dependencies alone offer a good alternative. Our future work will involve exploring automated methods for determining the optimal strength filter threshold for different systems.
 
 \begin{thebibliography}{00}
 
@@ -869,6 +904,8 @@ It is what it is
 \bibitem{b16} Silva, Luciana \& Valente, Marco \& Maia, Marcelo. (2015). Co-change Clusters: Extraction and Application on Assessing Software Modularity. Transactions on Aspect-Oriented Software Development. 10.1007/978-3-662-46734-3\_3. 
 \bibitem{b17} Murtagh, Fionn \& Contreras, Pedro. (2012). Algorithms for hierarchical clustering: An overview. Wiley Interdisc. Rew.: Data Mining and Knowledge Discovery. 2. 86-97. 10.1002/widm.53. 
 \bibitem{b18} Amarjeet Prajapati, Anshu Parashar, Amit Rathee. Multi-dimensional information-driven many-objective software remodularization approach. Frontiers of Computer Science in China, 17(3):173209, 2023.
+\bibitem{scikit} T. Bonald, N. de Lara, Q. Lutz, B. Charpentier, Scikit-network: Graph Analysis in Python, Journal of Machine Learning Research, vol.~21, no.~185, pp.~1--6, 2020. 
+
 
 
 \end{thebibliography}
