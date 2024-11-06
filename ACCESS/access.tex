@@ -48,15 +48,14 @@
 {Author \headeretal: Preparation of Papers for IEEE TRANSACTIONS and JOURNALS}
 {Author \headeretal: Preparation of Papers for IEEE TRANSACTIONS and JOURNALS}
 
-\corresp{Corresponding author: Stana Adelina Diana (e-mail: stana.adelina.diana@gmail.com).}
-
+\corresp{Corresponding author: Adelina Diana Stana  (e-mail: stana.adelina.diana@gmail.com).}
 
 \begin{abstract}
 Version control systems are important for tracking and managing changes in software code, but they also offer information about the relationships between software entities. When multiple software entities (e.g., classes, interfaces) are modified together, it may indicate an underlying connection. These code co-changes represent a type of software dependency that can be used together with structural or lexical dependencies to improve the understanding of a system's architecture.
 
 In this paper, we explore using code co-changes as input for software clustering for architectural reconstruction. Since structural dependencies are the most commonly used dependencies in software clustering, we investigate whether integrating them with code co-changes provides better results than using either dependency type alone.
 
-Our experiments are applied to four open-source Java projects from GitHub. For each project, we apply three distinct clustering algorithms (Louvain, Leiden, and DBSCAN) and evaluate their performance using two clustering evaluation metrics. These metrics allow us to compare the effectiveness of clustering based on code co-changes alone or clustering that combines co-changes with structural dependencies, offering a better understanding of how these co-changes influence software architecture reconstruction.
+Our experiments are applied to four open-source Java projects from GitHub. For each project, we apply three distinct clustering algorithms (Louvain, Leiden, and DBSCAN) and evaluate their performance using two clustering evaluation metrics. These metrics allow a comparison between clustering based solely on code co-changes and clustering that integrates both co-changes and structural dependencies, offering a better understanding of how these co-changes influence software architecture reconstruction.
 \end{abstract}
 
 \begin{keywords}
@@ -70,27 +69,27 @@ Architectural reconstruction, code co-changes, logical dependencies, software cl
 \section{Introduction}
 \label{sec:introduction}
 
-Software systems often face a lack of documentation. Even if there was original documentation at the beginning of development, over the years it may become outdated or lost. Additionally, the original developers may leave the company, taking with them knowledge about how the software was designed. This situation challenges the teams when it comes to maintenance or modernization. In this context, recovering the system's architecture is essential. Understanding the system's architecture helps developers better evaluate and understand the nature and impact of changes they need to make. One technique to aid reconstructing the system architecture is software clustering. Software clustering involves creating cohesive groups (modules) of software entities based on their dependencies and interactions.
+Software systems often need more documentation. Even if there was original documentation at the beginning of development, it may become outdated over the years. Additionally, the original developers may leave the company, taking with them knowledge about how the software was designed. This situation challenges the teams when it comes to maintenance or modernization. In this context, recovering the system's architecture is essential. Understanding the system's architecture helps developers evaluate better and understand the nature and impact of changes they must make. One technique to help in reconstructing the system architecture is software clustering. Software clustering involves creating cohesive groups (modules) of software entities based on their dependencies and interactions.
 
-Among the dependencies that can be used for software clustering are structural dependencies (relationships between entities based on code analysis), lexical dependencies (relationships based on naming conventions),  and code co-changes/logical dependencies (relationships between entities extracted from the version control system), among others. 
+Among the dependencies that can be used for software clustering are structural dependencies (relationships between entities based on code analysis), lexical dependencies (relationships based on naming conventions), and code co-changes/logical dependencies (relationships between entities extracted from the version control system), and others.
 
-In this paper, we assess the impact of logical dependencies, alone and in combination with structural dependencies, in software clustering. The structural dependencies are used as they are extracted from static code analysis, while the logical dependencies are filtered co-changes obtained from the version control system \cite{b15}. The co-changes are filtered to enhance their reliability and to remove noise caused by large commits with many files that are not related to development activities (e.g., formatting changes) or rare co-changes that may not indicate a true dependency \cite{b1}.
+This paper assesses the impact of logical dependencies in software clustering alone and combination with structural dependencies. The structural dependencies are used as they are extracted from static code analysis, while the logical dependencies are filtered co-changes obtained from the version control system \cite{b15}. The co-changes are filtered to enhance their reliability and remove noise caused by large commits with many files unrelated to development activities (e.g., formatting changes) or rare co-changes that may not indicate a true dependency \cite{b1}.
 
 The following research questions guide our investigation:
 
 \begin{itemize}
-    \item \textbf{RQ1:} Does using structural dependencies (SD) combined with logical dependencies (LD) improve software clustering results compared to traditional approaches using only structural dependencies (SD)?
-    \item \textbf{RQ2:} Can using only logical dependencies (LD) produce good software clustering results?
-    \item \textbf{RQ3:} How do different filtering settings for logical dependencies (LD) impact clustering results, and which filtering settings provide the best performance?
+\item \textbf{RQ1:} Does using structural dependencies (SD) combined with logical dependencies (LD) improve software clustering results compared to traditional approaches using only structural dependencies (SD)?
+\item \textbf{RQ2:} Can using only logical dependencies (LD) produce good software clustering results?
+\item \textbf{RQ3:} How do different filtering settings for logical dependencies (LD) impact clustering results, and which filtering settings provide the best performance?
 \end{itemize}
 
-To answer these research questions, we apply three different clustering algorithms (Louvain, Leiden, and DBSCAN) to different open-source projects. We then evaluate the results using two metrics: MQ (Modularization Quality) \cite{b10} and MoJoFM (Move and Join e\textbf{F}fectiveness \textbf{M}easure) \cite{mojofm}. The MoJoFM metric is used for external evaluation, evaluating against the perspective of the system’s architect or developers, while the MQ metric is used for internal evaluation, based on the software structure itself. These two metrics allow us to compare the effectiveness of using structural dependencies alone, logical dependencies alone, and a combination of both, providing a better understanding of how different dependency types and filtering settings impact the clustering results.
+To answer these research questions, we apply three different clustering algorithms (Louvain, Leiden, and DBSCAN) to different open-source projects. We then evaluate the results using two metrics: MQ (Modularization Quality) \cite{b10} and MoJoFM (Move and Join e\textbf{F}fectiveness \textbf{M}easure) \cite{mojofm}. The MoJoFM metric is used for external evaluation, evaluating against the perspective of the system's architect or developers. The MQ metric is used for internal evaluation based on the software structure itself. These two metrics allow us to compare the effectiveness of using structural and logical dependencies alone and combined. This comparison helps clarify how different dependencies and filtering choices affect clustering results.
 
 
 In Section \ref{sec:related_work}, we review the related work and previous studies that used various dependencies for software clustering and their metrics for evaluation.
-Section \ref{sec:dependencies} provides an overview of structural and logical dependencies used in our approach, explaining how these dependencies are extracted. 
-Section \ref{sec:methodology_implementation} details the workflow and implementation of our approach, including the extraction and filtering of dependencies, and the clustering algorithm used.
-The plan and results of our experiments on four open-source projects are presented in Section \ref{sec:experiment}. Section \ref{sec:evaluation} evaluates our results by using the Modularization Quality (MQ) metric and the MoJoFM metric. We also manually analyze some of the clustering solutions.
+Section \ref{sec:dependencies} provides an overview of structural and logical dependencies used in our approach, explaining how these dependencies are extracted.
+Section \ref{sec:methodology_implementation} details the workflow and implementation of our approach, including the extraction and filtering of dependencies and the clustering algorithm used.
+The plan and results of our experiments on four open-source projects are presented in Section \ref{sec:experiment}. Section \ref{sec:evaluation} evaluates our results using the Modularization Quality (MQ) metric and the MoJoFM metric. We also manually analyze some of the clustering solutions.
 Finally, Section \ref{sec:conclusion} contains our conclusions and findings.
 
 \subsection{Abbreviations and Acronyms}
@@ -109,26 +108,26 @@ The following abbreviations and acronyms are used throughout this article:
 
 Several studies have explored the use of different types of dependencies in software clustering, applying different algorithms to improve clustering results and using various metrics to evaluate the results obtained.
 
-Tzerpos and Holt developed ACDC (Algorithm for Comprehension-Driven Clustering), a pattern-driven clustering algorithm that uses subsystem structures such as source file patterns, directory patterns, system graph patterns, and support library patterns to detect similarities and create clusters \cite{acdc}. For result evaluation, the authors introduced the MoJo metric, which counts the minimum number of move and join operations required to transform one clustering result into another, assessing how close one clustering solution is to another \cite{b3}, \cite{tzerpos1}. Later, Wen and Tzerpos introduced the MoJoFM metric, an enhanced version of the original MoJo distance metric for more effective measurements, as presented in more detail in subsection \ref{subsec:mojofm} \cite{mojofm}.
+Tzerpos and Holt developed ACDC (Algorithm for Comprehension-Driven Clustering). This pattern-driven clustering algorithm uses subsystem structures such as source file patterns, directory patterns, system graph patterns, and support library patterns to detect similarities and create clusters \cite{acdc}. For result evaluation, the authors introduced the MoJo metric, which counts the minimum number of move and join operations required to transform one clustering result into another, assessing how close one clustering solution is to another \cite{b3}, \cite{tzerpos1}. Later, Wen and Tzerpos introduced the MoJoFM metric, an enhanced version of the original MoJo distance metric for more effective measurements, as presented in more detail in subsection \ref{subsec:mojofm} \cite{mojofm}.
 
-Corazza et al. \cite{b13}, \cite{corazza2} used lexical dependencies derived from code comments, class names, attribute names, and parameter names, applying Hierarchical Agglomerative Clustering (HAC) to group related entities. For evaluating the results, the authors used a metric based on MoJo distance metric and NED (Non-Extremity Cluster Distribution), which measures that the formed clusters are not too large or too small.
+Corazza et al. \cite{b13}, \cite{corazza2} used lexical dependencies derived from code comments, class names, attribute names, and parameter names, applying Hierarchical Agglomerative Clustering (HAC) to group-related entities. For evaluating the results, the authors used a metric based on the MoJo distance metric and NED (Non-Extremity Cluster Distribution), which measures that the formed clusters are not too large or too small.
 
-Andritsos and Tzerpos ~\cite{tzerpos1} used structural dependencies and nonstructural attributes, such as file names and developer names, and proposed the LIMBO algorithm, a hierarchical clustering algorithm for clustering software systems. To evaluate the output of the algorithm, they used the MoJo distance metric.
+Andritsos and Tzerpos ~\cite{tzerpos1} used structural dependencies and nonstructural attributes, such as file names and developer names, and proposed the LIMBO algorithm, a hierarchical clustering algorithm for clustering software systems. They used the MoJo distance metric to evaluate the algorithm's output.
 
 Anquetil et al.~\cite{b14} also used lexical information, including file names, routine names, included files, and comments. They applied an n-gram-based clustering approach to detect semantic similarities between entities and evaluated the results using precision and recall metrics.
 
-Maletic and Marcus \cite{maletic} propose an approach to software clustering that uses semantic dependencies extracted using Latent Semantic Indexing (LSI), a technique for identifying similarities between software components. They apply the minimal spanning tree (MST) algorithm for clustering, and evaluate the results using metrics based on both semantic and structural information.
+Maletic and Marcus \cite{maletic} propose an approach to software clustering that uses semantic dependencies extracted using Latent Semantic Indexing (LSI), a technique for identifying similarities between software components. They apply the minimal spanning tree (MST) algorithm for clustering and evaluate the results using metrics based on both semantic and structural information.
 
-Wu et al. \cite{wu} conducted a comparative study of six clustering algorithms, using structural dependencies on five software systems. Four of the algorithms are based on agglomerative clustering, one on program comprehension patterns, and the one  algorithm is a customized version of Bunch \cite{b10}. The performance of these algorithms was evaluated using the MoJo metric and NED (Non-Extreme Distribution).
+Wu et al. \cite{wu} conducted a comparative study of six clustering algorithms using structural dependencies on five software systems. Four of the algorithms are based on agglomerative clustering, one on program comprehension patterns, and one algorithm is a customized version of Bunch \cite{b10}. The performance of these algorithms was evaluated using the MoJo metric and NED (Non-Extreme Distribution).
 
- Mancoridis and Mitchell ~\cite{b10}, \cite{b101}, \cite{bunch} developed the Bunch tool for software clustering and used structural dependencies as input. The tool applies clustering algorithms to the structural dependency graph and outputs the system's organization. For evaluation, the authors introduced the Modularization Quality (MQ) metric, which is described in more detail in Section \ref{subsec:mq}, and is also used in our current experiments as an evaluation metric.
+Mancoridis and Mitchell ~\cite{b10}, \cite{b101}, \cite{bunch} developed the Bunch tool for software clustering and used structural dependencies as input. The tool applies clustering algorithms to the structural dependency graph and outputs the system's organization. For evaluation, the authors introduced the Modularization Quality (MQ) metric, described in more detail in Section \ref{subsec:mq}, and is also used in our current experiments as an evaluation metric.
 
 
 Prajapati et al.~\cite{b18} propose a many-objective SBSR (search-based software remodularization) approach with an improved definition of objective functions based on lexical, structural, and change-history dependencies. The authors evaluate their approach on several open-source software systems using the MoJoFM metric for external evaluation and the MQ metric for internal evaluation.
 
-Şora et al.~\cite{b12}, \cite{b19} developed the ARTs (Architecture Reconstruction Tool Suite) for their experiments on improving software architecture reconstruction through clustering. The tool suite implements various clustering algorithms, such as minimum spanning tree-based clustering, metric-based clustering, search-based clustering, and hierarchical clustering, primarily using structural dependencies as input. The research focuses on identifying the right factors for direct coupling between classes, indirect coupling, and layered architecture. The results of applying these different factors are evaluated using the MoJo distance metric.
+Şora et al.~\cite{b12}, \cite{b19} developed the ARTs (Architecture Reconstruction Tool Suite) for their experiments on improving software architecture reconstruction through clustering. The tool suite implements various clustering algorithms, such as minimum spanning tree-based, metric-based, search-based, and hierarchical clustering, primarily using structural dependencies as input. The research focuses on identifying the right factors for direct coupling between classes, indirect coupling, and layered architecture. The results of applying these different factors are evaluated using the MoJo distance metric.
 
-Silva et al.~\cite{b16} investigated the use of solely co-change dependencies as input for the Chameleon algorithm, an agglomerative hierarchical clustering method, to identify clusters. For evaluation, the authors compared the clusters generated from co-change dependencies with the system's package structure using distribution maps.
+Silva et al.~\cite{b16} investigated using solely co-change dependencies as input for the Chameleon algorithm, an agglomerative hierarchical clustering method, to identify clusters. For evaluation, the authors used distribution maps to compare the clusters generated from co-change dependencies with the system's package structure.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -136,13 +135,13 @@ Silva et al.~\cite{b16} investigated the use of solely co-change dependencies as
 \section{Structural and Logical Dependencies}
 \label{sec:dependencies}
 
-Software clustering relies on various types of dependencies to identify relationships between software entities. Structural dependencies, have been mostly used due to their reliability \cite{b12}. However, recent research has started incorporating other types of dependencies besides structural dependencies \cite{b13}, \cite{b14}, \cite{b18}.  In this section, we will present an overview of structural and logical dependencies, focusing on how they are extracted.
+Software clustering relies on various dependencies to identify relationships between software entities. Structural dependencies have been mostly used due to their reliability \cite{b12}. However, recent research has started incorporating other types of dependencies besides structural dependencies \cite{b13}, \cite{b14}, \cite{b18}. This section will present an overview of structural and logical dependencies, focusing on how they are extracted.
 
 \subsection{Structural Dependencies}
 
-Structural dependencies are important for understanding the architecture of a software system because they reveal how different modules interact at the code level. In our research, we extract structural dependencies using a tool from our previous work \cite{b4}. This tool analyzes the source code to identify various types of relationships between software entities and exports them in CSV format.
+Structural dependencies are important for understanding the architecture of a software system because they reveal how different modules interact at the code level. In our research, we extract structural dependencies using a tool from our previous work \cite{b4}. This tool analyzes the source code to identify various relationships between software entities and exports them in CSV format.
 
-Not all structural dependencies have the same impact on the architecture and behavior of a software system. To reflect their importance, we assign weights to different types of dependencies. This weighting ensures that more important relationships have a greater influence on the clustering process.
+Structural dependencies do not all have the same level of influence on a software system’s architecture and behavior. For instance, the relationship between a variable and the class that uses it is not the same as the relationship between a class and the interface it implements. To reflect these differences, we assign different weights to each type of dependency.
 
 The dependency types and weights were previously defined in related works on clustering \cite{b19}, \cite{b20}.
 
@@ -152,13 +151,13 @@ Table \ref{tab:structural_weights} shows the weights assigned to different categ
 \centering
 \begin{tabular}{|c|l|}
 \hline
-\textbf{Weight} & \textbf{Dependency types} \\ 
+\textbf{Weight} & \textbf{Dependency types} \\
 \hline
 4 & Interface realization \\
-3 & Inheritance, parameter, return type, field, cast, type binding \\ 
-2 & Method call, field access, instantiation \\ 
-1 & Local variable \\ 
- \hline
+3 & Inheritance, parameter, return type, field, cast, type binding \\
+2 & Method call, field access, instantiation \\
+1 & Local variable \\
+\hline
 \end{tabular}
 \caption{Weights assigned to different structural dependency types. \cite{b20}}
 \label{tab:structural_weights}
@@ -179,27 +178,28 @@ The weights are assigned based on the following considerations:
 \subsection{Logical Dependencies}
 \label{subsec:ld}
 
-We refer to logical dependencies as the filtered co-changes between software entities. A co-change occurs when two or more software entities are modified together during the same commit in the version control system. Co-changes indicate that these entities are likely related or dependent on each other, directly or indirectly.
+We refer to logical dependencies as the filtered co-changes between software entities. A co-change occurs when two or more software entities are modified together during the same commit in the version control system. Co-changes indicate that these entities are likely directly or indirectly related or dependent on each other.
 
-There is a degree of uncertainty associated with co-changes. Compared to structural dependencies, where the presence of a dependency is certain, co-changes are less reliable. For example, if the system was migrated from one version control system to another, the first commit will include all the entities from the system at that point in time. Should we consider all these entities as related to one another in this case? This would introduce false dependencies and reduce the likelihood of achieving accurate results when combining them with more reliable types of dependencies.
+Co-changes are associated with a degree of uncertainty. Compared to structural dependencies, where a dependency is certain, co-changes are less reliable. For example, if the system was migrated from one version control system to another, the first commit will include all the entities from the system at that point in time. Should we consider all these entities related to one another in this case? This would introduce false dependencies and reduce the likelihood of achieving accurate results when combining them with more reliable types of dependencies.
 
-Even if we address the issue of the first commit, it can still happen that a developer resolves multiple unrelated issues in the same commit (even though this is not recommended by development processes).
+Even if we address the issue of the first commit, a developer can still resolve multiple unrelated issues in the same commit (even though development processes do not recommend this).
 
-To solve this problem, in our previous works, we refined some filtering methods to ensure that the co-changes that remain after filtering are more reliable and suitable for use with other dependencies or individually \cite{b4}, \cite{b5}, \cite{b6}. Based on our previous results, the filters we decided to use further in our research are the commit size filter and the strength filter. Both filters are used together, and the end result is the set of logical dependencies that we use to generate software clusters.
+To solve this problem, in our previous works, we refined some filtering methods to ensure that the co-changes that remain after filtering are more reliable and suitable for use with other dependencies or individually \cite{b4}, \cite{b5}, \cite{b6}. Based on our previous results, the filters we decided to use further in our research are the commit size filter and the strength filter. Both filters are used together, and the result is the set of logical dependencies that we use to generate software clusters.
 
 \subsubsection{Commit Size Filter}
 
 The commit size filter filters out all co-changes that originate from commits that exceed a certain number of files.
 
-We are interested in extracting dependencies from code commits that involve feature development or bug fixes because that is when developers change related code files. If multiple unrelated features or bug fixes are solved in a single commit, it will appear as though all the entities in those files are related, even if they are not.
+We are interested in extracting dependencies from code commits that involve feature development or bug fixes because that is when developers change related code files. If multiple unrelated features or bug fixes are solved in a single commit, it will appear that all the entities in those files are related, even if they are not.
 
-One scenario where this issue arises is the first commit of a software system when it is ported from one versioning system to another. This commit will contain many changed code files, but these changes do not originate from any functionality change, so they generate numerous irrelevant co-changes for the system.
+One scenario where this issue arises is the first commit of a software system when it is ported from one versioning system to another. This commit will contain many changed code files, but these changes do not originate from any functionality change, generating numerous irrelevant co-changes for the system.
 
-A similar scenario occurs with merge commits. A merge commit is created automatically when you perform a merge operation to integrate changes from one branch into another. After integration, all commits from the branch are added to the target branch, and on top of that, there is the merge commit containing all changes from the commits merged into a single commit. Since this commit contains only a merge of multiple smaller, related issues/features solved, it is better to gather information from the smaller commits rather than from the overall merge commit.
-What both scenarios above have in common is the large number of files involved in the commits. Based on our previous research and measurements regarding the number of files involved in a commit, we chose to set a threshold of 20 files \cite{b4}, \cite{b5}. Therefore, all co-changes that originate from commits with more than 20 changed code files are filtered out.
+A similar scenario occurs with merge commits. A merge commit is automatically created when developers perform a merge operation to integrate changes from one branch into another. After integration, all commits from the branch are added to the target branch, and on top of that, there is the merge commit containing all changes from the commits merged into a single commit. Since this commit contains only a merge of multiple smaller, related issues/features solved, it is better to gather information from the smaller commits rather than from the overall merge commit.
+
+Both scenarios above have in common the large number of files involved in the commits. Based on our previous research and measurements regarding the number of files involved in a commit, we set a threshold of 20 files \cite{b4}, \cite{b5}. Therefore, all co-changes originating from commits with more than 20 changed code files are filtered out.
 
 
-Table \ref{tab:commit_statistics} presents the commit statistics for the studied projects. The columns represent the percentage of commits that modified under 5 files, between 5 and 10 files, between 10 and 20 files, and above 20 files. We can observe that most of the commits have under 5 files changed, with Apache Tomcat having more than 90\% of the commits with less than 5 files changed. On the opposite side, only a few commits involve more than 20 files changed, Hibernate ORM having the highest percentage at 8.39\%. Overall, filtering based on commit size does not significantly reduce the number of commits considered.
+Table \ref{tab:commit_statistics} presents the commit statistics for the studied projects. The columns represent the percentage of commits with under 5 files modified, between 5 and 10 files, between 10 and 20 files, and above 20 files modified. We can observe that most commits have under 5 files changed, with Apache Tomcat having more than 90\% of the commits with less than 5 files changed. On the opposite side, only a few commits involve more than 20 files changed, Hibernate ORM having the highest percentage at 8.39\%. Overall, filtering based on commit size does not significantly reduce the number of commits considered.
 
 \begin{table}[ht]
     \centering
@@ -220,13 +220,13 @@ Table \ref{tab:commit_statistics} presents the commit statistics for the studied
 
 \subsubsection{Strength Filter}
 
-This filter focuses on the reliability of the co-changes. If a pair of co-changing entities appears only once in the entire history of the system, it might be less reliable than a pair that appears more frequently.
+This filter focuses on the reliability of the co-changes. If a pair of co-changing entities appears only once in the system's history, it might be less reliable than a pair that appears more frequently.
 
 Zimmermann et al. introduced the support and confidence metrics to measure the significance of co-changes \cite{b7}.
 
-The \textit{support metric} of a rule $(A \rightarrow B)$ where A is the antecedent and B is the consequent of the rule, is defined as the number of commits (transactions) in which both entities are changed together.
+The \textit{support metric} of a rule $(A \rightarrow B)$, where A is the antecedent and B is the consequent of the rule, is defined as the number of commits (transactions) in which both entities are changed together.
 
-The \textit{confidence metric} of $(A \rightarrow B)$, as defined in Equation \eqref{eq:confidence} , focuses on the antecedent of the rule and is the number of commits together of both entities divided by the total number of commits of (A).
+The \textit{confidence metric} of $(A \rightarrow B)$, as defined in Equation \eqref{eq:confidence}, focuses on the antecedent of the rule and is the number of commits together of both entities divided by the total number of commits of (A).
 
 
 \begin{equation}
@@ -235,28 +235,28 @@ The \textit{confidence metric} of $(A \rightarrow B)$, as defined in Equation \e
 \end{equation}
 
 
-The confidence metric favors entities that change less and more frequently together, rather than entities that change more with a wider variation of other entities.
+The confidence metric favors entities that change less and more frequently together rather than entities that change more with a wider variation of other entities.
 
 Assuming that (A) was changed in 10 commits and, of these 10 commits, 9 also included changes to (B), the confidence for the rule $(A \rightarrow B)$ is 0.9. On the other hand, if (C) was changed in 100 commits and, of these 100 commits, 50 also included changes to (D), the confidence for the rule $(C \rightarrow D)$ is 0.5. Therefore, in this scenario, we would have more confidence in the first pair $(A \rightarrow B)$ than in the second pair $(C \rightarrow D)$, even though the second pair has more than five times more updates together.
 
-To favor entities that are involved in more commits together, we calculated a \textit{system factor}. This system factor is the mean value of the support metric values for all entity pairs.
+To favor entities involved in more commits together, we calculated a \textit{system factor}. This system factor is the mean value of the support metric values for all entity pairs.
 
-The system factor is multiplied with the calculated confidence metric value. In addition, since we plan to use the metric values as weights, together with the weights of the structural dependencies, we multiply by 100 to scale the metric value to be supraunitary, and we clip the results between 0 and 100.
+The system factor is multiplied by the calculated confidence metric value. In addition, since we plan to use the metric values as weights, together with the weights of the structural dependencies, we multiply by 100 to scale the metric value to be supraunitary, and we clip the results between 0 and 100.
 
 
-We refer to this addition to the original calculation formula as strength metric, and it is defined in Equation \eqref{eq:strength}.
+We refer to this addition to the original calculation formula as the strength metric, and it is defined in Equation \eqref{eq:strength}.
 
 \begin{equation}
-\text{strength}(A \rightarrow B) = \text{confidence}(A \rightarrow B) \times 100 \times \text{system factor} 
+\text{strength}(A \rightarrow B) = \text{confidence}(A \rightarrow B) \times 100 \times \text{system factor}
 \label{eq:strength}
 \end{equation}
 
 
 \subsubsection{Filter Application Process}
 
-The overall filter application process is illustrated in Fig. \ref{fig:filtering}.  We begin by extracting all co-changes from the versioning system, and the first filter applied is the commit size filter. The commit size filter has a strict threshold of 20 files, meaning that any co-changes from commits involving more than 20 files are filtered out.
+Fig. \ref{fig:filtering} illustrates the overall filter application process. We begin by extracting all co-changes from the versioning system, and the first filter applied is the commit size filter. The commit size filter has a strict threshold of 20 files, meaning that any co-changes from commits involving more than 20 files are filtered out.
 
-The co-changes that remain after applying the commit size filter are then processed using the strength filter. The strength filter uses multiple thresholds, specifically 10 different thresholds. We start with a threshold of 10 and increment it by 10 until we reach a maximum value of 100. The reason for not using a fixed threshold is to assess how different strength thresholds affect our cluster generation. 
+The co-changes that remain after applying the commit size filter are then processed using the strength filter. The strength filter uses multiple thresholds, precisely 10 different thresholds. We start with a threshold of 10 and increment it by 10 until we reach a maximum value of 100. We do not use a fixed threshold to assess how different strength thresholds affect our cluster generation.
 
 \begin{figure}[t!]
   \centering
@@ -267,11 +267,11 @@ The co-changes that remain after applying the commit size filter are then proces
 
 \subsubsection{Dependency Extraction and Filtering Tool}
 
-To extract and filter the co-changes, we used a previously developed tool \cite{b4}. This tool takes as input the GitHub repository address and the threshold values for commit and strength filters. The tool clones the repository, downloads all commit diffs starting from the first commit, examines all files changed in each commit to identify which entities have changed in those files, and creates undirected co-change dependencies between all changed entities within a commit.
+To extract and filter the co-changes, we used a previously developed tool \cite{b4}. This tool takes the GitHub repository address and the threshold values for commit and strength filters as input. The tool clones the repository, downloads all commit diffs starting from the first commit, examines all files changed in each commit to identify which entities have changed in those files, and creates undirected co-change dependencies between all changed entities within a commit.
 
-The commit size filter is applied to these undirected co-change dependencies, since the metric value for $(A \rightarrow B)$ is the same as for $(B \rightarrow A)$. For the strength filter, each co-change dependency is converted into a directed co-change dependency, so for each $(A \rightarrow B)$ dependency, we have both $(A \rightarrow B)$ and $(B \rightarrow A)$. This conversion is necessary because, as mentioned in the previous section, the confidence filter evaluates the antecedent of the rule. Thus, the metric value for $(A \rightarrow B)$ differs from the metric value for $(B \rightarrow A)$. 
+The commit size filter is applied to these undirected co-change dependencies since the metric value for $(A \rightarrow B)$ is the same as for $(B \rightarrow A)$. For the strength filter, each co-change dependency is converted into a directed co-change dependency, so for each $(A \rightarrow B)$ dependency, we have both $(A \rightarrow B)$ and $(B \rightarrow A)$. This conversion is necessary because, as mentioned in the previous section, the confidence filter evaluates the rule's antecedent. Thus, the metric value for $(A \rightarrow B)$ differs from the metric value for $(B \rightarrow A)$.
 
-The remaining dependencies after applying the filters are then exported to a CSV file for further use.
+After applying the filters, the remaining dependencies are exported to a CSV file for further use.
 
 It is important to note that the strength metric is only used for filtering and is \textit{not considered as a weight} of the dependencies. The \textit{weight assigned to each dependency is the number of commits in which both entities were updated together}.
 
@@ -281,17 +281,17 @@ It is important to note that the strength metric is only used for filtering and 
 \Figure[t!](topskip=0pt, botskip=0pt, midskip=0pt)[width=\textwidth]{codegraph.png}
 { \textbf{Dependency Graph: Combining structural and logical dependencies.}\label{fig:codegraph}}
 
-When combining structural dependencies (SD) and logical dependencies (LD) in software clustering, both types of relationships are represented within the same graph.
+When structural dependencies (SD) and logical dependencies (LD) are combined in software clustering, both types of relationships are represented within the same graph.
 
-Each entity in the system is represented as a node in the graph, and the dependencies between them are represented as directed, weighted edges.
+Each entity in the system is represented as a node in the graph, and the dependencies between them are represented as directed weighted edges.
 
-\textit{SD and LD weights are combined} when the same pair of entities appears in both types of dependencies. In this case, the weights from SD and LD are summed, giving more influence to those entity pairs. When a pair of entities appears only in SD or only in LD, the edge is added to the graph together with its corresponding weight.
+\textit{SD and LD weights are combined} when the same pair of entities appear in both dependencies. In this case, the weights from SD and LD are summed, giving more influence to those entity pairs. When a pair of entities appear only in SD or only in LD, the edge is added to the graph together with its corresponding weight.
 
-Figure \ref{fig:codegraph} illustrates the process of combining structural and logical dependencies in the same dependency graph. The structural dependencies between \texttt{House}, \texttt{OrangeCat}, and \texttt{CatBehavior} entities are visible from the source code analysis, showing relationships like interface implementation and method calls.
+Figure \ref{fig:codegraph} illustrates combining structural and logical dependencies in the same dependency graph. The structural dependencies between \texttt{House}, \texttt{OrangeCat}, and \texttt{CatBehavior} entities are visible from the source code analysis.
 
-However, the combination of SD and LD reveals additional insights. One important observation is the logical dependency between \texttt{House} and \texttt{OrangeCat}, which is not observed from the structural analysis. This connection is extracted from version control and is further filtered using a 60\% strength filter. The filter reveals that \texttt{House} and \texttt{OrangeCat} have a significant co-change strength of 75.0, suggesting a strong logical relationship.
+However, the combination of SD and LD reveals additional insights. One important observation is the logical dependency between \texttt{House} and \texttt{OrangeCat}, which is not observed from the structural analysis. This relation is extracted from version control and filtered using a 60\% strength filter. The strength metric reveals that \texttt{House} and \texttt{OrangeCat} have a significant co-change value of 75.0, usually associated with a strong relationship.
 
-When SD and LD overlap, such as between \texttt{OrangeCat} and \texttt{CatBehavior}, their weights are summed. This summation process highlights relationships that are both structurally and logically significant.
+When SD and LD overlap, such as between \texttt{OrangeCat} and \texttt{CatBehavior}, their weights are summed. This summation increases the weight of the dependency, making it more important in the dependency graph.
 
 
 
@@ -309,12 +309,12 @@ First, we describe the clustering algorithms used in our experiments: Louvain, L
 \subsubsection{Louvain}
 \label{subsubsec:louvain}
 
-The Louvain algorithm was originally developed by Blondel et al. and is used for finding community partitions (clusters) in large networks. The algorithm begins with a weighted network of N nodes, initially assigning each node to its own cluster, resulting in N clusters. For each node, the algorithm evaluates the modularity gain from moving the node to the cluster of each of its neighbors. Based on the results, the node is moved to the cluster with the maximum positive modularity gain. This process is repeated for all nodes until no further improvement in modularity is possible \cite{b8}, \cite{b9}.
+The Louvain algorithm was originally developed by Blondel et al. and is used to find community partitions (clusters) in large networks. The algorithm begins with a weighted network of N nodes, initially assigning each node to its own cluster, resulting in N clusters. For each node, the algorithm evaluates the modularity gained from moving the node to the cluster of each of its neighbors. Based on the results, the node is moved to the cluster with the maximum positive modularity gain. This process is repeated for all nodes until no further improvement in modularity is possible \cite{b8}, \cite{b9}.
 
 \subsubsection{Leiden}
 \label{subsubsec:leiden}
 
-The Leiden algorithm, developed by Traag et al., is an improvement over the Louvain algorithm for community detection in large networks. Like Louvain, the Leiden algorithm begins with each node assigned to its own cluster and iteratively moves nodes between clusters to optimize modularity. However, the Leiden algorithm addresses some problems of the Louvain method, particularly regarding badly connected communities and runtime performance issues \cite{leiden} \cite{scikit}.
+The Leiden algorithm, developed by Traag et al., is an improvement over the Louvain algorithm for community detection in large networks. Like Louvain, the Leiden algorithm begins with each node assigned to its own cluster and iteratively moves nodes between clusters to optimize modularity. However, the Leiden algorithm addresses some problems of the Louvain method, particularly regarding poorly connected communities and runtime performance issues \cite{leiden} \cite{scikit}.
 
 The Leiden algorithm introduces a refinement phase that ensures communities are locally optimally clustered and well-connected. This refinement step distinguishes the Leiden algorithm from Louvain.
 
@@ -327,26 +327,26 @@ The Density-Based Spatial Clustering of Applications with Noise (DBSCAN) algorit
 DBSCAN operates based on two main parameters:
 
 \begin{itemize}
-    \item \textbf{Eps}: It defines the radius within which to search for neighboring points.
-    \item \textbf{MinPts}: The minimum number of points required for a dense region. It determines the minimum number of neighbors a point must have to be considered a core point.
+\item \textbf{Eps}: It defines the radius within which to search for neighboring points.
+\item \textbf{MinPts}: The minimum number of points required for a dense region. It determines the minimum number of neighbors a point should have to be considered a core point.
 \end{itemize}
 
 The algorithm classifies points into three categories:
 
 \begin{enumerate}
-    \item \textbf{Core Points}: Points that have at least \textit{MinPts} neighbors within a radius of \textit{Eps}. These points are located in the interior of a cluster.
-    \item \textbf{Border Points}: Points that have fewer than \textit{MinPts} neighbors within a radius of \textit{Eps} but are in the Eps-neighborhood of a core point. They are located on the edge of a cluster.
-    \item \textbf{Noise}: Points that are neither core points nor border points.
+\item \textbf{Core Points}: Points that have at least \textit{MinPts} neighbors within a radius of \textit{Eps}. These points are located in the interior of a cluster.
+\item \textbf{Border Points}: Points that have fewer than \textit{MinPts} neighbors within a radius of \textit{Eps} but are in the Eps-neighborhood of a core point. They are located on the edge of a cluster.
+\item \textbf{Noise}: Points that are neither core points nor border points.
 \end{enumerate}
 
-The DBSCAN algorithm starts by visiting an arbitrary point in the dataset. If the point is a core point, the algorithm starts a new cluster and retrieves all points that are reachable from this core point. All points are then marked as part of the cluster. If the point is a border point, it moves to the next point in the dataset. This process is repeated until all points have been visited.
+The DBSCAN algorithm starts by visiting an arbitrary point in the dataset. If the point is a core point, the algorithm starts a new cluster and retrieves all reachable points from this core point. All points are then marked as part of the cluster. If the point is a border point, it moves to the next point in the dataset. This process is repeated until all points have been visited.
 
-For software clustering, DBSCAN can be applied by considering software entities as data points. A distance measure based on dependency weights can be used to compute the neighborhood between entities.
+DBSCAN can be applied for software clustering by considering software entities as data points. A distance measure based on dependency weights can be used to compute the neighborhood between entities.
 
 \subsection{Clustering Result Evaluation}
 \label{subsec:evaluation_def}
 
-To evaluate the clustering results, we use two metrics: the Modularity Quality (MQ) metric and the Move and Join Effectiveness Measure (MoJoFM) metric. Each of these metrics provides a different perspective on the quality of the clustering solutions. 
+We evaluate the clustering results using two metrics: the Modularity Quality (MQ) metric and the Move and Join Effectiveness Measure (MoJoFM) metric. Each provides a different perspective on the quality of the clustering solutions.
 
 \subsubsection{Modularity Quality Metric}
 \label{subsec:mq}
@@ -362,29 +362,29 @@ MQ = \left( \frac{1}{k} \sum_{i=1}^{k} A_i \right) - \left( \frac{1}{k(k-1)} \su
 
 The MQ metric's value ranges between -1 and 1. A value of -1 means that the clusters have more connections between the clusters than within the clusters, while a value of 1 means that there are more connections within clusters than between clusters. A good clustering solution should have an MQ value close to 1, since this indicates that the clusters are more cohesive internally and have fewer connections to other clusters.
 
-The MQ metric is useful because it does not require any additional input besides the clustering result itself. It relies on the structure of the clustered entities and their interactions. 
+The MQ metric is useful because it does not require additional input besides the clustering result. It relies on the structure of the clustered entities and their interactions.
 
 \subsubsection{MoJoFM Metric}
 \label{subsec:mojofm}
-The MoJoFM metric was introduced by Wen and Tzerpos to evaluate the similarity between two different software clustering results \cite{mojofm}. The metric is based on the MoJo metric, which measures the absolute minimum number of \textit{Move} and \textit{Join} operations required to transform one clustering solution into another \cite{b3}, \cite{mojofm}. However, MoJoFM provides a similarity measure ranging between 0\% and 100\%, where 100\% indicates identical clustering solutions.
+Wen and Tzerpos introduced the MoJoFM metric to evaluate the similarity between two different software clustering results \cite{mojofm}. The metric is based on the MoJo metric, which measures the absolute minimum number of \textit{Move} and \textit{Join} operations required to transform one clustering solution into another \cite{b3}, \cite{mojofm}. However, MoJoFM provides a similarity measure ranging between 0\% and 100\%, where 100\% indicates identical clustering solutions.
 
 The MoJoFM metric is calculated using Equation \eqref{eq:mojofm}:
 
-\begin{equation} 
+\begin{equation}
 \text{MoJoFM}(A, B) = \left(1 - \frac{\text{mno}(A, B)}{\max(\text{mno}(\forall A, B))}\right) \times 100\%
 \label{eq:mojofm}
 \end{equation}
 
-where:
+Where:
 
 \begin{itemize}
-    \item $\text{mno}(A, B)$ is the minimum number of \textit{Move} and \textit{Join} operations required to transform clustering solution $A$ into clustering solution $B$.
-    \item $\max(\text{mno}(\forall A, B))$ is the maximum possible number of such operations required to transform any clustering $A$ into clustering $B$.
+\item $\text{mno}(A, B)$ is the minimum number of \textit{Move} and \textit{Join} operations required to transform clustering solution $A$ into clustering solution $B$.
+\item $\max(\text{mno}(\forall A, B))$ is the maximum possible number of such operations required to transform any clustering $A$ into clustering $B$.
 \end{itemize}
 
-To use the metric, we first need to generate a reference clustering solution for comparison. This reference is manually created based on our analysis of the codebase.
+To use the metric, we first need to generate a reference clustering solution for comparison. We manually created this reference based on our analysis of the codebase.
 
-By using the MoJoFM metric, we can evaluate the similarity between the generated clustering solutions and the reference clustering solution. We consider this metric useful when combining multiple types of dependencies because it clearly measures the similarity between the obtained clustering solutions and the same reference.
+Using the MoJoFM metric, we can evaluate the similarity between the generated and reference clustering solutions. This metric is useful when combining multiple dependencies because it measures the similarity between the obtained clustering solutions and the same reference.
 
 
 \subsection{Workflow for Software Clustering and Evaluation}
@@ -393,26 +393,26 @@ By using the MoJoFM metric, we can evaluate the similarity between the generated
 \Figure[t!](topskip=0pt, botskip=0pt, midskip=0pt)[width=\textwidth]{workflow-tool.png}
 { \textbf{Tool workflow overview: input, processing and output.}\label{fig:tool}}
 
-To achieve our goal of evaluating how the quality of clustering solutions is impacted by logical dependencies, we developed a Python tool capable of using any type of dependency, either alone or combined with other types of dependencies, as long as they are provided in CSV format. The tool clusters and evaluates software clustering solutions using either the MQ metric or the MoJoFM metric.
+To evaluate how logical dependencies impact the quality of clustering solutions, we developed a Python tool capable of using any type of dependency, either alone or combined with other types of dependencies, as long as it is provided in CSV format. The tool clusters and evaluates software clustering solutions using the MQ or MoJoFM metrics.
 
 
 
 \subsubsection{Input}
 
-The tool takes as input one or multiple dependency CSV files and the reference solution required for the MoJoFM metric. We designed the tool to accept multiple dependency files so that we can generate clustering solutions based on either a single type of dependency (structural or logical) or a combination of both.
+The tool takes one or multiple dependency CSV files as input and the reference solution required for the MoJoFM metric. We designed the tool to accept multiple dependency files so that we can generate clustering solutions based on either a single type of dependency (structural or logical) or a combination of both.
 
-Since the MoJoFM metric requires a reference solution to evaluate the obtained clustering solutions, we manually inspected the code and created reference clustering solutions, which we then provide as input for the tool.
+Since the MoJoFM metric requires a reference solution to evaluate the obtained clustering solutions, we manually inspected the code and created reference clustering solutions, which we then provided as input for the tool.
 
 \subsubsection{Processing}
 
-The dependencies are saved in the CSV file in the following format: \texttt{antecedent of a dependency, consequent of a dependency, weight}. The tool reads each line, adds the antecedent and consequent as nodes in a directed graph, and creates an edge between them, with the weight from the CSV file becoming the edge weight. If multiple dependency files are processed and the same dependency is found in multiple files, the edge weights are summed.
+The dependencies are saved in the CSV file in the following format: \texttt{antecedent of a dependency, consequent of a dependency, weight}. The tool reads each line, adds the antecedent and consequent as nodes in a directed graph, and creates an edge between them, with the weight from the CSV file becoming the edge weight. The edge weights are summed if multiple dependency files are processed and the same dependency is found in multiple files.
 
-The workflow of applying the clustering algorithms and performing the evaluations is shown in Figure \ref{fig:tool}. After all dependencies are read, the directed graph is passed to the clustering algorithms: Louvain, Leiden, and DBSCAN. Each algorithm generates its own clustering result. The results from each algorithm are then evaluated using the MQ metric and the MoJoFM metric. The MQ metric requires the directed graph and the clustering result, while the MoJoFM metric requires the reference clustering solution provided as input and the clustering result. 
+The workflow of applying the clustering algorithms and performing the evaluations is shown in Figure \ref{fig:tool}. After all dependencies are read, the directed graph is passed to the clustering algorithms: Louvain, Leiden, and DBSCAN. Each algorithm generates its own clustering result. The results from each algorithm are then evaluated using the MQ metric and the MoJoFM metric. The MQ metric requires the directed graph and the clustering result, while the MoJoFM metric requires the reference clustering solution provided as input and the clustering result.
 
 
 \subsubsection{Output}
 
-After applying each clustering algorithm and completing both evaluations, we export the clustering result, the number of clusters from the clustering solution, and the values for both the MQ and MoJoFM metrics.
+After applying each clustering algorithm and completing both evaluations, we export the clustering result, the number of clusters from the clustering solution, and the MQ and MoJoFM metrics values.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -425,7 +425,6 @@ After applying each clustering algorithm and completing both evaluations, we exp
 \label{subsec:plan}
 
 \subsubsection{Overview of projects used}
-
 \begin{table*}
 \centering
 \caption{Overview of projects used in experimental analysis}
@@ -443,19 +442,19 @@ Gson & \href{https://github.com/google/gson/tree/gson-parent-2.10.1}{gson-parent
 \end{tabular}
 \end{table*}
 
-In Table \ref{tab:project_info}, we have synthesized all the information about the four projects used in our experiments. The 'Project Name' column contains the names of the software projects sourced from GitHub. The 'Release Tag' column contains the specific release tag of the project that was analyzed. For logical dependency extraction, we processed all the commits starting from the first commit up to the commit associated with the specified tag. For structural dependencies, we extracted the dependencies from the code of that specific tag. The 'Number of Commits' column provides the total number of commits used for logical dependencies extraction. The 'GitHub Repository Link' column includes the URL link to the project's repository on GitHub. Finally, the 'Repository Description' column provides a brief description of the project's purpose and functionality.
+In Table \ref{tab:project_info}, we have synthesized all the information about the four projects used in our experiments. The 'Project Name' column contains the names of the software projects sourced from GitHub. The 'Release Tag' column contains the specific release tag of the project that was analyzed. We processed all the commits for logical dependency extraction, from the first commit to the commit associated with the specified tag. We extracted the dependencies from the code of that specific tag for structural dependencies. The 'Number of Commits' column provides the total number of commits used for logical dependencies extraction. The 'GitHub Repository Link' column includes the URL link to the project's repository on GitHub. Finally, the 'Repository Description' column briefly describes the project's purpose and functionality.
 
-We mostly chose projects with more than 10,000 commits in their commit history, so that the logical dependencies extraction can be done on a larger information base. However, we selected 'Gson', which has a relatively small commit history (1,772 commits), to determine if our experiments work with a smaller information base.
+We mainly chose projects with more than 10,000 commits in their commit history so that the logical dependencies extraction can be done on a more extensive information base. However, we selected Gson, which has a relatively small commit history (1,772 commits), to determine if our experiments work with a smaller information base.
 
 \subsubsection{Tool runs}
 
 To assess the impact of logical dependencies and to answer the research questions from section \ref{sec:introduction}, we run the tool presented in Section \ref{subsec:tool_workflow} in three different scenarios for all the projects from table \ref{tab:project_info}. All three scenarios are illustrated in Fig. \ref{fig:scenatrio}.
 
-In the first scenario, we run the tool once, providing only the structural dependencies of the system as input for the clustering algorithm.
+In the first scenario, we run the tool once, providing only the system's structural dependencies as input for the clustering algorithm.
 
 In the second scenario, we run the tool ten times, using only logical dependencies as input. We perform ten runs because we generate logical dependencies with different threshold values for the strength filter. We start with a threshold of 10 and increase it in steps of 10 up to 100, where 100 is the maximum value for the threshold.
 
-In the third scenario, we combine logical with structural dependencies. Similar to the second scenario, we run the tool ten times, each time using structural dependencies and logical dependencies generated with different strength thresholds.
+In the third scenario, we combine logical with structural dependencies. Similar to the second scenario, we ran the tool ten times using structural and logical dependencies generated with different strength thresholds.
 
 \begin{figure}[t!]
   \centering
@@ -679,9 +678,9 @@ To better understand the impact of different dependency types on software cluste
 
 The overall analysis of all the results from subsection \ref{subsec:results} indicates that combining structural and logical dependencies (SD+LD) provides better clustering solutions than using structural dependencies (SD) alone, covering 100\% of the system, meaning that no entity is missed during cluster generation. On the other hand, logical dependencies (LD) alone result in better clustering quality metrics compared to both SD and SD+LD, but they do not cover the entire system.
 
-The best results for SD+LD are observed with a strength threshold between 10-40\%. For LD only, the best results are obtained at a 100\% strength threshold. The overall trend shows that for LD only, the MQ metric increases in value with a higher strength threshold, indicating more cohesive clusters, while the MoJo metric decreases, indicating that fewer transformations are needed to reach the expected clustering. For SD+LD, the best MQ and MoJo values are obtained at lower strength thresholds, and then both metrics indicate less effective clustering solution obtained with higher strength thresholds.
+The best results for SD+LD are observed with a strength threshold between 10-40\%. For LD only, the best results are obtained at a 100\% strength threshold. The overall trend shows that for LD only, the MQ metric increases in value with a higher strength threshold, indicating more cohesive clusters, while the MoJo metric decreases, indicating that fewer transformations are needed to reach the expected clustering. For SD+LD, the best MQ and MoJo values are obtained at lower strength thresholds, and then both metrics indicate a less effective clustering solution obtained with higher strength thresholds.
 
-In the sections below, we analyze each project in detail and address the research questions.
+We analyze each project in detail in the sections below and address the research questions.
 
 \subsection{Detailed results}
 
@@ -691,18 +690,18 @@ The clustering results for Apache Ant (Table \ref{tab:clustering_results_ant}) s
 
 Compared with the SD-only results, all SD+LD clustering solutions for all algorithms show better MQ metric values, with the highest MQ value for SD+LD being more than three times greater than the corresponding SD-only value. Similarly, the MoJoFM metric shows better results than SD-only. However, it does not always outperform the MoJoFM metric applied to SD-only data.
 
-Logical dependencies (LD) alone produced the highest MQ and MoJoFM values at the 100\% strength threshold for both Leiden and Louvain, with the obtained metric values being higher than those of SD-only and SD+LD. However, the percentage of entities covered is significantly lower (LD(100) covers only 12.37\% of the system). 
+Logical dependencies (LD) alone produced the highest MQ and MoJoFM values at the 100\% strength threshold for both Leiden and Louvain, with the obtained metric values being higher than those of SD-only and SD+LD. However, the percentage of entities covered is significantly lower (LD(100) covers only 12.37\% of the system).
 If we look at LD(10), where there is a 61.89\% coverage of the system, which is more compared to LD(100), both metrics still perform better than SD-only and SD+LD(10). However, there is still a gap until 100\% coverage.
 
 From the clustering algorithm performance point of view, Leiden obtains the best evaluation metrics for all scenarios, followed by Louvain and DBSCAN.
 
-An interesting observation is that, based on the LD-only results, where the metric results improve with a higher strength threshold, the SD+LD results do not follow the same pattern. On the contrary, the SD+LD metric results decline with a higher strength threshold. The explanation for this behavior may lie in the overlap between structural and logical dependencies. As presented in Figure \ref{fig:ant_correlation}, the number of LD decreases with a stricter strength threshold compared to the number of SD, and the overlap between the two types of dependencies increases.
+One interesting observation is that, based on the LD-only results, where the metrics results improved with higher strength thresholds, the SD+LD results did not follow the same pattern. On the opposite, the SD+LD metric results decline with a higher strength threshold. An explanation for this behavior may lie in the overlap between structural and logical dependencies. As presented in Figure \ref{fig:ant_correlation}, the number of LD decreases with a stricter strength threshold compared to the number of SD, and the overlap between the two types of dependencies increases.
 
 \begin{figure}[t!]
-  \centering
-  \includegraphics[width=\columnwidth]{ant_correlation.png}
-  \caption{\textbf{Apache Ant: Overlap between structural and logical dependencies and its correlation with clustering metrics.}}
-  \label{fig:ant_correlation}
+\centering
+\includegraphics[width=\columnwidth]{ant_correlation.png}
+\caption{\textbf{Apache Ant: Overlap between structural and logical dependencies and its correlation with clustering metrics.}}
+\label{fig:ant_correlation}
 \end{figure}
 
 In our previous works, we studied how these two types of dependencies overlap \cite{b4}, \cite{b5}. The reason behind those studies was to check how much new information we can get from using logical dependencies and how much is already present via structural dependencies.
@@ -713,45 +712,45 @@ So, we consider that the reason why SD+LD clustering solutions decline in perfor
 
 \subsubsection{Apache Tomcat}
 
-For Apache Tomcat (Table \ref{tab:clustering_results_tomcat}), the best results for SD+LD were obtained with strength thresholds between 10\% and 40\% across all algorithms. The Leiden algorithm achieved the best result for the MQ metric at a strength threshold of 40\%, while the best MoJoFM result was obtained at a threshold of 20\%, also with the Leiden algorithm. Compared with the SD-only results, the peak MQ values almost double the SD-only values. Similar to Apache Ant, the MQ values for all strength thresholds are higher than those for SD-only. While MoJoFM is not better for all thresholds, it still shows an improvement compared with the SD-only results.
+For Apache Tomcat (Table \ref{tab:clustering_results_tomcat}), the best results for SD+LD were obtained with strength thresholds between 10\% and 40\% across all algorithms. The Leiden algorithm achieved the best result for the MQ metric at a strength threshold of 40\%, while the best MoJoFM result was obtained at a threshold of 20\%, also with the Leiden algorithm. Compared with the SD-only results, the peak MQ values almost double the SD-only values. Like Apache Ant, the MQ values for all strength thresholds are higher than those for SD-only. While MoJoFM is not better for all thresholds, it still improves compared with the SD-only results.
 
 The LD-only results show the highest MQ and MoJoFM values at LD(100) for the Louvain and Leiden algorithms. However, as with the Apache Ant results, coverage remains an issue. LD(100) covers only 16.62\% of the system, lower than the coverage from SD-only or SD+LD combinations. On the other hand, LD(10), which covers 61.33\% of the system, still has better clustering solutions compared to SD-only, based on both MQ and MoJoFM results.
 
-We observe the same decline in results with a stricter strength threshold for SD+LD, and as with the previous system, these results can again be connected to the percentage of LD that also overlap with SD, as well as the decreasing number of LD compared to SD once the strength threshold becomes stricter. As shown in Figure \ref{fig:catalina_correlation}, LD filtered with a 10\% strength threshold overlaps with SD by approximately 22\%, while at a 100\% strength threshold, the overlap increases to approximately 39\%.
+We observe the same decline in results with a stricter strength threshold for SD+LD. As with the previous system, these results can again be connected to the percentage of LD that also overlaps with SD and the decreasing number of LD compared to SD once the strength threshold becomes stricter. As shown in Figure \ref{fig:catalina_correlation}, LD filtered with a 10\% strength threshold overlaps with SD by approximately 22\%, while at a 100\% strength threshold, the overlap increases to approximately 39\%.
 
 \begin{figure}[t!]
-  \centering
-  \includegraphics[width=\columnwidth]{catalina_correlation.png}
-  \caption{\textbf{Apache Tomcat: Overlap between structural and logical dependencies and its correlation with clustering metrics.}}
-  \label{fig:catalina_correlation}
+\centering
+\includegraphics[width=\columnwidth]{catalina_correlation.png}
+\caption{\textbf{Apache Tomcat: Overlap between structural and logical dependencies and its correlation with clustering metrics.}}
+\label{fig:catalina_correlation}
 \end{figure}
 
-To ensure that the decline in performance for SD+LD with a stricter strength threshold is indeed caused by the fact that LD are significantly fewer compared to SD, and that part of them is duplicated by SD at higher thresholds, we added an additional experiment to our study. In this experiment, whose results can be found in Table \ref{tab:clustering_results_multiplication}, we increased the weights associated with LD(100) for Apache Tomcat to confirm that we are dealing with an LD quantity problem rather than a weight problem.
+To ensure that the decline in performance for SD+LD with a stricter strength threshold is indeed caused by the fact that LD are significantly fewer than SD, and SD duplicates that part of them at higher thresholds, we added an additional experiment to our study. In this experiment, whose results can be found in Table \ref{tab:clustering_results_multiplication}, we increased the weights associated with LD(100) for Apache Tomcat to confirm that we are dealing with an LD quantity problem rather than a weight problem.
 
 Therefore, in this experiment, we increased the weight assigned to each logical dependency filtered with a 100\% strength threshold from the Apache Tomcat system by values ranging from 1 to 5 and re-ran scenario III from Fig. \ref{fig:scenatrio}.
 
 
 To maintain consistency, we used the same columns as in the other result tables (\ref{tab:clustering_results_ant}, \ref{tab:clustering_results_tomcat}, \ref{tab:clustering_results_hibernate}, \ref{tab:clustering_results_gson}), with the addition of two new columns:
 \begin{itemize}
-    \item \textbf{Multiplication Factor:} The value by which each logical dependency weight is multiplied.
-    \item \textbf{Avg Weight:} The average weight assigned to each type of dependency used.
+\item \textbf{Multiplication Factor:} The value by which each logical dependency weight is multiplied.
+\item \textbf{Avg Weight:} The average weight assigned to each type of dependency used.
 \end{itemize}
 
 \begin{table*}[htbp]
 \centering
-\setlength{\tabcolsep}{7pt} 
+\setlength{\tabcolsep}{7pt}
 \begin{tabular}{|l|c|c|ccc|ccc|ccc|}
 \hline
 \textbf{Multiplication} & \multicolumn{2}{c|}{\textbf{Avg. weight}} & \multicolumn{3}{c|}{\textbf{Louvain}} & \multicolumn{3}{c|}{\textbf{Leiden}} & \multicolumn{3}{c|}{\textbf{DBSCAN}} \\
 \cline{4-12}
 \textbf{Factor} & \textbf{SD} & \textbf{LD} & \textbf{Nr. of} & \textbf{MQ} & \textbf{MojoFM} & \textbf{Nr. of} & \textbf{MQ} & \textbf{MojoFM} & \textbf{Nr. of} & \textbf{MQ} & \textbf{MojoFM} \\
- &  &  & \textbf{clusters} & &  & \textbf{clusters} & && \textbf{clusters} &  & \\
+&  &  & \textbf{clusters} & &  & \textbf{clusters} & && \textbf{clusters} &  & \\
 \hline
-1 & 6.91  & 37.04  & 31 & 0.311 & 78.83 & 31 & 0.305 & 78.37 & 43 & 0.153 & 73.31 \\ 
+1 & 6.91  & 37.04  & 31 & 0.311 & 78.83 & 31 & 0.305 & 78.37 & 43 & 0.153 & 73.31 \\
 2 & 6.91  & 74.08  & 33 & 0.295 & 73.57 & 30 & 0.301 & 72.33 & 43 & 0.153 & 73.31 \\
-3 & 6.91  & 111.12 & 34 & 0.313 & 74.19 & 33 & 0.309 & 72.80 & 43 & 0.153 & 73.31 \\ 
-4 & 6.91  & 148.16 & 34 & 0.312 & 73.88 & 33 & 0.312 & 72.49 & 43 & 0.153 & 73.31 \\ 
-5 & 6.91  & 185.20 & 34 & 0.306 & 73.88 & 33 & 0.308 & 72.18 & 43 & 0.153 & 73.31 \\ 
+3 & 6.91  & 111.12 & 34 & 0.313 & 74.19 & 33 & 0.309 & 72.80 & 43 & 0.153 & 73.31 \\
+4 & 6.91  & 148.16 & 34 & 0.312 & 73.88 & 33 & 0.312 & 72.49 & 43 & 0.153 & 73.31 \\
+5 & 6.91  & 185.20 & 34 & 0.306 & 73.88 & 33 & 0.308 & 72.18 & 43 & 0.153 & 73.31 \\
 \hline
 \end{tabular}
 \caption{Impact of multiplication factors on clustering results for LD(100) in Apache Tomcat}
@@ -759,20 +758,20 @@ To maintain consistency, we used the same columns as in the other result tables 
 \end{table*}
 
 
-In Table \ref{tab:systems_weights}, which presents the average weights associated with the dependencies across all systems, we can see that for Tomcat, the average weight for LD(10) is already almost double than SD average weight. For LD(100), the average weight is approximately five times higher than that of SD. 
+In Table \ref{tab:systems_weights}, which presents the average weights associated with the dependencies across all systems, we can see that for Tomcat, the average weight for LD(10) is already almost double the SD average weight. For LD(100), the average weight is approximately five times higher than that of SD.
 
-Based on the metric values obtained for multiplication factors of 2 to 5, we can see that after increasing the weights assigned to LD, the metric values improve only slightly, with changes recorded at the second decimal: a 0.02 improvement for Louvain and 0.07 for Leiden. The results for DBSCAN remain unchanged due to the fixed values of MinPts and Eps and the already high LD weights for LD(100). 
+Based on the metric values obtained for multiplication factors of 2 to 5, we can see that after increasing the weights assigned to LD, the metric values improve only slightly, with changes recorded at the second decimal: a 0.02 improvement for Louvain and 0.07 for Leiden. The results for DBSCAN remain unchanged due to the fixed values of MinPts and Eps and the already high LD weights for LD(100).
 
-From the experiment with weights, we can conclude that the issue is the quantity of dependencies. SD outnumbers LD, making LD information less impactful on the overall clustering solution.
+We can conclude from the experiment with weights that the issue is the quantity of dependencies. SD outnumbers LD, making LD information less impactful on the clustering solution.
 
 
 \subsubsection{Hibernate ORM}
 
-Hibernate ORM is the second largest system after Apache Tomcat in terms of the number of commits analyzed, with 16,609 commits considered for LD extraction. Additionally, it is the largest in terms of system size, with 4,414 entities (Table \ref{tab:project_info}).
+Hibernate ORM is the second largest system after Apache Tomcat regarding the number of commits analyzed, with 16,609 commits considered for LD extraction. Additionally, it is the largest in terms of system size, with 4,414 entities (Table \ref{tab:project_info}).
 
 Based on the results from Table \ref{tab:clustering_results_hibernate}, the SD+LD combination with a strength threshold of 40 performs best for this system. Louvain achieves the best MQ metric at this threshold, while Leiden achieves the best MoJoFM metric.
 
-LD-only produced the best MQ values at 100\% strength and the best MoJoFM values at 70\% strength for both Louvain and Leiden. Compared to the previous systems, where both best values were recorded at the same strength threshold, Hibernate shows an earlier peak for MoJoFM. The system coverage is likely a factor contributing to this. Hibernate’s LD[100] covers only 8.07\% of the system, the lowest percentage among all systems studied. This low percentage can be linked to the number of commits compared to the number of entities. For Apache Tomcat, there were 22,698 commits and 662 entities, while for Hibernate, there were 16,609 commits and 4,414 entities. This indicates that not all entities had a chance to be updated in the version control system.
+LD-only produced the best MQ values at 100\% strength and the best MoJoFM values at 70\% strength for both Louvain and Leiden. Compared to the previous systems, where both best values were recorded at the same strength threshold, Hibernate shows an earlier peak for MoJoFM. The system coverage is likely a factor contributing to this. Hibernate  LD[100] covers only 8.07\% of the system, the lowest percentage among all systems studied. This low percentage can be linked to the number of commits compared to the number of entities. For Apache Tomcat, there were 22,698 commits and 662 entities, while for Hibernate, there were 16,609 commits and 4,414 entities. This indicates that not all entities had a chance to be updated in the version control system.
 
 This observation is also reflected in Table \ref{tab:systems_weights}, where Hibernate has the lowest average weights for LD compared to SD across all systems. In other systems, LD(10) starts with almost double the average weight compared to SD, while Hibernate's LD(10) average weight is less than half of the SD average weight.
 
@@ -783,9 +782,9 @@ This observation is also reflected in Table \ref{tab:systems_weights}, where Hib
   \label{fig:hibernate_correlation}
 \end{figure}
 
-Hibernate also has the lowest overlap percentage between LD and SD, as shown in Figure \ref{fig:hibernate_correlation}. Similar to the other systems, the performance for MQ and MoJoFM decreases for SD+LD as the strength threshold becomes stricter.
+Hibernate has the lowest overlap percentage between LD and SD, as shown in Figure \ref{fig:hibernate_correlation}. Similar to the other systems, the performance for MQ and MoJoFM decreases for SD+LD as the strength threshold becomes stricter.
 
-The results for Hibernate highlight the challenge of achieving better clustering in larger systems that have fewer commits relative to their size.
+The results for Hibernate highlight the challenge of achieving better clustering in larger systems with fewer commits relative to their size.
 
 
 \subsubsection{Google Gson}
@@ -800,11 +799,11 @@ The results for Hibernate highlight the challenge of achieving better clustering
 
 Gson has the smallest number of commits analyzed, with 1,772 commits considered for LD extraction, and it is also the smallest in terms of system size, with 210 entities involved in clustering (Table \ref{tab:project_info}).
 
-Based on the results from Table \ref{tab:clustering_results_gson}, the SD+LD combination with a strength threshold of 10 achieved the best results for both MQ and MoJoFM. Similar to Apache Ant and Tomcat, all SD+LD combinations achieve better MQ values than SD-only.
+Based on the results from Table \ref{tab:clustering_results_gson}, the SD+LD combination with a strength threshold of 10 achieved the best results for both MQ and MoJoFM. Like Apache Ant and Tomcat, all SD+LD combinations achieve better MQ values than SD-only.
 
 LD-only produced the best results for MQ at 40\% strength for both Louvain and Leiden, and the best MoJoFM value was also observed at the same threshold for both algorithms. It is the only system where the best MQ result for LD-only occurs at a lower strength threshold than 100\%. This is due to the very low number of entities remaining in the system at 100\% (only 18 out of 210).
 
-In this particular system, it is more visible that in some scenarios, the Leiden clustering algorithm does not improve the Louvain algorithm. This observation is based on the fact that the values obtained for both MQ and MoJoFM metrics are the same in most cases for the Gson system for both algorithms.
+In this particular system, it is more visible that the Leiden clustering algorithm does not improve the Louvain algorithm in some scenarios. This observation is based on the fact that the values obtained for both MQ and MoJoFM metrics are the same in most cases for the Gson system for both algorithms.
 
 It can also be observed that Gson has identical metric values for MQ and MoJoFM across multiple strength thresholds. Again, the small number of commits and the size of the system contribute to the stability of these metrics.
 
@@ -814,22 +813,22 @@ The results for this system highlight the difficulty of achieving better cluster
 
 \subsection{Research Questions and Findings}
 
-In this section, we will answer our research questions based on the results from our experiments. 
+In this section, we will answer our research questions based on the results of our experiments. 
 
 \textit{ \textbf{RQ1:} Does using structural dependencies (SD) combined with logical dependencies (LD) improve software clustering results compared to traditional approaches using only structural dependencies (SD)?} 
 
 Based on the results from all four systems analyzed, the combination of SD and LD performed better than SD-only according to the MQ and MoJoFM metrics, confirming that using SD+LD improves software clustering results. Across different strength thresholds, SD+LD achieved higher MQ and MoJoFM values for all clustering algorithms, indicating better modularization. 
-The effectiveness of combining SD and LD is influenced by the filtering thresholds applied to logical dependencies. Lower strength thresholds (10\% to 40\%) resulted in better MQ and MoJoFM values across all clustering algorithms compared with higher thresholds.
+The filtering thresholds applied to logical dependencies influence the effectiveness of combining SD and LD. Lower strength thresholds (10\% to 40\%) resulted in better MQ and MoJoFM values across all clustering algorithms compared with higher thresholds.
 
-At higher strength thresholds, the MQ and MoJoFM results decline. This decline occurs because the amount of logical dependencies is significantly reduced by the stricter strength thresholds. This reduction leads to fewer new relationships being introduced into the clustering process. Based on our previous research on the overlap between SD and LD, we observed that higher strength thresholds correlate with increased overlap between the two types of dependencies. This overlap indicates that at higher strength thresholds, not much new information is added to the system besides what is already introduced by structural dependencies, reducing the impact of logical dependencies on clustering results.
+At higher strength thresholds, the MQ and MoJoFM results decline. This decline occurs because stricter strength thresholds significantly reduce the amount of logical dependencies. This reduction leads to fewer new relationships introduced into the clustering process. Our previous research on the overlap between SD and LD showed that higher strength thresholds correlate with increased overlap between the two dependencies. This overlap indicates that at higher strength thresholds, not much new information is added to the system besides what is already introduced by structural dependencies, reducing the impact of logical dependencies on clustering results.
 
 However, when considering a lower strength threshold, the relationship between the system size and the number of commits in the version history becomes an important factor.
 
-In the case of Hibernate, a stricter strength threshold was needed to achieve the best metric values compared to other systems. Although at a 10\% strength threshold for LD, the metrics obtained are better than SD-only, the system reached peak metric values at a 40\% threshold across all algorithms.
+In the case of Hibernate, a stricter strength threshold was needed to achieve the best metric values compared to other systems. Although the metrics obtained at a 10\% strength threshold for LD are better than SD-only, the system reached peak metric values at 40\% threshold across all algorithms.
 
-Hibernate, with 16,609 commits and 4,414 entities, has a significantly lower average number of commits per entity than Ant (14,917 commits and 517 entities) or Tomcat (22,698 commits and 662 entities). This lower ratio means that each entity in Hibernate is, on average, involved in fewer commits. As a result, the co-change data extracted for logical dependencies are sparser and contain more noise at lower strength thresholds.
+With 16,609 commits and 4,414 entities, Hibernate has a significantly lower average number of commits per entity than Ant (14,917 commits and 517 entities) or Tomcat (22,698 commits and 662 entities). This lower ratio means that each entity in Hibernate is, on average, involved in fewer commits. As a result, the co-change data extracted for logical dependencies are sparser and contain more noise at lower strength thresholds.
 
-Applying a stricter strength threshold (e.g., 40\%) filters out these weaker logical dependencies.
+A stricter strength threshold (e.g., 40\%) filters out these weaker logical dependencies.
 
 In contrast, systems like Ant and Tomcat, with higher ratios of commits to entities, obtain better results with logical dependencies at a 10\% strength threshold because entities participate in more commits on average.
 
@@ -842,36 +841,36 @@ Using LD-only produced good clustering results, especially at higher strength th
 
 Thus, while LD(100) provides the highest metric results compared to SD+LD and SD-only, it represents only a small subset of the system's dependencies.
 
-On the other hand, the metric results for LD(10) are, in most cases, still better than those for SD-only and SD+LD. For Apache Ant and Tomcat, LD(10) covers more than 60\% of the system, while for Hibernate and Gson, the coverage is slightly above 30\%. 
+On the other hand, LD(10) has, in most of the cases, better metric results than those for SD-only and SD+LD with better system coverage. Apache Ant and Tomcat LD(10) cover more than 60\% of the system, while for Hibernate and Gson, the coverage is slightly above 30\%. 
 
-Therefore, LD(10) can serve as an alternative to SD-only or SD+LD, especially if structural dependencies are not available from the system.
+Therefore, LD(10) can be an alternative to SD-only or SD+LD, especially if structural dependencies are not available.
 
-However, it's important to consider that the performance of LD-only at higher strength thresholds may vary depending on the system's characteristics, such as the number of commits and the number of entities. For example, in the case of Gson, the performance at a 100\% strength threshold is not as good as in other systems, reaching its peak at a 40\% threshold. This is due to the lower number of entities remaining at higher thresholds, with only 18 entities at the 80\% to 100\% strength thresholds, and the relatively small number of commits considered.
+It is also important to consider that LD-only performance at higher strength thresholds depends on the system's characteristics, such as the number of commits and entities. For Gson project, the performance at a 100\% strength threshold is not as good as for the other systems, reaching its peak at a 40\% threshold. This is due to the low number of entities remaining at higher thresholds, with only 18 entities at the 80\% to 100\% strength thresholds, and the relatively small number of commits considered.
 
-In summary, while LD-only can produce good clustering results, especially at higher strength thresholds, its limited coverage reduces its usability, as the clustering is intended for the entire system, not just a small subset. At lower strength thresholds, LD-only offers a good alternative to SD-only, providing acceptable coverage.
+In summary, while LD-only can produce good clustering results, especially at higher strength thresholds, its limited coverage reduces its usability, as the clustering is intended for the entire system, not just a small subset. LD-only offers a good alternative to SD-only at lower strength thresholds, providing acceptable coverage.
 
 \textit{ \textbf{RQ3:} How do different filtering settings for logical dependencies (LD) impact clustering results, and which filtering settings provide the best performance?}
 
 The impact of different filtering settings on clustering performance was observed across all systems. For LD-only clustering, lower strength thresholds like 10\% provided good system coverage but had lower MQ and MoJoFM values compared to higher thresholds like 100\%, where the best metric results were often achieved. However, at these higher thresholds, the system coverage was significantly reduced.
 
-For the combination of SD and LD (SD+LD), the best performance was generally observed with strength thresholds between 10\% and 40\%. At these thresholds, the clustering solutions achieved higher MQ and MoJoFM values compared to using SD alone.
+The best performance was generally observed with strength thresholds between 10\% and 40\% for the combination of SD and LD (SD+LD). At these thresholds, the clustering solutions achieved higher MQ and MoJoFM values than SD alone.
 
-Selecting the appropriate filtering threshold is important. Lower thresholds include more logical dependencies, introducing additional relationships that improve clustering results. However, a too-low threshold may introduce noise, especially in systems with a low commits-to-entities ratio. On the other side, higher thresholds reduce noise but may exclude valuable dependencies and decrease coverage.
+It is important to select the optimal filtering threshold. Logical dependencies filtered with lower strength thresholds include more relationships, introducing more knowledge that could improve clustering results. However, a too-low threshold may sometimes introduce noise, especially in systems with a low commits-to-entities ratio. On the other hand, higher thresholds significantly reduce noise but can exclude valuable dependencies and decrease coverage.
 
-The optimal threshold may vary depending on system characteristics, so it is important to consider factors such as the number of commits, the size of the system, or whether it is used in combination with SD, when selecting the filtering settings.
+The optimal filtering threshold may vary depending on system characteristics ( number of commits, size of the system), so it is important to consider these factors when filtering logical dependencies.
 
 
 \section{Conclusion}
 \label{sec:conclusion}
-Our findings indicate that using logical dependencies improves software clustering. Integrating LD with SD achieved higher MQ and MoJoFM values across all clustering algorithms and projects compared to the SD-only approach, indicating enhanced clustering due to the additional information provided by logical dependencies.
+Our findings indicate that using logical dependencies improves software clustering. Integrating LD with SD achieved higher MQ and MoJoFM values across all clustering algorithms and projects than the SD-only approach, demonstrating enhanced clustering due to the additional information provided by logical dependencies.
 
-Using logical dependencies alone achieved the highest MQ and MoJoFM values at certain strength thresholds when compared with SD-only and SD+LD combinations. However, these strength thresholds corresponded to low system coverage, meaning that a significant portion of software entities was excluded from the clustering process. This suggests that logical dependencies alone may not be sufficient when full system coverage is required.
+Using logical dependencies alone achieved the highest MQ and MoJoFM values compared to SD-only and SD+LD combinations. However, these strength thresholds corresponded to low system coverage, meaning that a significant portion of software entities was excluded from the clustering process. This suggests that logical dependencies alone may not be sufficient if full system coverage is required.
 
-The impact of using logical dependencies is influenced by the filtering thresholds applied during their extraction. Lower strength thresholds (10\% to 40\%) provided a good trade-off between including meaningful co-change relationships and minimizing noise. At these thresholds, the combined SD+LD approach outperformed the SD-only approach. At higher strength thresholds (e.g., 100\%), the reduced coverage and increased overlap between LD and SD minimized the benefits of using logical dependencies.
+The impact of using logical dependencies is influenced by the filtering thresholds applied during their extraction. Lower strength thresholds (10\% to 40\%) provided a good trade-off between including meaningful co-change relationships and minimizing noise. At these thresholds, the combined SD+LD approach outperformed the SD-only approach. At higher strength thresholds (e.g., 100\%), the reduced coverage and increased overlap between LD and SD minimized the advantages of using logical dependencies.
 
-This highlights the importance of selecting appropriate filtering thresholds for logical dependencies. By using filtering settings according to the characteristics of the software system, users can benefit from logical dependencies to improve architectural reconstruction.
+This highlights the importance of choosing appropriate filtering thresholds for logical dependencies. The strength filtering threshold should be chosen based on the characteristics of the software system, like system size and commit history so that users can benefit from logical dependencies to improve architectural reconstruction.
 
-In conclusion, logical dependencies, when appropriately filtered and combined with structural dependencies, enhance software clustering results while maintaining full system coverage. This integration helps improve system understanding and maintainability. In cases where structural dependencies are unavailable, logical dependencies alone offer a good alternative. Our future work will involve exploring automated methods for determining the optimal strength filter threshold for different systems.
+In conclusion, when optimally filtered and combined with structural dependencies, logical dependencies enhance software clustering results and provide full system coverage. In cases where structural dependencies are unavailable, logical dependencies alone provide a good alternative. In our future work, we will explore automated methods for determining the optimal strength filter threshold for different systems.
 
 \begin{thebibliography}{00}
 
