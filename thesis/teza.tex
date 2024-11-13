@@ -9,6 +9,7 @@
 \usepackage{natbib}
 \usepackage{float}
 \usepackage{colortbl}
+\usepackage{enumitem}
 
 \graphicspath{ {./images/} }
 
@@ -31,6 +32,8 @@
 \newcolumntype{l}{>{\centering\arraybackslash}m{7cm}}
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\setlist[itemize]{itemsep=0pt, topsep=0pt, parsep=0pt, partopsep=0pt}
 
 % Font settings
 \setmainfont{Verdana}
@@ -58,6 +61,11 @@
 \renewcommand{\chaptermark}[1]{\markboth{#1}{}} % Only chapter title in the header
 \renewcommand{\sectionmark}[1]{\markright{#1}}
 
+\fancypagestyle{plain}{
+    \fancyhf{} % Clear all header and footer fields for chapter start pages
+    \renewcommand{\headrulewidth}{0pt} % Remove header line
+    \renewcommand{\footrulewidth}{0pt} % Remove footer line
+}
 
 % TOC, List of Figures, and List of Tables Customizations
 
@@ -95,6 +103,22 @@
 \titlespacing*{\subsection}{1.27cm}{9pt}{9pt} % 1 space of 9pt before and after subsection
 
 
+% Adjust Table of Contents Layout
+
+
+\setlength{\cftchapindent}{0pt} % No indent for chapters
+\setlength{\cftsecindent}{1.5em} % Set indent for sections
+\setlength{\cftsubsecindent}{3em} % Set indent for subsections
+\setlength{\cftsubsubsecindent}{4.5em} 
+
+\setlength{\cftchapnumwidth}{2em} % Set space for chapter numbers
+\setlength{\cftsecnumwidth}{3em}  % Set space for section numbers
+\setlength{\cftsubsecnumwidth}{4em} % Set space for subsection numbers
+
+\let\origaddcontentsline\addcontentsline
+\renewcommand{\addcontentsline}[3]{\origaddcontentsline{#1}{#2}{\numberline{}#3}}
+
+\setlength{\cftbeforechapskip}{0pt}
 
 \renewcommand{\normalsize}{\fontsize{9pt}{11pt}\selectfont}
 \normalsize 
@@ -105,19 +129,25 @@
 \newcommand*{\Comb}[2]{{}^{#1}C_{#2}}%
 
 \begin{document}
-
-
-\newpage
+\vspace*{-4cm}
+\pagestyle{empty}
 \tableofcontents
+\clearpage
 
 \newpage
+\vspace*{-4cm}
 \listoftables
 
 \newpage
+\vspace*{-4cm}
 \listoffigures
+
+\pagestyle{fancy}
+
 
 \newpage
 \chapter{Presentation of the research topic}
+
 
 The domain of the proposed thesis is Automated Software Engineering. The thesis will develop methods for the analysis of legacy software systems, focusing on using historical information describing the evolution of the systems extracted from the versioning systems. 
 The methods for analysis will integrate techniques based on computational algorithms as well as data-mining. As proof-of-concept, tool prototypes will implement the proposed methods and validate them by extensive experimentation on several cases of real-life systems.\\
@@ -1787,7 +1817,7 @@ Overall, by looking at the comparisons between FAN\_IN, FAN\_OUT, FAN\_TOTAL, an
 \newpage
 \addcontentsline{toc}{section}{References}
 \nocite{*}
-\bibliographystyle{plain}
+\bibliographystyle{unsrt}
 \bibliography{references}
 
 \end{document}
