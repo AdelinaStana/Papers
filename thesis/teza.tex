@@ -1170,27 +1170,29 @@ The commits number found on the remaining 6 repositories varies from 19108 commi
 \caption{Analyzed software systems in previous research paper.}
 \label{tab:keyclass:overview}
 \centering
-\begin{tabular}{|c|c|c|c|}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{|c|c|p{7cm}|c|}
 \hline
 ID	&	System	&	Description	&	Version	\\
 \hline
-Sl	&	Apache Ant	&	Java library and command line tool that drive the build processes as targets and extension points depending upon each other	&	1.6.1	\\
-S2	&	Argo UML	&	UML modelling tool with support for all UML diagrams.	&	0.9.5	\\
-S3	&	GWT Portlets	&	Open source web framework for building GWT (Google Web Toolkit) Applications.	&	0.9.5 beta	\\
-S4	&	Hibernate 	&	Persistence framework for Java.	&	5.2.12	\\
-S5	&	javaclient	&	Java distributed application for playing with robots	&	2.0.0	\\
-S6	&	jEdit	&	Java mature text editor for programmers.	&	5.1.0	\\
-S7	&	JGAP	&	Genetic Algorithms and Genetic Programming Java library.	&	3.6.3	\\
-S8	&	JHotDraw	&	JHotDraw is a two-dimensional graphics framework for structured drawing editors that is written in Java.	&	6.0b.1	\\
-S9	&	JMeter	&	JMeter is a Java application designed to load test functional behavior and measure performance	&	2.0.1	\\
-S10	&	Log4j	&	Logging Service	&	2.10.0	\\
-S11	&	Mars	&	The Mars Simulation Project is a Java project that models and simulates human settlements on Mars planet	&	3.06.0	\\
-S12	&	Maze	&	The Maze-solver project simulates an artificial intelligence algorithm on a maze	&	1.0.0	\\
-S13	&	Neuroph	&	Neuroph is a Java neural network framework.	&	2.2.0	\\
-S14	&	Tomcat Catalina	&	The Apache Tomcat project is an open-source implementation of JavaServlet and JavaServerPages technologies	&	9.0.4	\\
-S15	&	Wro4J	&	The Wro4J is a web resource (JS and CSS) optimizer for Java.	&	1.6.3	\\
+Sl	&	Apache Ant	&	Java library and command line tool that drive the build processes as targets and extension points depending upon each other	&	1.6.1	\\ \hline
+S2	&	Argo UML	&	UML modelling tool with support for all UML diagrams.	&	0.9.5	\\ \hline
+S3	&	GWT Portlets	&	Open source web framework for building GWT (Google Web Toolkit) Applications.	&	0.9.5 beta	\\ \hline
+S4	&	Hibernate 	&	Persistence framework for Java.	&	5.2.12	\\ \hline
+S5	&	javaclient	&	Java distributed application for playing with robots	&	2.0.0	\\ \hline
+S6	&	jEdit	&	Java mature text editor for programmers.	&	5.1.0	\\ \hline
+S7	&	JGAP	&	Genetic Algorithms and Genetic Programming Java library.	&	3.6.3	\\ \hline
+S8	&	JHotDraw	&	JHotDraw is a two-dimensional graphics framework for structured drawing editors that is written in Java.	&	6.0b.1	\\ \hline
+S9	&	JMeter	&	JMeter is a Java application designed to load test functional behavior and measure performance	&	2.0.1	\\ \hline
+S10	&	Log4j	&	Logging Service	&	2.10.0	\\ \hline
+S11	&	Mars	&	The Mars Simulation Project is a Java project that models and simulates human settlements on Mars planet	&	3.06.0	\\ \hline
+S12	&	Maze	&	The Maze-solver project simulates an artificial intelligence algorithm on a maze	&	1.0.0	\\ \hline
+S13	&	Neuroph	&	Neuroph is a Java neural network framework.	&	2.2.0	\\ \hline
+S14	&	Tomcat Catalina	&	The Apache Tomcat project is an open-source implementation of JavaServlet and JavaServerPages technologies	&	9.0.4	\\ \hline
+S15	&	Wro4J	&	The Wro4J is a web resource (JS and CSS) optimizer for Java.	&	1.6.3	\\ 
 \hline
 \end{tabular}
+}
 \end{table}
 
 
@@ -1344,7 +1346,7 @@ As for the new results obtained by combining structural and logical dependencies
 \caption{Measurements for Ant using structural and logical dependencies combined}
 \label{tab:measurementscombined:ant}
 \centering
-\scalebox{0.8}{
+\scalebox{0.7}{
 \begin{tabular}{|c|cccccccccc|c|}
 \hline
 Metrics &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$		&	Baseline \\
@@ -1367,7 +1369,7 @@ CON\_T	&	0.840	&	0.886	&	0.904	&	0.909	&	0.915	&	0.923	&	0.932	&	0.935	&	\cellco
 \caption{Measurements for Tomcat using structural and logical dependencies combined}
 \label{tab:measurementscombined:tomcat}
 \centering
-\scalebox{0.8}{
+\scalebox{0.7}{
 \begin{tabular}{|c|cccccccccc|c|}
 \hline
 Metrics &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$		&	Baseline \\
@@ -1391,7 +1393,7 @@ CON\_T	&	0.868	&	0.906	&	0.930	&	0.936	&	0.937	&	\cellcolor{lightorange}0.938	&	
 \caption{Measurements for Hibernate using structural and logical dependencies combined}
 \label{tab:measurementscombined:hibernate}
 \centering
-\scalebox{0.8}{
+\scalebox{0.7}{
 \begin{tabular}{|c|cccccccccc|c|}
 \hline
 Metrics &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$		&	Baseline \\
@@ -1426,7 +1428,7 @@ One possible explanation for the less performing results is that the key classes
 \caption{Measurements for Ant using only logical dependencies}
 \label{tab:measurementshistory:ant}
 \centering
-\scalebox{0.8}{
+\scalebox{0.7}{
 \begin{tabular}{|c|cccccccccc|c|}
 \hline
 Metrics &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$		&	Baseline \\
@@ -1569,7 +1571,7 @@ In table \ref{tab:ratio_sd_ld} are the ratio numbers between structural dependen
 \caption{Percentage of logical dependencies that are also structural dependencies}
 \label{tab:overlap}
 \centering
-\scalebox{0.8}{
+\scalebox{0.7}{
 \begin{tabular}{|c|cccccccccc|}
 \hline
 System &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$ \\
@@ -1589,7 +1591,7 @@ Hibernate	&	6.546	&	26.607	&	29.565	&	32.374	&	32.543	&	45.170	&	44.980	&	42.473
 \caption{Ratio between structural and logical dependencies (SD/LD)}
 \label{tab:ratio_sd_ld}
 \centering
-\scalebox{0.8}{
+\scalebox{0.7}{
 \begin{tabular}{|c|cccccccccc|}
 \hline
 System &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$ \\
@@ -2023,7 +2025,7 @@ The co-changes that remain after applying the commit size filter are then proces
 \begin{figure}[t!]
   \centering
   \includegraphics[width=\columnwidth]{filtering.png}
-  \caption{ \textbf{Filter application process}}
+  \caption{Filter application process}
   \label{fig:filtering}
 \end{figure}
 
@@ -2044,7 +2046,7 @@ It is important to note that the strength metric is only used for filtering and 
 \begin{figure}[t!]
   \centering
   \includegraphics[width=\columnwidth]{codegraph.png}
-  \caption{ \textbf{Dependency Graph: Combining structural and logical dependencies.}}
+  \caption{Dependency Graph: Combining structural and logical dependencies.}
   \label{fig:codegraph}
 \end{figure}
 
@@ -2197,11 +2199,13 @@ After applying each clustering algorithm and completing both evaluations, we exp
 \label{subsec:plan}
 
 \subsubsection{Overview of projects used}
-\begin{table}[ht]
+
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1}
 \centering
 \caption{Overview of projects used in experimental analysis}
 \label{tab:project_info}
-\resizebox{\textwidth}{!}{
+\scalebox{0.7}{
 \begin{tabular}{|c|c|c|c|p{3cm}|}
 \hline
 \textbf{Project Name} & \textbf{Release Tag} & \textbf{Commits} & \textbf{GitHub Repository Link} & \textbf{Repository Description} \\ \hline
@@ -2299,7 +2303,7 @@ The rows in each table represent different dependency types and strength filter 
 \centering
 \caption{Clustering results based on different dependency types and strength filter thresholds for repository: https://github.com/apache/tomcat}
 \label{tab:clustering_results_tomcat}
-\setlength{\tabcolsep}{7pt} 
+\resizebox{\textwidth}{!}{
 \begin{tabular}{|l|c|c|ccc|ccc|ccc|}
 \hline
  \textbf{Dependency} &  \textbf{Entities} & \textbf{System} & \multicolumn{3}{c|}{\textbf{Louvain}} & \multicolumn{3}{c|}{\textbf{Leiden}} & \multicolumn{3}{c|}{\textbf{DBSCAN}} \\
@@ -2331,6 +2335,7 @@ The rows in each table represent different dependency types and strength filter 
 \textbf{SD+LD(100)} & 662 & 100.00 & 31 & 0.311 & 78.83 & 31 & 0.305 & 78.37 & 43 & 0.153 & 73.31 \\
 \hline
 \end{tabular}
+}
 \end{table*}
 
 
@@ -2340,7 +2345,7 @@ The rows in each table represent different dependency types and strength filter 
 \centering
 \caption{Clustering results based on different dependency types and strength filter thresholds for repository: https://github.com/hibernate/hibernate-orm}{https://github.com/hibernate/hibernate-orm}
 \label{tab:clustering_results_hibernate}
-\setlength{\tabcolsep}{7pt} 
+\resizebox{\textwidth}{!}{
 \begin{tabular}{|l|c|c|ccc|ccc|ccc|}
 \hline
  \textbf{Dependency} &  \textbf{Entities} & \textbf{System} & \multicolumn{3}{c|}{\textbf{Louvain}} & \multicolumn{3}{c|}{\textbf{Leiden}} & \multicolumn{3}{c|}{\textbf{DBSCAN}} \\
@@ -2372,6 +2377,7 @@ The rows in each table represent different dependency types and strength filter 
 \textbf{SD+LD (100)} & 4414 & 100.00 & 30 & 0.128 & 52.78 & 28 & 0.114 & 55.23 & 365 & 0.128 & 47.75 \\
 \hline
 \end{tabular}
+}
 \end{table*}
 
 
@@ -2383,7 +2389,7 @@ The rows in each table represent different dependency types and strength filter 
 \centering
 \caption{Clustering results based on different dependency types and strength filter thresholds for repository: https://github.com/google/gson}{https://github.com/google/gson}
 \label{tab:clustering_results_gson}
-\setlength{\tabcolsep}{7pt} 
+\resizebox{\textwidth}{!}{
 \begin{tabular}{|l|c|c|ccc|ccc|ccc|}
 \hline
  \textbf{Dependency} &  \textbf{Entities} & \textbf{System} & \multicolumn{3}{c|}{\textbf{Louvain}} & \multicolumn{3}{c|}{\textbf{Leiden}} & \multicolumn{3}{c|}{\textbf{DBSCAN}} \\
@@ -2415,6 +2421,7 @@ The rows in each table represent different dependency types and strength filter 
 \textbf{gson SD+LD(100)} & 210 & 100.00 & 7 & 0.267 & 58.91 & 8 & 0.263 & 59.41 & 21 & 0.134 & 55.45 \\
 \hline
 \end{tabular}
+}
 \end{table*}
 
 
@@ -2493,7 +2500,7 @@ We observe the same decline in results with a stricter strength threshold for SD
 \begin{figure}[t!]
 \centering
 \includegraphics[width=\columnwidth]{catalina_correlation.png}
-\caption{\textbf{Apache Tomcat: Overlap between structural and logical dependencies and its correlation with clustering metrics.}}
+\caption{Apache Tomcat: Overlap between structural and logical dependencies and its correlation with clustering metrics.}
 \label{fig:catalina_correlation}
 \end{figure}
 
@@ -2508,9 +2515,11 @@ To maintain consistency, we used the same columns as in the other result tables 
 \item \textbf{Avg Weight:} The average weight assigned to each type of dependency used.
 \end{itemize}
 
-\begin{table*}[htbp]
+\begin{table}[htbp]
 \centering
-\setlength{\tabcolsep}{7pt}
+\caption{Impact of multiplication factors on clustering results for LD(100) in Apache Tomcat}
+\label{tab:clustering_results_multiplication}
+\resizebox{\textwidth}{!}{
 \begin{tabular}{|l|c|c|ccc|ccc|ccc|}
 \hline
 \textbf{Multiplication} & \multicolumn{2}{c|}{\textbf{Avg. weight}} & \multicolumn{3}{c|}{\textbf{Louvain}} & \multicolumn{3}{c|}{\textbf{Leiden}} & \multicolumn{3}{c|}{\textbf{DBSCAN}} \\
@@ -2525,9 +2534,9 @@ To maintain consistency, we used the same columns as in the other result tables 
 5 & 6.91  & 185.20 & 34 & 0.306 & 73.88 & 33 & 0.308 & 72.18 & 43 & 0.153 & 73.31 \\
 \hline
 \end{tabular}
-\caption{Impact of multiplication factors on clustering results for LD(100) in Apache Tomcat}
-\label{tab:clustering_results_multiplication}
-\end{table*}
+
+}
+\end{table}
 
 
 In Table \ref{tab:systems_weights}, which presents the average weights associated with the dependencies across all systems, we can see that for Tomcat, the average weight for LD(10) is already almost double the SD average weight. For LD(100), the average weight is approximately five times higher than that of SD.
@@ -2550,7 +2559,7 @@ This observation is also reflected in Table \ref{tab:systems_weights}, where Hib
 \begin{figure}[t!]
   \centering
   \includegraphics[width=\columnwidth]{hibernate_correlation.png}
-  \caption{\textbf{Hibernate ORM: Overlap between structural and logical dependencies and its correlation with clustering metrics.}}
+  \caption{Hibernate ORM: Overlap between structural and logical dependencies and its correlation with clustering metrics.}
   \label{fig:hibernate_correlation}
 \end{figure}
 
@@ -2565,7 +2574,7 @@ The results for Hibernate highlight the challenge of achieving better clustering
 \begin{figure}[t!]
   \centering
   \includegraphics[width=\columnwidth]{gson_correlation.png}
-  \caption{\textbf{Google Gson: Overlap between structural and logical dependencies and its correlation with clustering metrics.}}
+  \caption{Google Gson: Overlap between structural and logical dependencies and its correlation with clustering metrics.}
   \label{fig:gson_correlation}
 \end{figure}
 
