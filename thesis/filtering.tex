@@ -1,4 +1,4 @@
-\chapter{Extracting software dependencies}
+\chapter{Filtering logical dependencies}
 \label{extraction}
 
 
@@ -92,8 +92,6 @@ The filters are implemented in the tool and can be combined. The input for each 
 \end{figure}
 
 
-\chapter {Filtering extracted co-changing pairs in order to obtain logical dependencies}
-
 \section{Data set used}
 \label{sec:dataset}
 We have analyzed a set of open-source projects found on GitHub\footnote{http://github.com/} \cite{Kalliamvakou2016} in order to extract the structural and logical dependencies between classes. Table \ref{table:1} enumerates all the systems studied. The 1st column assigns the projects IDs; 2nd column shows the project name; 3rd column shows the number of entities(classes and interfaces) extracted; 4th column shows the number of most recent commits analyzed from the active branch of each project and the 5th shows the language in which the project was developed.
@@ -143,9 +141,9 @@ We have analyzed a set of open-source projects found on GitHub\footnote{http://g
 }
 \end{table}
 
+\section{Overview in types of filters used}
 
-
-\section{Filtering based on the size of commit transactions}
+\subsection{Filtering based on the size of commit transactions}
 \label{sec:filtercommit}
 
 As presented in section \ref{sec:copairs_extraction}, according to surveys,  co-changing pairs are not used because of their size. One system can have millions of co-changing pairs.
@@ -234,7 +232,7 @@ Nr.	  & Project    &	$cs\leq 5$	&	$cs\leq 10$	&	$cs\leq 20$	&	$cs<\infty$ & Avg	
 
 
 
-\section{Filtering based on number of occurrences}
+\subsection{Filtering based on number of occurrences}
 \label{sec:filterocc}
 
 In the previous section, we filtered the co-changing pairs based on the commit size. Even though the number of extracted co-changing pairs was reduced, this type of filtering will not guarantee that the remaining co-changing pairs can pass as logical dependencies. 
@@ -348,7 +346,7 @@ So, filtering with a threshold of 4 for the minimum number of occurrences will i
 
 
 
-\section{Filtering based on connection strength}
+\subsection{Filtering based on connection strength}
 \label{sec:filterstrength}
 
 In section \ref{sec:filtercommit} we filtered the co-changing pairs extracted from the versioning system history based on the commit size. Based on the results obtained, we decided to filter out all co-changing pairs extracted from commits with more than 10 files changed. 
@@ -482,7 +480,7 @@ If we filter out all the co-changing pairs that do not update at least half of t
 
 
 
-\section{Overlaps between structural and co-changing pairs}
+\section{Overlaps between structural and logical dependencies}
 \label{sec:overlaps}
 
 A logical dependency can be also a structural dependency and vice-versa, so studying the overlapping between logical and structural dependencies while filtering is important since the intention is to introduce those logical dependencies among with structural dependencies in architectural reconstruction systems. Current studies have shown a relatively small percentage of overlapping between them with and without any kind of filtering \cite{DBLP:journals/jss/AjienkaC17}. This means that a lot of non related entities update together in the versioning system, the goal here is to establish the factors that determine such a small percentage of overlapping \cite{enase19}.
@@ -674,3 +672,154 @@ On the other hand, the overlap between structural and co-changes is given by the
 A first observation from Tables \ref{tab:percSD:comm}, \ref{tab:percSD:nocomm}, and \ref{tab:percSDstrength} is that not all pairs of classes with structural dependencies co-change. The biggest value for the percentage of structural dependencies that are also co-changes is 76.5\% obtained in the case when no filterings are done.
 
 From Tables \ref{tab:percLD:comm}, \ref{tab:percLD:nocomm}, and \ref{tab:percLDtrength} we notice that the percentage of co-changes which are also structural is always low to very low. This means that most co-changes are recorded between classes that have no structural dependencies to each other \cite{enase19}.   
+
+
+
+\chapter{Combining Structural and Logical Dependencies}
+\label{sec:combining}
+
+Software clustering relies on various dependencies to identify relationships between software entities. Structural dependencies have been mostly used due to their reliability \cite{b12}. However, recent research has started incorporating other types of dependencies besides structural dependencies \cite{b13}, \cite{b14}, \cite{b18}. This section will present an overview of structural and logical dependencies, focusing on how they are extracted.
+
+\section{Structural Dependencies Weights}
+
+Structural dependencies are important for understanding the architecture of a software system because they reveal how different modules interact at the code level. In our research, we extract structural dependencies using a tool from our previous work \cite{b4}. This tool analyzes the source code to identify various relationships between software entities and exports them in CSV format.
+
+Structural dependencies do not all have the same level of influence on a software system’s architecture and behavior. For instance, the relationship between a variable and the class that uses it is not the same as the relationship between a class and the interface it implements. To reflect these differences, we assign different weights to each type of dependency.
+
+The dependency types and weights were previously defined in related works on clustering \cite{b19}, \cite{b20}.
+
+Table \ref{tab:structural_weights} shows the weights assigned to different categories of structural dependencies, as proposed in previous works.
+
+\begin{table}[htbp]
+\centering
+\begin{tabular}{|c|l|}
+\hline
+\textbf{Weight} & \textbf{Dependency types} \\
+\hline
+4 & Interface realization \\
+3 & Inheritance, parameter, return type, field, cast, type binding \\
+2 & Method call, field access, instantiation \\
+1 & Local variable \\
+\hline
+\end{tabular}
+\caption{Weights assigned to different structural dependency types. \cite{b20}}
+\label{tab:structural_weights}
+\end{table}
+
+The weights are assigned based on the following considerations:
+
+\textit{Weight 4 – Interface Realization:} Assigned the highest weight because it signifies a strong architectural relationship. Implementing an interface means classes are expected to provide specific functionalities.
+
+\textit{Weight 3 – Inheritance, Parameter, Return Type, Field, Cast, Type Binding:} These dependencies represent significant connections between entities. They include inheritance relationships and shared data or types, which affect the behavior and properties of entities.
+
+\textit{Weight 2 – Method Call, Field Access, Instantiation:} These indicate interactions between classes but are less impactful than higher weights. They involve using methods or fields of other classes or creating instances. When a method call, field access, or instantiation occurs multiple times between the same pair of entities, the weight is multiplied by the number of occurrences. For example, if Class A calls a method in Class B three times, the assigned weight would be 6 (weight 2 multiplied by 3).
+
+\textit{Weight 1 – Local Variable:} Given the lowest weight, local variables are the most basic level of interaction.
+
+
+
+\section{Logical Dependencies Weights}
+\label{subsec:ld}
+
+We refer to logical dependencies as the filtered co-changes between software entities. A co-change occurs when two or more software entities are modified together during the same commit in the version control system. Co-changes indicate that these entities are likely directly or indirectly related or dependent on each other.
+
+Co-changes are associated with a degree of uncertainty. Compared to structural dependencies, where a dependency is certain, co-changes are less reliable. For example, if the system was migrated from one version control system to another, the first commit will include all the entities from the system at that point in time. Should we consider all these entities related to one another in this case? This would introduce false dependencies and reduce the likelihood of achieving accurate results when combining them with more reliable types of dependencies.
+
+Even if we address the issue of the first commit, a developer can still resolve multiple unrelated issues in the same commit (even though development processes do not recommend this).
+
+To solve this problem, in our previous works, we refined some filtering methods to ensure that the co-changes that remain after filtering are more reliable and suitable for use with other dependencies or individually \cite{b4}, \cite{b5}, \cite{b6}. Based on our previous results, the filters we decided to use further in our research are the commit size filter and the strength filter. Both filters are used together, and the result is the set of logical dependencies that we use to generate software clusters.
+
+\subsubsection{Commit Size Filter}
+
+The commit size filter filters out all co-changes that originate from commits that exceed a certain number of files.
+
+We are interested in extracting dependencies from code commits that involve feature development or bug fixes because that is when developers change related code files. If multiple unrelated features or bug fixes are solved in a single commit, it will appear that all the entities in those files are related, even if they are not.
+
+One scenario where this issue arises is the first commit of a software system when it is ported from one versioning system to another. This commit will contain many changed code files, but these changes do not originate from any functionality change, generating numerous irrelevant co-changes for the system.
+
+A similar scenario occurs with merge commits. A merge commit is automatically created when developers perform a merge operation to integrate changes from one branch into another. After integration, all commits from the branch are added to the target branch, and on top of that, there is the merge commit containing all changes from the commits merged into a single commit. Since this commit contains only a merge of multiple smaller, related issues/features solved, it is better to gather information from the smaller commits rather than from the overall merge commit.
+
+Both scenarios above have in common the large number of files involved in the commits. Based on our previous research and measurements regarding the number of files involved in a commit, we set a threshold of 20 files \cite{b4}, \cite{b5}. Therefore, all co-changes originating from commits with more than 20 changed code files are filtered out.
+
+
+
+\subsubsection{Strength Filter}
+
+This filter focuses on the reliability of the co-changes. If a pair of co-changing entities appears only once in the system's history, it might be less reliable than a pair that appears more frequently.
+
+Zimmermann et al. introduced the support and confidence metrics to measure the significance of co-changes \cite{b7}.
+
+The \textit{support metric} of a rule $(A \rightarrow B)$, where A is the antecedent and B is the consequent of the rule, is defined as the number of commits (transactions) in which both entities are changed together.
+
+The \textit{confidence metric} of $(A \rightarrow B)$, as defined in Equation \eqref{eq:confidence}, focuses on the antecedent of the rule and is the number of commits together of both entities divided by the total number of commits of (A).
+
+
+\begin{equation}
+\text{Confidence}(A \rightarrow B) = \frac{\text{Nr. of commits containing } A \text{ and } B}{\text{Nr. of commits containing } A}
+\label{eq:confidence}
+\end{equation}
+
+
+The confidence metric favors entities that change less and more frequently together rather than entities that change more with a wider variation of other entities.
+
+Assuming that (A) was changed in 10 commits and, of these 10 commits, 9 also included changes to (B), the confidence for the rule $(A \rightarrow B)$ is 0.9. On the other hand, if (C) was changed in 100 commits and, of these 100 commits, 50 also included changes to (D), the confidence for the rule $(C \rightarrow D)$ is 0.5. Therefore, in this scenario, we would have more confidence in the first pair $(A \rightarrow B)$ than in the second pair $(C \rightarrow D)$, even though the second pair has more than five times more updates together.
+
+To favor entities involved in more commits together, we calculated a \textit{system factor}. This system factor is the mean value of the support metric values for all entity pairs.
+
+The system factor is multiplied by the calculated confidence metric value. In addition, since we plan to use the metric values as weights, together with the weights of the structural dependencies, we multiply by 100 to scale the metric value to be supraunitary, and we clip the results between 0 and 100.
+
+
+We refer to this addition to the original calculation formula as the strength metric, and it is defined in Equation \eqref{eq:strength}.
+
+\begin{equation}
+\text{strength}(A \rightarrow B) = \text{confidence}(A \rightarrow B) \times 100 \times \text{system factor}
+\label{eq:strength}
+\end{equation}
+
+
+\subsubsection{Filter Application Process}
+
+Fig. \ref{fig:filtering} illustrates the overall filter application process. We begin by extracting all co-changes from the versioning system, and the first filter applied is the commit size filter. The commit size filter has a strict threshold of 20 files, meaning that any co-changes from commits involving more than 20 files are filtered out.
+
+The co-changes that remain after applying the commit size filter are then processed using the strength filter. The strength filter uses multiple thresholds, precisely 10 different thresholds. We start with a threshold of 10 and increment it by 10 until we reach a maximum value of 100. We do not use a fixed threshold to assess how different strength thresholds affect our cluster generation.
+
+\begin{figure}[t!]
+  \centering
+  \includegraphics[width=\columnwidth]{filtering.png}
+  \caption{Filter application process}
+  \label{fig:filtering}
+\end{figure}
+
+\subsubsection{Dependency Extraction and Filtering Tool}
+
+To extract and filter the co-changes, we used a previously developed tool \cite{b4}. This tool takes the GitHub repository address and the threshold values for commit and strength filters as input. The tool clones the repository, downloads all commit diffs starting from the first commit, examines all files changed in each commit to identify which entities have changed in those files, and creates undirected co-change dependencies between all changed entities within a commit.
+
+The commit size filter is applied to these undirected co-change dependencies since the metric value for $(A \rightarrow B)$ is the same as for $(B \rightarrow A)$. For the strength filter, each co-change dependency is converted into a directed co-change dependency, so for each $(A \rightarrow B)$ dependency, we have both $(A \rightarrow B)$ and $(B \rightarrow A)$. This conversion is necessary because, as mentioned in the previous section, the confidence filter evaluates the rule's antecedent. Thus, the metric value for $(A \rightarrow B)$ differs from the metric value for $(B \rightarrow A)$.
+
+After applying the filters, the remaining dependencies are exported to a CSV file for further use.
+
+It is important to note that the strength metric is only used for filtering and is \textit{not considered as a weight} of the dependencies. The \textit{weight assigned to each dependency is the number of commits in which both entities were updated together}.
+
+
+\section{Combining Structural and Logical Dependencies}
+
+
+\begin{figure}[t!]
+  \centering
+  \includegraphics[width=\columnwidth]{codegraph.png}
+  \caption{Dependency Graph: Combining structural and logical dependencies.}
+  \label{fig:codegraph}
+\end{figure}
+
+When structural dependencies (SD) and logical dependencies (LD) are combined in software clustering, both types of relationships are represented within the same graph.
+
+Each entity in the system is represented as a node in the graph, and the dependencies between them are represented as directed weighted edges.
+
+\textit{SD and LD weights are combined} when the same pair of entities appear in both dependencies. In this case, the weights from SD and LD are summed, giving more influence to those entity pairs. When a pair of entities appear only in SD or only in LD, the edge is added to the graph together with its corresponding weight.
+
+Figure \ref{fig:codegraph} illustrates combining structural and logical dependencies in the same dependency graph. The structural dependencies between \texttt{House}, \texttt{OrangeCat}, and \texttt{CatBehavior} entities are visible from the source code analysis.
+
+However, the combination of SD and LD reveals additional insights. One important observation is the logical dependency between \texttt{House} and \texttt{OrangeCat}, which is not observed from the structural analysis. This relation is extracted from version control and filtered using a 60\% strength filter. The strength metric reveals that \texttt{House} and \texttt{OrangeCat} have a significant co-change value of 75.0, usually associated with a strong relationship.
+
+When SD and LD overlap, such as between \texttt{OrangeCat} and \texttt{CatBehavior}, their weights are summed. This summation increases the weight of the dependency, making it more important in the dependency graph.
+
