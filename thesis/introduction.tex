@@ -13,28 +13,111 @@ The methods for analysis will integrate techniques based on computational algori
 
 
 
-\chapter{Software dependencies}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Software Dependencies: concepts, applications, and current research}
 \label{dep}
 
+\section{Software dependencies overview}
 
-\section{Structural dependencies}
-A dependency is created by two elements that are in a relationship and indicates that an element of the relationship, in some manner, depends on the other element of the relationship \cite{Booch:2004:OAD:975416}, \cite{Cataldo2009SoftwareDW}.
+\subsection{Structural dependencies}
+\hspace{4em} A dependency is created by two elements that are in a relationship and indicates that an element of the relationship, in some manner, depends on the other element of the relationship \cite{Booch:2004:OAD:975416}, \cite{Cataldo2009SoftwareDW}.
 
 Structural dependencies can be found by analyzing the source code \cite{Sangal:2005:UDM:1094811.1094824}, \cite{CalloArias2011}. 
 There are several types of relationships between these source code entities and all those create \textit{structural dependencies}:
 
-\subsubsection{Data Item Dependencies}
+\textbf{Data Item Dependencies.}
 Data items can be variables, records or structures. A dependency is created between two data items when the value held in the first data item is used or affects the value from the second.
 
-\subsubsection{Data Type Dependencies}
+
+\begin{verbatim}
+Example:
+
+int a = 10;
+int b = a + 5;  // b depends on a
+a = 20;         // changing a doesn't impact b
+\end{verbatim}
+
+\textbf{Data Type Dependencies.}
 Data items are declared to be of a specific data type. Besides the built-in data types that every programming language has, developers can also create new types that they can use. Each time the data type definition is changed it will affect all the data items that are declared to be of that type. 
 
-\subsubsection{Subprogram Dependencies}
+
+\begin{verbatim}
+Example:
+
+class Rectangle { int width, height; }
+//Change posibility: class Rectangle { int width, height, color; }
+
+Rectangle r = new Rectangle();  
+r.width = 5;
+r.height = 10;
+// Existing code will fail to handle color in case of change
+\end{verbatim}
+
+\textbf{Subprogram Dependencies.}
 A subprogram is a sequence of instructions that performs a certain task. Depending on the programming language a subprogram may also be called a routine, a method, a function or a procedure. When a subprogram is changed, the developer must check the effects of that change in all the places that are calling that subprogram. Subprograms may also have dependencies with the data items that they receive as input or the data items that they are computing.
 
 
+\begin{verbatim}
+Example:
 
-\section{Logical dependencies}
+// First implementation:
+class Calculator {
+    double calculateArea(double side) {
+        return side * side;  
+    }
+}
+
+// Modified implementation:
+class Calculator {
+    double calculateArea(double radius) {
+        return Math.PI * radius * radius; 
+    }
+}
+
+Calculator calc = new Calculator();
+// Code expecting square area now gets circle area.
+double area = calc.calculateArea(5);  
+
+\end{verbatim}
+
+\subsection{Lexical dependencies}
+
+\subsection{Semantical dependencies}
+
+\subsection{Logical dedependencies}
+\textit{Logical dependencies} (a.k.a logical coupling) can be found by software history analysis and can reveal relationships that are not always present in the source code (structural dependencies).  
+
+Software engineering practice has shown that sometimes modules which do not present structural dependencies still appear to be related. Co-evolution represents the phenomenon when one component changes in response to a change in another component \cite{Yu:2007:UCC:1231330.1231370}, \cite{5166450}. Those changes can be found in the software history maintained by the versioning system. Gall \cite{Gall:1998:DLC:850947.853338}, \cite{Gall:2003:CRH:942803.943741} identified as logical coupling between two modules the fact that these modules  \textit{repeatedly} change together during the historical evolution of the software system \cite{6606615}.
+
+The concepts of logical coupling and logical dependencies were first used in different analysis tasks, all related to changes: for software change impact analysis \cite{1553643}, for identifying the potential ripple effects caused by software changes during software maintenance and evolution \cite{DBLP:conf/issre/OlivaG15}, \cite{Oliva:2011:ISL:2067853.2068086}, \cite{Poshyvanyk2009}, \cite{posh2010} or for their link to deffects \cite{wiese}, \cite{Zimmermann:2004:MVH:998675.999460}.
+
+The current trend recommends that general dependency management methods and tools should also include logical dependencies besides the structural dependencies \cite{Oliva:2011:ISL:2067853.2068086}, \cite{DBLP:journals/jss/AjienkaC17}. 
+
+\subsection{Additional dependencies}
+
+\hspace{4em} Besides the dependencies mentioned above, there are many other types of dependencies, such as temporal, package, external, and several others.
+
+\textit{Temporal dependencies} represent a type of dependency where certain operations in the code must occur in a specific order. These operations may belong to the same software component or span across different parts of the system \cite{work-dep}.
+
+\begin{verbatim}
+Example:
+
+var file = new File();
+file.open("example.txt");
+file.readContents();
+file.close();
+\end{verbatim}
+
+In this example, there is a temporal dependency between the \texttt{open}, \texttt{readContents}, and \texttt{close} methods. The \texttt{readContents} method cannot function correctly unless the \texttt{open} method is called first to open the file. Similarly, the \texttt{close} method should be called after \texttt{readContents} to release the file resources.
+
+
+\textit{Package dependencies} refer to the relationships between different software packages, usually managed using package managers \cite{dep-package}.
+
+\textit{External dependencies} are the relationships between a software system's code and components outside the system, such as third-party services, libraries, APIs, or the programming language itself \cite{dep-external}.
+
+
+\section{Software change and version control systems}
 
 \subsection{Software change}
 \label{change}
@@ -64,17 +147,10 @@ Software evolution implies change which can be triggered either by new feature r
 Usually, developers use version control when it comes to software development. Version control is a system that records changes to a file or set of files over time so that developers can recall specific versions of those files later \cite{svn}.
 Distributed version control systems (such as Git, Mercurial, Bazaar or Darcs) allows many developers to collaboratively develop their projects \cite{7471284}.
 
-\subsection{Logical dedependencies in software systems}
-\textit{Logical dependencies} (a.k.a logical coupling) can be found by software history analysis and can reveal relationships that are not always present in the source code (structural dependencies).  
 
-Software engineering practice has shown that sometimes modules which do not present structural dependencies still appear to be related. Co-evolution represents the phenomenon when one component changes in response to a change in another component \cite{Yu:2007:UCC:1231330.1231370}, \cite{5166450}. Those changes can be found in the software history maintained by the versioning system. Gall \cite{Gall:1998:DLC:850947.853338}, \cite{Gall:2003:CRH:942803.943741} identified as logical coupling between two modules the fact that these modules  \textit{repeatedly} change together during the historical evolution of the software system \cite{6606615}.
+\section{Current status of research on logical dependencies}
 
-The concepts of logical coupling and logical dependencies were first used in different analysis tasks, all related to changes: for software change impact analysis \cite{1553643}, for identifying the potential ripple effects caused by software changes during software maintenance and evolution \cite{DBLP:conf/issre/OlivaG15}, \cite{Oliva:2011:ISL:2067853.2068086}, \cite{Poshyvanyk2009}, \cite{posh2010} or for their link to deffects \cite{wiese}, \cite{Zimmermann:2004:MVH:998675.999460}.
-
-The current trend recommends that general dependency management methods and tools should also include logical dependencies besides the structural dependencies \cite{Oliva:2011:ISL:2067853.2068086}, \cite{DBLP:journals/jss/AjienkaC17}. 
-
-
-\subsection{Current status of research}
+\subsection{Logical dependencies in software systems}
 
 Oliva and Gerosa \cite{Oliva:2011:ISL:2067853.2068086}, \cite{DBLP:conf/issre/OlivaG15} have found first that the set of co-changed classes was much larger compared to the set of structurally coupled classes. They identified structural and logical dependencies from 150000 revisions from the Apache Software Foundation SVN repository. Also they concluded  that in at least 91\% of the cases, logical dependencies involve files that are not structurally related. This implies that not all of the change dependencies are related to structural dependencies and there could be other reasons for software artifacts to be change dependent.
 
@@ -109,6 +185,9 @@ Filtering only after commit size is not enough, this type of filtering can indee
 Although, some unrelated files can be updated by human error in small commits, for example: one file was forgot to be commited in the current commit and will be commited in the next one among some unrelated files. This kind of situation can introduce a set of co-changing pairs that are definitely not logical liked. In order to avoid this kind of situation a filter for the occurrence rate of co-changing pairs must be introduced. Co-changing pairs that occur multiple times are more prone to be logically dependent than the ones that occur only once. Currently there are no concrete examples of how the threshold for this type of filter can be calculated. In order to do that, incrementing the threshold by a certain step will be the start and then studying the impact on the remaining co-changing pairs for different systems. 
 
 Taking into account also structural dependencies from all the revisions of the system was not made in previous works, this step is important in order to filter out the old, out-of-date logical dependencies. Some logical dependencies may have been also structural in previous revisions of the system but not in the current one. If we take into consideration also structural dependencies from previous revisions then the overlapping rate between logical and structural dependencies could probably increase. Another way to investigate this problem could be to study the trend of concurrences of co-changes: if co-changes between a pair of classes used to happen more often in the remote past than in the more recent past, it may be a sign that the problem causing the logical coupling has been removed in the mean time. 
+
+\subsection{Existing filtering techniques}
+tbd
 
 
 \section{Applications of software dependencies}
