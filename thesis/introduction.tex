@@ -81,18 +81,70 @@ double area = calc.calculateArea(5);
 
 \end{verbatim}
 
+
+
+
+
 \subsection{Lexical dependencies}
+
+\hspace{4em}Lexical dependencies, similar to structural dependencies, are extracted from the source code. The difference lies in the fact that lexical dependencies focus on finding pairs of entities that are similar (and thus connected) from a linguistic point of view. This means they are based on the textual content and naming conventions used in the code rather than explicit structural relationships. The lexical information about an entity (such as a class or interface) can be extracted from class names, method names, parameter names, code comments, source code statements, and others \cite{lexical-dep}, \cite{lexical-dep-Prajapati}.
+
+For example, a class named \texttt{StructuralDependenciesEvaluator} and a class named \texttt{LexicalDependenciesEvaluation} can be related even if they do not directly share dependencies or their connection is not visible from a structural point of view.
+
+To extract lexical dependencies, the code is tokenized, breaking it down into lexical tokens (e.g., words or symbols). A document containing these tokens is created for each source code file. Each document is then split into different parts, such as a class names part, attribute names part, parameter names part, and others. For instance, the class names part will contain the names of all classes found in the source file.
+
+After the tokenization process and splitting into various parts, the similarity between the two documents is estimated. 
+
+Various methods can be used for similarity calculation, such as:
+\begin{itemize}
+    \item \textit{Term Frequency-Inverse Document Frequency (TF-IDF):} Weighs the importance of words based on their frequency across documents \cite{lexical-dep}, \cite{lexical-dep-Corazza}.
+    \item \textit{Cosine Similarity:} Measures the cosine of the angle between two vectors representing the documents \cite{lexical-dep-Prajapati}.
+\end{itemize}
+
+
+
+
+
 
 \subsection{Semantical dependencies}
 
+\hspace{4em} Podgurski and Clarke define semantic dependencies in source code as follows: if changes in a statement \(s_1\) impact the behavior of another statement \(s_2\), then \(s_1\) and \(s_2\) are \emph{semantically dependent} \cite{Podgurski-semantic}.
+
+Semantic dependencies can be identified from the source code by constructing control flow graphs (CFGs). A control flow graph is a directed graph \(G = (V, E)\), where:
+\begin{itemize}
+    \item \(V\) is the set of vertices representing program statements (e.g., assignments, method calls, conditions),
+    \item \(E\) is the set of edges representing possible transfers of control between statements.
+\end{itemize}
+
+A vertex \(u \in V\) is semantically dependent on a vertex \(v \in V\) if changes in \(v\) determine changes in \(u\).
+
+In object-oriented (OO) systems, semantic dependencies are dependencies that are not visible in the static structure of the code. There is no direct reference between two entities (e.g., classes or interfaces), but changes in one entity impact the behavior of the other \cite{Neto-semantic-dep}, \cite{Capiluppi-semantic-dep}.
+
+
+\textit{Example:}
+
+Let \(A\) a class that uses an object of type \(I\), and let \(B\) a class that implements \(I\). For example, class \(A\) calls a method \texttt{performAction()} via an interface \(I\), while class \(B\) implements the \texttt{performAction()} method.
+
+If \(B\) changes its implementation of \texttt{performAction()}, the behavior of \(A\) might also change when it uses \(B\). This means that \(A\) and \(B\) are semantically dependent.
+
+
+
+
+
+
 \subsection{Logical dedependencies}
-\textit{Logical dependencies} (a.k.a logical coupling) can be found by software history analysis and can reveal relationships that are not always present in the source code (structural dependencies).  
+\hspace{4em} \textit{Logical dependencies} (also known as logical coupling) can be discovered through software history analysis. They reveal relationships between entities that are not always present in the source code's static structure (i.e., structural dependencies).
 
-Software engineering practice has shown that sometimes modules which do not present structural dependencies still appear to be related. Co-evolution represents the phenomenon when one component changes in response to a change in another component \cite{Yu:2007:UCC:1231330.1231370}, \cite{5166450}. Those changes can be found in the software history maintained by the versioning system. Gall \cite{Gall:1998:DLC:850947.853338}, \cite{Gall:2003:CRH:942803.943741} identified as logical coupling between two modules the fact that these modules  \textit{repeatedly} change together during the historical evolution of the software system \cite{6606615}.
+Software engineering practice has shown that sometimes modules without explicit structural dependencies still appear to be related. \textit{Co-evolution} represents the phenomenon where one component changes in response to changes in another component \cite{Yu:2007:UCC:1231330.1231370, 5166450}. Such changes can be found in the software history maintained by version control systems. Gall et al. defined \textit{logical coupling} as the occurrence of modules that \emph{repeatedly} update together during the evolution of the software system \cite{Gall:1998:DLC:850947.853338, Gall:2003:CRH:942803.943741, 6606615}.
 
-The concepts of logical coupling and logical dependencies were first used in different analysis tasks, all related to changes: for software change impact analysis \cite{1553643}, for identifying the potential ripple effects caused by software changes during software maintenance and evolution \cite{DBLP:conf/issre/OlivaG15}, \cite{Oliva:2011:ISL:2067853.2068086}, \cite{Poshyvanyk2009}, \cite{posh2010} or for their link to deffects \cite{wiese}, \cite{Zimmermann:2004:MVH:998675.999460}.
+The concepts of logical coupling and logical dependencies have been applied in different analysis tasks related to software changes: for software change impact analysis \cite{1553643}; for identifying potential ripple effects caused by software changes during maintenance and evolution \cite{DBLP:conf/issre/OlivaG15, Oliva:2011:ISL:2067853.2068086, Poshyvanyk2009, posh2010}; and for exploring their link to defects \cite{wiese, Zimmermann:2004:MVH:998675.999460}.
 
-The current trend recommends that general dependency management methods and tools should also include logical dependencies besides the structural dependencies \cite{Oliva:2011:ISL:2067853.2068086}, \cite{DBLP:journals/jss/AjienkaC17}. 
+An in-depth analysis of how logical dependencies are identified within the versioning system and their applications is provided in Section \ref{ld-intro}.
+
+
+
+
+
 
 \subsection{Additional dependencies}
 
@@ -117,28 +169,34 @@ In this example, there is a temporal dependency between the \texttt{open}, \text
 \textit{External dependencies} are the relationships between a software system's code and components outside the system, such as third-party services, libraries, APIs, or the programming language itself \cite{dep-external}.
 
 
+
+
+
+
 \section{Software change and version control systems}
 
 \subsection{Software change}
 \label{change}
 
-Software has distinctive stages during its life: Initial development, Evolution, Servicing, Phase out and Close down \cite{Software-life-cycle}, \cite{model-bennett}.
+\hspace{4em} Software systems have distinctive stages during their life: initial development, evolution, servicing, phase out, and close down \cite{Software-life-cycle}, \cite{model-bennett}.
 
-In the \textit{evolution stage} iterative changes are made. By changes, we mean additions (new software features), modifications (changes of requirements or misunderstood requirements) or deletions. There are two main reasons for the change: the learning process of the software team and new requests from the client.
+In the \textit{evolution stage}, iterative changes are made. By changes, we mean additions (new software features), modifications (changes of requirements or misunderstood requirements), or deletions. There are two main reasons for the change: the software team's learning process and new requests from the client.
 
-If new changes are no longer easy to be made or are very difficult and time-consuming, the software enters the \textit{servicing stage} also called aging software, decayed software and legacy \cite{Software-life-cycle}, \cite{363157}.
+Suppose new changes are no longer easy to be made or are very difficult and time-consuming. In that case, the software enters the \textit{servicing stage}, also called aging software, decayed software, and legacy \cite{Software-life-cycle}, \cite{363157}.
 
-The main difference between changes made in the evolution stage and changes made in the servicing stage is the effort of making changes. In the evolution stage, software changes are made easily and do not require much effort while in the servicing stage only a limited number of changes are made and require a lot of effort, so are really time-consuming \cite{Bennett}, \cite{Rajlich}.
+The main difference between changes made in the evolution and servicing stages is the effort to make changes. In the evolution stage, software changes are made easily and do not require much effort, while in the servicing stage, only a limited number of changes are made and require a lot of effort, so they are time-consuming \cite{Bennett}, \cite{Rajlich}.
 
 The change mini-cycle consists of the following phases \cite{810308}:
 \begin{itemize}
-\item Phase 1: The request for change. This usually comes from the users of the software and it can also be a bug report or a request for an additional functionality. 
-\item Phase 2: The planning phase, this includes program comprehension and change impact analysis. Program comprehension is a mandatory prerequisite of the change while change
-impact analysis indicates how costly the change is going to be. \cite{Bohner}
-\item Phase 3: The change implementation, restructuring for change and change propagation.
+\item Phase 1: The change request. This usually comes from the software users, and it can also be a bug report or a request for additional functionality.
+\item Phase 2: The planning phase includes program comprehension and change impact analysis. Program comprehension is a mandatory prerequisite of the change, while change
+impact analysis indicates how costly the change will be. \cite{Bohner}
+\item Phase 3: The change implementation, restructuring for change, and change propagation.
 \item Phase 4: Verification and validation.
 \item Phase 5: Re-documentation.
 \end{itemize}
+
+Understanding these phases is important for ensuring the software system remains maintainable and reliable throughout its lifecycle.
 
 
 \subsection{Version control systems}
@@ -149,6 +207,7 @@ Distributed version control systems (such as Git, Mercurial, Bazaar or Darcs) al
 
 
 \section{Current status of research on logical dependencies}
+\label{ld-intro}
 
 \subsection{Logical dependencies in software systems}
 
