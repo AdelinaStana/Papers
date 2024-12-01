@@ -7,6 +7,8 @@ The methods for analysis will integrate techniques based on computational algori
 
 \section{Objectives of the thesis}
 
+
+
 \section{Structure of the thesis}
 
 \section{Main Contributions}
@@ -204,6 +206,97 @@ Understanding these phases is important for ensuring the software system remains
 Software evolution implies change which can be triggered either by new feature requests or bug reports \cite{articleEvolution}. As presented also in section \ref{change}, one phase of the change mini-cycle consists of change implementation and propagation (changing source code files). 
 Usually, developers use version control when it comes to software development. Version control is a system that records changes to a file or set of files over time so that developers can recall specific versions of those files later \cite{svn}.
 Distributed version control systems (such as Git, Mercurial, Bazaar or Darcs) allows many developers to collaboratively develop their projects \cite{7471284}.
+
+Below, we will review some of the operations supported by versioning systems. The operation names in the following text are specific to Git, as Git is the version control system used for data collection in the current work. However, similar operations exist in other versioning systems; for example, Subversion (SVN) and Mercurial also provide operations such as branching, merging, and committing changes.
+
+\textbf{Repository}
+
+A repository serves as a centralized storage location for project files. The entire codebase of a project can be stored within a single repository or be split into a main repository and various modules stored in multiple repositories. Git repositories can be hosted on numerous platforms, such as GitHub, GitLab, Bitbucket, and others.
+
+It is important to differentiate between Git and Git hosting services. Git is a version control system that allows developers to download and modify code on their local devices while hosting services like GitHub provide platforms for teams to host projects that utilize Git \cite{git}, \cite{github}.
+
+\textbf{Commits}
+
+Committing is an operation that allows developers to record the latest changes to the codebase in the repository. A commit saves the current state of the code, including changes made since the last commit.
+
+The changes tracked include:
+
+\begin{itemize}
+\item \textit{Additions:} New files or lines of code created.
+\item \textit{Modifications:} Updates to existing lines of code or files.
+\item \textit{Deletions:} Removal of files or lines of code that are no longer needed.
+\end{itemize}
+
+The \textit{push} operation uploads these changes to the remote repository on the hosting service.
+
+A unique identifier, also known as a commit hash, is assigned to each commit. This hash allows developers to track specific changes or revert to earlier code versions. When a developer commits the changes, a commit message is required. This message serves as documentation for the changes, enhancing code traceability and maintainability \cite{git}.
+
+Figure~\ref{fig:gitflow} illustrates how changes are made to the code over time through commits, starting from the initial commit to the latest version.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=\textwidth]{gitflow.png}
+\caption{Tracking changes through commits.}
+\label{fig:gitflow}
+\end{figure}
+
+\textbf{Branches and Merging}
+
+By default, every repository comes with a main (or master) branch. This branch represents the central timeline for code changes and serves as the main integration point for stable code. Other branches can be created for parallel development from this branch.
+
+Branches allow developers to encapsulate changes without affecting the main branch. In most software projects, it is standard practice for developers to use branches for development, with the main branch being locked for direct commits. Changes to the main branch can be integrated through merges from other branches.
+
+Software projects often have multiple branches running in parallel, including branches from other branches. The main branch is not the only branch that supports branching; any branch can be a base for creating other branches.
+
+The operation of integrating changes from one branch into another (usually into the main branch) is called \textit{merging}.
+
+There are three main types of merges in Git \cite{git}:
+
+\begin{itemize}
+    \item \textit{Git Merge:} This is the most commonly used type of merging. It creates a new merge commit that combines all the changes from the branch being merged. Additionally, it retains the history of all the individual commits in the branch.
+    \begin{verbatim}
+    git checkout main
+    git merge feature-branch
+    \end{verbatim}
+
+    \item \textit{Git Rebase and Merge:} This operation is typically used when the branch contains a single commit or a small number of commits. It moves all the commits from the source branch to the top of the target branch. The main disadvantage of this operation is that it rewrites the commit history.
+    \begin{verbatim}
+    git checkout feature-branch
+    git rebase main
+    git checkout main
+    git merge feature-branch
+    \end{verbatim}
+
+    \item \textit{Git Squash and Merge:} This operation compresses all commits from the source branch into a single commit before merging it into the target branch. It results in a cleaner commit history but has the disadvantage of losing individual commits from the source branch.
+    \begin{verbatim}
+    git checkout main
+    git merge --squash feature-branch
+    git commit
+    \end{verbatim}
+\end{itemize}
+
+
+Figure~\ref{fig:merging} illustrates the differences between these three types of merging. 
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{merging.png}
+    \caption{Comparison of Git merge types.}
+    \label{fig:merging}
+\end{figure}
+
+\textbf{Tagging}
+
+Another helpful operation in Git is tagging. Developers use the tagging operation to mark a specific code version at a particular commit. This is usually done for important milestones, such as a new release version or a stable build \cite{git}.
+
+Tags provide a way to create a human-readable reference to a specific commit (e.g., \texttt{v1.0.0}), as the commit hash can be hard to remember (e.g., \texttt{a1b2c3d4e5f6g7h8i9})
+
+Git supports two types of tags:
+\begin{itemize}
+    \item \textit{Lightweight Tags:} Simple references to a commit that do not contain any additional metadata.
+    \item \textit{Annotated Tags:} These include additional metadata such as the author's name, date, and message, making them more suited for marking releases.
+\end{itemize}
+
 
 
 \section{Current status of research on logical dependencies}
