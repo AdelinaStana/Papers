@@ -7,6 +7,57 @@ The methods for analysis will integrate techniques based on computational algori
 
 \section{Objectives of the thesis}
 
+The objective of this doctoral thesis is to investigate and improve methods for filtering logical dependencies extracted from version control systems and to validate the effectiveness of these methods. The filtered logical dependencies are used to enhance key class detection in software systems and to improve software architecture reconstruction, two areas that mostly depended on structural dependencies.
+
+This research involves proposing techniques for extracting, filtering, and integrating logical dependencies into dependency models. To evaluate the impact of incorporating logical dependencies, various metrics will be used to assess their impact on key class detection and software architecture reconstruction. The goal is to demonstrate that logical dependencies, when appropriately filtered, provide valuable informations that can complement or, in some cases, replace structural dependencies.
+To achieve this, the following objectives have been established:
+
+\textbf{[O1]}: \textit{Study and analyze the current state of research on logical dependencies, with the goal of improving their extraction and filtering methods.}  
+
+This objective involved the following tasks:
+\begin{itemize}
+    \item \textbf{[T1.1]}: Review existing methods for logical dependency extraction from version control systems.
+    \item \textbf{[T1.2]}: Identify and evaluate factors that influence the validity of logical dependencies, such as commit size thresholds, minimum co-change occurrences, and comment changes, for the development of effective filtering methods.
+    \item \textbf{[T1.3]}: Based on the observations from T1.2, propose filtering methods for logical dependencies.
+    \item \textbf{[T1.4]}: Investigate the interplay between logical and structural dependencies to better understand their overlap and differences.
+\end{itemize}
+The outcomes of this objective [O1] have been published in [A1] and [A2].
+
+
+\textbf{[O2]}: \textit{Develop a tool for extracting and filtering logical dependencies.}  
+
+This objective involved the following tasks:
+\begin{itemize}
+    \item \textbf{[T2.1]}: Designing a tool for extracting logical dependencies based on co-changing entities, with different configurable filters.
+    \item \textbf{[T2.2]}: Implementing and testing the filtering mechanisms by outputting the results in a commonly used format.
+\end{itemize}
+This objective [O2] has been published and described in more detail in [A1] and [A2], the developed tool being further used in [A3], [A4], and [A5].
+
+
+
+\textbf{[O3]}: \textit{Integrate logical dependencies in key class detection.}  
+This objective involved the following tasks:
+\begin{itemize}
+    \item \textbf{[T3.1]} Extract logical dependencies from version control systems and apply the proposed filter (connection strength).
+    \item \textbf{[T3.2]} Modify the baseline key class detection tool to incorporate logical dependencies.
+    \item \textbf{[T3.3]} Evaluate the impact of combining logical and structural dependencies on key class detection performance.
+    \item \textbf{[T3.4]} Evaluate the impact of using only logical dependencies for key class detection.
+    \item \textbf{[T3.5]} Investigate the effect of filtering strategies (connection strength with different thresholds) on the key class detection results.
+\end{itemize}
+The outcomes of this activity [O3] have been published in [A3].
+
+\textbf{[O4]}: \textit{Refine software clustering using logical dependencies.}  
+This objective involved the following tasks:  
+\begin{itemize}  
+    \item \textbf{[T4.1]} Review and select suitable clustering algorithms for the experiments.  
+    \item \textbf{[T4.2]} Use only logical dependencies as input for software clustering.   
+    \item \textbf{[T4.3]} Combine logical and structural dependencies as input for clustering algorithms.  
+    \item \textbf{[T4.4]} Investigate the impact of different connection strength filter thresholds on clustering results by using clustering evaluation metrics: MQ and MoJoFM.  
+    \item \textbf{[T4.5]} Analyze the results: logical dependencies alone vs. combined dependencies with varying filter thresholds.  
+\end{itemize}
+
+The outcomes of this objective [O4] have been published in [A4] and [A5].
+
 
 
 \section{Structure of the thesis}
