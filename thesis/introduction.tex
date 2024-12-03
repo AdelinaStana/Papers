@@ -7,64 +7,69 @@ The methods for analysis will integrate techniques based on computational algori
 
 \section{Objectives of the thesis}
 
-The objective of this doctoral thesis is to investigate and improve methods for filtering logical dependencies extracted from version control systems and to validate the effectiveness of these methods. The filtered logical dependencies are used to enhance key class detection in software systems and to improve software architecture reconstruction, two areas that mostly depended on structural dependencies.
+\hspace{4em}The objective of this doctoral thesis is to investigate and improve methods for filtering logical dependencies extracted from version control systems and to validate the effectiveness of these methods. The filtered logical dependencies are used to enhance key class detection in software systems and to improve software architecture reconstruction, two areas that mostly depend on structural dependencies.
 
-This research involves proposing techniques for extracting, filtering, and integrating logical dependencies into dependency models. To evaluate the impact of incorporating logical dependencies, various metrics will be used to assess their impact on key class detection and software architecture reconstruction. The goal is to demonstrate that logical dependencies, when appropriately filtered, provide valuable informations that can complement or, in some cases, replace structural dependencies.
+This research proposes techniques for extracting, filtering, and integrating logical dependencies into dependency models. Various metrics will be used to evaluate the impact of incorporating logical dependencies and assess their impact on key class detection and software architecture reconstruction. The goal is to demonstrate that logical dependencies, when appropriately filtered, provide valuable information that can complement or, in some cases, replace structural dependencies.
 To achieve this, the following objectives have been established:
 
-\textbf{[O1]}: \textit{Study and analyze the current state of research on logical dependencies, with the goal of improving their extraction and filtering methods.}  
+\textbf{[O1]}: \textit{Study and analyze the current state of research on logical dependencies to improve their extraction and filtering methods.}
 
 This objective involved the following tasks:
 \begin{itemize}
-    \item \textbf{[T1.1]}: Review existing methods for logical dependency extraction from version control systems.
-    \item \textbf{[T1.2]}: Identify and evaluate factors that influence the validity of logical dependencies, such as commit size thresholds, minimum co-change occurrences, and comment changes, for the development of effective filtering methods.
-    \item \textbf{[T1.3]}: Based on the observations from T1.2, propose filtering methods for logical dependencies.
-    \item \textbf{[T1.4]}: Investigate the interplay between logical and structural dependencies to better understand their overlap and differences.
+\item \textbf{[T1.1]}: Review existing methods for logical dependency extraction from version control systems.
+\item \textbf{[T1.2]}: Identify and evaluate factors that influence the validity of logical dependencies, such as commit size thresholds, minimum co-change occurrences, and comment changes, to develop effective filtering methods.
+\item \textbf{[T1.3]}: Based on the observations from T1.2, propose filtering methods for logical dependencies.
+\item \textbf{[T1.4]}: Investigate the interplay between logical and structural dependencies to understand their overlap and differences better.
 \end{itemize}
 The outcomes of this objective [O1] have been published in [A1] and [A2].
 
 
-\textbf{[O2]}: \textit{Develop a tool for extracting and filtering logical dependencies.}  
+\textbf{[O2]}: \textit{Develop a tool for extracting and filtering logical dependencies.}
 
 This objective involved the following tasks:
 \begin{itemize}
-    \item \textbf{[T2.1]}: Designing a tool for extracting logical dependencies based on co-changing entities, with different configurable filters.
-    \item \textbf{[T2.2]}: Implementing and testing the filtering mechanisms by outputting the results in a commonly used format.
+\item \textbf{[T2.1]}: Designing a tool for extracting logical dependencies based on co-changing entities with different configurable filters.
+\item \textbf{[T2.2]}: Implementing and testing the filtering mechanisms by outputting the results in a commonly used format.
 \end{itemize}
 This objective [O2] has been published and described in more detail in [A1] and [A2], the developed tool being further used in [A3], [A4], and [A5].
 
 
 
-\textbf{[O3]}: \textit{Integrate logical dependencies in key class detection.}  
+\textbf{[O3]}: \textit{Integrate logical dependencies in key class detection.}
 This objective involved the following tasks:
 \begin{itemize}
-    \item \textbf{[T3.1]} Extract logical dependencies from version control systems and apply the proposed filter (connection strength).
-    \item \textbf{[T3.2]} Modify the baseline key class detection tool to incorporate logical dependencies.
-    \item \textbf{[T3.3]} Evaluate the impact of combining logical and structural dependencies on key class detection performance.
-    \item \textbf{[T3.4]} Evaluate the impact of using only logical dependencies for key class detection.
-    \item \textbf{[T3.5]} Investigate the effect of filtering strategies (connection strength with different thresholds) on the key class detection results.
+\item \textbf{[T3.1]} Extract logical dependencies from version control systems and apply the proposed filter (connection strength).
+\item \textbf{[T3.2]} Modify the baseline key class detection tool to incorporate logical dependencies.
+\item \textbf{[T3.3]} Evaluate the impact of combining logical and structural dependencies on key class detection performance.
+\item \textbf{[T3.4]} Evaluate the impact of using only logical dependencies for key class detection.
+\item \textbf{[T3.5]} Investigate the effect of filtering strategies (connection strength with different thresholds) on the key class detection results.
 \end{itemize}
 The outcomes of this activity [O3] have been published in [A3].
 
-\textbf{[O4]}: \textit{Refine software clustering using logical dependencies.}  
-This objective involved the following tasks:  
-\begin{itemize}  
-    \item \textbf{[T4.1]} Review and select suitable clustering algorithms for the experiments.  
-    \item \textbf{[T4.2]} Use only logical dependencies as input for software clustering.   
-    \item \textbf{[T4.3]} Combine logical and structural dependencies as input for clustering algorithms.  
-    \item \textbf{[T4.4]} Investigate the impact of different connection strength filter thresholds on clustering results by using clustering evaluation metrics: MQ and MoJoFM.  
-    \item \textbf{[T4.5]} Analyze the results: logical dependencies alone vs. combined dependencies with varying filter thresholds.  
+\textbf{[O4]}: \textit{Refine software clustering using logical dependencies.}
+This objective involved the following tasks:
+\begin{itemize}
+\item \textbf{[T4.1]} Review and select suitable clustering algorithms for the experiments.
+\item \textbf{[T4.2]} Use only logical dependencies as input for software clustering.
+\item \textbf{[T4.3]} Combine logical and structural dependencies as input for clustering algorithms.
+\item \textbf{[T4.4]} Investigate the impact of different connection strength filter thresholds on clustering results by using clustering evaluation metrics: MQ and MoJoFM.
+\item \textbf{[T4.5]} Analyze the results: logical dependencies alone vs. combined dependencies with varying filter thresholds.
 \end{itemize}
 
 The outcomes of this objective [O4] have been published in [A4] and [A5].
-
-
 
 \section{Structure of the thesis}
 
 \section{Main Contributions}
 
-
+\hspace{4em}The principal contributions of this thesis are:  
+\begin{itemize}  
+    \item proposing methods for filtering logical dependencies extracted from version control systems to improve their reliability and usefulness; this includes introducing a new metric for filtering logical dependencies, called connection strength;  
+    \item developing a tool for extracting and filtering logical dependencies;  
+    \item integrating logical dependencies into key class detection methodologies and analyzing the impact of different filtering strategies when using logical dependencies both independently and in combination with structural dependencies;  
+    \item integrating logical dependencies into software clustering and analyzing the impact of different filtering strategies when using logical dependencies both independently and in combination with structural dependencies; this analysis involves using three distinct clustering algorithms and two evaluation metrics to study the results;  
+    \item providing evidence that logical dependencies when appropriately filtered, can improve key class detection and software architecture reconstruction.  
+\end{itemize}  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -393,26 +398,28 @@ Taking into account also structural dependencies from all the revisions of the s
 tbd
 
 
+
+
 \section{Applications of software dependencies}
 \label{app}
 
-\subsection{Reverse engineering}
+\hspace{4em}\textbf{Reverse engineering.}
 The term reverse engineering was first defined by Chikofsky and Cross \cite{ChikofskyReverse} as the \textit{"process of analyzing a system to (i) identify the system’s components and
 their inter-relationships and (ii) create representations of the system in another form or at a higher level of abstraction."} 
 
 Reverse engineering is viewed as a two step process: information extraction and abstraction. \cite{FoSEReverseEngineering} 
 The firs step, information extraction, is made by source code analysis which generates dependencies between software artifacts. So, reverse engineering uses dependencies in order to create new representations of the system or provide a higher level of abstraction \cite{struct_dep}, \cite{Gueheneuc}.
 
-\subsection{Architecture reconstruction}
+\textbf{Architecture reconstruction.}
 Currently, the software systems contain tens of thousands of lines of code and are updated multiple times a day by multiple developers.  
 The software architecture is important in order to understand and maintain a system. Often code updates are made without checking or updating the architecture.
 This kind of updates cause the architecture to drift from the reality of the code over time. So reconstructing the architecture and verifying if still matches the reality is important. \cite{sar},\cite{PagerankENASE}, \cite{Bass-archreconstruction} ,\cite{RecoverySartipi}, \cite{model-bennett}.
 
-\subsection{Identifying clones}
+\textbf{Identifying clones.}
 Research suggests that a considerable part (around 5-10\%) of the source code of large-scale software is duplicate code (“clones”). Source code is often duplicated for a variety of reasons, programmers may simply be reusing a piece of code by copy and paste or they may be “reinventing the wheel” \cite{ClonesMayrand}, \cite{clones}.
 Detection and removal of clones can decrease software maintenance costs \cite{CloneDetection}, \cite{cloneKamiya}.
 
-\subsection{Code smells }
+\textbf{Code smells.}
 Code smells have been defined by Fowler \cite{bookFowler} and describe patterns that are generally associated with bad design and bad programming practices.
 Originally, code smells are used to find the places in software may need refactoring \cite{articlesmells}. Studies have found that smells may affect comprehension and possibly increase change and fault proneness \cite{5741260}, \cite{5328703}, \cite{articlefault-proneness}.
 Examples of code smells:
@@ -427,7 +434,7 @@ Examples of code smells:
 
 Previous studies already explored the idea of using history information in order to detect code smells \cite{6963448}. 
 
-\subsection{Comprehension}
+\textbf{Comprehension.}
 Software comprehension is the process of gaining knowledge about a software system.
 An increased knowledge of the software system help activities such as bug correction, enhancement, reuse and documentation \cite{Comprehension}, \cite{1199197}, \cite{2003:XLC:851042.857028}.
 Previous studies show that the proportion of resources and time allocated to maintenance may vary from 50\% to 75\% \cite{articleLientz}.
@@ -435,7 +442,7 @@ Regarding maintenance, the greatest part of the software maintenance process is 
 system. 
 Thanking into consideration the previous statements we can say that if we want to improve software maintenance we have to improve software comprehension \cite{article-cognitive-processes}.
 
-\subsection{Fault location}
+\textbf{Fault location.}
 Debugging software is an expensive and mostly manual process. Of all debugging activities, fault localization, is the most expensive \cite{articleDebugging}. 
 
 Software developers locate faults in their programs using a manual process. This process begins when the developers observe failures in the program. The developers choose a set of data to inject in the system(a set of data that most likely replicate previous failures or may generate new ones) and place breakpoints using a debugger. Then they observe the system's state until an failed state is reached, and then backtrack until the fault is found. 
@@ -443,11 +450,11 @@ Software developers locate faults in their programs using a manual process. This
 As we said, this process has high costs so because of this high cost, any improvement in the process can decrease the cost of debugging.\cite{fault-localization} \cite{program-failures}
 
 
-\subsection{Error proneness}
+\textbf{Error proneness.}
 Research has shown that based on the software error history and simple metrics related to the amount of data and the structural complexity of software,
 modules that are most likely to contain errors can be identified \cite{67595}, \cite{1702015}.
 
 
-\subsection{Empirical software engineering research}
+\textbf{Empirical software engineering research.}
 Empirical research tries to explore, describe, predict, and explain natural or social phenomena by using evidence based on observation or experience.
 It involves obtaining and interpreting evidence by experimentation, systematic observation, interviews, surveys, or by the careful examination of documents and artifacts. \cite{inproceedingsEmpirical}
