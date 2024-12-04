@@ -403,44 +403,50 @@ tbd
 \section{Applications of software dependencies}
 \label{app}
 
-\hspace{4em}\textbf{Reverse engineering.}
-The term reverse engineering was first defined by Chikofsky and Cross \cite{ChikofskyReverse} as the \textit{"process of analyzing a system to (i) identify the system’s components and
-their inter-relationships and (ii) create representations of the system in another form or at a higher level of abstraction."} 
+\hspace{4em}This section reviews several applications of software dependencies (e.g., structural, lexical, semantical, logical dependencies). These dependencies play an important role in various software engineering tasks, architecture reconstruction, clone identification, and more. 
 
-Reverse engineering is viewed as a two step process: information extraction and abstraction. \cite{FoSEReverseEngineering} 
-The firs step, information extraction, is made by source code analysis which generates dependencies between software artifacts. So, reverse engineering uses dependencies in order to create new representations of the system or provide a higher level of abstraction \cite{struct_dep}, \cite{Gueheneuc}.
 
 \textbf{Architecture reconstruction.}
-Currently, the software systems contain tens of thousands of lines of code and are updated multiple times a day by multiple developers.  
-The software architecture is important in order to understand and maintain a system. Often code updates are made without checking or updating the architecture.
-This kind of updates cause the architecture to drift from the reality of the code over time. So reconstructing the architecture and verifying if still matches the reality is important. \cite{sar},\cite{PagerankENASE}, \cite{Bass-archreconstruction} ,\cite{RecoverySartipi}, \cite{model-bennett}.
+Currently, software systems contain tens of thousands of lines of code and are updated daily by multiple developers. The software architecture is important for understanding and maintaining a system. Often, code updates are made without checking or updating the architecture.
 
-\textbf{Identifying clones.}
-Research suggests that a considerable part (around 5-10\%) of the source code of large-scale software is duplicate code (“clones”). Source code is often duplicated for a variety of reasons, programmers may simply be reusing a piece of code by copy and paste or they may be “reinventing the wheel” \cite{ClonesMayrand}, \cite{clones}.
-Detection and removal of clones can decrease software maintenance costs \cite{CloneDetection}, \cite{cloneKamiya}.
+These kinds of updates cause the architecture to drift from the reality of the code over time. Therefore, reconstructing the architecture and verifying if it still matches the actual implementation is important \cite{RecoverySartipi}, \cite{model-bennett}. Architecture reconstruction has mainly been done using structural dependencies \cite{sar}, \cite{PagerankENASE}, \cite{Bass-archreconstruction}, but recent works also include semantical and logical dependencies \cite{b13}, \cite{corazza2}, \cite{maletic}.
 
-\textbf{Code smells.}
-Code smells have been defined by Fowler \cite{bookFowler} and describe patterns that are generally associated with bad design and bad programming practices.
-Originally, code smells are used to find the places in software may need refactoring \cite{articlesmells}. Studies have found that smells may affect comprehension and possibly increase change and fault proneness \cite{5741260}, \cite{5328703}, \cite{articlefault-proneness}.
-Examples of code smells:
+\textbf{Identifying Clones.} 
+Research suggests that a considerable portion (around 5-10\%) of the source code in large-scale software is duplicate code (“clones”). Source code is often duplicated for a variety of reasons: programmers may simply reuse a piece of code by copying and pasting, or they may “reinvent the wheel” \cite{ClonesMayrand}, \cite{clones}. Detection and removal of clones can significantly decrease software maintenance costs \cite{CloneDetection}, \cite{cloneKamiya}.
+
+Structural dependencies can be used to detect code clones. For example, Cordy and Roy created the NiCad tool, which receives the entire code base of a project as input to detect project clones \cite{clones-nicad}. The same authors also used versioning system information to link clones to bug-fix commits from the versioning system \cite{clones-nicad-git}. Other researchers have used semantic dependencies and machine learning techniques to identify clones \cite{clones-ml}, while others have used lexical dependencies extracted from code comments \cite{clones-comments}.
+
+\textbf{Code Smells.}  
+Fowler \ defined code smells cite{bookFowler} as patterns generally associated with bad design and poor programming practices. Originally, code smells were used to identify areas in software that may require refactoring \cite{articlesmells}. Studies have found that code smells can impact software comprehension and increase changes and faults in the system \cite{5741260}, \cite{5328703}, \cite{articlefault-proneness}.
+
+Examples of code smells include:
+
 \begin{itemize}
-	\item Large Class: one class with many fields.
-	\item Feature Envy:  methods that access more methods and fields of another class than of its own class.
-	\item Data Class: classes that only fields and do not contain functionality.
-	\item Refused Bequest: classes that leave many of the fields and methods they inherit unused
-	\item Parallel Inheritance: every time you make a subclass of one class you also have to make a subclass of the other.
-	\item Shotgun Surgery: one method is changing together with other methods contained other classes.
+    \item \textbf{Large Class:} A class with many fields and methods, making it difficult to maintain or understand.
+    \item \textbf{Feature Envy:} Methods that access more methods and fields of another class than of their class.
+    \item \textbf{Data Class:} Classes that contain only fields and no meaningful functionality.
+    \item \textbf{God Class:} A class that centralizes too much responsibility, often not respecting the Single Responsibility Principle.
+    \item \textbf{Refused Bequest:} A subclass that inherits many fields or methods from its parent but leaves them unused.
+    \item \textbf{Parallel Inheritance:} Every time a subclass is added to one class, a subclass must also be added to another class.
+    \item \textbf{Shotgun Surgery:} A single change requires modifications in multiple classes.
 \end{itemize}
 
-Previous studies already explored the idea of using history information in order to detect code smells \cite{6963448}. 
+Code smell detection approaches often use structural information extracted from static code analysis. For example, Marinescu \cite{Marinescu} proposed a method to identify smells like God Class and Data Class based on structural metrics. Recent works have used machine learning algorithms in combination with structural metrics to improve the detection of code smells \cite{code-smell-ml, PALOMBA20181}.
 
-\textbf{Comprehension.}
-Software comprehension is the process of gaining knowledge about a software system.
-An increased knowledge of the software system help activities such as bug correction, enhancement, reuse and documentation \cite{Comprehension}, \cite{1199197}, \cite{2003:XLC:851042.857028}.
-Previous studies show that the proportion of resources and time allocated to maintenance may vary from 50\% to 75\% \cite{articleLientz}.
-Regarding maintenance, the greatest part of the software maintenance process is the activity of understanding the
-system. 
-Thanking into consideration the previous statements we can say that if we want to improve software maintenance we have to improve software comprehension \cite{article-cognitive-processes}.
+Certain smells, however, are more effectively detected using information from versioning systems, which capture logical dependencies. For instance, smells like \textit{Parallel Inheritance} and \textit{Shotgun Surgery} have been successfully identified by analyzing co-change patterns in version control systems \cite{6963448}.
+
+
+\textbf{Key Classes.} The concept of key classes was first introduced by Zaidman et al.\ \cite{ZaidmanJurnal}, referring to classes found in documents that provide an architectural overview of the system or an introduction to its structure. Tahvildari and Kontogiannis provided a more detailed definition of the key classes concept: \textit{“Usually, the most important concepts of a system are implemented by very few key classes which can be characterized by specific properties. These classes, which we refer to as key classes, manage many other classes or use them in order to implement their functionality. The key classes are tightly coupled with other parts of the system.”}~\cite{Tahvildari2004ImprovingDQ}.
+
+Key class identification can be performed using different algorithms with various inputs. Most of the research is based on using structural dependencies~\cite{PagerankENASE}, \cite{enase15}, \cite{SoraSpringer}, \cite{PagerankSACI}, \cite{Finding-key-classes}, \cite{ZaidmanJurnal}, \cite{rocclasification}, class diagrams~\cite{6676885}, or \textit{dynamic dependencies} obtained through runtime analysis \cite{ZaidmanJurnal}. 
+
+\textbf{Comprehension.}  
+Software comprehension is the process of gaining knowledge about a software system. An increased understanding of the software system helps activities such as bug correction, enhancement, reuse, and documentation \cite{Comprehension}, \cite{1199197}, \cite{2003:XLC:851042.857028}. 
+
+Previous studies show that the proportion of resources and time allocated to maintenance activities can vary from 50\% to 75\% \cite{articleLientz}. Within the maintenance process, the biggest effort is dedicated to understanding the system.
+
+To support software comprehension, various tools have been developed to help this process. For example, the COSPEX tool developed by Gupta et al. uses source code analysis to help novice developers better comprehend their tasks \cite{Comprehension-Gupta}. Şora proposes a tool that uses structural dependencies and graph-based ranking to generate an executive summary highlighting the most important classes in the software system \cite{enase15}.
+
 
 \textbf{Fault location.}
 Debugging software is an expensive and mostly manual process. Of all debugging activities, fault localization, is the most expensive \cite{articleDebugging}. 
