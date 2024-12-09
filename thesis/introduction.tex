@@ -354,85 +354,27 @@ Git supports two types of tags:
 
 \subsection{Logical dependencies in software systems}
 
-\subsection{Logical dependencies in software systems}
+The versioning system stores the long-term change history of every file in a project. Each change made by an individual at a specific point in time is recorded as a commit \cite{7471284}. This historical data provides insights into how software components evolve over time. Logical dependencies, also known as evolutionary coupling or co-changes, are derived from patterns of co-evolution, where one component changes in response to changes in another \cite{Yu:2007:UCC:1231330.1231370, 5166450}.
 
-The versioning system contains the long-term change history of every file. Each project change made by an individual at a certain point of time is contained into a commit \cite{7471284}. 
+Gall \cite{Gall:1998:DLC:850947.853338, Gall:2003:CRH:942803.943741, 6606615} identified \textit{logical coupling} as the relationship between two modules that repeatedly change together during the historical evolution of a software system. Logical dependencies can be expressed at two levels of abstraction: module-level \cite{LD-module, LD-module-new} and file/class-level \cite{CVS-LD, inproceedings-gall}.
 
+Several tools have been developed to detect and use logical dependencies. For instance, the **ROSE** tool, developed by Zimmermann et al. \cite{Zimmermann:2004:MVH:998675.999460}, mines version histories to suggest related code changes based on historical coupling between software entities. ROSE can predict 26\% of further files to be changed and 15\% of the functions or variables involved in future modifications.
 
-Co-evolution represents the phenomenon when one component changes in response to a change in another component \cite{Yu:2007:UCC:1231330.1231370}, \cite{5166450}. Gall \cite{Gall:1998:DLC:850947.853338, Gall:2003:CRH:942803.943741, 6606615} identified as logical coupling between two modules the fact that these modules \textit{repeatedly} change together during the historical evolution of the software system . 
+Kagdi et al. \cite{article-Kagdi-commit, msr-kagdi} developed **sqminer**, a tool based on the SPADE (Sequential Pattern Discovery Algorithm) to mine sequences of file changes for software change prediction. They also proposed an approach that combines conceptual couplings (derived from textual analysis of source code comments and identifiers) with logical dependencies (mined using the sqminer tool) to enhance software change impact analysis \cite{article-Kagdi-commit}.
 
+Moonen et al. \cite{Moonen-commit, article-Moonen} proposed an algorithm called **Tarmaq** that analyzes evolutionary coupling for predicting co-changes. Their results demonstrated that Tarmaq achieves better performance than the ROSE tool. Similarly, Mondal et al. \cite{HistoRank} developed **HistoRank**, an algorithm that uses five different ranking strategies for prioritizing and filtering co-changes.
 
+As shown above, logical dependencies have been widely used in co-change prediction. Additionally, they have been used for various other purposes, such as detecting code clones \cite{Mandal-clones}, identifying buggy code \cite{buggy-code}, evaluating the impact of software changes \cite{1553643}, and identifying potential ripple effects caused by software changes during maintenance and evolution \cite{DBLP:conf/issre/OlivaG15, Oliva:2011:ISL:2067853.2068086}.
 
-Currently logical dependencies can be expressed in two levels of abstraction, on module level \cite{LD-module, LD-module-new}, and more fine-grained, at file/class level \cite{CVS-LD, inproceedings-gall}.
+Despite their utility, logical dependency usage presents several challenges. One significant issue is the large volume of information generated during extraction, which must be processed and filtered to remove noise \cite{Coupling-Lanza, articleEvolution, Shtern:2012:CMS:2332427.2332428}. For instance, \textit{Oliva and Gerosa} \cite{Oliva:2011:ISL:2067853.2068086} found that the set of co-changed classes was much larger than the set of structurally coupled classes. At least 91\% of logical dependencies involve files that are not structurally related. This implies that not all change dependencies are linked to structural dependencies and that other factors may cause software artifacts to be change-dependent.
 
+\textit{Ajienka and Capiluppi} also explored the interplay between the logical and structural coupling of software classes. In \cite{DBLP:journals/jss/AjienkaC17, DBLP:journals/ese/AjienkaCC18}, they conducted experiments on 79 open-source systems. For each system, they identified the sets of structural dependencies, logical dependencies, and the intersections of these sets. They studied the overlap between these dependencies, concluding that not all co-changed class pairs (logical dependencies) are also linked by structural dependencies. Another observation, which was not deeply investigated by the authors in \cite{DBLP:journals/jss/AjienkaC17, DBLP:journals/ese/AjienkaCC18}, is the ratio between the total number of logical dependencies and structural dependencies in software systems. Based on their raw data, the average ratio across all analyzed projects is approximately 12.
 
-Zimmermann et al \cite{Zimmermann:2004:MVH:998675.999460} introduced data mining techniques to obtain association rules from version histories.
-The mined association rules  have a probabilistic interpretation based on the amount of evidence in the transactions they are derived from. This amount of evidence is determined by two measures: support and confidence.  They developed a tool to predict future or missing changes.
+Applications based on dependency analysis could benefit from incorporating non-structural dependencies alongside structural ones. For example, works that investigate various methods for architectural reconstruction \cite{SoraConti, SoraSem13, PagerankENASE}, which rely on structural dependency data, could enhance their dependency models by including logical dependencies.
 
-
-%%%%%%%
-
- the ROSE algorithm by Zimmermann et al. (2005), the
-FP-TREE algorithm by Ying et al. (2004), the CO-CHANGE algorithm by Kagdi et al. (2006),
-and the TARMAQ algorithm introduced in our earlier work (Rolfsnes et al. 2016a).
+Logical dependencies should integrate harmoniously with structural dependencies. Valid logical dependencies should not be excluded from the model, but structural dependencies should also not be overwhelmed by questionable logical dependencies generated by incidental co-changes. Therefore, to effectively incorporate logical dependencies into dependency models, co-changes must be filtered to remain only with a reduced and relevant set of valid logical dependencies.
 
 
-Ying et al \cite{Ying-co-change}
-recommend potentially relevant source code to a developer performing a modification task
- Transactions involving more than 100 files were excluded, as these were likely to represent non-meaningful tasks such as bulk formatting or maintenance operations rather than actual dependencies.
-
- +support 
-
-
-
-Kagdi et al. presented an approach combining conceptual couplings (derived from textual analysis of source code comments and identifiers using Information Retrieval techniques) and evolutionary couplings (mined patterns of co-changed entities from version history) for software change impact analysis \cite{article-Kagdi-commit}. 
-
- Commits with more than ten source files were also discarded.
-
- + support thresholds (e.g., a minimum number of co-occurrences).
-
-
- However, none of this work reports how the threshold was chosen nor does it discuss the impact of different values on mined impact analysis
-quality
-
-
-
-
-
-\cite{Zimmermann:2004:MVH:998675.999460}
-
-They introduced ROSE, a tool that mines version histories to suggest related code changes based on historical coupling between software entities.
- 26% of further files to be
-changed
-
-Filtering Large Transactions: Changes involving more than 30 entities were excluded to avoid noise introduced by branch merges or formatting updates.
-Support and Confidence: ROSE used the Apriori algorithm to derive association rules between entities, where support measures the frequency of an association, and confidence assesses its reliability.
-
-%%%%%%%%%
-
-
-
-Software engineering practice has shown that sometimes modules which do not present structural dependencies still can be related \cite{articleEvolution}, but one problem that appers when it comes to logical dependencies, is the quanity of information that must be processed \cite{Coupling-Lanza}.
-
-Another survey \cite{Shtern:2012:CMS:2332427.2332428} mentions one possible explanation why historical information have been rarely used in architectural reconstruction: the size of the extracted information. One problem is the size of the extraction process, which has to analyze many versions from the historical evolution of the system. Another problem is the big number of pairs of classes which record co-changes and how they relate to the number of pairs of classes with structural dependencies.
-
-
-Oliva and Gerosa \cite{Oliva:2011:ISL:2067853.2068086}, \cite{DBLP:conf/issre/OlivaG15} have found first that the set of co-changed classes was much larger compared to the set of structurally coupled classes. They identified structural and logical dependencies from 150000 revisions from the Apache Software Foundation SVN repository. Also they concluded  that in at least 91\% of the cases, logical dependencies involve files that are not structurally related. This implies that not all of the change dependencies are related to structural dependencies and there could be other reasons for software artifacts to be change dependent.
-
-Ajienka and Capiluppi also studied the interplay between logical and structural coupling of software classes. In \cite{DBLP:journals/jss/AjienkaC17} they  perform experiments on 79 open source systems: for each system, they determine the sets of structural dependencies, the set of logical dependencies and the intersections of these sets. They quantify the overlapping or intersection of these sets, coming to the conclusion that not all co-changed class pairs (classes with logical dependencies) are also linked by structural dependencies. One other interesting aspect which has not been investigated by the authors in \cite{DBLP:journals/jss/AjienkaC17, DBLP:journals/ese/AjienkaCC18}  is the total number of logical dependencies, reported to the total number of structural dependencies of a software systems. However, they provide the raw data of their measurements and we calculated the ratio between the number of logical dependencies and the number of structural dependencies for all the projects analyzed by them: the average ratio resulted 12.  This means that, using their method of detecting logical dependencies for a system, the number of logical dependencies outnumbers by one order of magnitude the number of structural dependencies.
-
-Different applications based on dependency analysis could be improved if, beyond structural dependencies, they also take into account the hidden non-structural dependencies. For example, works  which investigate different methods for architectural reconstruction \cite{SoraConti}, \cite{SoraSem13}, \cite{PagerankENASE},  all of them based on the information provided by structural dependencies, could enhance their dependency models by taking into account also logical dependencies. However, a thorough survey \cite{sar} shows that historical information has been rarely used in architectural reconstruction. 
-
-
-Another survey \cite{Shtern:2012:CMS:2332427.2332428} mentions one possible explanation why historical information have been rarely used in architectural reconstruction: the size of the extracted information. One problem is the size of the extraction process, which has to analyze many versions from the historical evolution of the system. Another problem is the big number of pairs of classes which record co-changes and how they relate to the number of pairs of classes with structural dependencies.
-
-The software architecture is important in order to understand and maintain a system. Often code updates are made without checking or updating the architecture. This kind of updates cause the architecture to drift from the reality of the code over time \cite{sar}.
-So reconstructing the architecture and verifying if still matches the reality is important \cite{Kalliamvakou2016}. 
-
-Surveys also show that architectural reconstruction is mainly made based on structural dependencies \cite{Shtern:2012:CMS:2332427.2332428}, \cite{sar}, the main reason why historical information is rarely used in architectural reconstruction is the size of the extracted information.
-
-Logical dependencies should integrate harmoniously with structural dependencies in an unitary dependency model: valid logical dependencies should not be omitted from the dependency model, but structural dependencies should not be engulfed by questionable logical dependencies generated by casual co-changes.  
-Thus, in order to add logical dependencies besides structural dependencies in dependency models, class co-changes must be filtered until they remain only a reduced but relevant set of valid logical dependencies. 
 
 
 \subsection{Existing filtering techniques}
