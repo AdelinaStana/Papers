@@ -354,7 +354,7 @@ Git supports two types of tags:
 
 \subsection{Logical dependencies in software systems}
 
-\hspace{4em}The versioning system stores the long-term change history of every file in a project. Each change made by an individual at a specific point in time is recorded as a commit \cite{7471284}. This historical data provides insights into how software components evolve over time. Logical dependencies, also known as evolutionary coupling or co-changes, are derived from patterns of co-evolution, where one component changes in response to changes in another \cite{Yu:2007:UCC:1231330.1231370, 5166450, Beck:2011:CMC:2025113.2025162}.
+\hspace{4em}The versioning system stores the long-term change history of every file in a project. Each change made by an individual at a specific point in time is recorded as a commit \cite{7471284}. This historical data provides insights into how software components evolve over time. Logical dependencies, also known as evolutionary coupling or co-changes, are derived from patterns of co-evolution, where one component changes in response to changes in another \cite{Yu:2007:UCC:1231330.1231370, Beck:2011:CMC:2025113.2025162}.
 
 Gall \cite{Gall:1998:DLC:850947.853338, Gall:2003:CRH:942803.943741, 6606615} identified \textit{logical coupling} as the relationship between two modules that repeatedly change together during the historical evolution of a software system. Logical dependencies can be expressed at two levels of abstraction: module-level \cite{LD-module-new} and file/class-level \cite{Gall:2003:CRH:942803.943741, inproceedings-gall}.
 
@@ -405,7 +405,7 @@ Filtering based only on commit size is not enough. While this type of filtering 
 
 Unrelated files can sometimes be updated in small commits due to human error. For instance, a file that was omitted from the current commit may be committed in the next commit together with some unrelated files. Such scenarios can introduce co-changing pairs that are not genuinely linked. To address this problem, a filter based on the occurrence rate of co-changing pairs should be applied. Co-changing pairs that occur multiple times are more likely to be dependent than those that appear only once \cite{b4}.
 
-Zimmermann et al. \cite{Zimmermann:2004:MVH:998675.999460} introduced the support and confidence metrics to measure the significance of co-changes based on the occurrence rate of co-changing pairs.
+Zimmermann et al. \cite{Zimmermann:2004:MVH:998675.999460, Zimmermannj2003} introduced the support and confidence metrics to measure the significance of co-changes based on the occurrence rate of co-changing pairs.
 
 The \textit{support metric} of a rule $(A \rightarrow B)$, where A is the antecedent and B is the consequent of the rule, is defined as the number of commits (transactions) in which both entities are changed together.
 
@@ -434,15 +434,19 @@ If $A$ and $B$ are always modified together in all 10 commits involving $A$, the
 
 
 
-Many studies have used the support and confidence metrics. Zimmermann et al. \cite{Zimmermann:2004:MVH:998675.999460}, in their ROSE tool, used different combinations of minimum support and confidence thresholds. They applied three minimum support thresholds, 1, 3, and 5, together with confidence thresholds ranging from 0.1 to 0.9, to predict future changes in software systems.
+Many studies have used the support and confidence metrics. \textit{Zimmermann et al.} \cite{Zimmermann:2004:MVH:998675.999460}, in their ROSE tool, used different combinations of minimum support and confidence thresholds. They applied three minimum support thresholds, 1, 3, and 5, together with confidence thresholds ranging from 0.1 to 0.9, to predict future changes in software systems.
 
-Ying et al. \cite{Ying-co-change} recommend potentially relevant source code to developers during modification tasks. The support thresholds in their study vary based on the analysis, ranging from 5 to 30 (5, 10, 15, 20, 25, 30). For confidence, Ying et al. chose not to use this metric, as they consider it misleading when some files are changed much more frequently than others.
+\textit{Ying et al.} \cite{Ying-co-change} recommend potentially relevant source code to developers during modification tasks. The support thresholds in their study vary based on the analysis, ranging from 5 to 30 (5, 10, 15, 20, 25, 30). For confidence, Ying et al. chose not to use this metric, as they consider it misleading when some files are changed much more frequently than others.
 
-Kagdi et al. \cite{article-Kagdi-commit}, in their studies on software change prediction, used minimum support thresholds of 1, 2, 4, and 8. For confidence, they considered all possible values greater than zero.
+\textit{Kagdi et al.} \cite{article-Kagdi-commit}, in their studies on software change prediction, used minimum support thresholds of 1, 2, 4, and 8. For confidence, they considered all possible values greater than zero.
 
-Mandal et al. \cite{Mandal-clones}, in their study on detecting clones and analyzing their evolution, developed a tool called MARC (Mining Association Rules among Clones). The tool detects code clones and ranks their change-proneness based on support and confidence values. In their experiments, they applied a minimum support threshold of 1.
+\textit{Mandal et al.} \cite{Mandal-clones}, in their study on detecting clones and analyzing their evolution, developed a tool called MARC (Mining Association Rules among Clones). The tool detects code clones and ranks their change-proneness based on support and confidence values. In their experiments, they applied a minimum support threshold of 1.
 
-Ajienka and Capiluppi \cite{DBLP:journals/ese/AjienkaCC18}, in their study on the interplay between logical and structural dependencies, used a support threshold of 0.01 and a confidence threshold of 0.1.
+\textit{Oliva and Gerosa} \cite{Oliva:2011:ISL:2067853.2068086, OlivaG152} investigated the interplay between structural and logical dependencies, using a modified version of the support and confidence metrics introduced by Zimmermann, adjusted to a set of commits. The study found that the support interval [1, 7] contains 90\% of all logical dependencies, while the interval [0, 10] contains 99.9\% of logical dependencies. The interval [11, 31] represents only 0.1\% of logical dependencies, with high variation observed across coupling levels.
+
+The confidence metric was divided into three categories: low logical coupling (0.00–0.33), medium logical coupling (0.33–0.66), and high logical coupling (0.66–1.00). The study concluded that classes with high logical coupling were the least influenced by structural coupling.
+
+\textit{Ajienka and Capiluppi} \cite{DBLP:journals/ese/AjienkaCC18}, in their study on the overlappings between structural and logical dependencies used a support threshold of 0.1 and a confidence threshold of 0.01.
 
 
 
