@@ -155,7 +155,7 @@ After the tokenization process and splitting into various parts, the similarity 
 
 Various methods can be used for similarity calculation, such as:
 \begin{itemize}
-    \item \textit{Term Frequency-Inverse Document Frequency (TF-IDF):} Weighs the importance of words based on their frequency across documents \cite{lexical-dep}, \cite{lexical-dep-Corazza}.
+    \item \textit{Term Frequency-Inverse Document Frequency (TF-IDF):} Weighs the importance of words based on their frequency across documents \cite{lexical-dep}, \cite{corazza2}.
     \item \textit{Cosine Similarity:} Measures the cosine of the angle between two vectors representing the documents \cite{lexical-dep-Prajapati}.
 \end{itemize}
 
@@ -190,7 +190,7 @@ If \(B\) changes its implementation of \texttt{performAction()}, the behavior of
 \subsection{Logical dedependencies}
 \hspace{4em} \textit{Logical dependencies} (also known as logical coupling) can be discovered through software history analysis. They reveal relationships between entities that are not always present in the source code's static structure (i.e., structural dependencies).
 
-Software engineering practice has shown that sometimes modules without explicit structural dependencies still appear to be related. \textit{Co-evolution} represents the phenomenon where one component changes in response to changes in another component \cite{Yu:2007:UCC:1231330.1231370, 5166450}. Such changes can be found in the software history maintained by version control systems. Gall et al. defined \textit{logical coupling} as the occurrence of modules that \emph{repeatedly} update together during the evolution of the software system \cite{Gall:1998:DLC:850947.853338, Gall:2003:CRH:942803.943741, 6606615}.
+Software engineering practice has shown that sometimes modules without explicit structural dependencies still appear to be related. \textit{Co-evolution} represents the phenomenon where one component changes in response to changes in another component \cite{Yu:2007:UCC:1231330.1231370, Cataldo2009SoftwareDW}. Such changes can be found in the software history maintained by version control systems. Gall et al. defined \textit{logical coupling} as the occurrence of modules that \emph{repeatedly} update together during the evolution of the software system \cite{Gall:1998:DLC:850947.853338, Gall:2003:CRH:942803.943741, 6606615}.
 
 The concepts of logical coupling and logical dependencies have been applied in different analysis tasks related to software changes: for software change impact analysis \cite{1553643}; for identifying potential ripple effects caused by software changes during maintenance and evolution \cite{DBLP:conf/issre/OlivaG15, Oliva:2011:ISL:2067853.2068086, Poshyvanyk2009, posh2010}; and for exploring their link to defects \cite{wiese, Zimmermann:2004:MVH:998675.999460}.
 
@@ -202,7 +202,7 @@ An in-depth analysis of how logical dependencies are identified within the versi
 
 \hspace{4em} Besides the dependencies mentioned above, there are many other types of dependencies, such as temporal, package, external, and several others.
 
-\textit{Temporal dependencies} represent a type of dependency where certain operations in the code must occur in a specific order. These operations may belong to the same software component or span across different parts of the system \cite{work-dep}.
+\textit{Temporal dependencies} represent a type of dependency where certain operations in the code must occur in a specific order. These operations may belong to the same software component or span across different parts of the system \cite{Cataldo2009SoftwareDW}.
 
 \begin{verbatim}
 Example:
@@ -230,13 +230,13 @@ In this example, there is a temporal dependency between the \texttt{open}, \text
 \subsection{Software change}
 \label{change}
 
-\hspace{4em} Software systems have distinctive stages during their life: initial development, evolution, servicing, phase out, and close down \cite{Software-life-cycle}, \cite{model-bennett}.
+\hspace{4em}Software systems have distinctive stages during their life: initial development, evolution, servicing, phase out, and close down \cite{Software-life-cycle}, \cite{model-bennett}.
 
 In the \textit{evolution stage}, iterative changes are made. By changes, we mean additions (new software features), modifications (changes of requirements or misunderstood requirements), or deletions. There are two main reasons for the change: the software team's learning process and new requests from the client.
 
 Suppose new changes are no longer easy to be made or are very difficult and time-consuming. In that case, the software enters the \textit{servicing stage}, also called aging software, decayed software, and legacy \cite{Software-life-cycle}, \cite{363157}.
 
-The main difference between changes made in the evolution and servicing stages is the effort to make changes. In the evolution stage, software changes are made easily and do not require much effort, while in the servicing stage, only a limited number of changes are made and require a lot of effort, so they are time-consuming \cite{Bennett}, \cite{Rajlich}.
+The main difference between changes made in the evolution and servicing stages is the effort to make changes. In the evolution stage, software changes are made easily and do not require much effort, while in the servicing stage, only a limited number of changes are made and require a lot of effort, so they are time-consuming \cite{Bennett, Rajlich, FoSEReverseEngineering}.
 
 The change mini-cycle consists of the following phases \cite{810308}:
 \begin{itemize}
@@ -253,7 +253,7 @@ Understanding these phases is important for ensuring the software system remains
 
 \subsection{Version control systems}
 
-Software evolution implies change which can be triggered either by new feature requests or bug reports \cite{articleEvolution}. As presented also in section \ref{change}, one phase of the change mini-cycle consists of change implementation and propagation (changing source code files). 
+\hspace{4em}Software evolution implies change which can be triggered either by new feature requests or bug reports \cite{articleEvolution}. As presented also in section \ref{change}, one phase of the change mini-cycle consists of change implementation and propagation (changing source code files). 
 Usually, developers use version control when it comes to software development. Version control is a system that records changes to a file or set of files over time so that developers can recall specific versions of those files later \cite{svn}.
 Distributed version control systems (such as Git, Mercurial, Bazaar or Darcs) allows many developers to collaboratively develop their projects \cite{7471284}.
 
@@ -354,34 +354,32 @@ Git supports two types of tags:
 
 \subsection{Logical dependencies in software systems}
 
-The versioning system stores the long-term change history of every file in a project. Each change made by an individual at a specific point in time is recorded as a commit \cite{7471284}. This historical data provides insights into how software components evolve over time. Logical dependencies, also known as evolutionary coupling or co-changes, are derived from patterns of co-evolution, where one component changes in response to changes in another \cite{Yu:2007:UCC:1231330.1231370, 5166450}.
+\hspace{4em}The versioning system stores the long-term change history of every file in a project. Each change made by an individual at a specific point in time is recorded as a commit \cite{7471284}. This historical data provides insights into how software components evolve over time. Logical dependencies, also known as evolutionary coupling or co-changes, are derived from patterns of co-evolution, where one component changes in response to changes in another \cite{Yu:2007:UCC:1231330.1231370, 5166450, Beck:2011:CMC:2025113.2025162}.
 
-Gall \cite{Gall:1998:DLC:850947.853338, Gall:2003:CRH:942803.943741, 6606615} identified \textit{logical coupling} as the relationship between two modules that repeatedly change together during the historical evolution of a software system. Logical dependencies can be expressed at two levels of abstraction: module-level \cite{LD-module, LD-module-new} and file/class-level \cite{CVS-LD, inproceedings-gall}.
+Gall \cite{Gall:1998:DLC:850947.853338, Gall:2003:CRH:942803.943741, 6606615} identified \textit{logical coupling} as the relationship between two modules that repeatedly change together during the historical evolution of a software system. Logical dependencies can be expressed at two levels of abstraction: module-level \cite{LD-module-new} and file/class-level \cite{Gall:2003:CRH:942803.943741, inproceedings-gall}.
 
-Several tools have been developed to detect and use logical dependencies. For instance, the **ROSE** tool, developed by Zimmermann et al. \cite{Zimmermann:2004:MVH:998675.999460}, mines version histories to suggest related code changes based on historical coupling between software entities. ROSE can predict 26\% of further files to be changed and 15\% of the functions or variables involved in future modifications.
+Several tools have been developed to detect and use logical dependencies. For instance, the \textbf{ROSE} tool, developed by Zimmermann et al. \cite{Zimmermann:2004:MVH:998675.999460}, mines version histories to suggest related code changes based on historical coupling between software entities. ROSE can predict 26\% of further files to be changed and 15\% of the functions or variables involved in future modifications.
 
-Kagdi et al. \cite{article-Kagdi-commit, msr-kagdi} developed **sqminer**, a tool based on the SPADE (Sequential Pattern Discovery Algorithm) to mine sequences of file changes for software change prediction. They also proposed an approach that combines conceptual couplings (derived from textual analysis of source code comments and identifiers) with logical dependencies (mined using the sqminer tool) to enhance software change impact analysis \cite{article-Kagdi-commit}.
+Kagdi et al. \cite{article-Kagdi-commit, msr-kagdi} developed \textbf{sqminer}, a tool based on the SPADE (Sequential Pattern Discovery Algorithm) to mine sequences of file changes for software change prediction. They also proposed an approach that combines conceptual couplings (derived from textual analysis of source code comments and identifiers) with logical dependencies (mined using the sqminer tool) to enhance software change impact analysis \cite{article-Kagdi-commit}.
 
-Moonen et al. \cite{Moonen-commit, article-Moonen} proposed an algorithm called **Tarmaq** that analyzes evolutionary coupling for predicting co-changes. Their results demonstrated that Tarmaq achieves better performance than the ROSE tool. Similarly, Mondal et al. \cite{HistoRank} developed **HistoRank**, an algorithm that uses five different ranking strategies for prioritizing and filtering co-changes.
+Moonen et al. \cite{Moonen-commit, article-Moonen, 7476643} proposed an algorithm called \textbf{Tarmaq} that analyzes evolutionary coupling for predicting co-changes. Their results demonstrated that Tarmaq achieves better performance than the ROSE tool. Similarly, Mondal et al. \cite{HistoRank} developed \textbf{HistoRank}, an algorithm that uses five different ranking strategies for prioritizing and filtering co-changes.
 
 As shown above, logical dependencies have been widely used in co-change prediction. Additionally, they have been used for various other purposes, such as detecting code clones \cite{Mandal-clones}, identifying buggy code \cite{buggy-code}, evaluating the impact of software changes \cite{1553643}, and identifying potential ripple effects caused by software changes during maintenance and evolution \cite{DBLP:conf/issre/OlivaG15, Oliva:2011:ISL:2067853.2068086}.
 
 Despite their utility, logical dependency usage presents several challenges. One significant issue is the large volume of information generated during extraction, which must be processed and filtered to remove noise \cite{Coupling-Lanza, articleEvolution, Shtern:2012:CMS:2332427.2332428}. For instance, \textit{Oliva and Gerosa} \cite{Oliva:2011:ISL:2067853.2068086} found that the set of co-changed classes was much larger than the set of structurally coupled classes. At least 91\% of logical dependencies involve files that are not structurally related. This implies that not all change dependencies are linked to structural dependencies and that other factors may cause software artifacts to be change-dependent.
 
-\textit{Ajienka and Capiluppi} also explored the interplay between the logical and structural coupling of software classes. In \cite{DBLP:journals/jss/AjienkaC17, DBLP:journals/ese/AjienkaCC18}, they conducted experiments on 79 open-source systems. For each system, they identified the sets of structural dependencies, logical dependencies, and the intersections of these sets. They studied the overlap between these dependencies, concluding that not all co-changed class pairs (logical dependencies) are also linked by structural dependencies. Another observation, which was not deeply investigated by the authors in \cite{DBLP:journals/jss/AjienkaC17, DBLP:journals/ese/AjienkaCC18}, is the ratio between the total number of logical dependencies and structural dependencies in software systems. Based on their raw data, the average ratio across all analyzed projects is approximately 12.
+Ajienka and Capiluppi also explored the interplay between the logical and structural coupling of software classes. In \cite{DBLP:journals/jss/AjienkaC17, DBLP:journals/ese/AjienkaCC18}, they conducted experiments on 79 open-source systems. For each system, they identified the sets of structural dependencies, logical dependencies, and the intersections of these sets. They studied the overlap between these dependencies, concluding that not all co-changed class pairs (logical dependencies) are also linked by structural dependencies. Another observation, which was not deeply investigated by the authors in \cite{DBLP:journals/jss/AjienkaC17, DBLP:journals/ese/AjienkaCC18}, is the ratio between the total number of logical dependencies and structural dependencies in software systems. Based on their raw data, the average ratio across all analyzed projects is approximately 12.
 
-Applications based on dependency analysis could benefit from incorporating non-structural dependencies alongside structural ones. For example, works that investigate various methods for architectural reconstruction \cite{SoraConti, SoraSem13, PagerankENASE}, which rely on structural dependency data, could enhance their dependency models by including logical dependencies.
+Applications based on dependency analysis could benefit from incorporating non-structural dependencies alongside structural ones. For example, works that investigate various methods for architectural reconstruction \cite{SoraConti, SoraSem13, PagerankENASE}, which rely mostly on structural dependency data, could enhance their dependency models by including logical dependencies.
 
-Logical dependencies should integrate harmoniously with structural dependencies. Valid logical dependencies should not be excluded from the model, but structural dependencies should also not be overwhelmed by questionable logical dependencies generated by incidental co-changes. Therefore, to effectively incorporate logical dependencies into dependency models, co-changes must be filtered to remain only with a reduced and relevant set of valid logical dependencies.
+Logical dependencies should integrate harmoniously with structural dependencies. Valid logical dependencies should not be excluded from the model, but structural dependencies should also not be overwhelmed by questionable logical dependencies. Therefore, to effectively incorporate logical dependencies into dependency models, co-changes must be filtered to remain only with a reduced and relevant set of valid logical dependencies.
 
 
 
 
 \subsection{Existing filtering techniques}
 
-Currently there is no set of rules or best practices that can be applied to the extracted class co-changes and can guarantee their filtering into a set of valid logical dependencies.
-This is mainly because not all the updates made in the versioning system are code related. For example a commit that has as participants a big number of files can indicate that a merge with another branch or a folder renaming has been made. In this case, a series of irrelevant co-changing pairs of entities can be introduced. So, in order to exclude this kind of situations the information extracted from the versioning system has to be filtered first and then used.
-
+\hspace{4em}Currently, there are no fixed rules for filtering extracted class co-changes to ensure they form a set of valid logical dependencies. Most studies using or investigating logical dependencies have applied various filtering techniques to the extracted co-changes. Below are some of the most commonly used filtering methods cited in the literature.
 
 
 \textbf{Commit Size}  
@@ -401,19 +399,56 @@ One of the most frequently used filters for co-change extraction is the commit s
 However, most of the works presented above do not discuss how the thresholds were chosen, nor do they analyze the impact of different threshold values on the quantity and quality of the data extracted.
 
 
+\textbf{Support and confidence}
+
+Filtering based only on commit size is not enough. While this type of filtering can reduce the total number of extracted co-changes, it does so without guaranteeing that the remaining co-changes are more relevant.
+
+Unrelated files can sometimes be updated in small commits due to human error. For instance, a file that was omitted from the current commit may be committed in the next commit together with some unrelated files. Such scenarios can introduce co-changing pairs that are not genuinely linked. To address this problem, a filter based on the occurrence rate of co-changing pairs should be applied. Co-changing pairs that occur multiple times are more likely to be dependent than those that appear only once \cite{b4}.
+
+Zimmermann et al. \cite{Zimmermann:2004:MVH:998675.999460} introduced the support and confidence metrics to measure the significance of co-changes based on the occurrence rate of co-changing pairs.
+
+The \textit{support metric} of a rule $(A \rightarrow B)$, where A is the antecedent and B is the consequent of the rule, is defined as the number of commits (transactions) in which both entities are changed together.
+
+The \textit{confidence metric} of $(A \rightarrow B)$, as defined in Equation \eqref{eq:confidence}, focuses on the antecedent of the rule and is the number of commits together of both entities divided by the total number of commits of (A).
+
+\begin{equation}
+\text{Confidence}(A \rightarrow B) = \frac{\text{Nr. of commits containing } A \text{ and } B}{\text{Nr. of commits containing } A}
+\label{eq:confidence}
+\end{equation}
+
+
+The support metric represents the frequency of changes for an association rule and can take values from 0 to infinity. On the other hand, the confidence metric is defined within the interval [0, 1]. As in Equation \eqref{eq:confidence}, the confidence metric measures the likelihood of a co-change. It can never exceed 1 because $\text{Commits}(A \cap B)$ is always a subset of $\text{Commits}(A)$.
+
+
+ For example, consider the case where entity $A$ is modified in 10 commits and entity $B$ is modified together with $A$ in 7 of those commits. The confidence is then:
+
+\[
+\text{Confidence}(A \rightarrow B) = \frac{7}{10} = 0.7.
+\]
+
+If $A$ and $B$ are always modified together in all 10 commits involving $A$, the confidence would be:
+
+\[
+\text{Confidence}(A \rightarrow B) = \frac{10}{10} = 1.
+\]
+
+
+
+Many studies have used the support and confidence metrics. Zimmermann et al. \cite{Zimmermann:2004:MVH:998675.999460}, in their ROSE tool, used different combinations of minimum support and confidence thresholds. They applied three minimum support thresholds, 1, 3, and 5, together with confidence thresholds ranging from 0.1 to 0.9, to predict future changes in software systems.
+
+Ying et al. \cite{Ying-co-change} recommend potentially relevant source code to developers during modification tasks. The support thresholds in their study vary based on the analysis, ranging from 5 to 30 (5, 10, 15, 20, 25, 30). For confidence, Ying et al. chose not to use this metric, as they consider it misleading when some files are changed much more frequently than others.
+
+Kagdi et al. \cite{article-Kagdi-commit}, in their studies on software change prediction, used minimum support thresholds of 1, 2, 4, and 8. For confidence, they considered all possible values greater than zero.
+
+Mandal et al. \cite{Mandal-clones}, in their study on detecting clones and analyzing their evolution, developed a tool called MARC (Mining Association Rules among Clones). The tool detects code clones and ranks their change-proneness based on support and confidence values. In their experiments, they applied a minimum support threshold of 1.
+
+Ajienka and Capiluppi \cite{DBLP:journals/ese/AjienkaCC18}, in their study on the interplay between logical and structural dependencies, used a support threshold of 0.01 and a confidence threshold of 0.1.
+
+
+
 \textbf{History length and age}
 
 Moonen et al. investigated the influence of history length (the number of analyzed transactions) and history age (the number of transactions that have occurred since the last co-change) when mining evolutionary coupling. Their study, which analyzed over 540,000 commits, found no evidence to support the idea that there is an upper limit to the amount of history that can be used for mining evolutionary coupling before outdated knowledge starts to negatively affect the quality of the extracted information \cite{article-Moonen}.
-
-\textbf{Support and confidence}
-
-Filtering only after commit size is not enough, this type of filtering can indeed have an impact on the total number of extracted co-changes, but will only shrink the number of co-changes extracted without actually guaranteeing that the remaining ones have more relevancy and are more logical linked.
-
-Although, some unrelated files can be updated by human error in small commits, for example: one file was forgot to be commited in the current commit and will be commited in the next one among some unrelated files. This kind of situation can introduce a set of co-changing pairs that are definitely not logical liked. In order to avoid this kind of situation a filter for the occurrence rate of co-changing pairs must be introduced. Co-changing pairs that occur multiple times are more prone to be logically dependent than the ones that occur only once. Currently there are no concrete examples of how the threshold for this type of filter can be calculated. In order to do that, incrementing the threshold by a certain step will be the start and then studying the impact on the remaining co-changing pairs for different systems. 
-
-Taking into account also structural dependencies from all the revisions of the system was not made in previous works, this step is important in order to filter out the old, out-of-date logical dependencies. Some logical dependencies may have been also structural in previous revisions of the system but not in the current one. If we take into consideration also structural dependencies from previous revisions then the overlapping rate between logical and structural dependencies could probably increase. Another way to investigate this problem could be to study the trend of concurrences of co-changes: if co-changes between a pair of classes used to happen more often in the remote past than in the more recent past, it may be a sign that the problem causing the logical coupling has been removed in the mean time. 
-
-
 
 
 \section{Applications of software dependencies}
@@ -425,7 +460,7 @@ Taking into account also structural dependencies from all the revisions of the s
 \textbf{Architecture reconstruction.}
 Currently, software systems contain tens of thousands of lines of code and are updated daily by multiple developers. The software architecture is important for understanding and maintaining a system. Often, code updates are made without checking or updating the architecture.
 
-These kinds of updates cause the architecture to drift from the reality of the code over time. Therefore, reconstructing the architecture and verifying if it still matches the actual implementation is important \cite{RecoverySartipi, model-bennett, Kalliamvakou2016}. Architecture reconstruction has mainly been done using structural dependencies \cite{sar}, \cite{PagerankENASE}, \cite{Bass-archreconstruction}, but recent works also include semantical and logical dependencies \cite{b13}, \cite{corazza2}, \cite{maletic}.
+These kinds of updates cause the architecture to drift from the reality of the code over time. Therefore, reconstructing the architecture and verifying if it still matches the actual implementation is important \cite{RecoverySartipi, model-bennett, Kalliamvakou2016}. Architecture reconstruction has mainly been done using structural dependencies \cite{sar}, \cite{PagerankENASE}, \cite{Bass-archreconstruction}, but recent works also include semantical and logical dependencies \cite{lexical-dep}, \cite{corazza2}, \cite{maletic}.
 
 \textbf{Identifying Clones.} 
 Research suggests that a considerable portion (around 5-10\%) of the source code in large-scale software is duplicate code (“clones”). Source code is often duplicated for a variety of reasons: programmers may simply reuse a piece of code by copying and pasting, or they may “reinvent the wheel” \cite{ClonesMayrand}, \cite{clones}. Detection and removal of clones can significantly decrease software maintenance costs \cite{CloneDetection}, \cite{cloneKamiya}.
@@ -454,10 +489,10 @@ Certain smells, however, are more effectively detected using information from ve
 
 \textbf{Key Classes.} The concept of key classes was first introduced by Zaidman et al.\ \cite{ZaidmanJurnal}, referring to classes found in documents that provide an architectural overview of the system or an introduction to its structure. Tahvildari and Kontogiannis provided a more detailed definition of the key classes concept: \textit{“Usually, the most important concepts of a system are implemented by very few key classes which can be characterized by specific properties. These classes, which we refer to as key classes, manage many other classes or use them in order to implement their functionality. The key classes are tightly coupled with other parts of the system.”}~\cite{Tahvildari2004ImprovingDQ}.
 
-Key class identification can be performed using different algorithms with various inputs. Most of the research is based on using structural dependencies~\cite{PagerankENASE}, \cite{enase15}, \cite{SoraSpringer}, \cite{PagerankSACI}, \cite{Finding-key-classes}, \cite{ZaidmanJurnal}, \cite{rocclasification}, class diagrams~\cite{6676885}, or \textit{dynamic dependencies} obtained through runtime analysis \cite{ZaidmanJurnal}. 
+Key class identification can be performed using different algorithms with various inputs. Most of the research is based on using structural dependencies~\cite{PagerankENASE}, \cite{enase15}, \cite{PagerankSACI}, \cite{Finding-key-classes}, \cite{ZaidmanJurnal}, \cite{rocclasification}, class diagrams~\cite{6676885}, or \textit{dynamic dependencies} obtained through runtime analysis \cite{ZaidmanJurnal}. 
 
 \textbf{Comprehension.}  
-Software comprehension is the process of gaining knowledge about a software system. An increased understanding of the software system helps activities such as bug correction, enhancement, reuse, and documentation \cite{Comprehension}, \cite{1199197}, \cite{2003:XLC:851042.857028}. 
+Software comprehension is the process of gaining knowledge about a software system. An increased understanding of the software system helps activities such as bug correction, enhancement, reuse, and documentation \cite{Comprehension}, \cite{1199197}. 
 
 Previous studies show that the proportion of resources and time allocated to maintenance activities can vary from 50\% to 75\% \cite{articleLientz}. Within the maintenance process, the biggest effort is dedicated to understanding the system.
 

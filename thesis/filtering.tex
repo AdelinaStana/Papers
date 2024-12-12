@@ -9,7 +9,7 @@ A dependency is created between two elements that are in a relationship and indi
 Structural dependencies can be found by analyzing the source code \cite{Sangal:2005:UDM:1094811.1094824}, \cite{CalloArias2011}, \cite{structdep}. A structural dependency between two classes A and B is given by the fact that A statically depends on B, meaning that A cannot be compiled without knowing about B. In object oriented systems, this dependency can be given by many types of relationships between the two classes: A extends B, A implements B, A has attributes of type B, A has methods which have type B in their signature, A uses local variables of type B, A calls methods of B.
 
 
- We use an external tool called srcML \cite{srcML} to convert all source code files from the current release into XML files. All the information about classes, methods, calls to other classes are extracted by parsing the XML files and building a dependency data structure \cite{2003:XLC:851042.857028},
+ We use an external tool called srcML \cite{srcML} to convert all source code files from the current release into XML files. All the information about classes, methods, calls to other classes are extracted by parsing the XML files and building a dependency data structure \cite{1199197},
 \cite{Collard:2011:LTF:2067850.2068011}. We choose the srcML format because it has the same markup for different programming languages and can ease the parsing of source code written in various programming languages such as Java, C++, and C\#.
 
 
@@ -660,7 +660,7 @@ From Tables \ref{tab:percLD:comm}, \ref{tab:percLD:nocomm}, and \ref{tab:percLDt
 \chapter{Combining Structural and Logical Dependencies}
 \label{sec:combining}
 
-Software clustering relies on various dependencies to identify relationships between software entities. Structural dependencies have been mostly used due to their reliability \cite{b12}. However, recent research has started incorporating other types of dependencies besides structural dependencies \cite{b13}, \cite{b14}, \cite{b18}. This section will present an overview of structural and logical dependencies, focusing on how they are extracted.
+Software clustering relies on various dependencies to identify relationships between software entities. Structural dependencies have been mostly used due to their reliability \cite{SoraSem13}. However, recent research has started incorporating other types of dependencies besides structural dependencies \cite{lexical-dep}, \cite{b14}, \cite{b18}. This section will present an overview of structural and logical dependencies, focusing on how they are extracted.
 
 \section{Structural Dependencies Weights}
 
@@ -668,7 +668,7 @@ Structural dependencies are important for understanding the architecture of a so
 
 Structural dependencies do not all have the same level of influence on a software system’s architecture and behavior. For instance, the relationship between a variable and the class that uses it is not the same as the relationship between a class and the interface it implements. To reflect these differences, we assign different weights to each type of dependency.
 
-The dependency types and weights were previously defined in related works on clustering \cite{b19}, \cite{b20}.
+The dependency types and weights were previously defined in related works on clustering \cite{SoraConti}, \cite{Finding-key-classes}.
 
 Table \ref{tab:structural_weights} shows the weights assigned to different categories of structural dependencies, as proposed in previous works.
 
@@ -684,7 +684,7 @@ Table \ref{tab:structural_weights} shows the weights assigned to different categ
 1 & Local variable \\
 \hline
 \end{tabular}
-\caption{Weights assigned to different structural dependency types. \cite{b20}}
+\caption{Weights assigned to different structural dependency types. \cite{Finding-key-classes}}
 \label{tab:structural_weights}
 \end{table}
 
@@ -709,7 +709,7 @@ Co-changes are associated with a degree of uncertainty. Compared to structural d
 
 Even if we address the issue of the first commit, a developer can still resolve multiple unrelated issues in the same commit (even though development processes do not recommend this).
 
-To solve this problem, in our previous works, we refined some filtering methods to ensure that the co-changes that remain after filtering are more reliable and suitable for use with other dependencies or individually \cite{b4}, \cite{b5}, \cite{b6}. Based on our previous results, the filters we decided to use further in our research are the commit size filter and the strength filter. Both filters are used together, and the result is the set of logical dependencies that we use to generate software clusters.
+To solve this problem, in our previous works, we refined some filtering methods to ensure that the co-changes that remain after filtering are more reliable and suitable for use with other dependencies or individually \cite{b4}, \cite{DepSACI}, \cite{enase19}. Based on our previous results, the filters we decided to use further in our research are the commit size filter and the strength filter. Both filters are used together, and the result is the set of logical dependencies that we use to generate software clusters.
 
 \subsubsection{Commit Size Filter}
 
@@ -729,7 +729,7 @@ Both scenarios above have in common the large number of files involved in the co
 
 This filter focuses on the reliability of the co-changes. If a pair of co-changing entities appears only once in the system's history, it might be less reliable than a pair that appears more frequently.
 
-Zimmermann et al. introduced the support and confidence metrics to measure the significance of co-changes \cite{b7}.
+Zimmermann et al. introduced the support and confidence metrics to measure the significance of co-changes \cite{Zimmermann:2004:MVH:998675.999460}.
 
 The \textit{support metric} of a rule $(A \rightarrow B)$, where A is the antecedent and B is the consequent of the rule, is defined as the number of commits (transactions) in which both entities are changed together.
 
