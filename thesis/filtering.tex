@@ -1,132 +1,8 @@
-\chapter{Filtering logical dependencies}
-\label{extraction}
-
-
-\section{Extracting structural dependencies}
-\label{sec:sd_extraction}
-A dependency is created between two elements that are in a relationship and indicates that an element of the relationship, in some manner, depends on the other element of the relationship \cite{Booch:2004:OAD:975416}, \cite{Cataldo2009SoftwareDW}.
-
-Structural dependencies can be found by analyzing the source code \cite{Sangal:2005:UDM:1094811.1094824}, \cite{CalloArias2011}, \cite{structdep}. A structural dependency between two classes A and B is given by the fact that A statically depends on B, meaning that A cannot be compiled without knowing about B. In object oriented systems, this dependency can be given by many types of relationships between the two classes: A extends B, A implements B, A has attributes of type B, A has methods which have type B in their signature, A uses local variables of type B, A calls methods of B.
-
-
- We use an external tool called srcML \cite{srcML} to convert all source code files from the current release into XML files. All the information about classes, methods, calls to other classes are extracted by parsing the XML files and building a dependency data structure \cite{1199197},
-\cite{Collard:2011:LTF:2067850.2068011}. We choose the srcML format because it has the same markup for different programming languages and can ease the parsing of source code written in various programming languages such as Java, C++, and C\#.
-
-
-\section{Extracting co-changing pairs}
-\label{sec:copairs_extraction}
-
-\textit{Logical dependencies} (a.k.a logical coupling) can be found by software history analysis and can reveal relationships that are not always present in the source code (structural dependencies).  
-
-TBA
-
-\section{Tool for measuring software dependencies}
-\label{sec:tool}
-
-To establish structural and logical dependencies, we developed a tool that takes as input the source code repository URL of a given system and extracts from it the software dependencies \cite{DepSACI}. 
-From a workflow point of view, we can identify 3 major types of activities that the tool does: downloads the required data from the git repository, extracts from the source code the structural dependencies and, extracts and filters the co-changing pairs from the repository's commit history. Figure \ref{fig:figworkflow} represents the activities mentioned above. Each block represents a different activity. 
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{tool_workflow.png}
-\caption{Tool workflow and major activities.}
-\label{fig:figworkflow}
-\end{figure}
-
-
-\textbf{Download git data.}
-
-The source code repository provides us all the needed information to extract both types of dependencies. It holds the code of the system but also the change history of the system. We use the source code for structural dependencies extraction and the change history for co-changing pairs extraction.
-To get the source code files and the change history, we first need to know the repository URL from GitHub (GitHub is a Git repository cloud-based hosting service). With the GitHub URL and a series of Git commands, the tool can download all the necessary data for dependencies extraction.
-
-As we can see in figure \ref{fig:figgitdata}, the \textit{"clone"} command will download a Git repository to your local computer, including the source code files. The \textit{"diff"} command will get the differences between two existing commits in the Git repository. 
-The tool gets the Git repository and the source code files by executing the "clone" command. Afterward, it gets all the existing commits within the Git repository. The commits are ordered by date, beginning with the oldest one and ending with the most recent one. The tool executes the "diff" command between each commit and its parent (the previous commit). The "diff" command generates a text file that contains the differences between the two commits: code differences, the number of files changed and changed file names.
-
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{gitdata.png}
-\caption{Commands used to download the required data from GitHub.}
-\label{fig:figgitdata}
-\end{figure}
-
-\textbf{Extract structural dependencies.}
-
-To extract the structural dependencies from the source code files the tool converts each source code file into srcML format using an open-source tool called srcML. The srcML format is an XML representation for source code. Each markup tag identifies elements of the abstract syntax for the language \cite{srcML}. 
-After conversion, the tool parses each file and identifies all the defined entities (class, interface, enum, struct) within the file. It also identifies all the entities that are used by the entities defined.  The connection between both types of entities mentioned above constitutes a structural dependency.
-
-\textbf{Extract and filter co-changing pairs.}
-
-The process of extracting and filtering the co-changing pairs is represented in figure \ref{fig:figfiltering}.
-For co-changing pairs extraction, the tool parses each generated diff file.
-For each file, the tool gets the number of changed files and the name of the files. 
-After structural dependencies extraction, the tool knows all the software entities contained in a file. Two entities from two changed files form a co-changing pair. After all the co-changing pairs of one diff file are extracted, the tool moves to the next diff file and extracts the set of co-changing pairs.
-
-As will be presented in more details in sections \ref{sec:filtercommit}, \ref{sec:filterocc}, and \ref{sec:filterstrength}, not every co-changing pair extracted is a logical dependency. For a co-changing pair to be labeled as a logical dependency, it has to meet some criteria. Each criterion constitutes a filter that a co-changing pair has to pass in order to be called logical dependency.
-The filters are implemented in the tool and can be combined. The input for each filter is the set of co-changing pairs extracted, and the output is the remaining co-changing pairs that respect the filter criterion.
-
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{pairs_filtering.png}
-\caption{Co-changing pairs extraction and filtering.}
-\label{fig:figfiltering}
-\end{figure}
-
-
-\section{Data set used}
-\label{sec:dataset}
-We have analyzed a set of open-source projects found on GitHub\footnote{http://github.com/} \cite{Kalliamvakou2016} in order to extract the structural and logical dependencies between classes. Table \ref{table:1} enumerates all the systems studied. The 1st column assigns the projects IDs; 2nd column shows the project name; 3rd column shows the number of entities(classes and interfaces) extracted; 4th column shows the number of most recent commits analyzed from the active branch of each project and the 5th shows the language in which the project was developed.
-
-
-\begin{table}[!h]
-\renewcommand{\arraystretch}{1}
-\caption{Summary of open source projects studied.}
-\label{table:1}
-\centering
-\scalebox{0.9}{
-\begin{tabular}{|c|c|c|c|c|c|}
-\hline
-   ID  & Project    & Nr. of & Nr. of& Type\\
-     &     & entites & commits & \\
-\hline
-1	&	bluecove	&	2685	&	894	&	java	\\
-2	&	aima-java	&	5232	&	1006	&	java	\\
-3	&	powermock	&	2801	&	949	&	java	\\
-4	&	restfb	&	3350	&	1391	&	java	\\
-5	&	rxjava	&	21097	&	4398	&	java	\\
-6	&	metro-jax-ws	&	6482	&	2927	&	java	\\
-7	&	mockito	&	5189	&	3330	&	java	\\
-8	&	grizzly	&	10687	&	3113	&	java	\\
-9	&	shipkit	&	639	&	1563	&	java	\\
-10	&	OpenClinica	&	9655	&	3276	&	java	\\
-11	&	robolectric	&	8922	&	5912	&	java	\\
-12	&	aeron	&	4159	&	5977	&	java	\\
-13	&	antlr4	&	4747	&	4431	&	java	\\
-14	&	mcidasv	&	3272	&	4136	&	java	\\
-15	&	ShareX	&	4289	&	5485	&	csharp	\\
-16	&	aspnetboilerplate	&	9712	&	4323	&	csharp	\\
-17	&	orleans	&	16963	&	3995	&	csharp	\\
-18	&	cli	&	2063	&	4488	&	csharp	\\
-19	&	cake	&	12260	&	2518	&	csharp	\\
-20	&	Avalonia	&	16732	&	5264	&	csharp	\\
-21	&	EntityFrameworkCore	&	50179	&	5210	&	csharp	\\
-22	&	jellyfin	&	8764	&	5433	&	csharp	\\
-23	&	PowerShell	&	2405	&	3250	&	csharp	\\
-24	&	WeiXinMPSDK	&	7075	&	5729	&	csharp	\\
-25	&	ArchiSteamFarm	&	702	&	2497	&	csharp	\\
-26	&	VisualStudio	&	4869	&	5039	&	csharp	\\
-27	&	CppSharp	&	17060	&	4522	&	csharp	\\
-
-\hline
-\end{tabular}
-}
-\end{table}
 
 \section{Overview in types of filters used}
 
 \subsection{Filtering based on the size of commit transactions}
-\label{sec:filtercommit}
+\label{subsec:filtering_transaction_size}
 
 As presented in section \ref{sec:copairs_extraction}, according to surveys,  co-changing pairs are not used because of their size. One system can have millions of co-changing pairs.
 With this filtering type, we not only want to decrease the total size of the extracted co-changing pairs. But also to be one step closer to the identification of the logical dependencies among the co-changing pairs.
@@ -331,11 +207,11 @@ So, filtering with a threshold of 4 for the minimum number of occurrences will i
 \subsection{Filtering based on connection strength}
 \label{sec:filterstrength}
 
-In section \ref{sec:filtercommit} we filtered the co-changing pairs extracted from the versioning system history based on the commit size. Based on the results obtained, we decided to filter out all co-changing pairs extracted from commits with more than 10 files changed. 
+In section \ref{subsec:filtering_transaction_size} we filtered the co-changing pairs extracted from the versioning system history based on the commit size. Based on the results obtained, we decided to filter out all co-changing pairs extracted from commits with more than 10 files changed. 
 
 In section \ref{sec:filterocc}, we added a new filtering rule based on the occurrence of a co-changing pair. The new filter is applied to the co-changing pairs resulted after commit size filtering. In this case, the filtering method proved insufficient due to the size diversity of the systems. One important conclusion drawn from the occurrence number filtering is that setting a hard threshold for a filter is not always a good idea. One threshold value can be too much for a small-sized system and too little for a medium-sized system. 
 
-To avoid the above problem, we decided to introduce another filter complementary to the commit size filter described in section \ref{sec:filtercommit}.
+To avoid the above problem, we decided to introduce another filter complementary to the commit size filter described in section \ref{subsec:filtering_transaction_size}.
 This filter focuses on the connection strength of a co-changing pair. In this section, we will filter out all the co-changing pairs that are not strongly connected.
 
 To determine the connection strength of a pair, we first need to calculate the connection factors for both entities that form a co-changing pair.
@@ -810,18 +686,7 @@ When SD and LD overlap, such as between \texttt{OrangeCat} and \texttt{CatBehavi
 
 New structure:
 \begin{verbatim}
-Chapter 3: Research methodology
-    3.1 Overview of research approach
-    3.2 Data collection
-        3.2.1 Extracting structural dependencies
-        3.2.2 Extracting logical dependencies (co-changing pairs)
-        3.2.3 Description of data sets used
-    3.3 Tool development
-        3.3.1 Tool for measuring software dependencies
-    3.4 Filtering logical dependencies
-        3.4.1 Filtering based on commit transaction size
-        3.4.2 Filtering based on number of occurrences
-        3.4.3 Filtering based on connection strength
+
 
 Chapter 4: Combining structural and logical dependencies
     4.1 Analysis of dependency overlaps

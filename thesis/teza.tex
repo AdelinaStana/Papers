@@ -11,6 +11,8 @@
 \usepackage{colortbl}
 \usepackage{enumitem}
 \usepackage[table]{xcolor}
+\usepackage{listings}
+
 
 \graphicspath{ {./images/} }
 
@@ -129,6 +131,23 @@
 
 \newcommand*{\Comb}[2]{{}^{#1}C_{#2}}%
 
+
+\lstdefinelanguage{diff}{
+    morecomment=[f][\color{gray}]{@@},         % Change markers
+    morecomment=[f][\color{blue}]{---},       % Removed lines
+    morecomment=[f][\color{green!50!black}]{+++}, % Added lines
+    morecomment=[f][\color{red}]{-},          % Deleted content
+    morecomment=[f][\color{green!50!black}]{+}, % Added content
+    morestring=[b]",
+    basicstyle=\ttfamily\scriptsize,
+    breaklines=true,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    showstringspaces=false,
+    frame=single,
+    captionpos=b
+}
+
 \begin{document}
 \vspace*{-4cm}
 \pagestyle{empty}
@@ -150,7 +169,7 @@
 \newpage
 
 \include{introduction}
-\include{filtering}
+\include{filtering_new}
 \include{keyclasses}
 \include{clustering}
 \include{conclusions}
