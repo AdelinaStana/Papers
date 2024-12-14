@@ -3,7 +3,22 @@
 
 \section{Overview of the approach}
 \label{sec:overview_approach}
-To be done at the end
+
+\hspace{4em}This chapter investigates the process of extracting and refining logical dependencies. The process is organized into three steps: collecting data, extracting dependencies, and applying filters.
+
+A set of 27 open-source projects were used to perform the investigations. These projects have different sizes, complexities, and programming languages (Java and C\#). Section \ref{subsec:data_sets_used} provides an overview of the systems used.
+
+The extraction process targets two types of dependencies:\\
+- \textit{Structural dependencies} are obtained by analyzing the static structure of the source code. Using the \textit{srcML} tool, source code files are converted into an XML format to extract relationships between entities. \\
+- \textit{Logical dependencies} are derived from the version control history. \\
+
+After extraction, filtering techniques are applied to refine the logical dependencies:\\
+- \textit{Commit size filtering} removes co-changing pairs from large commits, such as branch merges or formatting updates.\\
+- \textit{Support filtering} ensures co-changing pairs occur a minimum number of times.\\
+- \textit{Strength filtering} uses metrics like support, confidence, and a system factor to identify pairs with stronger relationships, scaling the results to the reality of the system.
+
+Each filtering step helps reduce the number of co-changing pairs while keeping meaningful dependencies. Figure \ref{fig:figworkflow} shows the workflow of the tool, which handles data collection, dependency extraction, and filtering. 
+
 
 
 \section{Data collection}
@@ -13,9 +28,14 @@ To be done at the end
 \subsection{Data set used}
 \label{subsec:data_sets_used}
 
-\hspace{4em}To investigate logical dependencies extraction and filtering techniques and their interplay with structural dependencies, 27 open-source projects from GitHub\footnote{http://github.com/} were selected. Table \ref{table:1} provides an overview of all the software systems analyzed.
+\hspace{4em}To investigate logical dependencies extraction and filtering techniques and their interplay with structural dependencies, 27 open-source projects from GitHub\footnote{http://github.com/} were selected. Table \ref{table:1} provides an overview of all the software systems analyzed. The columns in the table represent the following information:
 
-The table consists of five columns: the \textit{ID} column assigns a unique identifier to each project. The \textit{Project name} column lists the project names as they appear on GitHub. The \textit{Number of entities} column specifies the total number of entities (classes and interfaces) extracted from the source code. The \textit{Number of commits} column specifies the number of commits analyzed from the active branch (main/master) of each project. Lastly, the \textit{Type} column specifies the programming language in which the project was developed.
+\hspace{-4em}- \textit{ID}: A unique identifier assigned to each project. \\
+- \textit{Project name}: The name of the project as it appears on GitHub. \\
+- \textit{Number of entities}: The total number of entities (classes and interfaces) extracted from the source code. \\
+- \textit{Number of commits}: The total number of commits analyzed from the active branch (main/master) of each project. \\
+- \textit{Type}: The programming language used in the development of the project.
+
 
 This selection includes projects implemented in two programming languages: Java and C\#. The systems vary in size and complexity. From a structural perspective, the smallest project is \textit{shipkit}, which contains only 639 entities, while the largest is \textit{EntityFrameworkCore}, with 50,179 entities.
 
@@ -216,11 +236,11 @@ This section presents three filtering techniques used to refine the extracted co
 \subsection{Filtering based on commit transaction size}
 \label{subsec:filtering_transaction_size}
 
-As discussed in Section \ref{ld-intro}, the number of co-changing pairs extracted from software repositories can be quite large, often reaching millions. 
+As discussed in Section \ref{ld-intro}, the number of co-changing pairs extracted from software repositories can be quite large, often reaching millions.  With this filtering approach, the goal is to reduce the total number of extracted co-changing pairs and move closer to identifying meaningful logical dependencies. 
 
-With this filtering approach, the goal is to reduce the total number of extracted co-changing pairs and move closer to identifying meaningful logical dependencies. With the filter based on commit size (\textit{cs}), only co-changing pairs from commits involving fewer files than a predefined threshold are considered.
+Large commits often involve many files due to non-functional changes like branch merges, folder restructuring, or formatting updates. These types of commits can introduce noise by creating irrelevant co-changing pairs. Dependencies are more meaningful when extracted from commits that involve feature development or bug fixes, where developers modify related code files. However, if multiple unrelated features or fixes are solved into a single commit, it can add false relationships between the entities.
 
-Large commits, which often involve numerous files, are usually because of non-functional changes, such as branch merges, folder restructuring, or formatting updates. These types of commits can introduce noise by creating irrelevant co-changing pairs.
+One example of this issue is the initial commit when a system is migrated to a new versioning platform. These commits typically include many files but no functional changes. Another example is merge commits, created automatically during branch integrations. These commits combine changes from multiple smaller commits, which often address different issues or features. In such cases, analyzing the smaller, individual commits provides more accurate information than the overall merge commit \cite{cluster-access}.
 
 Different studies have used various threshold values for filtering commit sizes. Cappiluppi and Ajienka \cite{DBLP:journals/jss/AjienkaC17, DBLP:journals/ese/AjienkaCC18} only considered commits with fewer than 10 modified source code files. Similarly, Kagdi et al. used the same threshold, excluding commits with more than 10 source files. Ying et al. \cite{Ying-co-change} took a different approach, excluding commits involving over 100 files. Zimmermann et al. \cite{Zimmermann:2004:MVH:998675.999460} configured the ROSE tool to exclude commits larger than 30 files. Moonen et al. \cite{Moonen-commit} explored seven different transaction filtering sizes (2, 4, 6, 8, 10, 20, and 30), recommending a threshold of 8 files.
 
@@ -428,11 +448,147 @@ We calculate the overlap between co-changing pairs and structural dependencies n
 
 We stopped the minimum support threshold at 4 because, as observed in Table \ref{table:ld_ratio}, systems with IDs 2, 6, 10, and 16 show a ratio below 1, indicating that the number of structural dependencies exceeds the number of co-changing pairs. For systems with IDs 4, 11, 25, and 27, increasing the threshold to 4 does not significantly reduce the difference between the number of co-changing pairs and structural dependencies.
 
-Raising the support threshold beyond 4 risks filtering out all co-changing pairs for some systems. Therefore, while applying a threshold of 4 filters co-changing pairs to identify logical dependencies, the remaining number of co-changing pairs still significantly exceeds the number of structural dependencies for certain systems.
+Raising the support threshold beyond 4 might cause filtering out all co-changing pairs for some systems. Therefore, while applying a threshold of 4 filters co-changing pairs to identify logical dependencies, the remaining number of co-changing pairs still significantly exceeds the number of structural dependencies for certain systems.
+
+
 
 
 
 
 \subsection{Filtering based on connection strength}
 \label{subsec:filtering_connection_strength}
+In Section \ref{subsec:filtering_transaction_size}, we applied a filtering rule to exclude co-changing pairs extracted from commits involving more than 10 changed files. This decision was based on the results obtained from analyzing the commit size.
+
+In Section \ref{subsec:filtering_support}, we introduced an additional filter based on the support metric of a co-changing pair. This filter was applied after the commit size filter. However, the results highlighted a challenge: using a fixed threshold for filtering may not be effective across systems of varying sizes. A threshold that works well for smaller systems may need to be increased for medium-sized systems and vice versa.
+
+To address this issue, we introduced another filter complementary to the commit size filter described in Section \ref{subsec:filtering_transaction_size}. This new filter focuses on the connection strength of co-changing pairs. A co-changing pair that appears only once in a system's history may be less reliable than one that occurs more frequently \cite{cluster-access}.
+
+Zimmermann et al. proposed the support and confidence metrics to measure the reliability of co-changes \cite{Zimmermann:2004:MVH:998675.999460}.
+
+The \textit{support metric} for a rule $(A \rightarrow B)$, where A is the antecedent, and B is the consequent, is defined as the number of commits (transactions) in which both entities are modified together.
+
+The \textit{confidence metric} of the same rule $(A \rightarrow B)$, as expressed in Equation \eqref{eq:confidence}, measures the proportion of commits involving both entities relative to the total number of commits where A appears.
+
+\begin{equation}
+\text{Confidence}(A \rightarrow B) = \frac{\text{Nr. of commits containing } A \text{ and } B}{\text{Nr. of commits containing } A}
+\label{eq:confidence}
+\end{equation}
+
+
+The confidence metric focuses on entities that are modified less frequently but consistently together, rather than entities that are modified more often but with multiple other entities.
+
+For example, assuming that entity \( A \) was changed in 10 commits and, of these 10 commits, 9 also included changes to entity \( B \), the confidence for the rule \( (A \rightarrow B) \) would be 0.9. On the other hand, if entity \( C \) was changed in 100 commits and, of these 100 commits, 50 also included changes to entity \( D \), the confidence for the rule \( (C \rightarrow D) \) would be 0.5 \cite{cluster-access}. This means we would have more confidence in the first pair \( (A \rightarrow B) \) than in the second pair \( (C \rightarrow D) \), even though the second pair has more than five times the number of updates together.
+
+
+This observation was also made by \textit{Ying et al.} \cite{Ying-co-change}, who analyzed co-change patterns to recommend potentially relevant source code to developers during development tasks. In their study, they did not use the confidence metric, as they considered it misleading when some files are changed much more frequently than others. Instead, they used only support thresholds from 5 to 30.
+ 
+
+To favor entities that frequently appear in commits together, we calculated a \textit{system factor}. This factor represents the average support metric value for all entity pairs within the system \cite{cluster-access}.
+
+The system factor is then incorporated into the confidence metric calculation by multiplying the two values. To ensure the metric can also serve as a weight alongside structural dependency weights, we scale the resulting value by 100 to make it supraunitary and limit the range between 0 and 100.
+
+This modified formula is referred to as the strength metric, which is defined in Equation \eqref{eq:strength}.
+
+\begin{equation}
+\text{strength}(A \rightarrow B) = \text{confidence}(A \rightarrow B) \times 100 \times \text{system factor}
+\label{eq:strength}
+\end{equation}
+
+
+
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1}
+\caption{Ratio of number of filtered co-changing pairs to number of SD, when strength A and strength B $\geq threshold \%$}
+\label{tab:commitstrengthAND}
+\centering
+\scalebox{0.8}{
+\begin{tabular}{|c|cccccccccc|c|}
+\hline
+$Project\ nr.$  & $\geq10\%$ & $\geq20\%$ & $\geq30\%$ & $\geq40\%$ & $\geq50\%$ & $\geq60\%$ & $\geq70\%$ & $\geq80\%$ & $\geq90\%$ & $\geq100\%$ \\
+\hline
+1  & 1.326 & 0.658 & 0.433 & 0.401 & 0.244 & 0.199 & 0.195 & 0.022 & 0.011 & 0.011 \\
+2  & 0.266 & 0.137 & 0.070 & 0.044 & 0.036 & 0.019 & 0.005 & 0.004 & 0.003 & 0.003 \\
+3  & 0.505 & 0.243 & 0.147 & 0.086 & 0.061 & 0.031 & 0.031 & 0.031 & 0.031 & 0.031 \\
+4  & 0.822 & 0.163 & 0.045 & 0.017 & 0.011 & 0.002 & 0.001 & 0.001 & 0.001 & 0.001 \\
+5  & 0.234 & 0.119 & 0.054 & 0.037 & 0.034 & 0.018 & 0.013 & 0.011 & 0.007 & 0.007 \\
+6  & 0.227 & 0.155 & 0.101 & 0.077 & 0.070 & 0.036 & 0.018 & 0.017 & 0.016 & 0.016 \\
+7  & 1.590 & 0.804 & 0.357 & 0.288 & 0.215 & 0.088 & 0.052 & 0.036 & 0.032 & 0.032 \\
+8  & 2.073 & 0.293 & 0.170 & 0.111 & 0.093 & 0.050 & 0.039 & 0.034 & 0.021 & 0.007 \\
+9  & 1.495 & 0.479 & 0.271 & 0.142 & 0.108 & 0.059 & 0.047 & 0.011 & 0.008 & 0.008 \\
+10 & 0.253 & 0.135 & 0.093 & 0.078 & 0.062 & 0.042 & 0.024 & 0.019 & 0.019 & 0.017 \\
+11 & 0.114 & 0.086 & 0.064 & 0.037 & 0.027 & 0.025 & 0.001 & 0.000 & 0.000 & 0.000 \\
+12 & 0.277 & 0.136 & 0.085 & 0.069 & 0.053 & 0.045 & 0.039 & 0.015 & 0.007 & 0.004 \\
+13 & 11.363 & 0.721 & 0.031 & 0.010 & 0.007 & 0.004 & 0.000 & 0.000 & 0.000 & 0.000 \\
+14 & 3.225 & 0.805 & 0.660 & 0.533 & 0.493 & 0.454 & 0.386 & 0.356 & 0.005 & 0.005 \\
+15 & 6.097 & 0.725 & 0.663 & 0.564 & 0.500 & 0.242 & 0.176 & 0.170 & 0.001 & 0.001 \\
+16 & 1.302 & 0.333 & 0.219 & 0.146 & 0.094 & 0.045 & 0.014 & 0.008 & 0.007 & 0.007 \\
+17 & 0.816 & 0.640 & 0.551 & 0.503 & 0.496 & 0.196 & 0.159 & 0.152 & 0.142 & 0.142 \\
+18 & 1.676 & 0.233 & 0.159 & 0.118 & 0.102 & 0.062 & 0.058 & 0.029 & 0.026 & 0.026 \\
+19 & 2.335 & 0.753 & 0.614 & 0.337 & 0.075 & 0.021 & 0.007 & 0.004 & 0.004 & 0.004 \\
+20 & 0.846 & 0.117 & 0.098 & 0.018 & 0.013 & 0.002 & 0.001 & 0.001 & 0.001 & 0.001 \\
+21 & 3.377 & 1.691 & 1.608 & 1.584 & 1.576 & 1.310 & 0.001 & 0.001 & 0.001 & 0.001 \\
+22 & 0.132 & 0.006 & 0.003 & 0.002 & 0.002 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+23 & 1.732 & 1.299 & 0.158 & 0.053 & 0.007 & 0.001 & 0.000 & 0.000 & 0.000 & 0.000 \\
+24 & 3.295 & 0.334 & 0.188 & 0.061 & 0.017 & 0.006 & 0.003 & 0.001 & 0.000 & 0.000 \\
+25 & 0.897 & 0.479 & 0.429 & 0.423 & 0.412 & 0.403 & 0.339 & 0.009 & 0.001 & 0.000 \\
+26 & 1.281 & 0.090 & 0.053 & 0.028 & 0.020 & 0.013 & 0.006 & 0.001 & 0.001 & 0.001 \\
+27 & 99.528 & 1.020 & 0.992 & 0.980 & 0.972 & 0.927 & 0.078 & 0.075 & 0.073 & 0.072 \\
+\hline
+\end{tabular}
+}
+\end{table}
+
+
+
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1}
+\caption{Ratio of number of filtered co-changing pairs to number of SD, when strength A or strength B $\geq threshold \%$}
+\label{tab:commitstrengthOR}
+\centering
+\scalebox{0.8}{
+\begin{tabular}{|c|cccccccccc|c|}
+\hline
+$Project\ nr.$ & $\geq10\%$ & $\geq20\%$ & $\geq30\%$ & $\geq40\%$ & $\geq50\%$ & $\geq60\%$ & $\geq70\%$ & $\geq80\%$ & $\geq90\%$ & $\geq100\%$ \\
+\hline
+1  & 1.312 & 1.181 & 0.700 & 0.599 & 0.419 & 0.235 & 0.219 & 0.046 & 0.045 & 0.045 \\
+2  & 0.430 & 0.280 & 0.176 & 0.118 & 0.103 & 0.056 & 0.022 & 0.020 & 0.020 & 0.020 \\
+3  & 0.508 & 0.328 & 0.234 & 0.179 & 0.150 & 0.092 & 0.091 & 0.091 & 0.091 & 0.091 \\
+4  & 0.662 & 0.336 & 0.122 & 0.067 & 0.059 & 0.016 & 0.015 & 0.015 & 0.015 & 0.015 \\
+5  & 0.279 & 0.206 & 0.145 & 0.100 & 0.099 & 0.047 & 0.044 & 0.039 & 0.034 & 0.034 \\
+6  & 0.271 & 0.261 & 0.204 & 0.172 & 0.160 & 0.106 & 0.082 & 0.081 & 0.080 & 0.080 \\
+7  & 2.481 & 1.521 & 0.904 & 0.623 & 0.411 & 0.199 & 0.128 & 0.107 & 0.101 & 0.101 \\
+8  & 1.332 & 0.838 & 0.515 & 0.320 & 0.288 & 0.142 & 0.117 & 0.106 & 0.090 & 0.076 \\
+9  & 1.376 & 1.083 & 0.725 & 0.515 & 0.424 & 0.191 & 0.149 & 0.105 & 0.094 & 0.094 \\
+10 & 0.830 & 0.434 & 0.314 & 0.256 & 0.217 & 0.130 & 0.093 & 0.082 & 0.080 & 0.072 \\
+11 & 0.366 & 0.122 & 0.088 & 0.046 & 0.031 & 0.027 & 0.003 & 0.002 & 0.002 & 0.002 \\
+12 & 0.781 & 0.449 & 0.265 & 0.190 & 0.160 & 0.096 & 0.062 & 0.031 & 0.021 & 0.018 \\
+13 & 11.363 & 0.798 & 0.055 & 0.022 & 0.011 & 0.007 & 0.002 & 0.002 & 0.002 & 0.002 \\
+14 & 1.932 & 1.203 & 0.858 & 0.682 & 0.579 & 0.473 & 0.396 & 0.365 & 0.013 & 0.013 \\
+15 & 2.681 & 1.292 & 0.916 & 0.730 & 0.593 & 0.287 & 0.210 & 0.201 & 0.017 & 0.017 \\
+16 & 1.055 & 0.759 & 0.493 & 0.364 & 0.273 & 0.130 & 0.067 & 0.050 & 0.046 & 0.046 \\
+17 & 1.120 & 0.962 & 0.849 & 0.750 & 0.744 & 0.559 & 0.482 & 0.476 & 0.466 & 0.466 \\
+18 & 1.676 & 0.762 & 0.560 & 0.434 & 0.375 & 0.269 & 0.237 & 0.149 & 0.142 & 0.142 \\
+19 & 1.883 & 1.197 & 1.001 & 0.541 & 0.185 & 0.103 & 0.019 & 0.013 & 0.013 & 0.013 \\
+20 & 0.510 & 0.224 & 0.138 & 0.037 & 0.028 & 0.011 & 0.006 & 0.003 & 0.003 & 0.003 \\
+21 & 2.636 & 1.888 & 1.695 & 1.623 & 1.608 & 1.317 & 0.006 & 0.006 & 0.006 & 0.006 \\
+22 & 0.132 & 0.030 & 0.016 & 0.011 & 0.008 & 0.003 & 0.002 & 0.002 & 0.002 & 0.002 \\
+23 & 3.454 & 1.648 & 0.232 & 0.081 & 0.021 & 0.004 & 0.003 & 0.003 & 0.003 & 0.003 \\
+24 & 1.342 & 0.603 & 0.327 & 0.144 & 0.080 & 0.047 & 0.015 & 0.008 & 0.007 & 0.007 \\
+25 & 5.472 & 1.416 & 0.830 & 0.677 & 0.575 & 0.450 & 0.353 & 0.023 & 0.016 & 0.014 \\
+26 & 1.281 & 0.236 & 0.142 & 0.092 & 0.060 & 0.040 & 0.031 & 0.020 & 0.019 & 0.019 \\
+27 & 55.038 & 1.343 & 1.106 & 1.044 & 1.030 & 0.983 & 0.449 & 0.443 & 0.441 & 0.439 \\
+\hline
+\end{tabular}
+}
+\end{table}
+
+In Table \ref{tab:commitstrengthOR}, the columns represent the ratio between the number of structural dependencies and the number of co-changing pairs that remain after filtering out pairs where at least one factor falls below the specified threshold in the column header.
+In Table \ref{tab:commitstrengthAND}, the columns represent the ratio between the number of structural dependencies and the number of co-changing pairs that remain after filtering out pairs where both factors fall below the specified threshold in the column header.
+
+We calculate this ratio between co-changing pairs and structural dependencies to assess the size of the extracted co-changing pairs compared to the structural dependencies in the system. According to surveys \cite{Shtern:2012:CMS:2332427.2332428}, \cite{sar}, the primary reason logical dependencies (i.e., filtered co-changes) are not used together with structural dependencies is their size. Therefore, it is important to evaluate the ratio between the sizes of co-changes and structural dependencies at each filtering step.
+
+The results in Tables \ref{tab:commitstrengthAND} and \ref{tab:commitstrengthOR} show that the number of co-changing pairs is reduced. In most cases, the number of structural dependencies exceeds the number of co-changing pairs after filtering. However, the goal of filtering is not just to reduce the size of co-changing pairs but to ensure that the remaining co-changing pairs truly indicate logical dependencies.
+
+We keep a manageable number of co-changing pairs by filtering out all co-changing pairs that do not co-occur at least 50\% of the time (factor A and factor B $\geq 50\%$). Considering both the output size and the connection strength of these pairs, the remaining co-changing pairs can be regarded as logical dependencies at this stage.
+
 
