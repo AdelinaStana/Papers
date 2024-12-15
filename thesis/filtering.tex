@@ -811,19 +811,21 @@ Table \ref{tab:percLDtrength} shows that the percentage of co-changes that are a
 
 Overall, these results highlight that co-changes are often not captured by structural dependencies. The OR condition gives higher overlap percentages than the AND condition, as the AND condition is stricter by requiring both entities to meet the connection strength threshold.
 
+
+
 \section{Weight Assignment}
 \label{sec:weight_assignment}
+
+\hspace{4em}For both experiments where logical dependencies are used together with structural dependencies, detailed in Chapters \ref{cap:key_class_detection} (Logical Dependencies in Key Class Detection) and \ref{cap:architectural_reconstruction} (Logical Dependencies in Architectural Reconstruction), we integrate the dependencies into a single directed dependency graph. An entity pair \( A - B \) is represented as an edge in this graph. The weights assigned to each type of dependency are explained in Sections \ref{subsec:structural_weights} and \ref{subsec:logical_weights}.
 
 \subsection{Structural dependencies weights}
 \label{subsec:structural_weights}
 
-Structural dependencies are important for understanding the architecture of a software system because they reveal how different modules interact at the code level. In our research, we extract structural dependencies using a tool from our previous work \cite{b4}. This tool analyzes the source code to identify various relationships between software entities and exports them in CSV format.
+\hspace{4em}Structural dependencies do not all have the same impact on the software system architecture and behavior. For example, the relationship between a variable and the class that uses it holds less weight compared to the relationship between a class and the interface it implements. To consider these differences, we assign different weights to each dependency type \cite{cluster-access}.
 
-Structural dependencies do not all have the same level of influence on a software system’s architecture and behavior. For instance, the relationship between a variable and the class that uses it is not the same as the relationship between a class and the interface it implements. To reflect these differences, we assign different weights to each type of dependency.
+The types of dependencies with their corresponding weights used in this research are based on earlier studies on clustering \cite{SoraConti, Finding-key-classes}.
 
-The dependency types and weights were previously defined in related works on clustering \cite{SoraConti}, \cite{Finding-key-classes}.
-
-Table \ref{tab:structural_weights} shows the weights assigned to different categories of structural dependencies, as proposed in previous works.
+Table \ref{tab:structural_weights} presents the weights assigned to various categories of structural dependencies, as proposed in previous research.
 
 \begin{table}[htbp]
 \centering
@@ -837,40 +839,47 @@ Table \ref{tab:structural_weights} shows the weights assigned to different categ
 1 & Local variable \\
 \hline
 \end{tabular}
-\caption{Weights assigned to different structural dependency types. \cite{Finding-key-classes}}
+\caption{Weights assigned to different structural dependency types. \cite{Finding-key-classes, cluster-access}}
 \label{tab:structural_weights}
 \end{table}
 
 The weights are assigned based on the following considerations:
 
-\textit{Weight 4 – Interface Realization:} Assigned the highest weight because it signifies a strong architectural relationship. Implementing an interface means classes are expected to provide specific functionalities.
+\noindent \textbf{Note:} If the same relationship occurs multiple times between the same pair of entities, the assigned weights are summed. For example, multiple method calls between the same two classes add their weights \cite{cluster-access}.
 
-\textit{Weight 3 – Inheritance, Parameter, Return Type, Field, Cast, Type Binding:} These dependencies represent significant connections between entities. They include inheritance relationships and shared data or types, which affect the behavior and properties of entities.
+\textit{Weight 4 – Interface Realization:}  
+Assigned the highest weight because it represents a strong architectural relationship. When a class implements an interface, it must provide the functionalities defined by that interface. For example, consider an interface called \texttt{CatBehavior} defining methods like \texttt{meow()}, and \texttt{chaseMouse()}. A class \texttt{SiameseCat} implementing \texttt{CatBehavior} must offer its versions of these methods. If the interface changes, all classes implementing it will likely need to be updated.
 
-\textit{Weight 2 – Method Call, Field Access, Instantiation:} These indicate interactions between classes but are less impactful than higher weights. They involve using methods or fields of other classes or creating instances. When a method call, field access, or instantiation occurs multiple times between the same pair of entities, the weight is multiplied by the number of occurrences. For example, if Class A calls a method in Class B three times, the assigned weight would be 6 (weight 2 multiplied by 3).
+\textit{Weight 3 – Inheritance, Parameter, Return Type, Field, Cast, Type Binding:}  
+These dependencies indicate significant connections between entities. They include inheritance or cases where a class relies on another as a parameter type, return type, or field type (for example, a \texttt{CatFeeder} class that uses \texttt{CatFood} as a parameter or return type). Casting a general \texttt{Animal} object into a \texttt{Cat} type also is in the same category. 
 
-\textit{Weight 1 – Local Variable:} Given the lowest weight, local variables are the most basic level of interaction.
+\textit{Weight 2 – Method Call, Field Access, Instantiation:}  
+These interactions show that one class needs another’s functionality but are generally easier to modify. For instance, a \texttt{CatGroomer} calling \texttt{CatFeeder.feedCat()} once is assigned a weight of 2. If the same method is called three times, the total weight would be \(2 \times 3 = 6\). Although these connections show that one class depends on another, replacing or adjusting these relationships tends to be more straightforward than changing dependencies like inheritance.
 
-
+\textit{Weight 1 – Local Variable:}  
+Local variables represent the most basic level of interaction. For example, a method in \texttt{CatPlayController} might create a \texttt{YarnBall} object. Such a variable does not strongly tie classes together and removing it has minimal impact on the overall system structure.
 
 
 
 
 \subsection{Logical dependencies weights}
 \label{subsec:logical_weights}
+\hspace{4em}Based on the filtering recommendations from Subsection \ref{filtering_recomandations}, we will use two of the filters proposed in Chapter \ref{extraction} for further investigations related to key class detection or software clustering.
 
+First, the commit size filter will be applied with a fixed threshold of 10 files. For the strength threshold, we couldn't determine the best option based solely on the overlap with structural dependencies. This is partly because there hasn’t been previous research specifically focused on this type of filter. Earlier studies explored confidence and support filters with varying thresholds but provided no fixed recommendation similar to the commit size filter. To address this, we will use strength thresholds starting at 10\% and increasing in steps of 10\% up to 100\%, to see which threshold performs better in different scenarios \cite{b4}, \cite{DepSACI}, \cite{enase19}.
 
-We refer to logical dependencies as the filtered co-changes between software entities. A co-change occurs when two or more software entities are modified together during the same commit in the version control system. Co-changes indicate that these entities are likely directly or indirectly related or dependent on each other.
+The strength filter evaluates the connection strength between two entities $A$ and $B$. If the threshold is met, a directed edge from $A \rightarrow B$ is added to the dependency graph. The same evaluation is performed for $B$ and $A$, and only if the threshold is satisfied a directed edge $B \rightarrow A$ is added.
 
-Co-changes are associated with a degree of uncertainty. Compared to structural dependencies, where a dependency is certain, co-changes are less reliable. For example, if the system was migrated from one version control system to another, the first commit will include all the entities from the system at that point in time. Should we consider all these entities related to one another in this case? This would introduce false dependencies and reduce the likelihood of achieving accurate results when combining them with more reliable types of dependencies.
+The strength filter threshold is used only for filtering purposes and \textit{not as a weight} for the dependencies. The actual weight assigned to each dependency is simply the \textit{number of commits where both entities were updated together}.
 
-Even if we address the issue of the first commit, a developer can still resolve multiple unrelated issues in the same commit (even though development processes do not recommend this).
+Figure~\ref{fig:filtering_process} illustrates the filtering process, where the commit size and strength filters are applied to extract logical dependencies.
 
-To solve this problem, in our previous works, we refined some filtering methods to ensure that the co-changes that remain after filtering are more reliable and suitable for use with other dependencies or individually \cite{b4}, \cite{DepSACI}, \cite{enase19}. Based on our previous results, the filters we decided to use further in our research are the commit size filter and the strength filter. Both filters are used together, and the result is the set of logical dependencies that we use to generate software clusters.
-
-It is important to note that the strength metric is only used for filtering and is \textit{not considered as a weight} of the dependencies. The \textit{weight assigned to each dependency is the number of commits in which both entities were updated together}.
-
-
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{filtering.png}
+    \caption{Filtering process: commit size filter and strength filter applied to extract meaningful logical dependencies.}
+    \label{fig:filtering_process}
+\end{figure}
 
 \section{Integration techniques}
 \label{sec:integration_techniques}
@@ -884,16 +893,14 @@ It is important to note that the strength metric is only used for filtering and 
   \label{fig:codegraph}
 \end{figure}
 
-When structural dependencies (SD) and logical dependencies (LD) are combined in software clustering, both types of relationships are represented within the same graph.
+When structural dependencies (SD) and logical dependencies (LD) are integrated into a single graph, the system entities are represented as nodes, and the relationships between them are represented as directed, weighted edges. 
 
-Each entity in the system is represented as a node in the graph, and the dependencies between them are represented as directed weighted edges.
-
-\textit{SD and LD weights are combined} when the same pair of entities appear in both dependencies. In this case, the weights from SD and LD are summed, giving more influence to those entity pairs. When a pair of entities appear only in SD or only in LD, the edge is added to the graph together with its corresponding weight.
+\textit{SD and LD weights are combined} when a pair of entities exists in both dependency sets. In this situation, the weights from SD and LD are summed, giving greater significance to these pairs. If a pair of entities appears only in SD or LD, an edge is added to the graph with its corresponding weight \cite{cluster-access}.
 
 Figure \ref{fig:codegraph} illustrates combining structural and logical dependencies in the same dependency graph. The structural dependencies between \texttt{House}, \texttt{OrangeCat}, and \texttt{CatBehavior} entities are visible from the source code analysis.
 
 However, the combination of SD and LD reveals additional insights. One important observation is the logical dependency between \texttt{House} and \texttt{OrangeCat}, which is not observed from the structural analysis. This relation is extracted from version control and filtered using a 60\% strength filter. The strength metric reveals that \texttt{House} and \texttt{OrangeCat} have a significant co-change value of 75.0, usually associated with a strong relationship.
 
-When SD and LD overlap, such as between \texttt{OrangeCat} and \texttt{CatBehavior}, their weights are summed. This summation increases the weight of the dependency, making it more important in the dependency graph.
+When SD and LD overlap, such as between \texttt{OrangeCat} and \texttt{CatBehavior}, their weights are summed. This summation increases the weight of the dependency, making it more important in the dependency graph \cite{cluster-access}.
 
 
