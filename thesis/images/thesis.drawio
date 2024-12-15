@@ -721,7 +721,7 @@
     </mxGraphModel>
   </diagram>
   <diagram name="Page-3" id="2ywgazzCKhwDH6sZYI00">
-    <mxGraphModel dx="934" dy="485" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1221" dy="618" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="U2cuEKpd7XkI8HC6BM8S-0" />
         <mxCell id="U2cuEKpd7XkI8HC6BM8S-1" parent="U2cuEKpd7XkI8HC6BM8S-0" />
@@ -918,8 +918,8 @@
         <mxCell id="dSB1-RGWdWals931OZ-c-27" value="" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn2.iconfinder.com/data/icons/pittogrammi/142/10-128.png" parent="U2cuEKpd7XkI8HC6BM8S-1" vertex="1">
           <mxGeometry x="115" y="438.75" width="10" height="10" as="geometry" />
         </mxCell>
-        <mxCell id="dSB1-RGWdWals931OZ-c-28" value="&lt;b&gt;co-changing pairs&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;rotation=0;" parent="U2cuEKpd7XkI8HC6BM8S-1" vertex="1">
-          <mxGeometry x="55" y="496.5" width="90" height="40" as="geometry" />
+        <mxCell id="dSB1-RGWdWals931OZ-c-28" value="&lt;b&gt;co-changing pairs&lt;/b&gt;&lt;div&gt;&lt;i style=&quot;&quot;&gt;with/without comments changes&lt;/i&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;rotation=0;" parent="U2cuEKpd7XkI8HC6BM8S-1" vertex="1">
+          <mxGeometry x="40" y="509.25" width="115" height="40" as="geometry" />
         </mxCell>
         <mxCell id="dSB1-RGWdWals931OZ-c-94" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;strokeColor=#1A1A1A;" parent="U2cuEKpd7XkI8HC6BM8S-1" source="dSB1-RGWdWals931OZ-c-30" target="dSB1-RGWdWals931OZ-c-90" edge="1">
           <mxGeometry relative="1" as="geometry" />

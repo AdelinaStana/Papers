@@ -16,6 +16,7 @@ After extraction, filtering techniques are applied to refine the logical depende
 - \textit{Commit size filtering} removes co-changing pairs from large commits, such as branch merges or formatting updates.\\
 - \textit{Support filtering} ensures co-changing pairs occur a minimum number of times.\\
 - \textit{Strength filtering} uses metrics like support, confidence, and a system factor to identify pairs with stronger relationships, scaling the results to the reality of the system.
+- \textit{Code comments filtering} excludes co-changing pairs that involve only changes to code comments, as these are non-functional modifications.  
 
 Each filtering step helps reduce the number of co-changing pairs while keeping meaningful dependencies. Figure \ref{fig:figworkflow} shows the workflow of the tool, which handles data collection, dependency extraction, and filtering. 
 
@@ -215,7 +216,7 @@ To analyze the changes between commits, the tool uses the \texttt{"git diff"} co
 
 To extract co-changing pairs, the tool parses each generated diff file. From each file, it identifies the number of changed files and their names. Since the tool already knows the software entities contained in each file (from the structural dependencies extraction), it can determine co-changing pairs by linking entities from changed files. Once all the co-changing pairs for a diff file are extracted, the tool moves to the next diff file and repeats the process.
 
-Explained in more detail in subsections \ref{subsec:filtering_transaction_size}, \ref{subsec:filtering_support}, and \ref{subsec:filtering_connection_strength}, not every extracted co-changing pair is considered a logical dependency. For a pair to be considered a logical dependency, it must pass some criteria. These criteria are implemented as filters in the tool. Each filter processes the extracted co-changing pairs and outputs the pairs that meet the filter requirements. The filters can also be combined to ensure that only meaningful logical dependencies remain after filtering.
+Explained in more detail in subsections \ref{subsec:filtering_transaction_size}, \ref{subsec:filtering_support}, \ref{subsec:filtering_connection_strength}, and \ref{subsec:filtering_comments}, not every extracted co-changing pair is considered a logical dependency. For a pair to be considered a logical dependency, it must pass some criteria. These criteria are implemented as filters in the tool. Each filter processes the extracted co-changing pairs and outputs the pairs that meet the filter requirements. The filters can also be combined to ensure that only meaningful logical dependencies remain after filtering.
 
 \begin{figure}[H]
 \centering
@@ -236,7 +237,7 @@ This section presents three filtering techniques used to refine the extracted co
 \subsection{Filtering based on commit transaction size}
 \label{subsec:filtering_transaction_size}
 
-As discussed in Section \ref{ld-intro}, the number of co-changing pairs extracted from software repositories can be quite large, often reaching millions.  With this filtering approach, the goal is to reduce the total number of extracted co-changing pairs and move closer to identifying meaningful logical dependencies. 
+With this filtering approach, the goal is to reduce the total number of extracted co-changing pairs and move closer to identifying meaningful logical dependencies. 
 
 Large commits often involve many files due to non-functional changes like branch merges, folder restructuring, or formatting updates. These types of commits can introduce noise by creating irrelevant co-changing pairs. Dependencies are more meaningful when extracted from commits that involve feature development or bug fixes, where developers modify related code files. However, if multiple unrelated features or fixes are solved into a single commit, it can add false relationships between the entities.
 
@@ -451,13 +452,10 @@ We stopped the minimum support threshold at 4 because, as observed in Table \ref
 Raising the support threshold beyond 4 might cause filtering out all co-changing pairs for some systems. Therefore, while applying a threshold of 4 filters co-changing pairs to identify logical dependencies, the remaining number of co-changing pairs still significantly exceeds the number of structural dependencies for certain systems.
 
 
-
-
-
-
 \subsection{Filtering based on connection strength}
 \label{subsec:filtering_connection_strength}
-In Section \ref{subsec:filtering_transaction_size}, we applied a filtering rule to exclude co-changing pairs extracted from commits involving more than 10 changed files. This decision was based on the results obtained from analyzing the commit size.
+
+\hspace{4em}In Section \ref{subsec:filtering_transaction_size}, we applied a filtering rule to exclude co-changing pairs extracted from commits involving more than 10 changed files. This decision was based on the results obtained from analyzing the commit size.
 
 In Section \ref{subsec:filtering_support}, we introduced an additional filter based on the support metric of a co-changing pair. This filter was applied after the commit size filter. However, the results highlighted a challenge: using a fixed threshold for filtering may not be effective across systems of varying sizes. A threshold that works well for smaller systems may need to be increased for medium-sized systems and vice versa.
 
@@ -469,15 +467,16 @@ The \textit{support metric} for a rule $(A \rightarrow B)$, where A is the antec
 
 The \textit{confidence metric} of the same rule $(A \rightarrow B)$, as expressed in Equation \eqref{eq:confidence}, measures the proportion of commits involving both entities relative to the total number of commits where A appears.
 
-\begin{equation}
-\text{Confidence}(A \rightarrow B) = \frac{\text{Nr. of commits containing } A \text{ and } B}{\text{Nr. of commits containing } A}
-\label{eq:confidence}
-\end{equation}
+\[
+\text{$confidence$}(A \rightarrow B) = \frac{\text{$Nr.\ of\ commits\ containing$} A \text{ $and$ } B}{\text{$Nr.\ of\ commits\ containing$ } A}
+\tag{\ref{eq:confidence}}
+\]
+
 
 
 The confidence metric focuses on entities that are modified less frequently but consistently together, rather than entities that are modified more often but with multiple other entities.
 
-For example, assuming that entity \( A \) was changed in 10 commits and, of these 10 commits, 9 also included changes to entity \( B \), the confidence for the rule \( (A \rightarrow B) \) would be 0.9. On the other hand, if entity \( C \) was changed in 100 commits and, of these 100 commits, 50 also included changes to entity \( D \), the confidence for the rule \( (C \rightarrow D) \) would be 0.5 \cite{cluster-access}. This means we would have more confidence in the first pair \( (A \rightarrow B) \) than in the second pair \( (C \rightarrow D) \), even though the second pair has more than five times the number of updates together.
+For example, assuming that entity \( A \) was changed in 10 commits and, of these 10 commits, 9 also included changes to entity \( B \), the confidence for the rule \( (A \rightarrow B) \) would be 0.9. On the other hand, if entity \( C \) was changed in 100 commits and, of these 100 commits, 50 also included changes to entity \( D \), the confidence for the rule \( (C \rightarrow D) \) would be 0.5. This means we would have more confidence in the first pair \( (A \rightarrow B) \) than in the second pair \( (C \rightarrow D) \), even though the second pair has more than five times the number of updates together \cite{cluster-access}.
 
 
 This observation was also made by \textit{Ying et al.} \cite{Ying-co-change}, who analyzed co-change patterns to recommend potentially relevant source code to developers during development tasks. In their study, they did not use the confidence metric, as they considered it misleading when some files are changed much more frequently than others. Instead, they used only support thresholds from 5 to 30.
@@ -490,7 +489,7 @@ The system factor is then incorporated into the confidence metric calculation by
 This modified formula is referred to as the strength metric, which is defined in Equation \eqref{eq:strength}.
 
 \begin{equation}
-\text{strength}(A \rightarrow B) = \text{confidence}(A \rightarrow B) \times 100 \times \text{system factor}
+\text{$strength$}(A \rightarrow B) = \text{$confidence$}(A \rightarrow B) \times 100 \times \text{$system\ factor$}
 \label{eq:strength}
 \end{equation}
 
@@ -498,7 +497,7 @@ This modified formula is referred to as the strength metric, which is defined in
 
 \begin{table}[!h]
 \renewcommand{\arraystretch}{1}
-\caption{Ratio of number of filtered co-changing pairs to number of SD, when strength A and strength B $\geq threshold \%$}
+\caption{Ratio of number of filtered co-changing pairs to number of structural dependencies, when strength A and strength B $\geq threshold \%$}
 \label{tab:commitstrengthAND}
 \centering
 \scalebox{0.8}{
@@ -542,7 +541,7 @@ $Project\ nr.$  & $\geq10\%$ & $\geq20\%$ & $\geq30\%$ & $\geq40\%$ & $\geq50\%$
 
 \begin{table}[!h]
 \renewcommand{\arraystretch}{1}
-\caption{Ratio of number of filtered co-changing pairs to number of SD, when strength A or strength B $\geq threshold \%$}
+\caption{Ratio of number of filtered co-changing pairs to number of structural dependencies, when strength A or strength B $\geq threshold \%$}
 \label{tab:commitstrengthOR}
 \centering
 \scalebox{0.8}{
@@ -591,6 +590,159 @@ The results in Tables \ref{tab:commitstrengthAND} and \ref{tab:commitstrengthOR}
 
 We keep a manageable number of co-changing pairs by filtering out all co-changing pairs that do not co-occur at least 50\% of the time (factor A and factor B $\geq 50\%$). Considering both the output size and the connection strength of these pairs, the remaining co-changing pairs can be regarded as logical dependencies at this stage.
 
+
+
+\subsection{Filtering based on code comments changes}
+\label{subsec:filtering_comments}
+
+\hspace{4em}Code comment changes are not directly related to the functional aspects of the source code, as they do not affect the system's behavior. These changes can be classified as non-functional modifications, similar to formatting.
+
+Comment changes are visible in the diff files generated. When parsing the diff files to extract co-changes, detecting whether a change impacts only comments or involves actual source code modifications is straightforward. In this way, we can evaluate whether filtering out comment-only modifications influences the overall results. To assess the influence of code comment changes on logical dependencies, we compared two scenarios:
+
+\hspace{-4em}- \textit{With comments}: Changes in source code files are considered, even if the modifications are only within comments. \\  
+- \textit{Without comments}: Changes in source code files are ignored if they involve only editing comments.  
+
+\hspace{-4em}In all cases, the following threshold values were varied: \\  
+- \textit{Commit size} ($cs$): The maximum size of commit transactions that are accepted to generate co-changes. The values for this threshold were 5, 10, 20, and no threshold (infinity). \\  
+- \textit{Support}: The minimum number of repeated occurrences (support) for a co-change to be considered a logical dependency. The values for this threshold were 1, 2, 3, and 4.  
+
+\hspace{-4em}The six tables below present a summary of our experiments. We have computed the following values: \\  
+- The mean ratio of the number of co-changes to the number of structural dependencies (SD). \\  
+- The mean percentage of structural dependencies that are also co-changes (calculated as the number of overlaps divided by the number of structural dependencies). \\  
+- The mean percentage of co-changes that are also structural dependencies (calculated as the number of overlaps divided by the number of co-changes).  
+
+
+
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1}
+\caption{Ratio of co-changes to structural dependencies (SD) with comments included, for varying commit size ($cs$) and support thresholds.}
+\label{tab:ratio:comm}
+\centering
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+$condition$	      &	$cs\leq 5$	&	$cs\leq 10$	&	$cs\leq 20$	&	$cs<\infty$	\\
+\hline
+$support\geq 1$	&	3,39	&	5,67	&	9,00	&	80,31	\\
+$support\geq 2$	&	2,24	&	3,47	&	5,02	&	60,14	\\
+$support\geq 3$	&	1,04	&	2,53	&	3,52	&	44,68	\\
+$support\geq 4$	&	0,90	&	2,16	&	2,88	&	33,47	\\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1}
+\caption{Ratio of co-changes to structural dependencies (SD) without comments, for varying commit size ($cs$) and support thresholds.}
+\label{tab:ratio:nocomm}
+\centering
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+$condition$	      &	$cs\leq 5$	&	$cs\leq 10$	&	$cs\leq 20$	&	$cs< \infty$	\\
+\hline
+$support\geq 1$	&	3,24	&	5,33	&	7,90	&	67,16	\\
+$support\geq 2$	&	1,35	&	3,27	&	4,72	&	47,39	\\
+$support\geq 3$	&	1,00	&	1,67	&	2,49	&	32,39	\\
+$support\geq 4$	&	0,43	&	1,26	&	1,93	&	22,15	\\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1}
+\caption{Percentage of structural dependencies (SD) that are also co-changes with comments included, for varying commit size ($cs$) and support thresholds.}
+\label{tab:percSD:comm}
+\centering
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+$condition$	      &	$cs\leq 5$	&	$cs\leq 10$	&	$cs\leq 20$	&	$cs< \infty$	\\
+\hline
+$support\geq 1$	&	19,75	&	29,86	&	39,29	&	76,59	\\
+$support\geq 2$	&	12,50	&	20,20	&	27,68	&	66,11	\\
+$support\geq 3$	&	8,49	&	14,22	&	19,94	&	55,99	\\
+$support\geq 4$	&	6,58	&	10,95	&	15,76	&	47,12	\\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1}
+\caption{Percentage of structural dependencies (SD) that are also co-changes without comments, for varying commit size ($cs$) and support thresholds.}
+\label{tab:percSD:nocomm}
+\centering
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+$condition$	      &	$cs\leq 5$	&	$cs\leq 10$	&	$cs\leq 20$	&	$cs< \infty$	\\
+\hline
+$support\geq 1$	&	18,88	&	28,47	&	37,44	&	71,12	\\
+$support\geq 2$	&	11,87	&	19,03	&	25,93	&	59,58	\\
+$support\geq 3$	&	8,00	&	13,09	&	18,15	&	48,65	\\
+$support\geq 4$	&	5,85	&	9,94	&	14,27	&	39,07	\\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1}
+\caption{Percentage of co-changes that are also structural dependencies (SD) with comments included, for varying commit size ($cs$) and support thresholds.}
+\label{tab:percLD:comm}
+\centering
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+$condition$	      &	$cs\leq 5$	&	$cs\leq 10$	&	$cs\leq 20$	&	$cs< \infty$	\\
+\hline
+$support\geq 1$	&	12,02	&	8,86	&	6,72	&	1,79	\\
+$support\geq 2$	&	15,05	&	11,71	&	9,38	&	2,21	\\
+$support\geq 3$	&	17,45	&	13,97	&	11,57	&	2,86	\\
+$support\geq 4$	&	18,96	&	15,28	&	12,94	&	3,67	\\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[!h]
+\renewcommand{\arraystretch}{1}
+\caption{Percentage of co-changes that are also structural dependencies (SD) without comments, for varying commit size ($cs$) and support thresholds.}
+\label{tab:percLD:nocomm}
+\centering
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+$condition$      &	$cs\leq 5$	&	$cs\leq 10$	&	$cs\leq 20$	&	$cs< \infty$	\\
+\hline
+$support\geq 1$	&	12,05	&	9,02	&	6,98	&	1,93	\\
+$support\geq 2$	&	15,08	&	12,03	&	9,66	&	2,42	\\
+$support\geq 3$	&	17,78	&	14,37	&	12,24	&	3,28	\\
+$support\geq 4$	&	19,22	&	15,59	&	13,30	&	4,21	\\
+\hline
+\end{tabular}
+\end{table}
+
+In all six tables (\ref{tab:ratio:comm}, \ref{tab:ratio:nocomm}, \ref{tab:percSD:comm}, \ref{tab:percSD:nocomm}, \ref{tab:percLD:comm}, \ref{tab:percLD:nocomm}), the columns represent the values used for the commit size threshold $cs$, while the rows represent the values for the support threshold $support$. The tables display median values obtained from experiments conducted under all combinations of the two thresholds across all test systems. In each table, the upper-right corner corresponds to the most relaxed filtering conditions, and the lower-left corner represents the most restrictive filtering conditions.
+
+In order to evaluate the influence of comments, we compare pairwise Tables \ref{tab:ratio:comm} and \ref{tab:ratio:nocomm}, Tables \ref{tab:percSD:comm} and \ref{tab:percSD:nocomm} and Tables \ref{tab:percLD:comm} and \ref{tab:percLD:nocomm}. 
+The comparison reveals that comment-only changes slightly increase the size of co-changing pairs with minimal impact on the overlap with structural dependencies across different thresholds. The differences between results with and without comments are more noticeable under relaxed conditions, such as ($support \geq 1$) and ($cs < \infty$). However, as the thresholds become stricter, these differences become negligible.
+Excluding comments would add unnecessary complexity and increase runtime for the analysis. Due to this, we choose to include comments in the analysis for performance reasons, as their impact on the final results is minimal.
+
+
+
+\subsection{Filtering recomandations}
+\label{filtering_recomandations}
+
+\noindent
+\fbox{
+\parbox{0.98\textwidth}{
+- \textit{\textbf{Commit size threshold ($cs \leq 10$):}} \\  
+Filtering out commits with more than 10 changed files helps reduce noise. This threshold, supported by our experiments and prior studies, filters out only a small percentage of the total commits. Our analysis shows that over 90\% of commits involve 10 or fewer files, meaning the majority of commits remain available for extracting logical dependencies.
+
+\vspace{0.3em}
+
+- \textit{\textbf{Include changes in code comments:}} \\  
+Our analysis shows that ignoring comment-only changes has minimal impact on the results. Considering these changes simplifies the process and avoids unnecessary filtering.
+
+\vspace{0.3em}
+
+- \textit{\textbf{Connection strength filtering:}} \\  
+This method identifies entities that co-change frequently, prioritizing stronger co-changes over incidental ones. Although a fixed threshold is not yet defined, connection strength filtering has proven to be more reliable than support filtering.
+}}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \chapter{Combining structural and logical dependencies}
@@ -600,162 +752,35 @@ We keep a manageable number of co-changing pairs by filtering out all co-changin
 \section{Overlaps between structural and logical dependencies}
 \label{sec:dependency_overlaps}
 
-A logical dependency can be also a structural dependency and vice-versa, so studying the overlapping between logical and structural dependencies while filtering is important since the intention is to introduce those logical dependencies among with structural dependencies in architectural reconstruction systems. Current studies have shown a relatively small percentage of overlapping between them with and without any kind of filtering \cite{DBLP:journals/jss/AjienkaC17}. This means that a lot of non related entities update together in the versioning system, the goal here is to establish the factors that determine such a small percentage of overlapping \cite{enase19}.
+\hspace{4em}A logical dependency can also be a structural dependency and vice versa. Therefore, studying the overlap between logical and structural dependencies during filtering is important, especially when the plan is to combine them for tasks such as key class detection and software clustering for architectural reconstruction. A significant overlap in this case could raise questions about whether logical dependencies provide much new information about the system.
+Several studies have shown that the overlap between logical and structural dependencies is relatively small, with and without filtering \cite{DBLP:journals/jss/AjienkaC17}. This suggests that many unrelated entities are updated together in the versioning system \cite{enase19, cluster-access}.
 
-Since we are first extracting co-changing pairs and only after various filters we call the remaining co-changing pairs logically dependent, we will be studying the overlapping between the remaining co-changing pairs after each filtering stage and the structural dependencies. 
-For each system, we extracted the structural dependencies and the co-changing pairs and determined the overlap between the two dependencies sets, in various experimental conditions. 
+The overlap between structural dependencies and co-changes is defined as the number of pairs that have both types of relationships: structural and logical dependencies. This overlap is analyzed in two ways:
+\hspace{-4em}- \textit{as a percentage relative to the number of structural dependencies (SD).}
+- \textit{as a percentage relative to the number of co-changes.}
 
-One variable experimental condition is whether changes located in comments contribute towards logical dependencies. This condition distinguishes between two different cases: 
-\begin{itemize}
-	\item with comments: a change in source code files is counted as a co-changing pair, even if the change is inside comments in all files
-	\item without comments: commits that changed source code files only by editing comments are ignored
-\end{itemize}
+The connection strength filtering was applied in addition to a fixed commit size threshold of \(cs \leq 10\) under two conditions:   
 
-In all cases, we varied the following threshold values: 
- \begin{itemize}
-	\item commit size ($cs$): the maximum size of commit transactions which are accepted to generate co-changes. The values for this threshold were 5, 10, 20 and no threshold (infinity).  
-	\item number of occurrences ($occ$): the minimum number of repeated occurrences for a co-change to be counted as logical dependency. The values for this threshold were 1, 2, 3 and 4.  
-\end{itemize}
+\hspace{-4em}- \textit{AND condition}: Both entities of the association rule (A and B) must meet the specified connection strength threshold. \\  
+- \textit{OR condition}: At least one entity of the association rule (A or B) must meet the specified connection strength threshold.
 
-The six tables below present the synthesis of our experiments. 
-We have computed the following  values:
-\begin{itemize}
-	\item the mean ratio of the number of co-changes to the number of structural dependencies (SD)
-   	\item the mean percentage of structural dependencies that are also co-changes (calculated from the number of overlaps divided to the number of structural dependencies)	
-	\item the mean percentage of co-changes that are also structural dependencies (calculated from the number of overlaps divided to the number of co-changes)
-\end{itemize}
-
-In all the six tables, \ref{tab:ratio:comm}, \ref{tab:ratio:nocomm}, \ref{tab:percSD:comm}, \ref{tab:percSD:nocomm},
-\ref{tab:percLD:comm}, \ref{tab:percLD:nocomm} we have on columns the values used for the commit size $cs$, while on rows we have the values for the number of occurrences threshold $occ$. The tables contain median values obtained for experiments done under all combinations of the two threshold values, on all test systems. In all tables, the upper right corner corresponds to the most relaxed filtering conditions, while the lower left corner corresponds to the most restrictive filtering conditions.
-
-\begin{table}[!h]
-%% increase table row spacing, adjust to taste
-\renewcommand{\arraystretch}{1}
-\caption{Ratio of number of co-changes to number of SD, case with comments}
-\label{tab:ratio:comm}
-\centering
-
-\begin{tabular}{|c|c|c|c|c|}
-\hline
-	      &	$cs\leq 5$	&	$cs\leq 10$	&	$cs\leq 20$	&	$cs<\infty$	\\
-\hline
-$occ\geq 1$	&	3,39	&	5,67	&	9,00	&	80,31	\\
-$occ\geq 2$	&	2,24	&	3,47	&	5,02	&	60,14	\\
-$occ\geq 3$	&	1,04	&	2,53	&	3,52	&	44,68	\\
-$occ\geq 4$	&	0,90	&	2,16	&	2,88	&	33,47	\\
-\hline
-\end{tabular}
-\end{table}
-
-\begin{table}[!h]
-%% increase table row spacing, adjust to taste
-\renewcommand{\arraystretch}{1}
-\caption{Ratio of number of co-changes to number of SD, case without comments}
-\label{tab:ratio:nocomm}
-\centering
-
-\begin{tabular}{|c|c|c|c|c|}
-\hline
-	      &	$cs\leq 5$	&	$cs\leq 10$	&	$cs\leq 20$	&	$cs< \infty$	\\
-\hline
-$occ\geq 1$	&	3,24	&	5,33	&	7,90	&	67,16	\\
-$occ\geq 2$	&	1,35	&	3,27	&	4,72	&	47,39	\\
-$occ\geq 3$	&	1,00	&	1,67	&	2,49	&	32,39	\\
-$occ\geq 4$	&	0,43	&	1,26	&	1,93	&	22,15	\\
-\hline
-\end{tabular}
-\end{table}
-
-\begin{table}[!h]
-%% increase table row spacing, adjust to taste
-\renewcommand{\arraystretch}{1}
-\caption{Percentage of SD that are also co-changes, case with comments}
-\label{tab:percSD:comm}
-\centering
-
-\begin{tabular}{|c|c|c|c|c|}
-\hline
-	      &	$cs\leq 5$	&	$cs\leq 10$	&	$cs\leq 20$	&	$cs< \infty$	\\
-\hline
-$occ\geq 1$	&	19,75	&	29,86	&	39,29	&	76,59	\\
-$occ\geq 2$	&	12,50	&	20,20	&	27,68	&	66,11	\\
-$occ\geq 3$	&	8,49	&	14,22	&	19,94	&	55,99	\\
-$occ\geq 4$	&	6,58	&	10,95	&	15,76	&	47,12	\\
-\hline
-\end{tabular}
-\end{table}
-
-\begin{table}[!h]
-%% increase table row spacing, adjust to taste
-\renewcommand{\arraystretch}{1}
-\caption{Percentage of SD that are also co-changes, case without comments}
-\label{tab:percSD:nocomm}
-\centering
-
-\begin{tabular}{|c|c|c|c|c|}
-\hline
-	      &	$cs\leq 5$	&	$cs\leq 10$	&	$cs\leq 20$	&	$cs< \infty$	\\
-\hline
-$occ\geq 1$	&	18,88	&	28,47	&	37,44	&	71,12	\\
-$occ\geq 2$	&	11,87	&	19,03	&	25,93	&	59,58	\\
-$occ\geq 3$	&	8,00	&	13,09	&	18,15	&	48,65	\\
-$occ\geq 4$	&	5,85	&	9,94	&	14,27	&	39,07	\\
-\hline
-\end{tabular}
-\end{table}
-
-\begin{table}[!h]
-%% increase table row spacing, adjust to taste
-\renewcommand{\arraystretch}{1}
-\caption{Percentage of co-changes that are also SD, case with comments}
-\label{tab:percLD:comm}
-\centering
-
-\begin{tabular}{|c|c|c|c|c|}
-\hline
-	      &	$cs\leq 5$	&	$cs\leq 10$	&	$cs\leq 20$	&	$cs< \infty$	\\
-\hline
-$occ\geq 1$	&	12,02	&	8,86	&	6,72	&	1,79	\\
-$occ\geq 2$	&	15,05	&	11,71	&	9,38	&	2,21	\\
-$occ\geq 3$	&	17,45	&	13,97	&	11,57	&	2,86	\\
-$occ\geq 4$	&	18,96	&	15,28	&	12,94	&	3,67	\\
-\hline
-\end{tabular}
-\end{table}
-
-\begin{table}[!h]
-%% increase table row spacing, adjust to taste
-\renewcommand{\arraystretch}{1}
-\caption{Percentage of co-changes that are also SD, case without comments}
-\label{tab:percLD:nocomm}
-\centering
-\begin{tabular}{|c|c|c|c|c|}
-\hline
-	      &	$cs\leq 5$	&	$cs\leq 10$	&	$cs\leq 20$	&	$cs< \infty$	\\
-\hline
-$occ\geq 1$	&	12,05	&	9,02	&	6,98	&	1,93	\\
-$occ\geq 2$	&	15,08	&	12,03	&	9,66	&	2,42	\\
-$occ\geq 3$	&	17,78	&	14,37	&	12,24	&	3,28	\\
-$occ\geq 4$	&	19,22	&	15,59	&	13,30	&	4,21	\\
-\hline
-\end{tabular}
-\end{table}
+Table \ref{tab:percSDstrength} presents the \textit{percentage of structural dependencies (SD)} that are also co-changing pairs, while Table \ref{tab:percLDtrength} shows the \textit{percentage of co-changing pairs} that are also structural dependencies. In both tables, the columns represent the connection strength thresholds, ranging from \( \geq 10\% \) to \( \geq 100\% \), and the rows represent the applied conditions (AND or OR).
 
 
 
 \begin{table}[!h]
 \renewcommand{\arraystretch}{1}
-\caption{Percentage of SD that are also co-changing pairs after connection strength filtering. }
+\caption{Percentage of structural dependencies (SD) that are also co-changing pairs after applying connection strength filtering in addition to a commit size threshold of $cs \leq 10$.}
 \label{tab:percSDstrength}
 \centering
 \scalebox{0.8}{
 \begin{tabular}{|c|cccccccccc|c|}
 \hline
-Condition &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$	 \\
+$condition$ &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$	 \\
 \hline
 							
-factor A and factor B	&	11.20	&	6.80		&	4.44	&	3.25	&	2.58	&	1.74		&	1.16	&	0.57	&	0.35	&	0.33	\\
-factor A or factor B	&	15.94	&	11.02	&	7.56	&	5.59		&	4.52	&	2.90	&	2.00	&	1.33	&	1.04	&	1.02	\\
+$A\ AND\ B$	&	11.20	&	6.80		&	4.44	&	3.25	&	2.58	&	1.74		&	1.16	&	0.57	&	0.35	&	0.33	\\
+$A\ OR\ B$	&	15.94	&	11.02	&	7.56	&	5.59		&	4.52	&	2.90	&	2.00	&	1.33	&	1.04	&	1.02	\\
 								
 \hline
 \end{tabular}
@@ -764,35 +789,27 @@ factor A or factor B	&	15.94	&	11.02	&	7.56	&	5.59		&	4.52	&	2.90	&	2.00	&	1.33	
 
 \begin{table}[!h]
 \renewcommand{\arraystretch}{1}
-\caption{Percentage of co-changing pairs that are SD after connection strength filtering. }
+\caption{Percentage of co-changing pairs that are structural dependencies (SD) after applying connection strength filtering in addition to a commit size threshold of $cs \leq 10$.}
 \label{tab:percLDtrength}
 \centering
 \scalebox{0.8}{
 \begin{tabular}{|c|cccccccccc|c|}
 \hline
-Condition &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$	 \\
+$condition$ &	$\geq10\%$	&	$\geq20\%$		&	$\geq30\%$		&	$\geq40\%$		&	$\geq50\%$		&	$\geq60\%$		&	$\geq70\%$		&	$\geq80\%$		&	$\geq90\%$		&	$\geq100\%$	 \\
 \hline
-factor A and factor B	&	10.95	&	20.61	&	23.73	&	26.75	&	28.57	&	33.31	&	33.43	&	38.34	&	42.52	&	39.41	\\
-factor A or factor B		&	12.19	&   16.85	&	19.41	&	20.70	&	21.63	&	22.84	&	21.86	&	23.08	&	24.00	&	22.73	\\						
+$A\ AND\ B$&	10.95	&	20.61	&	23.73	&	26.75	&	28.57	&	33.31	&	33.43	&	38.34	&	42.52	&	39.41	\\
+$A\ OR\ B$	&	12.19	&   16.85	&	19.41	&	20.70	&	21.63	&	22.84	&	21.86	&	23.08	&	24.00	&	22.73	\\						
 
 \hline
 \end{tabular}
 }
 \end{table}
 
-In order to assess the influence of comments, we compare pairwise Tables \ref{tab:ratio:comm} and \ref{tab:ratio:nocomm},  
-Tables \ref{tab:percSD:comm} and \ref{tab:percSD:nocomm} and Tables \ref{tab:percLD:comm} and \ref{tab:percLD:nocomm}. 
-We observe that, although there are some differences between pairs of measurements done in similar conditions with and without comments, the differences are not significant.
+A first observation from Table \ref{tab:percSDstrength} is that only a small percentage of structural dependencies are also co-changing pairs. Under the most relaxed condition (\(\geq 10\%\) and OR), the overlap reaches a maximum of 15.94\%. As the connection strength threshold increases, the percentage of structural dependencies that are also co-changes decreases, with the most restrictive condition (\(\geq 100\%\) and AND) resulting in just 0.33\%. This confirms that many structural dependencies do not co-evolve in the versioning system.
 
-On the other hand, the overlap between structural and co-changes is given by the number of pairs of classes that have both structural and co-change dependencies. We evaluate this overlap as a percentage relative to the number of structural dependencies in Tables \ref{tab:percSD:comm},\ref{tab:percSD:nocomm} and \ref{tab:percSDstrength}, respectively as a percentage relative to the number of co-changes in Tables \ref{tab:percLD:comm},\ref{tab:percLD:nocomm}, \ref{tab:percLDtrength}.
+Table \ref{tab:percLDtrength} shows that the percentage of co-changes that are also structural dependencies is higher but remains below 50\%. Under relaxed conditions (\(\geq 10\%\) and OR), the overlap is approximately 12.19\%. As the connection strength threshold increases, the overlap rises, peaking at 42.52\% for the \(\geq 90\%\) threshold. This increase is mainly because stricter thresholds significantly reduce the size of the remaining co-changes while the number of structural dependencies stays constant. However, even at its highest, the percentage indicates that many co-changes still occur between entities without structural relationships.
 
-A first observation from Tables \ref{tab:percSD:comm}, \ref{tab:percSD:nocomm}, and \ref{tab:percSDstrength} is that not all pairs of classes with structural dependencies co-change. The biggest value for the percentage of structural dependencies that are also co-changes is 76.5\% obtained in the case when no filterings are done.
-
-From Tables \ref{tab:percLD:comm}, \ref{tab:percLD:nocomm}, and \ref{tab:percLDtrength} we notice that the percentage of co-changes which are also structural is always low to very low. This means that most co-changes are recorded between classes that have no structural dependencies to each other \cite{enase19}.   
-
-
-
-
+Overall, these results highlight that co-changes are often not captured by structural dependencies. The OR condition gives higher overlap percentages than the AND condition, as the AND condition is stricter by requiring both entities to meet the connection strength threshold.
 
 \section{Weight Assignment}
 \label{sec:weight_assignment}
