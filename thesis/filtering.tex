@@ -9,16 +9,16 @@
 A set of 27 open-source projects were used to perform the investigations. These projects have different sizes, complexities, and programming languages (Java and C\#). Section \ref{subsec:data_sets_used} provides an overview of the systems used.
 
 The extraction process targets two types of dependencies:\\
-- \textit{Structural dependencies} are obtained by analyzing the static structure of the source code. Using the \textit{srcML} tool, source code files are converted into an XML format to extract relationships between entities. \\
-- \textit{Logical dependencies} are derived from the version control history. \\
+- \textit{Structural dependencies}, obtained by analyzing the static structure of the source code. Using the \textit{srcML} tool, source code files are converted into an XML format to extract relationships between entities. \\
+- \textit{Logical dependencies}, derived from the version control history. \\
 
 After extraction, filtering techniques are applied to refine the logical dependencies:\\
 - \textit{Commit size filtering} removes co-changing pairs from large commits, such as branch merges or formatting updates.\\
 - \textit{Support filtering} ensures co-changing pairs occur a minimum number of times.\\
-- \textit{Strength filtering} uses metrics like support, confidence, and a system factor to identify pairs with stronger relationships, scaling the results to the reality of the system.
-- \textit{Code comments filtering} excludes co-changing pairs that involve only changes to code comments, as these are non-functional modifications.  
+- \textit{Strength filtering} uses metrics like support, confidence, and a system factor to identify pairs with stronger relationships, scaling the results to the reality of the system.\\
+- \textit{Code comments filtering} excludes co-changing pairs that involve only changes to code comments, as they are non-functional modifications.  
 
-Each filtering step helps reduce the number of co-changing pairs while keeping meaningful dependencies. Figure \ref{fig:figworkflow} shows the workflow of the tool, which handles data collection, dependency extraction, and filtering. 
+Each filtering step helps reduce the number of co-changing pairs and increases the probability of remaining with meaningful dependencies. Figure \ref{fig:figworkflow} shows the workflow of the tool which handles data collection, dependency extraction, and filtering. 
 
 
 
@@ -29,7 +29,7 @@ Each filtering step helps reduce the number of co-changing pairs while keeping m
 \subsection{Data set used}
 \label{subsec:data_sets_used}
 
-\hspace{4em}To investigate logical dependencies extraction and filtering techniques and their interplay with structural dependencies, 27 open-source projects from GitHub\footnote{http://github.com/} were selected. Table \ref{table:1} provides an overview of all the software systems analyzed. The columns in the table represent the following information:
+\hspace{4em}To investigate logical dependencies extraction, filtering techniques and their interplay with structural dependencies, 27 open-source projects from GitHub\footnote{http://github.com/} were selected. Table \ref{table:1} provides an overview of all the software systems analyzed. The columns in the table represent the following information:
 
 \hspace{-4em}- \textit{ID}: A unique identifier assigned to each project. \\
 - \textit{Project name}: The name of the project as it appears on GitHub. \\
@@ -38,9 +38,9 @@ Each filtering step helps reduce the number of co-changing pairs while keeping m
 - \textit{Type}: The programming language used in the development of the project.
 
 
-This selection includes projects implemented in two programming languages: Java and C\#. The systems vary in size and complexity. From a structural perspective, the smallest project is \textit{shipkit}, which contains only 639 entities, while the largest is \textit{EntityFrameworkCore}, with 50,179 entities.
+The systems vary in size and complexity. From a structural perspective, the smallest project is \textit{shipkit}, which contains only 639 entities, while the largest is \textit{EntityFrameworkCore}, with 50,179 entities.
 
-Regarding commit history, \textit{shipkit} is again the smallest, with 1,563 commits analyzed, while \textit{aeron} is the largest, with 5,977 commits. This selection of projects allows a better investigation of how filtering techniques affect systems of different sizes and commit histories.
+Regarding commit history, \textit{shipkit} is again the smallest, with 1,563 commits, while \textit{aeron} is the largest, with 5,977 commits. This selection of projects allows a better investigation of how filtering techniques affect systems of different sizes and commit histories.
 
 
 \begin{table}[!h]
@@ -100,16 +100,16 @@ We use an external tool called \textit{srcML} \cite{srcML} to convert all source
 
 Maletic and Collard \cite{srcMLCollard, Collard:2011:LTF:2067850.2068011, CollardsrcML2005} developed the \textit{srcML} tool to offer an XML-based representation of the source code. The tool preserves all source code information, including comments and formatting. The tool supports languages such as C, C++, Java, and C\#, and provides command-line utilities for converting an entire project to and from the \textit{srcML} format. 
 
-Another advantage of the \textit{srcML} tool is that it uses consistent markup for different programming languages, making it easier to extract structural dependencies from source code written in languages like Java, C++, Python, or C\#.
+Another advantage of the \textit{srcML} tool is that it uses the same markup for different programming languages, making it easier to extract structural dependencies from source code written in languages like Java, C++, Python, or C\#.
 
 
 
 \subsection{Extracting Logical Dependencies}
 \label{subsec:extracting_logical_dependencies}
 
-\hspace{4em}\textit{Logical dependencies} (logical couplings) can be identified through software history analysis. Version control repositories (such as Git) store not only the source code of the system but also its change history. By examining both, we can extract structural and logical dependencies. The source code structure provides \textit{structural dependencies}, while the system’s change history reveals \textit{logical dependencies} formed by pairs of files or components that co-evolve.
+\hspace{4em}\textit{Logical dependencies} (logical couplings) can be identified through software history analysis. Version control repositories (such as Git) store not only the source code of the system but also its change history. By examining both, we can extract structural and logical dependencies. The source code structure provides \textit{structural dependencies}, while the system’s change history provides \textit{logical dependencies} formed by pairs of files or components that co-evolve.
 
-As illustrated in Figure~\ref{fig:extracting_data_with_git}, the \texttt{git clone} command retrieves the entire repository, including its code and commit history. The \texttt{git diff} command then highlights differences between two specific commits, generating a text file that contains the differences between the two commits: code differences, the number of files changed, and the names of changed files.
+As illustrated in Figure~\ref{fig:extracting_data_with_git}, the \texttt{git clone} command retrieves the entire repository, including its code and commit history. The \texttt{git diff} command retrieves differences between two specific commits, generating a text file that contains the differences between the two commits: code differences, the number of files changed, and the names of changed files.
 
 \begin{figure}[H]
 \centering
@@ -119,13 +119,11 @@ As illustrated in Figure~\ref{fig:extracting_data_with_git}, the \texttt{git clo
 \end{figure}
 
 
-Listing \ref{lst:git_diff} provides an example of a \texttt{git diff} output for three files: \texttt{User.java}, \texttt{Calculator.java}, and \texttt{Utils.java}. From the diff output, we can identify the names of the changed files and information about added or deleted lines of code, but not the specific entities (e.g., classes or interfaces) from those files. 
+Listing \ref{lst:git_diff} provides an example of a \texttt{git diff} output for three files: \texttt{User.java}, \texttt{Calculator.java}, and \texttt{Utils.java}. From the diff output, we can identify the names of the changed files and information about added or deleted lines of code, but not the specific entities (e.g., classes or interfaces) from those files. To determine the changed entities, we first extract the structural dependencies of the system and create a mapping between the entities defined in each file and the file. Later, we associate the changed files with their corresponding entities when processing the diff files using this mapping \cite{DepSACI, b4, icstcc-2024, enase19}. 
 
-To determine the changed entities, we first extract the structural dependencies of the system and create a mapping between the entities defined in each file and the file. Later, we associate the changed files with their corresponding entities when processing the diff files using this mapping \cite{DepSACI, b4, icstcc-2024, enase19}. 
+For instance, in this example, the mapping can reveal that \texttt{User.java} contains the class \texttt{User}, \texttt{Calculator.java} contains the class \texttt{Calculator}, and \texttt{Utils.java} contains the class \texttt{Utils}. Even if Java typically enforces a standardized relationship between file and public entity names, this is not always the case for other programming languages, so we need a uniform approach.
 
-For instance, in this example, the mapping can reveal that \texttt{User.java} contains the class \texttt{User}, \texttt{Calculator.java} contains the class \texttt{Calculator}, and \texttt{Utils.java} contains the class \texttt{Utils}. Even if Java typically enforces a standardized relationship between file and entity names, this is not always the case for other programming languages, so we need a uniform approach.
-
-Using this mapping, we can say that the commit presented in Listing \ref{lst:git_diff} generates three pairs of co-changed entities: \texttt{Utils-Calculator}, \texttt{Utils-User}, and \texttt{Calculator-User}.
+Using this mapping, we can say that the commit whose diff file with its parent is presented in Listing \ref{lst:git_diff} generates three pairs of co-changed entities: \texttt{Utils-Calculator}, \texttt{Utils-User}, and \texttt{Calculator-User}.
 
 \begin{lstlisting}[language=diff, caption={Example output of \texttt{git diff} between two commits.}, label={lst:git_diff}]
 commit 1a2b3c4d5e (HEAD -> main)
@@ -185,12 +183,8 @@ From a workflow perspective, the tool performs three main activities: downloadin
 
 To get the source code files and the change history, we first need to know the repository URL from GitHub (GitHub is a Git repository cloud-based hosting service). With the GitHub URL and a series of Git commands, the tool can download all the necessary data for dependencies extraction.
 
+The tool gets the Git repository and the source code files by executing the \textit{"git clone"} command. Afterward, it gets all the existing commits within the Git repository. The commits are ordered by date, beginning with the oldest one and ending with the most recent one. The tool executes the \textit{"git diff"} command between each commit and its parent (the previous commit). The "diff" command generates a text file that contains the differences between the two commits: code differences, the number of files changed and changed file names.
 
-As presented in figure \ref{fig:extracting_data_with_git}, the \textit{"git clone"} command will download a repository, including the source code files. The \textit{"git diff"} command will get the differences between two existing commits in the Git repository. 
-The tool gets the Git repository and the source code files by executing the "clone" command. Afterward, it gets all the existing commits within the Git repository. The commits are ordered by date, beginning with the oldest one and ending with the most recent one. The tool executes the "diff" command between each commit and its parent (the previous commit). The "diff" command generates a text file that contains the differences between the two commits: code differences, the number of files changed and changed file names.
-
-
-The first step involves downloading the source code files and change history. This requires the GitHub repository URL, as GitHub is a cloud-based hosting service for Git repositories. Using this URL and Git commands, the tool downloads all the data necessary for dependency extraction.
 
 \begin{figure}[H]
 \centering
@@ -210,11 +204,7 @@ Once converted, the tool parses each file to identify all defined entities (such
 
 \textbf{Extract and filter co-changing pairs.}
 
-The process of extracting and filtering co-changing pairs is illustrated in Figure \ref{fig:figfiltering}.
-
-To analyze the changes between commits, the tool uses the \texttt{"git diff"} command. All existing commits in the repository are collected and chronologically ordered, starting with the oldest and ending with the most recent. For each commit, the tool runs the \texttt{"git diff"} command to compare it with its parent (the preceding commit). This generates a text file containing the details of the changes between the two commits.
-
-To extract co-changing pairs, the tool parses each generated diff file. From each file, it identifies the number of changed files and their names. Since the tool already knows the software entities contained in each file (from the structural dependencies extraction), it can determine co-changing pairs by linking entities from changed files. Once all the co-changing pairs for a diff file are extracted, the tool moves to the next diff file and repeats the process.
+The process of extracting and filtering co-changing pairs is illustrated in Figure \ref{fig:figfiltering}. To extract co-changing pairs, the tool parses each generated diff file. From each file, it identifies the number of changed files and their names. Since the tool already knows the software entities contained in each file (from the structural dependencies extraction), it can determine co-changing pairs by linking entities from changed files. Once all the co-changing pairs for a diff file are extracted, the tool moves to the next diff file and repeats the process.
 
 Explained in more detail in subsections \ref{subsec:filtering_transaction_size}, \ref{subsec:filtering_support}, \ref{subsec:filtering_connection_strength}, and \ref{subsec:filtering_comments}, not every extracted co-changing pair is considered a logical dependency. For a pair to be considered a logical dependency, it must pass some criteria. These criteria are implemented as filters in the tool. Each filter processes the extracted co-changing pairs and outputs the pairs that meet the filter requirements. The filters can also be combined to ensure that only meaningful logical dependencies remain after filtering.
 
@@ -232,22 +222,22 @@ Explained in more detail in subsections \ref{subsec:filtering_transaction_size},
 
 \hspace{4em}As discussed in Section \ref{ld-intro}, the number of co-changing pairs extracted from software repositories can be quite large, often reaching millions. This quantity, combined with noise in the data, makes it important to apply filtering techniques to identify meaningful co-changing pairs.
 
-This section presents three filtering techniques used to refine the extracted co-changing pairs. The filter based on commit transaction size, discussed in Section \ref{subsec:filtering_transaction_size}, is always applied. The experiments are performed by combining this filter with one of the other two filters: the support filter presented in Section \ref{subsec:filtering_support} or the connection strength filter discussed in Section \ref{subsec:filtering_connection_strength}. The commit size filter aims to reduce the overall size of the co-changing pairs, while the support and connection strength filters aim to minimize noise in the data.
+This section presents four filtering techniques used to refine the extracted co-changing pairs. The filter based on commit transaction size, discussed in Section \ref{subsec:filtering_transaction_size}, is always applied. The experiments are performed by combining this filter with one of the other three filters: the support filter presented in Section \ref{subsec:filtering_support}, the connection strength filter presented in Section \ref{subsec:filtering_connection_strength}, or the comment change filter presented in Section \ref{subsec:filtering_comments}. The commit size filter aims to reduce the overall size of the co-changing pairs, while the support, connection strength, and code comments filters aim to reduce noise in the data.
 
 \subsection{Filtering based on commit transaction size}
 \label{subsec:filtering_transaction_size}
 
-With this filtering approach, the goal is to reduce the total number of extracted co-changing pairs and move closer to identifying meaningful logical dependencies. 
+\hspace{4em}With this filtering approach, the goal is to reduce the total number of extracted co-changing pairs and move closer to identifying meaningful logical dependencies. 
 
 Large commits often involve many files due to non-functional changes like branch merges, folder restructuring, or formatting updates. These types of commits can introduce noise by creating irrelevant co-changing pairs. Dependencies are more meaningful when extracted from commits that involve feature development or bug fixes, where developers modify related code files. However, if multiple unrelated features or fixes are solved into a single commit, it can add false relationships between the entities.
 
-One example of this issue is the initial commit when a system is migrated to a new versioning platform. These commits typically include many files but no functional changes. Another example is merge commits, created automatically during branch integrations. These commits combine changes from multiple smaller commits, which often address different issues or features. In such cases, analyzing the smaller, individual commits provides more accurate information than the overall merge commit \cite{cluster-access}.
+One example of this issue is the initial commit when a system is migrated to a new versioning platform. These commits include many files but no functional changes. Another example is merge commits, created automatically during branch integrations. These commits combine changes from multiple smaller commits, which often address different issues or features. In such cases, analyzing the smaller, individual commits provides more accurate information than the overall merge commit \cite{cluster-access}.
 
-Different studies have used various threshold values for filtering commit sizes. Cappiluppi and Ajienka \cite{DBLP:journals/jss/AjienkaC17, DBLP:journals/ese/AjienkaCC18} only considered commits with fewer than 10 modified source code files. Similarly, Kagdi et al. used the same threshold, excluding commits with more than 10 source files. Ying et al. \cite{Ying-co-change} took a different approach, excluding commits involving over 100 files. Zimmermann et al. \cite{Zimmermann:2004:MVH:998675.999460} configured the ROSE tool to exclude commits larger than 30 files. Moonen et al. \cite{Moonen-commit} explored seven different transaction filtering sizes (2, 4, 6, 8, 10, 20, and 30), recommending a threshold of 8 files.
+Different studies have used various threshold values for filtering commit sizes. Cappiluppi and Ajienka \cite{DBLP:journals/jss/AjienkaC17, DBLP:journals/ese/AjienkaCC18} only considered commits with fewer than 10 modified source code files. Similarly, Kagdi et al. used the same threshold, excluding commits with more than 10 source files. Ying et al. \cite{Ying-co-change} exclude commits with more 100 files. Zimmermann et al. \cite{Zimmermann:2004:MVH:998675.999460} configured the ROSE tool to exclude commits with more than 30 files. Moonen et al. \cite{Moonen-commit} explored seven different filtering sizes (2, 4, 6, 8, 10, 20, and 30), recommending a threshold of 8 files.
 
 
 
-We analyzed the overall transaction size trend for 27 open-source C\# and Java systems with a total of 74,332 commits. The results are presented in Figure \ref{fig:fig_cs} and in Table \ref{table:cs_values}. Based on the analysis, we observed that 90\% of the total commit transactions involved fewer than 10 source code files. This percentage indicates that setting a threshold of 10 files for the maximum size of commit transactions will not affect too much the total number of commits available for extracting co-changing pairs, 90\% of the transactions still remain available for analysis \cite{DepSACI, enase19}.
+We analyzed the overall transaction size trend for the 27 open-source C\# and Java systems with a total of 74,332 commits. The results are presented in Figure \ref{fig:fig_cs} and in Table \ref{table:cs_values}. Based on the analysis, we observed that 90\% of the total commit transactions involved fewer than 10 source code files. This percentage indicates that setting a threshold of 10 files for the maximum size of commit transactions will not affect too much the total number of commits available for extracting co-changing pairs, 90\% of the transactions still remain available for analysis \cite{DepSACI, enase19}.
 
 Table \ref{table:cs_values} provides more details of the commit transaction size distribution for each system. The columns in the table represent the following information:
 
@@ -284,7 +274,7 @@ One single commit transaction can lead to a large amount of co-changing pairs. F
 \]
 logical dependencies. By setting a threshold on the commit transaction size, we can avoid the introduction of those co-changing pairs into the system.  
 
-Filtering 10\% of the total amount of commit transactions can significantly decrease the number of co-changing pairs. That is why we choose the value of 10 files as our fixed threshold for the maximum size of a commit transaction \cite{DepSACI}.
+Filtering 10\% of the total amount of commit transactions can significantly decrease the number of co-changing pairs. That is why we will also choose the value of 10 files as our fixed threshold for the maximum size of a commit transaction \cite{DepSACI}.
 
 
 
@@ -443,13 +433,11 @@ Avg	&	5,67	&	3,43	&	2,51	&	2,15	\\
 \end{tabular}
 }
 \end{table}
-Based on Table \ref{table:sd_percentages}, we observe that only a small percentage of the extracted co-changing pairs overlap with structural dependencies. This observation is consistent with findings from related works \cite{DBLP:journals/jss/AjienkaC17, DBLP:journals/ese/AjienkaCC18}. The percentage of co-changing pairs that are structural dependencies increases as the minimum support threshold rises.
-
-We calculate the overlap between co-changing pairs and structural dependencies not only to understand how many structural dependencies are reflected in the versioning system through co-changing pairs but also to filter out co-changing pairs that are structural dependencies, as they do not provide new information about the system.
+Based on Table \ref{table:sd_percentages}, we observe that only a small percentage of the extracted co-changing pairs overlap with structural dependencies. This observation is consistent with findings from related works \cite{DBLP:journals/jss/AjienkaC17, DBLP:journals/ese/AjienkaCC18}. The percentage of co-changing pairs that are structural dependencies increases as the minimum support threshold rises. We calculate the overlap between co-changing pairs and structural dependencies to understand how many structural dependencies are reflected in the versioning system through co-changing pairs.
 
 We stopped the minimum support threshold at 4 because, as observed in Table \ref{table:ld_ratio}, systems with IDs 2, 6, 10, and 16 show a ratio below 1, indicating that the number of structural dependencies exceeds the number of co-changing pairs. For systems with IDs 4, 11, 25, and 27, increasing the threshold to 4 does not significantly reduce the difference between the number of co-changing pairs and structural dependencies.
 
-Raising the support threshold beyond 4 might cause filtering out all co-changing pairs for some systems. Therefore, while applying a threshold of 4 filters co-changing pairs to identify logical dependencies, the remaining number of co-changing pairs still significantly exceeds the number of structural dependencies for certain systems.
+Raising the support threshold above 4 might cause filtering out all co-changing pairs for some systems. Therefore, while applying a threshold of 4 filters co-changing pairs to identify logical dependencies, the remaining number of co-changing pairs still significantly exceeds the number of structural dependencies for certain systems.
 
 
 \subsection{Filtering based on connection strength}
@@ -474,17 +462,13 @@ The \textit{confidence metric} of the same rule $(A \rightarrow B)$, as expresse
 
 
 
-The confidence metric focuses on entities that are modified less frequently but consistently together, rather than entities that are modified more often but with multiple other entities.
-
-For example, assuming that entity \( A \) was changed in 10 commits and, of these 10 commits, 9 also included changes to entity \( B \), the confidence for the rule \( (A \rightarrow B) \) would be 0.9. On the other hand, if entity \( C \) was changed in 100 commits and, of these 100 commits, 50 also included changes to entity \( D \), the confidence for the rule \( (C \rightarrow D) \) would be 0.5. This means we would have more confidence in the first pair \( (A \rightarrow B) \) than in the second pair \( (C \rightarrow D) \), even though the second pair has more than five times the number of updates together \cite{cluster-access}.
+The confidence metric focuses on entities that are modified less frequently but consistently together, rather than entities that are modified more often but with multiple other entities. For example, assuming that entity \( A \) was changed in 10 commits and, of these 10 commits, 9 also included changes to entity \( B \), the confidence for the rule \( (A \rightarrow B) \) would be 0.9. On the other hand, if entity \( C \) was changed in 100 commits and, of these 100 commits, 50 also included changes to entity \( D \), the confidence for the rule \( (C \rightarrow D) \) would be 0.5. This means we would have more confidence in the first pair \( (A \rightarrow B) \) than in the second pair \( (C \rightarrow D) \), even though the second pair has more than five times the number of updates together \cite{cluster-access}.
 
 
 This observation was also made by \textit{Ying et al.} \cite{Ying-co-change}, who analyzed co-change patterns to recommend potentially relevant source code to developers during development tasks. In their study, they did not use the confidence metric, as they considered it misleading when some files are changed much more frequently than others. Instead, they used only support thresholds from 5 to 30.
  
 
-To favor entities that frequently appear in commits together, we calculated a \textit{system factor}. This factor represents the average support metric value for all entity pairs within the system \cite{cluster-access}.
-
-The system factor is then incorporated into the confidence metric calculation by multiplying the two values. To ensure the metric can also serve as a weight alongside structural dependency weights, we scale the resulting value by 100 to make it supraunitary and limit the range between 0 and 100.
+To favor entities that frequently appear in commits together, we calculated a \textit{system factor}. This factor represents the average support metric value for all entity pairs within the system \cite{cluster-access, b4}. The system factor is then incorporated into the confidence metric calculation by multiplying the two values. To ensure the metric can also serve as a weight alongside structural dependency weights, we scale the resulting value by 100 to make it supraunitary and limit the range between 0 and 100.
 
 This modified formula is referred to as the strength metric, which is defined in Equation \eqref{eq:strength}.
 
@@ -740,7 +724,7 @@ Our analysis shows that ignoring comment-only changes has minimal impact on the 
 \vspace{0.3em}
 
 - \textit{\textbf{Connection strength filtering:}} \\  
-This method identifies entities that co-change frequently, prioritizing stronger co-changes over incidental ones. Although a fixed threshold is not yet defined, connection strength filtering has proven to be more reliable than support filtering.
+This method identifies entities that co-change frequently, favoring stronger co-changes over incidental ones. Although a fixed threshold is not yet defined, connection strength filtering has proven more reliable than support filtering.
 }}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -755,22 +739,22 @@ This method identifies entities that co-change frequently, prioritizing stronger
 \hspace{4em}A logical dependency can also be a structural dependency and vice versa. Therefore, studying the overlap between logical and structural dependencies during filtering is important, especially when the plan is to combine them for tasks such as key class detection and software clustering for architectural reconstruction. A significant overlap in this case could raise questions about whether logical dependencies provide much new information about the system.
 Several studies have shown that the overlap between logical and structural dependencies is relatively small, with and without filtering \cite{DBLP:journals/jss/AjienkaC17}. This suggests that many unrelated entities are updated together in the versioning system \cite{enase19, cluster-access}.
 
-The overlap between structural dependencies and co-changes is defined as the number of pairs that have both types of relationships: structural and logical dependencies. This overlap is analyzed in two ways:
-\hspace{-4em}- \textit{as a percentage relative to the number of structural dependencies (SD).}
-- \textit{as a percentage relative to the number of co-changes.}
+The overlap between structural dependencies and co-changes is defined as the number of pairs that have both types of relationships: structural and logical dependencies. This overlap is analyzed in two ways:\\
+\hspace{-4em}- \textit{as a percentage relative to the number of structural dependencies (SD).}\\
+- \textit{as a percentage relative to the number of co-changes.}\\
 
-The connection strength filtering was applied in addition to a fixed commit size threshold of \(cs \leq 10\) under two conditions:   
+The connection strength filtering was applied in addition to a fixed commit size threshold of \(cs \leq 10\) with two different conditions:   
 
 \hspace{-4em}- \textit{AND condition}: Both entities of the association rule (A and B) must meet the specified connection strength threshold. \\  
 - \textit{OR condition}: At least one entity of the association rule (A or B) must meet the specified connection strength threshold.
 
-Table \ref{tab:percSDstrength} presents the \textit{percentage of structural dependencies (SD)} that are also co-changing pairs, while Table \ref{tab:percLDtrength} shows the \textit{percentage of co-changing pairs} that are also structural dependencies. In both tables, the columns represent the connection strength thresholds, ranging from \( \geq 10\% \) to \( \geq 100\% \), and the rows represent the applied conditions (AND or OR).
+Table \ref{tab:percSDstrength} presents the \textit{percentage of structural dependencies (SD)} that are also co-changing pairs, Table \ref{tab:percLDtrength} presents the \textit{percentage of co-changing pairs} that are also structural dependencies. In both tables, the columns represent the connection strength thresholds, ranging from \( \geq 10\% \) to \( \geq 100\% \), and the rows represent the applied conditions (AND or OR).
 
 
 
 \begin{table}[!h]
 \renewcommand{\arraystretch}{1}
-\caption{Percentage of structural dependencies (SD) that are also co-changing pairs after applying connection strength filtering in addition to a commit size threshold of $cs \leq 10$.}
+\caption{Percentage of structural dependencies (SD) that are also co-changing pairs after applying connection strength filtering and a commit size threshold of $cs \leq 10$.}
 \label{tab:percSDstrength}
 \centering
 \scalebox{0.8}{
@@ -789,7 +773,7 @@ $A\ OR\ B$	&	15.94	&	11.02	&	7.56	&	5.59		&	4.52	&	2.90	&	2.00	&	1.33	&	1.04	&	1
 
 \begin{table}[!h]
 \renewcommand{\arraystretch}{1}
-\caption{Percentage of co-changing pairs that are structural dependencies (SD) after applying connection strength filtering in addition to a commit size threshold of $cs \leq 10$.}
+\caption{Percentage of co-changing pairs that are structural dependencies (SD) after applying connection strength filtering and a commit size threshold of $cs \leq 10$.}
 \label{tab:percLDtrength}
 \centering
 \scalebox{0.8}{
@@ -823,7 +807,7 @@ Overall, these results highlight that co-changes are often not captured by struc
 
 \hspace{4em}Structural dependencies do not all have the same impact on the software system architecture and behavior. For example, the relationship between a variable and the class that uses it holds less weight compared to the relationship between a class and the interface it implements. To consider these differences, we assign different weights to each dependency type \cite{cluster-access}.
 
-The types of dependencies with their corresponding weights used in this research are based on earlier studies on clustering \cite{SoraConti, Finding-key-classes}.
+The types of dependencies with their corresponding weights used in this research are based on studies on software clustering \cite{SoraConti, Finding-key-classes}.
 
 Table \ref{tab:structural_weights} presents the weights assigned to various categories of structural dependencies, as proposed in previous research.
 
@@ -866,11 +850,11 @@ Local variables represent the most basic level of interaction. For example, a me
 \label{subsec:logical_weights}
 \hspace{4em}Based on the filtering recommendations from Subsection \ref{filtering_recomandations}, we will use two of the filters proposed in Chapter \ref{extraction} for further investigations related to key class detection or software clustering.
 
-First, the commit size filter will be applied with a fixed threshold of 10 files. For the strength threshold, we couldn't determine the best option based solely on the overlap with structural dependencies. This is partly because there hasn’t been previous research specifically focused on this type of filter. Earlier studies explored confidence and support filters with varying thresholds but provided no fixed recommendation similar to the commit size filter. To address this, we will use strength thresholds starting at 10\% and increasing in steps of 10\% up to 100\%, to see which threshold performs better in different scenarios \cite{b4}, \cite{DepSACI}, \cite{enase19}.
+First, the commit size filter will be applied with a fixed threshold of 10 files. For the strength threshold, we couldn't determine the best option based solely on the overlap with structural dependencies. This is mainly because there hasn’t been previous research specifically focused on this type of filter. Earlier studies explored confidence and support filters with varying thresholds but provided no fixed recommendation similar to the commit size filter. To address this, we will use strength thresholds starting at 10\% and increasing in steps of 10\% up to 100\%, to see which threshold performs better in different scenarios \cite{b4}, \cite{DepSACI}, \cite{enase19}.
 
-The strength filter evaluates the connection strength between two entities $A$ and $B$. If the threshold is met, a directed edge from $A \rightarrow B$ is added to the dependency graph. The same evaluation is performed for $B$ and $A$, and only if the threshold is satisfied a directed edge $B \rightarrow A$ is added.
+The strength filter evaluates the connection strength between two entities $A$ and $B$. If the threshold is met, a directed edge from $A \rightarrow B$ is added to the dependency graph. The same evaluation is performed for $B$ and $A$, and only if the threshold is met a directed edge $B \rightarrow A$ is added.
 
-The strength filter threshold is used only for filtering purposes and \textit{not as a weight} for the dependencies. The actual weight assigned to each dependency is simply the \textit{number of commits where both entities were updated together}.
+The strength filter threshold is used only for filtering purposes and \textit{not as a weight} for the dependencies. The actual weight assigned to each dependency is the \textit{number of commits in which both entities were updated together}.
 
 Figure~\ref{fig:filtering_process} illustrates the filtering process, where the commit size and strength filters are applied to extract logical dependencies.
 
@@ -893,7 +877,7 @@ Figure~\ref{fig:filtering_process} illustrates the filtering process, where the 
   \label{fig:codegraph}
 \end{figure}
 
-When structural dependencies (SD) and logical dependencies (LD) are integrated into a single graph, the system entities are represented as nodes, and the relationships between them are represented as directed, weighted edges. 
+\hspace{4em}When structural dependencies (SD) and logical dependencies (LD) are integrated into a single graph, the system entities are represented as nodes, and the relationships between them are represented as directed, weighted edges. 
 
 \textit{SD and LD weights are combined} when a pair of entities exists in both dependency sets. In this situation, the weights from SD and LD are summed, giving greater significance to these pairs. If a pair of entities appears only in SD or LD, an edge is added to the graph with its corresponding weight \cite{cluster-access}.
 
