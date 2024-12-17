@@ -45,7 +45,7 @@ Some researchers \cite{ZaidmanJurnal}, \cite{Ding2016AnIA}, \cite{PAN2018188} su
 \section{Methodology and implementation}
 \label{sec:key_methodology_implementation}
 
-This section presents the methodology and implementation used for key class detection. Section \ref{subsec:key_evalmetrics} describes the evaluation metrics used to assess the results of detected key classes. Section \ref{subsec:key_previous_measurements} describes the baseline approach by Şora et al. \cite{Finding-key-classes}. Section \ref{subsec:key_current_approach} describes the current approach, which extends the baseline by incorporating logical dependencies from the version control system. Section \ref{subsec:key_tool} describes the tool setup and workflow used for extracting, filtering, and processing logical dependencies and using them for key class detection.
+\hspace{4em}This section presents the methodology and implementation used for key class detection. Section \ref{subsec:key_evalmetrics} describes the evaluation metrics used to assess the results of detected key classes. Section \ref{subsec:key_previous_measurements} describes the baseline approach by Şora et al. \cite{Finding-key-classes}. Section \ref{subsec:key_current_approach} describes the current approach, which extends the baseline by incorporating logical dependencies from the version control system. Section \ref{subsec:key_tool} describes the tool setup and workflow used for extracting, filtering, and processing logical dependencies and using them for key class detection.
 
 
 \subsection{Metrics for results evaluation} %not refactored
@@ -218,41 +218,40 @@ The next step is to use the exported logical dependencies for key class detectio
 \label{sec:key_dataset}
 
 
-The research of I. Sora et al \cite{Finding-key-classes} takes into consideration structural public dependencies that are extracted using static analysis techniques and was performed on the object-oriented systems presented in table \ref{tab:keyclass:overview}.
+\hspace{4em}The research of I. Şora et al. \cite{Finding-key-classes}, which we use as our baseline, was conducted on the object-oriented systems listed in Table \ref{tab:keyclass:overview} \cite{b4}. For a system to be suitable for investigation using logical dependencies, it needs to meet several criteria: it must be hosted on GitHub/Bitbucket, have release tags to identify specific versions, and contain a considerable number of commits. Out of the 14 object-oriented systems mentioned in the paper \cite{Finding-key-classes}, 13 have corresponding GitHub repositories, as shown in Table \ref{tab:gitfoundsystems}. From these, only six repositories have release tags matching the versions specified in Table \ref{tab:keyclass:overview}. Finding the correct release tags is important to filter commits by date, ensuring that only commits made before the specified release are considered.
 
-The requirements for a system to qualify as suited for investigations using logical dependencies are: has to be on GitHub, has to have release tags to identify the version, and also has to have an increased number of commits. 
-From the total of 14 object-oriented systems listed in the paper \cite{Finding-key-classes}, 13 of them have repositories in Github \ref{tab:gitfoundsystems}. And from the found repositories we identified only 6 repositories that have the same release tag as the specified version from table \ref{tab:keyclass:overview}. It is important to identify the correct release tag for each repository to limit the commits further analyzed by date. Only commits that were made until the specified release are considered and analyzed.
-The commits number found on the remaining 6 repositories varies from 19108 commits for Tomcat Catalina to 149 commits for JHotDraw. In order to have more accurate results, we need a significant number of commits, so we reached the conclusion that only 3 systems can be used for key classes detection using logical dependencies: Apache Ant, Hibernate, and Tomcat Catalina.  From all the systems mentioned in table \ref{tab:keyclass:overview} Apache Ant is the most used and analyzed in other  works \cite{enase19}, \cite{7332515}, \cite{1402122}, \cite{Kamran2016IdentificationOC}.
+The number of commits found in these six repositories ranges from 19,108 for Tomcat Catalina to 149 for JHotDraw. Since a significant number of commits is important for obtaining accurate results, we concluded that only three systems could be used for key class detection using logical dependencies: Apache Ant, Hibernate, and Tomcat Catalina. Among these, Apache Ant is the most frequently analyzed system in other studies \cite{enase19}, \cite{7332515}, \cite{1402122}, \cite{Kamran2016IdentificationOC}.
 
 \begin{table}[H]
-\renewcommand{\arraystretch}{1}
-\caption{Analyzed software systems in previous research paper.}
+\renewcommand{\arraystretch}{1.8}
+\caption{Analyzed Software Systems in Previous Research.}
 \label{tab:keyclass:overview}
 \centering
 \resizebox{\textwidth}{!}{
-\begin{tabular}{|c|c|p{7cm}|c|}
+\begin{tabular}{|c|l|p{9cm}|c|}
 \hline
-ID	&	System	&	Description	&	Version	\\
+\textbf{ID} & \textbf{System} & \textbf{Description} & \textbf{Version} \\
 \hline
-Sl	&	Apache Ant	&	Java library and command line tool that drive the build processes as targets and extension points depending upon each other	&	1.6.1	\\ \hline
-S2	&	Argo UML	&	UML modelling tool with support for all UML diagrams.	&	0.9.5	\\ \hline
-S3	&	GWT Portlets	&	Open source web framework for building GWT (Google Web Toolkit) Applications.	&	0.9.5 beta	\\ \hline
-S4	&	Hibernate 	&	Persistence framework for Java.	&	5.2.12	\\ \hline
-S5	&	javaclient	&	Java distributed application for playing with robots	&	2.0.0	\\ \hline
-S6	&	jEdit	&	Java mature text editor for programmers.	&	5.1.0	\\ \hline
-S7	&	JGAP	&	Genetic Algorithms and Genetic Programming Java library.	&	3.6.3	\\ \hline
-S8	&	JHotDraw	&	JHotDraw is a two-dimensional graphics framework for structured drawing editors that is written in Java.	&	6.0b.1	\\ \hline
-S9	&	JMeter	&	JMeter is a Java application designed to load test functional behavior and measure performance	&	2.0.1	\\ \hline
-S10	&	Log4j	&	Logging Service	&	2.10.0	\\ \hline
-S11	&	Mars	&	The Mars Simulation Project is a Java project that models and simulates human settlements on Mars planet	&	3.06.0	\\ \hline
-S12	&	Maze	&	The Maze-solver project simulates an artificial intelligence algorithm on a maze	&	1.0.0	\\ \hline
-S13	&	Neuroph	&	Neuroph is a Java neural network framework.	&	2.2.0	\\ \hline
-S14	&	Tomcat Catalina	&	The Apache Tomcat project is an open-source implementation of JavaServlet and JavaServerPages technologies	&	9.0.4	\\ \hline
-S15	&	Wro4J	&	The Wro4J is a web resource (JS and CSS) optimizer for Java.	&	1.6.3	\\ 
+S1 & Apache Ant & Java library and command-line tool that manages build processes through targets and extension points & 1.6.1 \\
+S2 & Argo UML & UML modeling tool with support for all UML diagrams & 0.9.5 \\
+S3 & GWT Portlets & Open-source web framework for building GWT (Google Web Toolkit) applications & 0.9.5 beta \\
+S4 & Hibernate & Persistence framework for Java & 5.2.12 \\
+S5 & javaclient & Java distributed application for interacting with robots & 2.0.0 \\
+S6 & jEdit & Java-based mature text editor for programmers & 5.1.0 \\
+S7 & JGAP & Genetic Algorithms and Genetic Programming Java library & 3.6.3 \\
+S8 & JHotDraw & Two-dimensional graphics framework for structured drawing editors written in Java & 6.0b.1 \\
+S9 & JMeter & Java application designed for load testing and performance measurement & 2.0.1 \\
+S10 & Log4j & Logging service for Java applications & 2.10.0 \\
+S11 & Mars & Java-based simulation project modeling human settlements on Mars & 3.06.0 \\
+S12 & Maze & Maze-solver project simulating an AI algorithm navigating a maze & 1.0.0 \\
+S13 & Neuroph & Java neural network framework & 2.2.0 \\
+S14 & Tomcat Catalina & Open-source implementation of JavaServlet and JavaServerPages technologies & 9.0.4 \\
+S15 & Wro4J & Web resource optimizer for JS and CSS in Java projects & 1.6.3 \\
 \hline
 \end{tabular}
 }
 \end{table}
+
 
 
 
@@ -289,12 +288,15 @@ S15	&	Wro4J	&	1.6.3	&	v1.6.3	&	2871	\\
 }
 \end{table}
 
+\hspace{-4em}\underline{\textbf{Version control details}}
 
-Figures \ref{fig:strength_overview_ant}, \ref{fig:strength_overview_hibernate} and \ref{fig:strength_overview_catalina} intend to offer a big picture of systems. The dots represent the maximum number of updates of one entity with another, and the black line represents the average occurrence value of the system.
-It can be observed that all systems have multiple entities that update only once, meaning that we might have many confidence values of 1 (the highest value possible) for entities that update only once together. 
-We plotted only the maximum occurrences between entities to not overcrowd the plot. Even with only the maximum occurrences plotted, it can be observed that most of the points are at the bottom of the graphic. So, plotting all the points wouldn't change the overall picture of the system. The excluded points will only create a line of points even lower at the bottom of the graphic.
+Figures \ref{fig:strength_overview_ant}, \ref{fig:strength_overview_hibernate}, and \ref{fig:strength_overview_catalina} provide an overview of the co-change relationships within the analyzed systems. The dots represent the maximum number of updates (co-change occurrences) between two entities, while the black line shows the average occurrence value across the system.
 
-\begin{figure}
+To avoid cluttering the plots, only the maximum occurrences between entities are displayed. Even with only the maximum occurrences plotted,  most points are still located near the bottom of the graph, showing that most entity pairs have low co-change frequencies. Including all occurrences would not change the overall system view, as the additional points would only form a denser line closer to the graph’s baseline \cite{b4}.
+
+
+
+\begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{fig_ant_maxOcc.png}
 \caption{Overview of the number of occurrences in Ant. }
@@ -302,7 +304,7 @@ We plotted only the maximum occurrences between entities to not overcrowd the pl
 \centering
 \end{figure}
 
-\begin{figure}
+\begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{fig_hibernate_maxOcc.png}
 \caption{Overview of the number of occurrences in Hibernate. }
@@ -310,13 +312,18 @@ We plotted only the maximum occurrences between entities to not overcrowd the pl
 \centering
 \end{figure}
 
-In figure \ref{fig:strength_overview} we plotted for two systems (one small-sized and one medium-sized) the number of structural dependencies, co-changing pairs before filtering, and co-changing pairs after filtering. With the connection strength filter, the small-sized system didn't lose all the co-changing pairs once with the filtering.
-We compare the number of remaining co-changing pairs with the number of structural dependencies because, according to surveys \cite{Shtern:2012:CMS:2332427.2332428}, \cite{sar}, the main reason why logical dependencies (filtered co-changes) are not used together with structural dependencies is their size. So, it is essential to get an overview of the comparison between the number of co-changing pairs and the number of structural dependencies at each filtering step.
 
-We call the co-changing pairs that remain after filtering, logical dependencies. 
-After this step, we will use the logical dependencies obtained with different threshold values and see which threshold value performs the best. Up until now, we only looked at the size of the resulting logical dependencies and decided if a filter and its threshold are good or not. Now, we can also look at the results obtained by using the logical dependencies and decide.
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{fig_catalina_maxOcc.png}
+\caption{Overview of the number of occurrences in Catalina. }
+\label{fig:strength_overview_catalina}
+\centering
+\end{figure}
 
-\begin{figure}
+To get an overview of the comparison between the number of co-changing pairs and structural dependencies at each filtering step, we plotted the data for two systems: a small-sized system (Ant) and a medium-sized system (Hibernate), as shown in Figure \ref{fig:strength_overview}. The plot includes the number of structural dependencies, co-changing pairs before filtering, and co-changing pairs after filtering. When applying the connection strength filter, the small-sized system (Ant) kept some co-changing pairs even after filtering instead of losing them all.
+
+\begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{strength_overview.PNG}
 \caption{Overview of the impact of connection strength filtering on the number of co-changing pairs. }
@@ -327,22 +334,16 @@ After this step, we will use the logical dependencies obtained with different th
 \section{Experimental plan and results}
 \label{sec:key_plan_and_results}
 
-As presented in section \ref{sec:baseline_approach}, the key class detection was previously done only by using the structural dependencies of the system. 
-In this section, we use the same tool used in the baseline approach presented in section \ref{sec:baseline_approach}, and we add a new input to it, the logical dependencies. 
-
-In subsection \ref{sec:dataset}, we present the data set used to generate new results and, in subsection \ref{sec:measure_baseline}, we present the previously obtained results. Subsection \ref{sec:measure_ld_sd} presents the conclusions and results obtained by using logical and structural dependencies together, and subsection \ref{sec:measure_ld} presents the conclusions and results obtained by using only logical dependencies. Subsection \ref{sec:measure_metrics} presents a comparison between results obtained with the confidence metric versus results obtained with the strength metric. And finally, subsection \ref{sec:compare_others} presents a comparison between the results obtained in the current paper and the results of other researchers.
+\hspace{4em}In this section, we present our experimental plan and the results obtained. Section \ref{subsec:key_plan} describes the experimental plan that guided our research. Section \ref{subsec:key_results_baseline} describes the baseline results obtained using only structural dependencies. In Section \ref{subsec:key_results_combined}, we describe how adding logical dependencies impacts the detection process when combined with structural dependencies, while in Section \ref{subsec:key_results_ld}, we describe the results of using only logical dependencies. In Section \ref{sec:measure_metrics}, we compare the impact of using the connection strength filter versus the confidence metric filter for logical dependencies. 
 
 
 \subsection{Experimental plan}
 \label{subsec:key_plan}
 
-Our study aims to check whether logical dependencies can be usable. Previous research focused on filtering the co-changes extracted from the versioning system and studying how filtering affects their size or how they overlap with structural dependencies. We intend to use the resulting information after co-changes filtering (the logical dependencies) in a tool that usually receives structural dependencies as input.
-
-Our research questions are the following: \textbf{RQ1:} \textit{Can logical dependencies combined with structural dependencies enhance the results obtained by using only structural dependencies in key class detection?} \textbf{RQ2:} \textit{Can logical dependencies provide good results if they are used instead of structural dependencies in key class detection?} \textbf{RQ3:} \textit{ Does the connection strength filter has a favorable impact on the detection of key classes?}
+\hspace{4em}Our research regarding logical dependencies usage in key class detection was guided based on the following research questions: \textbf{RQ1:} \textit{Can combining logical and structural dependencies improve the previous results obtained by using only structural dependencies in key class detection?} \textbf{RQ2:} \textit{Can logical dependencies alone provide good results in key class detection?} \textbf{RQ3:} \textit{Does applying the connection strength filter have a positive impact on key class detection?}
 
 To answer the research questions, we defined the following experimental plan: 
-We will use the tool mentioned in the above section. Previously the tool had as input the structural dependencies of the system and the reference solution, and the output was the ROC-AUC score. The closer the ROC-AUC score is to 1, the better the results.  
-With the slightly modified version of the tool, we are able to receive as input also logical dependencies.
+We will use the tool mentioned in section \ref{subsec:key_current_approach}. Previously, the tool had the structural dependencies of the system and the reference solution as input, and the output was the ROC-AUC score. The closer the ROC-AUC score is to 1, the better the results. With the slightly modified version of the tool, we can give as input also logical dependencies.
 
 
 For \textbf {RQ1}, we will give as input to the tool the structural and the logical dependencies, and we will compare the ROC-AUC scores obtained with the results obtained by using only structural dependencies.
@@ -355,11 +356,11 @@ For \textbf {RQ1}, we will give as input to the tool the structural and the logi
 }
 \medskip
 
-Our findings for this research question can be found in section \ref{sec:measure_ld_sd}.
+Our findings for this research question can be found in section \ref{subsec:key_results_combined}.
 
 
 For \textbf {RQ2}, we will give as input to the tool only logical dependencies, and we will compare the ROC-AUC scores obtained with the results obtained by using only structural dependencies, and by using structural and logical dependencies combined.
-We do not expect that the results will be better compared to the results previously obtained, but we expect results that have a ROC-AUC score close to those values. That would mean that logical dependencies can provide enough information to detect most of the key classes of the system.
+We do not expect that the results will be better compared to the results previously obtained, but we expect results that have a ROC-AUC score close to those values. That would mean that logical dependencies can provide enough information to detect most of the key classes of the system \cite{b4}.
 
 \medskip
 
@@ -371,7 +372,7 @@ We do not expect that the results will be better compared to the results previou
 
 \medskip
 
-Our findings for this research question can be found in section \ref{sec:measure_ld}.
+Our findings for this research question can be found in section \ref{subsec:key_results_ld}.
 
 For \textbf {RQ3}, we will generate two sets of logical dependencies. One set will be generated with the connection strength filter and one with the confidence filter. We will then use each set in two different scenarios: one when we only use logical dependencies to detect key classes and one when we use logical and structural dependencies for detection. Finally, we will compare the results obtained. We expect that the connection strength filter will generate better results. 
 
@@ -390,7 +391,7 @@ Our findings for this research question can be found in section \ref{sec:measure
 \subsection{Results using only the baseline approach}
 \label{subsec:key_results_baseline}
 
-In table \ref{tab:previousresults} are presented the ROC-AUC values for different attributes computed for the systems Ant, Tomcat Catalina, and Hibernate by using the baseline approach. We compare these values with the new values obtained by using also logical dependencies in key class detection.
+\hspace{4em}Table \ref{tab:previousresults} presents the ROC-AUC values for different attributes computed for the systems Ant, Tomcat Catalina, and Hibernate using the baseline approach. We will compare these values with the new ones obtained by using logical dependencies in key class detection.
 
 \begin{table}
 \renewcommand{\arraystretch}{1}
@@ -416,14 +417,13 @@ CONN\_TOTAL	&	0.94630	&	0.93903	&	0.94630	\\
 \subsection{Results using combined structural and logical dependencies}
 \label{subsec:key_results_combined}
 
-The tool used in the baseline approach runs a graph-ranking algorithm on a graph that contains all the structural dependencies extracted from static source code analysis.
-Each edge in the graph represents a dependency. The entities that form a structural dependency are represented as vertices in the graph. 
-As mentioned in section \ref{sec:baseline_approach}, we modified the tool to take structural and logical dependencies as input.
-For this subsection's measurements, we add the logical dependencies in the graph that contains all structural dependencies. Since it is a weighted graph, if a structural dependency is also a logical dependency, then the final weight of the connection is the sum of the weight computed for the structural dependency and the connection strength metric associated with the logical dependency.
+\hspace{4em}The tool used in the baseline approach runs a graph-ranking algorithm on a graph containing all the structural dependencies extracted from static source code analysis. Each edge in the graph represents a dependency, while the entities forming the structural dependencies are represented as vertices.
 
-In tables \ref{tab:measurementscombined:ant}, \ref{tab:measurementscombined:tomcat}, and \ref{tab:measurementscombined:hibernate}, on each line, we have the computed the key class metric generated with logical dependencies extracted with the connection strength threshold that is specified in the colums header.
+For the measurements in this subsection, we added the logical dependencies to the graph containing all structural dependencies. Since the graph is weighted, if a structural dependency also exists as a logical dependency, the final weight of the connection becomes the sum of the weight computed for the structural dependency and the number of commits associated with the logical dependency.
 
-We started with logical dependencies that have a connection strength metric greater than 10, then we repeatedly increased the value by 10 until we reached 100. The last column of the table contains the results previously obtained by the tool by only using structural dependencies (the results presented in section \ref{sec:measure_baseline}). So, to answer \textit{RQ1: Can logical dependencies combined with structural dependencies enhance the results obtained by using only structural dependencies in key class detection?}: The results obtained by combining structural and logical dependencies are close to the previously registered values but, in most cases, do not surpass them. Underlined are the values that are better than the previously registered values. We can observe that for all 3 systems, the best values obtained are for connection strength between 40-70.
+In Tables \ref{tab:measurementscombined:ant}, \ref{tab:measurementscombined:tomcat}, and \ref{tab:measurementscombined:hibernate}, each row contains the computed key class metric generated using logical dependencies extracted with the connection strength threshold specified in the column headers.
+
+We started with logical dependencies having a connection strength metric greater than 10 and increased the value by 10 in each step until reaching 100. The last column of each table contains the results obtained using only structural dependencies, as presented in Section \ref{subsec:key_results_baseline}. To answer \textit{RQ1: Can combining logical and structural dependencies improve the previous results obtained by using only structural dependencies in key class detection?}, the results obtained by combining structural and logical dependencies are close to the previously registered values. The underlined values indicate results that are better than the previously registered values. It can be observed that, for all three systems, the best values were obtained for connection strengths between 40 and 70.
 
 \begin{table}[!h]
 \setlength\tabcolsep{3.5pt}
@@ -484,10 +484,10 @@ CON\_T	&	0.920	&	0.927	&	0.932	&	0.940	&	0.940	&	0.940	&	0.945	&	0.945	&	0.945	&
 \end{tabular}
 }
 \end{table}
-Some other details about the systems are presented in tables \ref{tab:overlap} and \ref{tab:ratio_sd_ld} . In table \ref{tab:overlap} are the overlappings between structural and logical dependencies expressed in percentages. Each column represents the percentage of logical dependencies that are also structural. 
-The values obtained confirm that, indeed, the logical dependencies overlap with structural dependencies in a small percentage, and they must be treated as different dependencies.
+Some additional details about the systems are presented in Tables \ref{tab:overlap} and \ref{tab:ratio_sd_ld}. Table \ref{tab:overlap} shows the overlap between structural and logical dependencies, expressed as percentages. Each column represents the percentage of logical and structural dependencies. The obtained values confirm that logical dependencies overlap with structural dependencies only in a small percentage, supporting the idea that they should be treated as distinct types of dependencies.
 
-In table \ref{tab:ratio_sd_ld} are the ratio numbers between structural dependencies and logical dependencies. We added this table to highlight how different the numbers of both dependencies are.
+Table \ref{tab:ratio_sd_ld} presents the ratio between the number of structural dependencies and logical dependencies. This table was included to highlight the difference in the number of these two dependencies.
+
 
 
 \begin{table}[!h]
@@ -501,7 +501,7 @@ In table \ref{tab:ratio_sd_ld} are the ratio numbers between structural dependen
 System &	$\geq10$	&	$\geq20$		&	$\geq30$		&	$\geq40$		&	$\geq50$		&	$\geq60$		&	$\geq70$		&	$\geq80$		&	$\geq90$		&	$\geq100$ \\
 \hline
 Ant	&	17.628	&	19.872	&	20.461	&	20.858	&	21.078	&	23.913	&	24.688	&	21.807	&	20.000	&	19.776	\\
-Tomcat Catalina  	&	10.331	&	14.931	&	15.862	&	16.221	&	16.427	&	16.302	&	16.598	&	18.336	&	19.207	&	19.149	\\
+Catalina  	&	10.331	&	14.931	&	15.862	&	16.221	&	16.427	&	16.302	&	16.598	&	18.336	&	19.207	&	19.149	\\
 Hibernate	&	8.005	&	8.971	&	9.755	&	12.060	&	12.348	&	12.254	&	18.426	&	19.105	&	18.836	&	19.371	\\
 \hline
 \end{tabular}
@@ -521,7 +521,7 @@ System &	$\geq10$	&	$\geq20$		&	$\geq30$		&	$\geq40$		&	$\geq50$		&	$\geq60$		&	
 
 \hline
 Ant	&	1.373	&	2.251	&	2.870	&	3.133	&	3.461	&	4.604	&	5.282	&	6.598	&	7.060	&	7.903	\\
-Tomcat Catalina	&	0.445	&	0.936	&	1.302	&	1.543	&	1.660	&	1.967	&	2.218	&	3.057	&	3.376	&	3.440	\\
+Catalina	&	0.445	&	0.936	&	1.302	&	1.543	&	1.660	&	1.967	&	2.218	&	3.057	&	3.376	&	3.440	\\
 Hibernate	&	1.159	&	1.747	&	2.184	&	3.867	&	4.283	&	4.877	&	10.547	&	11.920	&	12.464	&	14.851	\\
 
 \hline
@@ -529,14 +529,15 @@ Hibernate	&	1.159	&	1.747	&	2.184	&	3.867	&	4.283	&	4.877	&	10.547	&	11.920	&	12
 }
 \end{table}
 
-In most cases, for all systems, the results tend to become better once with increasing the value of the connection strength threshold up until one point, after which the results obtained begin to drop.
-If we look at table \ref{tab:overlap}, we can observe that the bigger the threshold for the connection strength filter, the smaller the number of total logical dependencies becomes. For example, in Hibernate, the value 70 for the connection strength threshold makes the structural dependencies outnumber 10 times the logical dependencies. 
+In most cases, the results for all systems improve as the connection strength threshold value increases to a certain point. After this point, the results begin to decline. Looking at Table \ref{tab:overlap}, it can be observed that increasing the connection strength threshold reduces the total number of logical dependencies. For example, when the connection strength threshold reaches 70 in Hibernate, the number of structural dependencies outnumbers the logical dependencies by a factor of 10.
 
-We can identify 3 scenarios based on tables \ref{tab:measurementscombined:ant}, \ref{tab:measurementscombined:tomcat}, \ref{tab:measurementscombined:hibernate} and \ref{tab:ratio_sd_ld}. In the 1$^{st}$ scenario, the connection strength threshold is too small, and we remain with a lot of logical dependencies after filtering. The high volume of logical dependencies introduced in the graph might cause an erroneous detection of the key classes, in consequence, less performing measurements/results. This affirmation is sustained by the fact that, when the threshold begins to be more restrictive, and the total number of logical dependencies begins to decrease, the key classes detection starts to improve.
-The 2$^{nd}$ scenario assumes that the connection strength threshold is too big, significantly decreasing the number of logical dependencies. In this case, the logical dependencies introduced in the graph are too few to improve the detection, and, instead, will create noise in the graph and less performing results.
-This leads us to the 3$^{rd}$ scenario, in which the connection strength threshold is 'just right'. Not too small, because it will introduce too many logical dependencies in the graph and produce less performing results. And not too high, because it will decrease too much the number of logical dependencies, producing less performing results. 
+Based on Tables \ref{tab:measurementscombined:ant}, \ref{tab:measurementscombined:tomcat}, \ref{tab:measurementscombined:hibernate}, and \ref{tab:ratio_sd_ld}, three scenarios can be identified.
 
-The 'just right' value can differ from one system to another, depending on the size of the system. If we look at Ant (the smaller size system), we can see that the results begin to decrease sooner than for Hibernate. On average, all the systems perform well between 40 and 70 for the connection strength threshold value.
+The first scenario is when the connection strength threshold is too small, leaving many logical dependencies after filtering. The high volume of logical dependencies introduced into the graph may cause incorrect key class detection, resulting in lower performance. This is supported by the observation that when the threshold becomes more restrictive, and the number of logical dependencies decreases, the detection results improve.
+
+The second scenario is when the connection strength threshold is too high, significantly reducing the number of logical dependencies. In this case, too few logical dependencies are introduced into the graph to enhance key class detection, creating only noise and lowering the performance of the results.
+
+The third scenario is when the connection strength threshold is 'just right,' meaning it is not too low (to avoid introducing too many logical dependencies) and not too high (to ensure a sufficient number of logical dependencies are considered). The 'just right' threshold value can vary depending on the system's size. For example, in Ant, a smaller-sized system, results begin to decline sooner than in Hibernate. On average, the best performance across all systems is achieved with a connection strength threshold between 40 and 70 \cite{b4}.
 
 
 
@@ -545,13 +546,10 @@ The 'just right' value can differ from one system to another, depending on the s
 \subsection{Results using only logical dependencies}
 \label{subsec:key_results_ld}
 
-In the previous subsection, we added the logical and structural dependencies in the graph based on which the ranking algorithm works. Currently, we add only the logical dependencies to the graph.
+\hspace{4em}In the previous subsection, we added both logical and structural dependencies to the graph used by the ranking algorithm. In this subsection, we add only the logical dependencies to the graph. Tables \ref{tab:measurementshistory:ant}, \ref{tab:measurementshistory:tomcat}, and \ref{tab:measurementshistory:hibernate} present the results obtained by using only logical dependencies to detect key classes.
 
-In tables \ref{tab:measurementshistory:ant}, \ref{tab:measurementshistory:tomcat}, and \ref{tab:measurementshistory:hibernate} are presented the results obtained by using only logical dependencies to detect key classes.
+Regarding the second research question: '\textit{RQ2: Can logical dependencies alone provide good results in key class detection?}', the initial hypothesis is confirmed by the results obtained. The measurements are not as good as those obtained using both logical and structural dependencies or using only structural dependencies. However, the values are above 0.7, indicating that a good portion of the key classes is still detected using only logical dependencies. As mentioned in Section \ref{subsec:key_evalmetrics}, a classifier is considered good if its ROC-AUC value is as close to 1 as possible.
 
-For the second research question: '\textit{RQ2: Can logical dependencies provide good results if they are used instead of structural dependencies in key class detection?}', the initial hypothesis is confirmed by the results obtained.
-
-The measurements obtained are not as good as the ones using logical and structural dependencies combined or using only structural dependencies. But the values obtained are above 0.7, which means that a good part of the key classes is detected by using only logical dependencies. As mentioned in section \ref{sec:evalmetrics}, a classifier is good if it has the ROC-AUC value as close to 1 as possible.
 
 
 \begin{table}[!h]
@@ -619,14 +617,11 @@ CON\_T	&	0.740	&	0.743	&	0.750	&	0.700	&	0.700	&	0.704	&	0.746	&	0.746	&	0.747	&
 
 
 
+One possible explanation for the less-performing results is that key classes may have a better design than the rest, making them less prone to change. If key classes are less prone to change, their associated connection strength metric will have a lower value than other entities.
 
-One explanation for the less performing results is that the key classes may have a better design than the rest of the classes, which means that are less prone to change. If the key classes are less prone to change, then the associated connection strength metric has a lower value than other entities.
+Tables \ref{tab:overviewcommit:ant}, \ref{tab:overviewcommit:catalina}, and \ref{tab:overviewcommit:hibernate} provide a better overview of the update behavior of key classes in the versioning system. The selected classes from all three tables are the key classes identified from developer documentation \cite{Finding-key-classes}. The "Commit Count" column shows the number of commits in which each entity was involved, while the "Max Occurrence with Another Entity" column indicates the maximum number of updates with another entity from the system (the strongest connection with another entity).
 
-Tables \ref{tab:overviewcommit:ant}, \ref{tab:overviewcommit:catalina} and \ref{tab:overviewcommit:hibernate}, provide us a better overview of the update behavior of key classes in the versioning system. The selected classes from all three tables are the key classes extracted from developer documentation \cite{Finding-key-classes}. The commit count column presents the number of commits in which the entity was involved. The column 'Max occurrence with another entity' contains the maximum number of updates with another entity from the system (the strongest connection with another entity).
-
-It can be observed that some key classes change a lot in the versioning system, for example, Configuration for Hibernate, ProjectHelper for Ant and StandardContext for Catalina. Also, some classes create strong connections with other entities, like IntrospectionHelper for Ant, Table for Hibernate and StandardContext for Catalina. But, in most cases, the key classes are not the entities that update the most in the versioning system.
-So, by setting too high the connection strength threshold, we risk filtering out the key classes.
-
+It can be observed that some key classes change frequently in the versioning system, such as \texttt{Configuration} for Hibernate, \texttt{ProjectHelper} for Ant, and \texttt{StandardContext} for Catalina. Additionally, some classes form strong connections with other entities, like \texttt{IntrospectionHelper} for Ant, \texttt{Table} for Hibernate, and \texttt{StandardContext} for Catalina. However, in most cases, the key classes are not the entities that change the most in the versioning system. This indicates that by setting the connection strength threshold too high we risk filtering out key classes and reduce the detection performance \cite{b4}.
 
 
 \begin{table}[!h]
@@ -736,36 +731,67 @@ org.apache.catalina.Engine	&	4	&	1	\\
 \end{table}
 
 
+\subsection{Results using confidence metric for filtering}
+\label{sec:measure_metrics}
 
-\section{Evaluation}
-\label{sec:key_plan_and_results}
+\hspace{4em}As mentioned in Chapter \ref{extraction}, we did not use the confidence metric because it does not consider the big picture of the system. A co-changing pair $A \rightarrow B$, where A updates only once in the entire history and always updates together with B, will have the highest possible confidence value. This behavior ignores the system context, so we introduced the strength metric to balance the metric to favor pairs that update more frequently.
 
-\subsection{ Comparison and discussion on the obtained results}
-\label{sec:compare_others}
-In this subsection, we compare the results obtained in the current paper with results previously obtained by other researchers. 
+Since both metrics require the same input data and differ only in the calculation method, we computed the confidence metric using our tool and applied the same threshold for the strength metric. The only adjustment we made was multiplying the confidence value by 100, allowing its range to fluctuate between 0 and 100 to be more similar in filtering to the strength metric \cite{b4}.
 
-Even though the approaches were not the same, most of them used the ROC-AUC metric to evaluate the quality of the results, the same as ours.
-Osman et al. obtained in their research an average ROC-AUC score of 0.750 \cite{6676885}. Thung et al. obtained an average ROC-AUC score of 0.825 \cite{rocclasification} and Şora et al. (our baseline approach) obtained an average ROC-AUC score of 0.894 \cite{Finding-key-classes}.
+\begin{table}[!h]
+\setlength\tabcolsep{3.5pt}
+\caption{ Average results obtained with strength versus confidence metric.}
+\label{tab:confidence_vs_strength}
+\centering
+\scalebox{0.85}{
+\begin{tabular}{|c|c|c|}
+\hline
+Metric  &\multicolumn{2}{c|}{Using}\\
+ used &Only logical dependencies 	&	Structural and logical dependencies 	 \\
+\hline
+\multicolumn{3}{|c|}{Average values obtained for all systems}\\
+\hline
+strength	&	0.791	&	0.916	\\
+confidence	&	0.731	&	0.893	\\
+\hline
+\multicolumn{3}{|c|}{Average values obtained for Ant}\\
+\hline
+strength	&	0.826	&	0.903	\\
+confidence	&	0.741	&	0.873	\\
+\hline
+\multicolumn{3}{|c|}{Average values obtained for Tomcat Catalina}\\
+\hline
+strength	&	0.816	&	0.910	\\
+confidence	&	0.752	&	0.878	\\
+\hline
+\multicolumn{3}{|c|}{Average values obtained for Hibernate}\\
+\hline
+strength	&	0.732	&	0.935	\\
+confidence	&	0.699	&	0.929	\\
+\hline
+\end{tabular}
+}
+\end{table}
 
-In the current research, we obtained an average ROC-AUC score of 0.916 when using logical and structural dependencies combined and a score of 0.791 when using only logical dependencies to detect key classes.
+The comparison between the average values obtained using the confidence metric and the strength metric is presented in Table \ref{tab:confidence_vs_strength}. 
 
-So, when using both dependencies combined, we can obtain a slightly better ROC-AUC score than the one from the baseline approach. And, when using only logical dependencies, even though we do not obtain a better score than the baseline approach, we obtain results that can be compared with results obtained by other researchers. 
-
-
-
-\subsection{Correlation between details of the systems and results}
-\label{subsec:key_overlapping}
-
-In this section, we discuss about the correlation between the details of the systems and the results obtained in section \ref{sec:current_measurements}.
-
-The reason why we are doing this correlation is to find if there are some links between the details of the systems and the results obtained. 
-
-The results obtained are presented in figures \ref{fig:plot_sd_ld_ant} - \ref{fig:plot_ld_hibernate}. We are using plots to display the results obtained to have a clearer view of how the results fluctuate over different thresholds values.
+These results help us answer the third research question: \textit{RQ3: Does applying the connection strength filter have a positive impact on key class detection?}. As expected based on our initial hypothesis and supported by the results, we can conclude that the connection strength metric is better suited for logical dependency detection. By considering the mean update frequency of the entire system during the filtering process, we can say that we improve the detection of logical dependencies \cite{b4}.
 
 
 
 
-\begin{figure}[H]
+
+\section{Correlation between details of the systems and results}
+\label{sec:key_overlapping}
+
+\hspace{4em}This section discusses the correlation between the system details and the results obtained in Section \ref{sec:key_plan_and_results}. This correlation aims to determine whether there are any links between the system details and the obtained results.
+
+The results are presented in Figures \ref{fig:plot_sd_ld_ant} - \ref{fig:plot_ld_hibernate}. We use plots to display the results and provide a clearer view of how the values fluctuate across different threshold settings. The system details are presented in two tables. Table \ref{tab:overlap} shows the overlap between structural and logical dependencies expressed as percentages. Each column represents the percentage of logical dependencies that are also structural. For each column, the logical dependencies are obtained by applying a different connection strength filter. The connection strength filter starts at 10, meaning that the entities update together in at least 10\% of the total commits involving two entities. The filter value is increased by 10 at each step until it reaches 100, indicating that the other entity is also present in all commits involving one entity \cite{b4}.
+
+
+
+
+\begin{figure}
 \centering
 \includegraphics[width=\columnwidth]{ant_SD_LD.PNG}
 \caption{Variation of AUC score when varying connection strength threshold for Ant. Results for structural and logical dependencies combined. }
@@ -774,7 +800,7 @@ The results obtained are presented in figures \ref{fig:plot_sd_ld_ant} - \ref{fi
 \end{figure}
 
 
-\begin{figure}[H]
+\begin{figure}
 \centering
 \includegraphics[width=\columnwidth]{tomcat_SD_LD.PNG}
 \caption{Variation of AUC score when varying connection strength threshold for Tomcat. Results for structural and logical dependencies combined. }
@@ -783,7 +809,7 @@ The results obtained are presented in figures \ref{fig:plot_sd_ld_ant} - \ref{fi
 \end{figure}
 
 
-\begin{figure}[H]
+\begin{figure}
 \centering
 \includegraphics[width=\columnwidth]{hibernate_SD_LD.PNG}
 \caption{Variation of AUC score when varying connection strength threshold for Hibernate. Results for structural and logical dependencies combined. }
@@ -793,7 +819,7 @@ The results obtained are presented in figures \ref{fig:plot_sd_ld_ant} - \ref{fi
 
 
 
-\begin{figure}[H]
+\begin{figure}
 \centering
 \includegraphics[width=\columnwidth]{ant_LD.PNG}
 \caption{Variation of AUC score when varying connection strength threshold for Ant. Results for logical dependencies only. }
@@ -802,7 +828,7 @@ The results obtained are presented in figures \ref{fig:plot_sd_ld_ant} - \ref{fi
 \end{figure}
 
 
-\begin{figure}[H]
+\begin{figure}
 \centering
 \includegraphics[width=\columnwidth]{tomcat_LD.PNG}
 \caption{Variation of AUC score when varying connection strength threshold for Tomcat. Results for logical dependencies only. }
@@ -811,7 +837,7 @@ The results obtained are presented in figures \ref{fig:plot_sd_ld_ant} - \ref{fi
 \end{figure}
 
 
-\begin{figure}[H]
+\begin{figure}
 \centering
 \includegraphics[width=\columnwidth]{hibernate_LD.PNG}
 \caption{Variation of AUC score when varying connection strength threshold for Hibernate. Results for logical dependencies only.}
@@ -820,11 +846,8 @@ The results obtained are presented in figures \ref{fig:plot_sd_ld_ant} - \ref{fi
 \end{figure}
 
 
-The details of the systems are presented in two tables.  In table \ref{tab:overlap} are the overlappings between structural and logical dependencies expressed in percentages. Each column represents the percentage of logical dependencies that are also structural, for each column the logical dependencies are obtained by applying a different connection strength filter. The connection strength filter begins at 10, meaning that in at least 10 \% of the total commits involving two entities, the entities update together. We increase the connection strength filter by 10 up until we reach 100, meaning that in all the commits that involve one entity, the other entity is present also.
 
-
-In table \ref{tab:ratio_sd_ld} are the ratio numbers between structural dependencies and logical dependencies. We added this table in order to highlight how different the total number of both dependencies is.
-
+Table \ref{tab:ratio_sd_ld} presents the ratio between the number of structural dependencies and logical dependencies. We included this table to highlight how different the total number of these two dependencies is.
 
 \begin{table}[!h]
 \renewcommand{\arraystretch}{1}
@@ -865,81 +888,32 @@ Hibernate	&	1.037	&	6.391	&	10.037	&	14.947	&	18.940	&	54.248	&	83.442	&	111.704
 }
 \end{table}
 
-In figures \ref{fig:plot_sd_ld_ant}, \ref{fig:plot_sd_ld_tomcat} and \ref{fig:plot_sd_ld_hibernate} are the measurements obtained by using structural and logical dependencies combined. 
-In all three figures, the measurements at the beginning are smaller than the rest. Once with the increasing of the threshold value also the measurements begin to increase. Meaning that better results for key class detection are found. 
-The best measurements are when the threshold value is between 40 and 60, after that, the measurements tend to decrease a little bit and stay at that fixed value. 
+Figures \ref{fig:plot_sd_ld_ant}, \ref{fig:plot_sd_ld_tomcat}, and \ref{fig:plot_sd_ld_hibernate} show the measurements obtained by using structural and logical dependencies combined.
 
-A possible explanation of the results fluctuation and then capping is that if we are looking at table \ref{tab:ratio_sd_ld} we can see that at the beginning, the total number of logical dependencies used is close to the number of existing structural dependencies. The high volume of logical dependencies introduced might cause an erroneous detection of the key classes, in consequence, smaller measurements. 
-When the threshold begins to be more restrictive and the total number of logical dependencies used begins to decrease, the key classes detection starts to improve. This improvement stops after the threshold value reaches 60\%. If we look again at table \ref{tab:ratio_sd_ld} we can see that after 60\% the number of structural dependencies outnumbers the number of logical dependencies up to 124 times in some cases. In addition, if we look at table \ref{tab:overlap} we can see that the remaining logical dependencies overlap a lot with the structural dependencies, so we are not introducing too much new information.
+In all three figures, the initial measurements are lower than the rest. As the threshold value increases, the measurements also increase, indicating better results for key class detection. The best measurements are obtained when the threshold value is between 40 and 60. After this point, the measurements decrease slightly and stabilize at a fixed value. A possible explanation for this fluctuation and eventual stabilization is found in Table \ref{tab:ratio_sd_ld}. At the beginning, the total number of logical dependencies used is close to the number of existing structural dependencies. The high volume of logical dependencies introduced may cause incorrect key class detection, resulting in lower measurements.
 
- So, the number of logical dependencies used is so small that it doesn't influence the key class identification. Since the structural dependencies used don't change, we obtain the same results for different threshold values. 
+As the threshold becomes more restrictive and the number of logical dependencies decreases, key class detection improves. This improvement stops after the threshold value reaches 60\%. Looking again at Table \ref{tab:ratio_sd_ld}, it can be observed that after 60\%, the number of structural dependencies outnumbers the number of logical dependencies by up to 124 times in some cases. Additionally, Table \ref{tab:overlap} shows that the remaining logical dependencies overlap significantly with the structural dependencies, meaning that not much new information is introduced at this point.
+ So, the number of logical dependencies used is so small that it doesn't influence the key class identification. Since the structural dependencies used don't change, we obtain the same results for different threshold values \hspace{4em}. 
 
 
 
-In figures \ref{fig:plot_ld_ant}, \ref{fig:plot_ld_tomcat} and \ref{fig:plot_ld_hibernate} are the measurements obtained by using only logical dependencies.
-Initially, we expected to see a Gaussian curve, but instead, we see a bell curve.  We think that in the beginning, we use a high number of logical dependencies in key class detection, among those logical dependencies is an important number of key classes and also an important number of other classes. But the number of other classes does not influence the key classes detection. When we start to increase the value of the threshold and filter more the logical dependencies, we also filter some of the initial detected key classes and remain with a significant number of other classes. In this case, the other classes that remain influence the measurements, causing the worst-performing solutions. 
-Some of the key classes are strongly connected in the versioning system, and even for higher threshold values don't get filtered out. Meanwhile, the rest of the classes that are not key classes get filtered out for higher threshold values which leads to better performing measurements when the threshold value are above 60\%. 
+Figures \ref{fig:plot_ld_ant}, \ref{fig:plot_ld_tomcat}, and \ref{fig:plot_ld_hibernate} show the measurements obtained by using only logical dependencies. Initially, we expected to see a Gaussian curve, but instead, we observed a bell curve. This happens because, in the beginning, we use a high number of logical dependencies in key class detection. Among these logical dependencies, there is a significant number of key and non-key classes. However, non-key classes do not influence key class detection at this stage.
 
-\subsection{Comparison between strength versus confidence metric}
-\label{sec:measure_metrics}
+As we increase the threshold value and filter more logical dependencies, some of the initially detected key classes are filtered out. In this situation, the remaining non-key classes influence the measurements negatively, causing worse-performing results. Some key classes are strongly connected in the versioning system and remain even when higher threshold values are applied. At the same time, the non-key classes get filtered out at higher threshold values, leading to better-performing measurements when the threshold value exceeds 60\%.
 
 
-As mentioned in section \ref{strength_filter}, we did not use the confidence metric because it does not consider the big picture of the system.
-A co-changing pair $A \rightarrow B$, where A updates only once in the entire history, and when it updates, it updates together with B, will have the best confidence value that we can get. This is why we introduced the strength metric, to balance the metric in the favor of those which update more frequently.
-Since both metrics require the same inputs and only the calculation method is different, we computed with our tool the confidence metric and applied the same threshold to it as to the strength metric. The only difference from how other authors computed the metric is that we multiplied its value by 100. So, the confidence values can fluctuate between 0 and 100.
-In the graph used by the key classes detection tool, the structural dependencies weights are supraunitary values. So, we multiplied with 100 the confidence value to scale it to the structural dependencies weights. Otherwise, if we add a subunitary value (confidence value) to a high value (the structural weight), it will not make a difference, so we will not be able to see the impact of the logical dependencies in the graph.
-
-\begin{table}[!h]
-\setlength\tabcolsep{3.5pt}
-\caption{ Average results obtained with strength versus confidence metric.}
-\label{tab:confidence_vs_strength}
-\centering
-\scalebox{0.85}{
-\begin{tabular}{|c|c|c|}
-\hline
-Metric  &\multicolumn{2}{c|}{Using}\\
- used &Only logical dependencies 	&	Structural and logical dependencies 	 \\
-\hline
-\multicolumn{3}{|c|}{Average values obtained for all systems}\\
-\hline
-strength	&	0.791	&	0.916	\\
-confidence	&	0.731	&	0.893	\\
-\hline
-\multicolumn{3}{|c|}{Average values obtained for Ant}\\
-\hline
-strength	&	0.826	&	0.903	\\
-confidence	&	0.741	&	0.873	\\
-\hline
-\multicolumn{3}{|c|}{Average values obtained for Tomcat Catalina}\\
-\hline
-strength	&	0.816	&	0.910	\\
-confidence	&	0.752	&	0.878	\\
-\hline
-\multicolumn{3}{|c|}{Average values obtained for Hibernate}\\
-\hline
-strength	&	0.732	&	0.935	\\
-confidence	&	0.699	&	0.929	\\
-\hline
-\end{tabular}
-}
-\end{table}
 
 
-The comparison between the average values obtained by using the confidence metric and the strength metric can be found in table \ref{tab:confidence_vs_strength}.
-
-These results help us answer the third research question: \textit{RQ3: Does the connection strength filter has a favorable impact on the detection of key classes?}. As we expected in our initial hypothesis and now based on the results, we can say that the connection strength metric is more suited for logical dependencies detection. So, by considering the mean update frequency of the entire system in the filtering process, we improve the detection of logical dependencies.
-
-
-\subsection{Comparison with fan-in and fan-out metric}
-\label{subsec:key_metrics}
-
-Fan-in and fan-out are coupling metrics. The fan-in of entity A is the total number of entities that call functions of A. The fan-out of A is the total number of entities called by A \cite{5507329}.
+\section{Comparison with fan-in and fan-out metric}
+\label{sec:key_metrics}
 
 
-In tables \ref{tab:measurementsfan:ant}, \ref{tab:measurementsfan:catalina}, and \ref{tab:measurementsfan:hibernate} we can find the metrics detalis for each documented key class of each system.
-The first column represents the name of each key class, the second column represents the fan\_in values for each key class, the third column represents the fan\_out values, the fourth column represents the number of entities that call functions of that key class plus the number of entities that are called by the key class (fan\_in and fan\_out combined), and the fifth column represents the number of logical dependencies in which an entity is involved. 
+\hspace{4em}Fan-in and fan-out are coupling metrics. The fan-in of entity A is the total number of entities that call functions of A, while the fan-out of A is the total number of entities that A calls functions from \cite{5507329}. Tables \ref{tab:measurementsfan:ant}, \ref{tab:measurementsfan:catalina}, and \ref{tab:measurementsfan:hibernate} present the detailed metrics for each documented key class in each system. 
 
-For Ant, we can see in table \ref{tab:measurementsfan:ant} that all the key classes have logical dependencies with other classes. The LD\_NUMBER means the number of logical dependencies of an entity. The key classes with the most LD number are Project and IntrospectionHelper, these two entities can be found also in table \ref{tab:measurementstop:ant} in which we did a top 10 entities that have a logical dependency with other entities. This means that some key classes are involved in software change quite often and can be observed via system history.
+The first column represents the name of each key class. The second column represents the fan\_in values for each key class, while the third column represents the fan\_out values. The fourth column represents the total number of entities interacting with the key class, calculated as the sum of fan\_in and fan\_out. The fifth column represents the number of logical dependencies (LD\_NUMBER) involved in each entity.
+
+For Ant, Table \ref{tab:measurementsfan:ant} shows that all key classes have logical dependencies with other classes. The key classes with the highest number of logical dependencies are \texttt{Project} and \texttt{IntrospectionHelper}. These two entities also appear in Table \ref{tab:measurementstop:ant}, where we list the top 10 entities with logical dependencies. This indicates that some key classes are frequently involved in software changes, which can be observed through the system’s versioning history.
+
 
 \begin{table}[!h]
 \renewcommand{\arraystretch}{1}
@@ -967,9 +941,9 @@ Nr.	&	Classname	&	FAN\_IN	&	FAN\_OUT	&	FAN\_TOTAL	&	LD\_NUMBER\\
 \end{table}
 
 
-For Tomcat Catalina, same as for Ant, we can see in table \ref{tab:measurementsfan:catalina} that all the key classes have logical dependencies.  The key classes with the most LD number are StandardContext and Request, these two entities can also be found in table \ref{tab:measurementstop:catalina} in which we did a top 10 entities that have the most logical dependencies with other entities for Tomcat Catalina.
+For Tomcat Catalina, similar to Ant, Table \ref{tab:measurementsfan:catalina} shows that all key classes have logical dependencies. The key classes with the highest number of logical dependencies are \texttt{StandardContext} and \texttt{Request}. These two entities also appear in Table \ref{tab:measurementstop:catalina}, where we list the top 10 entities with the most logical dependencies in Tomcat Catalina.
 
-For Hibernate things are a little bit different, as we can see in table \ref{tab:measurementsfan:hibernate},  key classes like Criterion, Projection, or Transaction have 0 logical dependencies, meaning that those key classes are not involved in any software change. One possible explanation for this is that for Hibernate the architecture is designed in such way that the core is not often touched by change. 
+For Hibernate, the situation is different. As seen in Table \ref{tab:measurementsfan:hibernate}, key classes like \texttt{Criterion}, \texttt{Projection}, and \texttt{Transaction} have zero logical dependencies, indicating that these key classes are not involved in any software change. One possible explanation for this is that Hibernate’s archi
 
 
 \begin{table}[!h]
@@ -1048,12 +1022,10 @@ Nr.	&	Classname	&	FAN\_IN	&	FAN\_OUT	&	FAN\_TOTAL	&	LD\_NUMBER \\
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-In tables \ref{tab:measurementstop:ant}, \ref{tab:measurementstop:catalina}, and \ref{tab:measurementstop:hibernate} we can find the top 10 entities with logical dependencies. The first column represents the name of each top 10 entity, the second column represents the fan\_in values, the third column represents the fan\_out values, the fourth column represents the fan\_in and fan\_out combined, and the fifth column represents the number of logical dependencies in which the entity is involved.
+Tables \ref{tab:measurementstop:ant}, \ref{tab:measurementstop:catalina}, and \ref{tab:measurementstop:hibernate} present the top 10 entities with the highest number of logical dependencies. The first column contains the names of the top 10 entities; the second column contains the fan\_in values, the third column contains the fan\_out values, the fourth column contains the combined fan\_in and fan\_out values, and the fifth column contains the number of logical dependencies (LD) involving each entity.
 
+We created these top 10 tables to provide an overview of the highest LD numbers registered for each system. As mentioned, some key classes appear in these tables, but not all are included. In Table \ref{tab:measurementstop:hibernate}, which shows the top 10 entities for Hibernate, most entries are inner classes of \texttt{AbstractEntityPersister}. This is expected because the class \texttt{AbstractEntityPersister} is also listed. This behavior occurs due to the limitation of the versioning system, which cannot separate changes made to a class from those made to its inner classes. Therefore, whenever \texttt{AbstractEntityPersister} records a change, its inner classes are also marked as changed.
 
-We did these top 10 tables to offer an overview of the highest registered numbers for LD for each system. As we mentioned before, some of the key classes are also present in these tables, but not all of them.
-
-In table \ref{tab:measurementstop:hibernate} we can find the top 10 measurements for Hibernate, most of the table is occupied by inner classes of AbstractEntityPersister. This is expected behavior since class AbstractEntityPersister is also present. This behavior is caused by the impossibility to separate the updates done for a class from its inner classes in the versioning system. So, each time AbstractEntityPersister records a change, also the inner classes are considered to have changed.
 \begin{table}[!h]
 \renewcommand{\arraystretch}{1}
 \caption{Top 10 measurements for Ant. }
@@ -1130,25 +1102,21 @@ Nr.	&	Classname	&	FAN\_IN	&	FAN\_OUT	&	FAN\_TOTAL	&	LD\_NR \\
 }
 \end{table}
 
-Overall, by looking at the comparisons between FAN\_IN, FAN\_OUT, FAN\_TOTAL, and the logical dependencies in which a class is involved we could not determine a direct connection between them. Nither we can say that one influences the other.  We consider that even though the metrics are not related directly, they could be all used together to get a better view of the system connections.
+Overall, by comparing the values of \texttt{FAN\_IN}, \texttt{FAN\_OUT}, \texttt{FAN\_TOTAL}, and the number of logical dependencies in which a class is involved, we could not identify a direct connection between these metrics. Similarly, we cannot conclude that one metric directly influences the others. However, even though these metrics are not directly related, we believe that using them together can provide a more comprehensive view of the system’s connections and dependencies.
 
 
 
 \section{Chapter conclusions}
 \label{sec:key_class_conclusions}
 
-In this paper, we studied the filtering and the usage of co-changes extracted from the versioning system. In the first part of the paper, we focused on the co-changes filtering, and in the second part, we used the filtered co-changes (logical dependencies) to detect key classes.
-For co-changes filtering, we applied the commit size filter and the filter based on connection strength. The co-changes that remained after filtering, called logical dependencies, were provided as input for a tool that detects key classes. 
+\hspace{4em}This chapter studied the filtering and usage of co-changes extracted from the versioning system. We approached two scenarios for detecting key classes using logical dependencies. In the first scenario, we used logical and structural dependencies; in the second scenario, we used only logical ones. We adapted the tool used in the baseline approach for detecting key classes from structural dependencies \cite{Finding-key-classes} to process in addition also logical dependencies.
 
-We approached two scenarios to detect key classes by using logical dependencies. In the 1$^{st}$ scenario, we used logical dependencies together with structural dependencies, and in the 2$^{nd}$, we used only logical dependencies to detect the key classes. We modified the tool used in the baseline approach for detecting key classes from structural dependencies \cite{Finding-key-classes}, to use also logical dependencies.
+Even though the approaches differed, most related research used the ROC-AUC metric to evaluate the quality of results, as we did. Osman et al. achieved an average ROC-AUC score of 0.750 \cite{6676885}, Thung et al. obtained a score of 0.825 \cite{rocclasification}, and Şora et al. (our baseline approach) achieved an average score of 0.894 \cite{Finding-key-classes}.
 
-Based on the results obtained, compared with the baseline results, we saw a slight improvement in key class detection when both logical and structural dependencies were used together. The best results were obtained with a connection strength threshold of 40-70. Also, our connection strength metric performs better than the confidence metric used in related works.
+In our research, we obtained an average ROC-AUC score of 0.916 when using logical and structural dependencies and a score of 0.791 when using only logical dependencies to detect key classes.
 
-When we used only logical dependencies to detect key classes, the results were less performing than our results when using only structural or structural and
-logical dependencies combined, but they were comparable with results of related work using structural dependencies. We consider this a very
-positive result because this research uses a different type of input than the previous ones, the logical dependencies.
-It is also an open door for new research in multiple fields that use structural dependencies to gain knowledge about software systems. And since logical dependencies are easy and fast to extract from the versioning system and do not depend on the language of the software system, the cost of integrating them is small. 
+When using both types of dependencies combined, we achieved a slightly better ROC-AUC score than the one from the baseline approach. When using only logical dependencies, although we did not surpass the baseline score, our results were comparable to those obtained by other researchers. Based on these results, we observed a slight improvement in key class detection when using both logical and structural dependencies, with the best results achieved at a connection strength threshold between 40 and 70. Our connection strength metric also performed better than the confidence metric used in related research. When using only logical dependencies, the results were less effective than when using structural dependencies alone or when combining both types. However, the results were still comparable to those achieved by other researchers using only structural dependencies. We consider this a significant finding, as this research uses a different type of input: logical dependencies.
 
-To sum up the findings of this paper, logical dependencies can be used to gain knowledge about software systems. We consider that the advantage of using only logical dependencies is that it only uses data extracted from the versioning system and can be generalized to various programming languages.
+This opens the door to new research possibilities across various fields that rely on structural dependencies to gain insight into software systems. Since logical dependencies are easy and fast to extract from the versioning system and are not dependent on the programming language, their integration comes at a low cost.
 
-In the future, we want to check if other areas can be improved by using logical dependencies, like software clustering \cite{SoraConti}, \cite{Shtern:2012:CMS:2332427.2332428}, \cite{SoraSem13}.
+In conclusion, logical dependencies can be used to gain valuable knowledge about software systems. Their main advantage is that they rely solely on data extracted from the versioning system and can be generalized to various programming languages.
