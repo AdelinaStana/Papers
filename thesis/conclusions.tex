@@ -2,6 +2,53 @@
 
 \section{Summary of research findings}
 
+\hspace{4em}A brief chapter-level summary of the contributions made through this thesis is:
+
+\noindent In \textit{Chapter \ref{dep}}:
+\begin{itemize}
+    \item Different types of software dependencies such as structural, lexical, semantical, logical, and others are presented and explained with examples
+    \item Techniques for extracting logical dependencies from version control systems are presented, focusing on filtering methods based on commit size, support, and confidence \hfill ([T1.1])
+    \item The current research on logical dependencies and their integration with structural dependencies is presented \hfill ([T1.4])
+    \item Are presented various applications of software dependencies, including architecture reconstruction, clone detection, code smell identification, key class recognition, software comprehension, fault localization, and defect prediction 
+\end{itemize}
+
+\noindent In \textit{Chapter \ref{extraction}}:
+\begin{itemize}
+    \item The methodology for extracting logical dependencies from version control systems and structural dependencies from source code is described. 
+    \item Various filtering techniques for refining logical dependencies are presented, including commit size filtering, support filtering, strength filtering, and comment-only changes filtering. Their impact on the extracted logical dependencies is analyzed, focusing on the newly proposed strength filter. \hfill ([T1.2], [T1.3])
+    \item A tool developed for extracting and filtering logical dependencies is described. The tool filters co-changing pairs based on the above mentioned filters. \hfill ([T2.1])
+\end{itemize}
+
+\noindent In \textit{Chapter \ref{chap:combining_dependencies}}:
+\begin{itemize}
+    \item The overlaps and differences between structural and logical dependencies are discussed. \hfill ([T1.4])
+    \item Methods for assigning weights to structural and logical dependencies and a method for integrating them into a single dependency model are discussed.
+\end{itemize}
+
+\noindent In \textit{Chapter \ref{cap:key_class_detection}}:
+\begin{itemize}
+    \item The concept of key classes is revisited, and the approach for identifying these classes using both structural and logical dependencies is presented \hfill ([T3.1])
+    \item Experiments on three open-source projects (Ant, Tomcat Catalina, and Hibernate) are conducted to determine if combining logical dependencies (derived from version control) with structural dependencies (extracted from source code) can improve key class detection \hfill ([T3.1], [T3.2], [T3.3])
+    \item The effectiveness of using only logical dependencies in key class detection is evaluated \hfill ([T3.4])
+    \item The influence of the connection strength filter thresholds on logical dependencies based on the results obtained are evaluated \hfill ([T3.5])
+\end{itemize}
+
+
+\noindent In \textit{Chapter \ref{cap:architectural_reconstruction}}:
+\begin{itemize}
+    \item The integration of logical dependencies (extracted from co-change data in version control systems) with structural dependencies for software clustering is presented. 
+    \item Three clustering algorithms are introduced: Louvain, Leiden, and DBSCAN, along with the metrics for evaluating results: MQ (Modularization Quality) and MoJoFM. \hfill ([T4.1])
+    \item An evaluation based on experiments is performed using only structural dependencies, only logical dependencies (filtered at different thresholds), and a combination of both. \hfill ([T4.2], [T4.3])
+    \item The results of applying different strength threshold filters are reviewed. \hfill ([T4.4], [T4.5])
+\end{itemize}
+
+
 \section{Contributions}
 
+To be done after some discussions regarding what should go here
+
 \section{Future work}
+
+\hspace{4em}In both key class detection and software clustering for architectural reconstruction analyses, selecting the appropriate strength threshold for logical dependencies proved important. For key class detection, thresholds between 40\% and 70\% led to an improvement over the baseline approach. In architectural reconstruction, lower thresholds between 10\% and 40\% provided the best trade-offs between coverage and clustering quality. 
+
+These findings suggest that the “ideal” threshold depends on the intended use case of logical dependencies. Future work will investigate automated methods for determining the optimal strength filter threshold for different systems.
