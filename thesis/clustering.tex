@@ -13,7 +13,7 @@ Our experiments are conducted on four open-source Java projects from GitHub. We 
 
 \hspace{4em} Software systems often need more documentation. Even if there was original documentation at the beginning of development, it may become outdated over the years. Additionally, the original developers may leave the company, taking with them knowledge about how the software was designed. This situation challenges the teams when it comes to maintenance or modernization. In this context, recovering the system's architecture is essential. Understanding the system's architecture helps developers evaluate better and understand the nature and impact of changes they must make. One technique to help in reconstructing the system architecture is software clustering. Software clustering involves creating cohesive groups (modules) of software entities based on their dependencies and interactions.
 
-Among the dependencies that can be used for software clustering are structural dependencies (relationships between entities based on code analysis), lexical dependencies (relationships based on naming conventions), and code co-changes/logical dependencies (relationships between entities extracted from the version control system), and others \cite{b15, BLP:journals/jss/AjienkaC17}.
+Among the dependencies that can be used for software clustering are structural dependencies (relationships between entities based on code analysis), lexical dependencies (relationships based on naming conventions), and code co-changes/logical dependencies (relationships between entities extracted from the version control system), and others \cite{b15, DBLP:journals/jss/AjienkaC17}.
 
 This chapter assesses the impact of logical dependencies in software clustering alone and combination with structural dependencies. The following research questions guide our investigation:
 
@@ -230,8 +230,6 @@ Table \ref{tab:commit_statistics} presents the commit statistics for the studied
 
 \subsection{Experimental plan}
 \label{subsec:plan}
-
-\subsubsection{Tool runs}
 
 \hspace{4em}To assess the impact of logical dependencies and to answer the research questions from section \ref{sec:introduction_clustering}, we run the tool presented in Section \ref{subsec:tool_workflow} in three different scenarios for all the projects from table \ref{tab:project_info}. All three scenarios are illustrated in Fig. \ref{fig:scenatrio}.
 
