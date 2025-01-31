@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36" version="24.7.12" pages="3">
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36" version="26.0.10" pages="3">
   <diagram name="filtering" id="PhSkuTTHiElNDAKjxbeT">
     <mxGraphModel dx="794" dy="420" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -218,7 +218,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="XeuW-A3ZSPk6Nvi6jmlT" name="scenario">
-    <mxGraphModel dx="1221" dy="660" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="794" dy="412" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -237,8 +237,8 @@
         <mxCell id="NTAj5z_szv7dGT0ilOGb-3" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EAF1FC;strokeColor=#6c8ebf;" parent="1" vertex="1">
           <mxGeometry x="200" y="5" width="120" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="Fkgld6WzWmGYhF2XPbJi-1" value="&lt;b&gt;&lt;font color=&quot;#004c99&quot;&gt;Tool Fig. 2&amp;nbsp;&lt;/font&gt;&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
-          <mxGeometry x="222.5" y="25" width="75" height="30" as="geometry" />
+        <mxCell id="Fkgld6WzWmGYhF2XPbJi-1" value="&lt;b&gt;&lt;font color=&quot;#004c99&quot;&gt;Tool for Clustering and Evaluation&amp;nbsp;&lt;/font&gt;&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="216.25" y="25" width="87.5" height="30" as="geometry" />
         </mxCell>
         <mxCell id="Fkgld6WzWmGYhF2XPbJi-4" value="" style="endArrow=classic;html=1;rounded=0;entryX=-0.015;entryY=0.357;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" target="NTAj5z_szv7dGT0ilOGb-3" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
@@ -276,8 +276,8 @@
         <mxCell id="Fkgld6WzWmGYhF2XPbJi-66" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EAF1FC;strokeColor=#6c8ebf;" parent="1" vertex="1">
           <mxGeometry x="200" y="140" width="120" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="Fkgld6WzWmGYhF2XPbJi-67" value="&lt;b&gt;&lt;font color=&quot;#004c99&quot;&gt;Tool Fig. 2&amp;nbsp;&lt;/font&gt;&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
-          <mxGeometry x="222.5" y="160" width="75" height="30" as="geometry" />
+        <mxCell id="Fkgld6WzWmGYhF2XPbJi-67" value="&lt;b&gt;&lt;font style=&quot;color: light-dark(rgb(0, 76, 153), rgb(237, 237, 237));&quot;&gt;Tool for Clustering and Evaluation&amp;nbsp;&lt;/font&gt;&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=Helvetica;fontSize=12;fontColor=default;" parent="1" vertex="1">
+          <mxGeometry x="216.25" y="160" width="87.5" height="30" as="geometry" />
         </mxCell>
         <mxCell id="Fkgld6WzWmGYhF2XPbJi-68" value="" style="endArrow=classic;html=1;rounded=0;entryX=-0.015;entryY=0.357;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" target="Fkgld6WzWmGYhF2XPbJi-66" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
@@ -345,8 +345,8 @@
         <mxCell id="Fkgld6WzWmGYhF2XPbJi-65" value="&lt;b style=&quot;font-size: 13px;&quot;&gt;reference&amp;nbsp;&lt;/b&gt;&lt;div style=&quot;font-size: 13px;&quot;&gt;&lt;b style=&quot;font-size: 13px;&quot;&gt;clustering solution&lt;/b&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=13;" parent="1" vertex="1">
           <mxGeometry x="35.36" y="190" width="125.71" height="25" as="geometry" />
         </mxCell>
-        <mxCell id="4g09X8hMU0XVw3CV-GO9-3" value="&lt;b&gt;&lt;font color=&quot;#004c99&quot;&gt;Tool Fig. 2&amp;nbsp;&lt;/font&gt;&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
-          <mxGeometry x="222.5" y="300" width="75" height="30" as="geometry" />
+        <mxCell id="4g09X8hMU0XVw3CV-GO9-3" value="&lt;b&gt;&lt;font style=&quot;color: light-dark(rgb(0, 76, 153), rgb(86, 174, 255));&quot;&gt;Tool for Clustering and Evaluation&amp;nbsp;&lt;/font&gt;&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="216.25" y="300" width="87.5" height="30" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

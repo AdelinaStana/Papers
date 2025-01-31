@@ -89,7 +89,7 @@ To answer these research questions, we apply three different clustering algorith
 In Section \ref{sec:related_work}, we review the related work and previous studies that used various dependencies for software clustering and their metrics for evaluation.
 Section \ref{sec:dependencies} provides an overview of structural and logical dependencies used in our approach, explaining how these dependencies are extracted.
 Section \ref{sec:methodology_implementation} details the workflow and implementation of our approach, including the extraction and filtering of dependencies and the clustering algorithm used.
-The plan and results of our experiments on four open-source projects are presented in Section \ref{sec:experiment}. Section \ref{sec:evaluation} evaluates our results using the Modularization Quality (MQ) metric and the MoJoFM metric. We also manually analyze some of the clustering solutions.
+The plan of our experiments on four open-source projects is presented in Section \ref{sec:plan}. Sections \ref{sec:results} and \ref{sec:rq} present and evaluate our results using the Modularization Quality (MQ) metric and the MoJoFM metric. 
 Finally, Section \ref{sec:conclusion} contains our conclusions and findings.
 
 \subsection{Abbreviations and Acronyms}
@@ -417,14 +417,12 @@ After applying each clustering algorithm and completing both evaluations, we exp
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Experimental Plan and Results}
-\label{sec:experiment}
+\section{Experimental Plan}
+\label{sec:plan}
 
+This section presents the projects used in our experiments and the approach taken to conduct the experiments.
 
-\subsection{Experimental Plan}
-\label{subsec:plan}
-
-\subsubsection{Overview of projects used}
+\subsection{Overview of projects used}
 \begin{table*}
 \centering
 \caption{Overview of projects used in experimental analysis}
@@ -446,7 +444,7 @@ In Table \ref{tab:project_info}, we have synthesized all the information about t
 
 We mainly chose projects with more than 10,000 commits in their commit history so that the logical dependencies extraction can be done on a more extensive information base. However, we selected Gson, which has a relatively small commit history (1,772 commits), to determine if our experiments work with a smaller information base.
 
-\subsubsection{Tool runs}
+\subsection{Tool runs}
 
 To assess the impact of logical dependencies and to answer the research questions from section \ref{sec:introduction}, we run the tool presented in Section \ref{subsec:tool_workflow} in three different scenarios for all the projects from table \ref{tab:project_info}. All three scenarios are illustrated in Fig. \ref{fig:scenatrio}.
 
@@ -463,10 +461,11 @@ In the third scenario, we combine logical with structural dependencies. Similar 
   \label{fig:scenatrio}
 \end{figure}
 
-\subsection{Results}
-\label{subsec:results}
 
-The experimental results are presented in this subsection in four tables, each corresponding to a different project. Table \ref{tab:clustering_results_ant} presents the results for Apache Ant, Table \ref{tab:clustering_results_tomcat} presents the results for Apache Tomcat, Table \ref{tab:clustering_results_hibernate} presents the results for Hibernate ORM, and Table \ref{tab:clustering_results_gson} presents the results for Gson.
+\section{Experimental Results}
+\label{sec:results}
+
+The experimental results are presented in this section in four tables, each corresponding to a different project. Table \ref{tab:clustering_results_ant} presents the results for Apache Ant, Table \ref{tab:clustering_results_tomcat} presents the results for Apache Tomcat, Table \ref{tab:clustering_results_hibernate} presents the results for Hibernate ORM, and Table \ref{tab:clustering_results_gson} presents the results for Gson.
 
 Each table includes the following columns:
 \begin{itemize}
@@ -672,19 +671,13 @@ The rows in each table represent different dependency types and strength filter 
 To better understand the impact of different dependency types on software clustering, we also analyzed the average weights assigned to structural dependencies (SD) and logical dependencies (LD) across the studied projects. Table \ref{tab:systems_weights} presents these average dependency weights. The first row shows the average weights for SD, which remain constant across all strength thresholds, while the other rows show the average weights for logical dependencies at different strength thresholds.
 
 
-
-\section{Evaluation}
-\label{sec:evaluation}
-
-The overall analysis of all the results from subsection \ref{subsec:results} indicates that combining structural and logical dependencies (SD+LD) provides better clustering solutions than using structural dependencies (SD) alone, covering 100\% of the system, meaning that no entity is missed during cluster generation. On the other hand, logical dependencies (LD) alone result in better clustering quality metrics compared to both SD and SD+LD, but they do not cover the entire system.
+The overall analysis of all the results from this section indicates that combining structural and logical dependencies (SD+LD) provides better clustering solutions than using structural dependencies (SD) alone, covering 100\% of the system, meaning that no entity is missed during cluster generation. On the other hand, logical dependencies (LD) alone result in better clustering quality metrics compared to both SD and SD+LD, but they do not cover the entire system.
 
 The best results for SD+LD are observed with a strength threshold between 10-40\%. For LD only, the best results are obtained at a 100\% strength threshold. The overall trend shows that for LD only, the MQ metric increases in value with a higher strength threshold, indicating more cohesive clusters, while the MoJo metric decreases, indicating that fewer transformations are needed to reach the expected clustering. For SD+LD, the best MQ and MoJo values are obtained at lower strength thresholds, and then both metrics indicate a less effective clustering solution obtained with higher strength thresholds.
 
-We analyze each project in detail in the sections below and address the research questions.
+We analyze each project in detail in the sections below.
 
-\subsection{Detailed results}
-
-\subsubsection{Apache Ant}
+\subsection{Apache Ant}
 
 The clustering results for Apache Ant (Table \ref{tab:clustering_results_ant}) show that the combined structural and logical dependencies (SD+LD) achieved the best values with a strength threshold between 10\% and 30\%. The highest value for the MQ metric is reached with Leiden at a strength threshold of 20\%, and the highest value for MoJoFM is also reached with Leiden at a strength threshold of 10\%.
 
@@ -710,7 +703,7 @@ Our overall findings were that with stricter filtering of logical dependencies, 
 
 So, we consider that the reason why SD+LD clustering solutions decline in performance with a higher strength threshold is that less and less new additional information is added to the system (logical dependencies that are not structural dependencies), causing the clustering solution to start resembling the performance of the SD-only solution. In Figure \ref{fig:ant_correlation}, we can see that LD(10) represents 61\% of the quantity of SD, while LD(100) is only at 12\%, with half of them being duplicated with SD.
 
-\subsubsection{Apache Tomcat}
+\subsection{Apache Tomcat}
 
 For Apache Tomcat (Table \ref{tab:clustering_results_tomcat}), the best results for SD+LD were obtained with strength thresholds between 10\% and 40\% across all algorithms. The Leiden algorithm achieved the best result for the MQ metric at a strength threshold of 40\%, while the best MoJoFM result was obtained at a threshold of 20\%, also with the Leiden algorithm. Compared with the SD-only results, the peak MQ values almost double the SD-only values. Like Apache Ant, the MQ values for all strength thresholds are higher than those for SD-only. While MoJoFM is not better for all thresholds, it still improves compared with the SD-only results.
 
@@ -765,7 +758,7 @@ Based on the metric values obtained for multiplication factors of 2 to 5, we can
 We can conclude from the experiment with weights that the issue is the quantity of dependencies. SD outnumbers LD, making LD information less impactful on the clustering solution.
 
 
-\subsubsection{Hibernate ORM}
+\subsection{Hibernate ORM}
 
 Hibernate ORM is the second largest system after Apache Tomcat regarding the number of commits analyzed, with 16,609 commits considered for LD extraction. Additionally, it is the largest in terms of system size, with 4,414 entities (Table \ref{tab:project_info}).
 
@@ -787,7 +780,7 @@ Hibernate has the lowest overlap percentage between LD and SD, as shown in Figur
 The results for Hibernate highlight the challenge of achieving better clustering in larger systems with fewer commits relative to their size.
 
 
-\subsubsection{Google Gson}
+\subsection{Google Gson}
 
 
 \begin{figure}[t!]
@@ -811,7 +804,10 @@ Gson also has relatively high overlap rates between LD and SD compared to the ot
 
 The results for this system highlight the difficulty of achieving better clustering solutions using logical dependencies in smaller systems with fewer commits. However, even for a small system like Gson, an improvement is still visible when using logical dependencies.
 
-\subsection{Research Questions and Findings}
+
+
+\section{Research Questions and Findings}
+\label{sec:rq}
 
 In this section, we will answer our research questions based on the results of our experiments. 
 
@@ -822,7 +818,7 @@ The filtering thresholds applied to logical dependencies influence the effective
 
 At higher strength thresholds, the MQ and MoJoFM results decline. This decline occurs because stricter strength thresholds significantly reduce the amount of logical dependencies. This reduction leads to fewer new relationships introduced into the clustering process. Our previous research on the overlap between SD and LD showed that higher strength thresholds correlate with increased overlap between the two dependencies. This overlap indicates that at higher strength thresholds, not much new information is added to the system besides what is already introduced by structural dependencies, reducing the impact of logical dependencies on clustering results.
 
-However, when considering a lower strength threshold, the relationship between the system size and the number of commits in the version history becomes an important factor.
+However, considering a lower strength threshold, the relationship between the system size and the number of commits in the version history becomes an important factor.
 
 In the case of Hibernate, a stricter strength threshold was needed to achieve the best metric values compared to other systems. Although the metrics obtained at a 10\% strength threshold for LD are better than SD-only, the system reached peak metric values at 40\% threshold across all algorithms.
 
@@ -841,11 +837,11 @@ Using LD-only produced good clustering results, especially at higher strength th
 
 Thus, while LD(100) provides the highest metric results compared to SD+LD and SD-only, it represents only a small subset of the system's dependencies.
 
-On the other hand, LD(10) has, in most of the cases, better metric results than those for SD-only and SD+LD with better system coverage. Apache Ant and Tomcat LD(10) cover more than 60\% of the system, while for Hibernate and Gson, the coverage is slightly above 30\%. 
+On the other hand, LD(10) has, in most cases, better metric results than those for SD-only and SD+LD with better system coverage. Apache Ant and Tomcat LD(10) cover more than 60\% of the system, while for Hibernate and Gson, the coverage is slightly above 30\%. 
 
 Therefore, LD(10) can be an alternative to SD-only or SD+LD, especially if structural dependencies are not available.
 
-It is also important to consider that LD-only performance at higher strength thresholds depends on the system's characteristics, such as the number of commits and entities. For Gson project, the performance at a 100\% strength threshold is not as good as for the other systems, reaching its peak at a 40\% threshold. This is due to the low number of entities remaining at higher thresholds, with only 18 entities at the 80\% to 100\% strength thresholds, and the relatively small number of commits considered.
+It is also important to consider that LD-only performance at higher strength thresholds depends on the system's characteristics, such as the number of commits and entities. For the Gson project, the performance at a 100\% strength threshold is not as good as for the other systems, reaching its peak at a 40\% threshold. This is due to the low number of entities remaining at higher thresholds, with only 18 entities at the 80\% to 100\% strength thresholds, and the relatively small number of commits considered.
 
 In summary, while LD-only can produce good clustering results, especially at higher strength thresholds, its limited coverage reduces its usability, as the clustering is intended for the entire system, not just a small subset. LD-only offers a good alternative to SD-only at lower strength thresholds, providing acceptable coverage.
 
@@ -868,7 +864,7 @@ Using logical dependencies alone achieved the highest MQ and MoJoFM values compa
 
 The impact of using logical dependencies is influenced by the filtering thresholds applied during their extraction. Lower strength thresholds (10\% to 40\%) provided a good trade-off between including meaningful co-change relationships and minimizing noise. At these thresholds, the combined SD+LD approach outperformed the SD-only approach. At higher strength thresholds (e.g., 100\%), the reduced coverage and increased overlap between LD and SD minimized the advantages of using logical dependencies.
 
-This highlights the importance of choosing appropriate filtering thresholds for logical dependencies. The strength filtering threshold should be chosen based on the characteristics of the software system, like system size and commit history so that users can benefit from logical dependencies to improve architectural reconstruction.
+This highlights the importance of choosing appropriate filtering thresholds for logical dependencies. The strength filtering threshold should be chosen based on the characteristics of the software system, like system size and commit history, so that users can benefit from logical dependencies to improve architectural reconstruction.
 
 In conclusion, when optimally filtered and combined with structural dependencies, logical dependencies enhance software clustering results and provide full system coverage. In cases where structural dependencies are unavailable, logical dependencies alone provide a good alternative. In our future work, we will explore automated methods for determining the optimal strength filter threshold for different systems.
 
@@ -909,10 +905,12 @@ In conclusion, when optimally filtered and combined with structural dependencies
 
 \end{thebibliography}
 
-\begin{IEEEbiographynophoto}{First} Add text here
+\begin{IEEEbiographynophoto}{Adelina Diana Stana} is a Ph.D. student at the Politehnica University of Timisoara.
+In 2016 she received her bachelor’s degree at Politehnica, and in 2018 her master’s degree. Since 2014 she is also employed at Continental Automotive Group, her current role is Software Architect. Her research interests are focusing on software evolution and maintenance.
 \end{IEEEbiographynophoto}
 
-\begin{IEEEbiographynophoto}{Second} Add text here
+\begin{IEEEbiographynophoto}{Ioana Șora} is an Associate Professor in the Department of Computer and Information Technology at the Politehnica University of Timisoara, Romania. She received the Phd degree in Computer Science in 2003 from the Politehnica Univerity of Timisoara.
+Her research interests are in the following domains: Software architecture and reconstuction; Program analysis and program comprehension; Recommender systems for software engineering; Dynamic and self-adaptive software architectures; Component based software engineering.
 \end{IEEEbiographynophoto}
 
 \EOD
