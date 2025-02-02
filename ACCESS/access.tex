@@ -50,13 +50,13 @@
 
 \corresp{Corresponding author: Adelina Diana Stana  (e-mail: stana.adelina.diana@gmail.com).}
 
-\begin{abstract}
-Version control systems are important for tracking and managing changes in software code, but they also offer information about the relationships between software entities. When multiple software entities (e.g., classes, interfaces) are modified together, it may indicate an underlying connection. These code co-changes represent a type of software dependency that can be used together with structural or lexical dependencies to improve the understanding of a system's architecture.
+\begin{abstract}  
+Version control systems are important for tracking and managing changes in software code, but they also offer information about the relationships between software entities. When multiple software entities (e.g., classes, interfaces) are modified together, it may indicate an underlying connection. These code co-changes can be filtered to obtain logical dependencies (LD), which represent a type of software dependency that can complement structural or lexical dependencies to improve the understanding of a system's architecture.  
 
-In this paper, we explore using code co-changes as input for software clustering for architectural reconstruction. Since structural dependencies are the most commonly used dependencies in software clustering, we investigate whether integrating them with code co-changes provides better results than using either dependency type alone.
+In this paper, we explore the use of logical dependencies extracted from code co-changes as input for software clustering for architectural reconstruction. Since structural dependencies (SD) are the most commonly used dependencies in software clustering, we investigate whether integrating both logical and structural dependencies provides better results than using either dependency type alone.  
 
-Our experiments are applied to four open-source Java projects from GitHub. For each project, we apply three distinct clustering algorithms (Louvain, Leiden, and DBSCAN) and evaluate their performance using two clustering evaluation metrics. These metrics allow a comparison between clustering based solely on code co-changes and clustering that integrates both co-changes and structural dependencies, offering a better understanding of how these co-changes influence software architecture reconstruction.
-\end{abstract}
+Our experiments are conducted on four open-source Java projects from GitHub. We apply three distinct clustering algorithms (Louvain, Leiden, and DBSCAN) and evaluate their performance using two clustering evaluation metrics. Our results show that using logical and structural dependencies as inputs for software clustering improves the quality of software architecture reconstruction. Also, the experiments show that when structural dependencies cannot be extracted, using only logical dependencies as input for software clustering still results in an acceptable quality of software architecture reconstruction.  
+\end{abstract}  
 
 \begin{keywords}
 Architectural reconstruction, code co-changes, logical dependencies, software clustering, software dependencies, versioning system.
@@ -904,6 +904,9 @@ In conclusion, when optimally filtered and combined with structural dependencies
 
 
 \end{thebibliography}
+
+
+\newpage
 
 \begin{IEEEbiographynophoto}{Adelina Diana Stana} is a Ph.D. student at the Politehnica University of Timisoara.
 In 2016 she received her bachelor’s degree at Politehnica, and in 2018 her master’s degree. Since 2014 she is also employed at Continental Automotive Group, her current role is Software Architect. Her research interests are focusing on software evolution and maintenance.
