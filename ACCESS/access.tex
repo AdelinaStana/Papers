@@ -55,7 +55,7 @@ Version control systems are important for tracking and managing changes in softw
 
 In this paper, we explore the use of logical dependencies extracted from code co-changes as input for software clustering for architectural reconstruction. Since structural dependencies (SD) are the most commonly used dependencies in software clustering, we investigate whether integrating both logical and structural dependencies provides better results than using either dependency type alone.  
 
-Our experiments are conducted on four open-source Java projects from GitHub. We apply three distinct clustering algorithms (Louvain, Leiden, and DBSCAN) and evaluate their performance using two clustering evaluation metrics. Our results show that using logical and structural dependencies as inputs for software clustering improves the quality of software architecture reconstruction. Also, the experiments show that when structural dependencies cannot be extracted, using only logical dependencies as input for software clustering still results in an acceptable quality of software architecture reconstruction.  
+Our experiments are conducted on four open-source Java projects from GitHub. We apply three distinct clustering algorithms (Louvain, Leiden, and DBSCAN) and evaluate their performance using two clustering evaluation metrics. Our results show that using logical and structural dependencies as inputs for software clustering improves the quality of software architecture reconstruction. Also, the experiments show that when structural dependencies cannot be extracted, then using only logical dependencies as input for software clustering enables architecture reconstruction with good results.  
 \end{abstract}  
 
 \begin{keywords}
@@ -241,7 +241,7 @@ Assuming that (A) was changed in 10 commits and, of these 10 commits, 9 also inc
 
 To favor entities involved in more commits together, we calculated a \textit{system factor}. This system factor is the mean value of the support metric values for all entity pairs.
 
-The system factor is multiplied by the calculated confidence metric value. In addition, since we plan to use the metric values as weights, together with the weights of the structural dependencies, we multiply by 100 to scale the metric value to be supraunitary, and we clip the results between 0 and 100.
+The system factor is multiplied by the calculated confidence metric value, then scaled by 100. Finally, the results are clipped between 0 and 100.
 
 
 We refer to this addition to the original calculation formula as the strength metric, and it is defined in Equation \eqref{eq:strength}.
@@ -256,7 +256,7 @@ We refer to this addition to the original calculation formula as the strength me
 
 Fig. \ref{fig:filtering} illustrates the overall filter application process. We begin by extracting all co-changes from the versioning system, and the first filter applied is the commit size filter. The commit size filter has a strict threshold of 20 files, meaning that any co-changes from commits involving more than 20 files are filtered out.
 
-The co-changes that remain after applying the commit size filter are then processed using the strength filter. The strength filter uses multiple thresholds, precisely 10 different thresholds. We start with a threshold of 10 and increment it by 10 until we reach a maximum value of 100. We do not use a fixed threshold to assess how different strength thresholds affect our cluster generation.
+The co-changes that remain after applying the commit size filter are then processed using the strength filter. The strength filter uses multiple thresholds, precisely 10 different thresholds. We start with a threshold of 10 and increment it by 10 until we reach a maximum value of 100.
 
 \begin{figure}[t!]
   \centering
@@ -436,7 +436,7 @@ Apache Ant & \href{https://github.com/apache/ant/tree/rel/1.10.13}{rel/1.10.13} 
 Apache Tomcat & \href{https://github.com/apache/tomcat/tree/8.5.93}{8.5.93} & 22698 & \href{https://github.com/apache/tomcat}{https://github.com/apache/tomcat} & 
 Apache Tomcat is an open-source Java web server and servlet container\\ \hline
 Hibernate ORM & \href{https://github.com/hibernate/hibernate-orm/tree/6.2.14}{6.2.14} & 16609 & \href{https://github.com/hibernate/hibernate-orm}{https://github.com/hibernate/hibernate-orm} & Hibernate ORM is a Java-based object-relational mapping (ORM) framework for managing database interactions. \\ \hline
-Gson & \href{https://github.com/google/gson/tree/gson-parent-2.10.1}{gson-parent-2.10.1} & 1772 & \href{https://github.com/google/gson}{https://github.com/google/gson} & A Java library for serialization and deserialization that converts Java objects to JSON and back. \\ \hline
+Gson & \href{https://github.com/google/gson/tree/gson-parent-2.10.1}{gson-parent-2.10.1} & 1772 & \href{https://github.com/google/gson}{https://github.com/google/gson} & A Java library for transforming Java objects into JSON format and reconstructing them back. \\ \hline
 \end{tabular}
 \end{table*}
 
