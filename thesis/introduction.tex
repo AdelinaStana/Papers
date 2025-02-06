@@ -186,32 +186,6 @@ Various methods can be used for similarity calculation, such as:
 
 
 
-
-
-
-\subsection{Semantical dependencies}
-
-\hspace{4em} Podgurski and Clarke define semantic dependencies in source code as follows: if changes in a statement \(s_1\) impact the behavior of another statement \(s_2\), then \(s_1\) and \(s_2\) are \emph{semantically dependent} \cite{Podgurski-semantic}.
-
-Semantic dependencies can be identified from the source code by constructing control flow graphs (CFGs). A control flow graph is a directed graph \(G = (V, E)\), where:
-\begin{itemize}
-    \item \(V\) is the set of vertices representing program statements (e.g., assignments, method calls, conditions),
-    \item \(E\) is the set of edges representing possible transfers of control between statements.
-\end{itemize}
-
-A vertex \(u \in V\) is semantically dependent on a vertex \(v \in V\) if changes in \(v\) determine changes in \(u\).
-
-In object-oriented (OO) systems, semantic dependencies are dependencies that are not visible in the static structure of the code. There is no direct reference between two entities (e.g., classes or interfaces), but changes in one entity impact the behavior of the other \cite{Neto-semantic-dep, Capiluppi-semantic-dep, Poshyvanyk2009}. 
-
-
-\textit{Example:}
-
-Let \(A\) a class that uses an object of type \(I\), and let \(B\) a class that implements \(I\). For example, class \(A\) calls a method \texttt{performAction()} via an interface \(I\), while class \(B\) implements the \texttt{performAction()} method.
-
-If \(B\) changes its implementation of \texttt{performAction()}, the behavior of \(A\) might also change when it uses \(B\). This means that \(A\) and \(B\) are semantically dependent.
-
-
-
 \subsection{Logical dedependencies}
 \hspace{4em} \textit{Logical dependencies} (also known as logical coupling) can be discovered through software history analysis. They reveal relationships between entities that are not always present in the source code's static structure (i.e., structural dependencies).
 
@@ -220,7 +194,6 @@ Software engineering practice has shown that sometimes modules without explicit 
 The concepts of logical coupling and logical dependencies have been applied in different analysis tasks related to software changes: for software change impact analysis \cite{1553643}; for identifying potential ripple effects caused by software changes during maintenance and evolution \cite{DBLP:conf/issre/OlivaG15, Oliva:2011:ISL:2067853.2068086, Poshyvanyk2009, posh2010}; and for exploring their link to defects \cite{wiese, Zimmermann:2004:MVH:998675.999460}.
 
 An in-depth analysis of how logical dependencies are identified within the versioning system and their applications is provided in Section \ref{ld-intro}.
-
 
 
 \subsection{Additional dependencies}
@@ -244,8 +217,6 @@ In this example, there is a temporal dependency between the \texttt{open}, \text
 \textit{Package dependencies} refer to the relationships between different software packages, usually managed using package managers \cite{dep-package}.
 
 \textit{External dependencies} are the relationships between a software system's code and components outside the system, such as third-party services, libraries, APIs, or the programming language itself \cite{dep-external}.
-
-
 
 
 
@@ -486,11 +457,6 @@ Moonen et al. investigated the influence of history length (the number of analyz
 \hspace{4em}This section reviews several applications of software dependencies (e.g., structural, lexical, semantical, logical dependencies). These dependencies play an important role in various software engineering tasks, architecture reconstruction, clone identification, and more. 
 
 
-\textbf{Architecture reconstruction.}
-Currently, software systems contain tens of thousands of lines of code and are updated daily by multiple developers. The software architecture is important for understanding and maintaining a system. Often, code updates are made without checking or updating the architecture.
-
-These kinds of updates cause the architecture to drift from the reality of the code over time. Therefore, reconstructing the architecture and verifying if it still matches the actual implementation is important \cite{RecoverySartipi, model-bennett, Kalliamvakou2016}. Architecture reconstruction has mainly been done using structural dependencies \cite{sar}, \cite{PagerankENASE}, \cite{Bass-archreconstruction}, but recent works also include semantical and logical dependencies \cite{lexical-dep}, \cite{corazza2}, \cite{maletic}.
-
 \textbf{Identifying Clones.} 
 Research suggests that a considerable portion (around 5-10\%) of the source code in large-scale software is duplicate code (“clones”). Source code is often duplicated for a variety of reasons: programmers may simply reuse a piece of code by copying and pasting, or they may “reinvent the wheel” \cite{ClonesMayrand}, \cite{clones}. Detection and removal of clones can significantly decrease software maintenance costs \cite{CloneDetection}, \cite{cloneKamiya}.
 
@@ -516,9 +482,6 @@ Code smell detection approaches often use structural information extracted from 
 Certain smells, however, are more effectively detected using information from versioning systems, which capture logical dependencies. For instance, smells like \textit{Parallel Inheritance} and \textit{Shotgun Surgery} have been successfully identified by analyzing co-change patterns in version control systems \cite{6963448}.
 
 
-\textbf{Key Classes.} The concept of key classes was first introduced by Zaidman et al.\ \cite{ZaidmanJurnal}, referring to classes found in documents that provide an architectural overview of the system or an introduction to its structure. Tahvildari and Kontogiannis provided a more detailed definition of the key classes concept: \textit{“Usually, the most important concepts of a system are implemented by very few key classes which can be characterized by specific properties. These classes, which we refer to as key classes, manage many other classes or use them in order to implement their functionality. The key classes are tightly coupled with other parts of the system.”}~\cite{Tahvildari2004ImprovingDQ}.
-
-Key class identification can be performed using different algorithms with various inputs. Most of the research is based on using structural dependencies~\cite{PagerankENASE}, \cite{enase15}, \cite{PagerankSACI}, \cite{Finding-key-classes}, \cite{ZaidmanJurnal}, \cite{rocclasification}, class diagrams~\cite{6676885}, or \textit{dynamic dependencies} obtained through runtime analysis \cite{ZaidmanJurnal}. 
 
 \textbf{Comprehension.}  
 Software comprehension is the process of gaining knowledge about a software system. An increased understanding of the software system helps activities such as bug correction, enhancement, reuse, and documentation \cite{Comprehension}, \cite{1199197}. 
@@ -544,3 +507,69 @@ More recent studies have suggested enhancing fault localization techniques by in
 Fault localization is the process of identifying elements responsible for software failures reported by users or discovered by developers. Defect prediction, on the other hand, predicts elements that are likely to be fault-prone before faults occur. Due to this difference, fault localization and defect prediction are studied as two separate research areas \cite{error-prone, fault-survey}.  
 
 Research has shown that modules or entities most likely to contain defects can be identified based on structural metrics (e.g., lines of code, cyclomatic complexity) and versioning system data (e.g., frequency of changes, modified code in a source file) \cite{67595}, \cite{1702015}.
+
+
+\subsection{Applications used to validate logical dependencies}
+
+\subsubsection{Key Class Detection}
+\label{key-class-related-work}
+
+The concept of key classes was first introduced by Zaidman et al.\ \cite{ZaidmanJurnal}, referring to classes found in documents that provide an architectural overview of the system or an introduction to its structure. Tahvildari and Kontogiannis provided a more detailed definition of the key classes concept: \textit{“Usually, the most important concepts of a system are implemented by very few key classes which can be characterized by specific properties. These classes, which we refer to as key classes, manage many other classes or use them in order to implement their functionality. The key classes are tightly coupled with other parts of the system.”}~\cite{Tahvildari2004ImprovingDQ}.
+
+Key class identification can be performed using different algorithms with various inputs. Most of the research is based on using structural dependencies~\cite{PagerankENASE}, \cite{enase15}, \cite{PagerankSACI}, \cite{Finding-key-classes}, \cite{ZaidmanJurnal}, \cite{rocclasification}, class diagrams~\cite{6676885}, or \textit{dynamic dependencies} obtained through runtime analysis \cite{ZaidmanJurnal}. 
+
+%%%%
+
+
+\hspace{4em}Zaidman et al. \cite{ZaidmanJurnal} were the first to introduce the concept of key classes, referring to classes commonly found in documents that provide an architectural overview of the system or an introduction to its structure. 
+
+Tahvildari and Kontogiannis offered a more detailed definition of key classes: “Usually, the most important concepts of a system are implemented by very few key classes which can be characterized by specific properties. These classes, which we refer to as key classes, manage many other classes or use them in order to implement their functionality. The key classes are tightly coupled with other parts of the system. Additionally, they tend to be rather complex since they implement much of the legacy system’s functionality” \cite{Tahvildari2004ImprovingDQ}.
+
+Other researchers have used similar concepts under different terms, such as important classes \cite{Meyer2014IdentifyingIC} or central software classes \cite{CentralClassesSteidl}. 
+
+Key class identification can be performed using different algorithms and input types. In the research by Osman et al., key class identification is performed using a machine learning algorithm with class diagrams as input \cite{6676885}. Thung et al. build on Osman et al.’s approach by incorporating network metrics and optimistic classification to enhance key class detection \cite{rocclasification}. 
+
+Zaidman et al. \cite{ZaidmanJurnal} apply a web-mining algorithm and dynamic source code analysis to identify key classes. Similarly, Sora et al. use a PageRank-inspired algorithm combined with static source code analysis \cite{PagerankENASE}, \cite{enase15}, \cite{PagerankSACI}. In \cite{Finding-key-classes}, the authors extend this approach by including additional class attributes to improve key class identification. 
+
+The PageRank algorithm, developed initially for ranking web pages \cite{ilprints422}, works based on a recommendation system. If one node is connected to another, it recommends the second node. In previous studies, connections were based on structural dependencies extracted from static code analysis. If class A has a structural dependency with class B, both A and B recommend each other.
+
+Based on their importance, the ranking algorithm assigns a score to all classes from the analyzed system's source code. To distinguish important classes from the rest, a threshold for the TOP-ranked classes is set. The TOP threshold value can range from 1 to the total number of classes in the system. 
+
+Some researchers \cite{ZaidmanJurnal}, \cite{Ding2016AnIA}, \cite{PAN2018188} suggest that 15\% of the total number of classes in the system is a suitable value for the TOP threshold. Others \cite{Finding-key-classes} argue that 15\% is too high and propose a range of 20 to 30 classes as a more appropriate threshold \cite{b4}.
+
+
+
+
+\subsubsection{Architecture Reconstruction}
+\label{clustering-related-work}
+
+
+\hspace{4em}Currently, software systems contain tens of thousands of lines of code and are updated daily by multiple developers. The software architecture is important for understanding and maintaining a system. Often, code updates are made without checking or updating the architecture.
+
+These kinds of updates cause the architecture to drift from the reality of the code over time. Therefore, reconstructing the architecture and verifying if it still matches the actual implementation is important \cite{RecoverySartipi, model-bennett, Kalliamvakou2016}. Architecture reconstruction has mainly been done using structural dependencies \cite{sar,vPagerankENASE, Bass-archreconstruction, Capiluppi-semantic-dep}, but recent works also include lexical and logical dependencies \cite{lexical-dep}, \cite{corazza2}, \cite{maletic}.
+
+%%%%%
+\hspace{4em}Several studies have explored the use of different types of dependencies in software clustering, applying different algorithms to improve clustering results and using various metrics to evaluate the results obtained.
+
+Tzerpos and Holt developed ACDC (Algorithm for Comprehension-Driven Clustering). This pattern-driven clustering algorithm uses subsystem structures such as source file patterns, directory patterns, system graph patterns, and support library patterns to detect similarities and create clusters \cite{acdc}. For result evaluation, the authors introduced the MoJo metric, which counts the minimum number of move and join operations required to transform one clustering result into another, assessing how close one clustering solution is to another \cite{b3}, \cite{tzerpos1}. Later, Wen and Tzerpos introduced the MoJoFM metric, an enhanced version of the original MoJo distance metric for more effective measurements, as presented in more detail in subsection \ref{subsec:mojofm} \cite{mojofm}.
+
+Corazza et al. \cite{lexical-dep}, \cite{corazza2} used lexical dependencies derived from code comments, class names, attribute names, and parameter names, applying Hierarchical Agglomerative Clustering (HAC) to group-related entities. For evaluating the results, the authors used a metric based on the MoJo distance metric and NED (Non-Extremity Cluster Distribution), which measures that the formed clusters are not too large or too small.
+
+Andritsos and Tzerpos ~\cite{tzerpos1} used structural dependencies and nonstructural attributes, such as file names and developer names, and proposed the LIMBO algorithm, a hierarchical clustering algorithm for clustering software systems. They used the MoJo distance metric to evaluate the algorithm's output.
+
+Anquetil et al.~\cite{b14} also used lexical information, including file names, routine names, included files, and comments. They applied an n-gram-based clustering approach to detect semantic similarities between entities and evaluated the results using precision and recall metrics.
+
+Maletic and Marcus \cite{maletic} propose an approach to software clustering that uses semantic dependencies extracted using Latent Semantic Indexing (LSI), a technique for identifying similarities between software components. They apply the minimal spanning tree (MST) algorithm for clustering and evaluate the results using metrics based on both semantic and structural information.
+
+Wu et al. \cite{wu} conducted a comparative study of six clustering algorithms using structural dependencies on five software systems. Four of the algorithms are based on agglomerative clustering, one on program comprehension patterns, and one algorithm is a customized version of Bunch \cite{b10}. The performance of these algorithms was evaluated using the MoJo metric and NED (Non-Extreme Distribution).
+
+Mancoridis and Mitchell ~\cite{b10}, \cite{b2}, \cite{bunch} developed the Bunch tool for software clustering and used structural dependencies as input. The tool applies clustering algorithms to the structural dependency graph and outputs the system's organization. For evaluation, the authors introduced the Modularization Quality (MQ) metric, described in more detail in Section \ref{subsec:mq}, and is also used in our current experiments as an evaluation metric.
+
+
+Prajapati et al.~\cite{b18} propose a many-objective SBSR (search-based software remodularization) approach with an improved definition of objective functions based on lexical, structural, and change-history dependencies. The authors evaluate their approach on several open-source software systems using the MoJoFM metric for external evaluation and the MQ metric for internal evaluation.
+
+Şora et al.~\cite{SoraSem13}, \cite{SoraConti} developed the ARTs (Architecture Reconstruction Tool Suite) for their experiments on improving software architecture reconstruction through clustering. The tool suite implements various clustering algorithms, such as minimum spanning tree-based, metric-based, search-based, and hierarchical clustering, primarily using structural dependencies as input. The research focuses on identifying the right factors for direct coupling between classes, indirect coupling, and layered architecture. The results of applying these different factors are evaluated using the MoJo distance metric.
+
+Silva et al.~\cite{b16} investigated using solely co-change dependencies as input for the Chameleon algorithm, an agglomerative hierarchical clustering method, to identify clusters. For evaluation, the authors used distribution maps to compare the clusters generated from co-change dependencies with the system's package structure.
+
+
