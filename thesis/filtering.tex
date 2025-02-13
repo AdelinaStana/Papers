@@ -22,11 +22,128 @@ Each filtering step helps reduce the number of co-changing pairs and increases t
 
 
 
-\section{Data collection}
-\label{sec:data_collection}
+\section{Tool for measuring software dependencies}
+\label{subsec:tool_measuring_dependencies}
+
+\hspace{4em}To extract structural and logical dependencies, we developed a tool that takes as input the source code repository URL of a given system and extracts the corresponding software dependencies \cite{DepSACI, enase19}. 
+
+From a workflow perspective, the tool performs three main activities: downloading the necessary data from the repository, extracting structural dependencies from the source code, and identifying and filtering co-changing pairs from the repository's commit history. Figure \ref{fig:figworkflow} illustrates these activities, with each block representing a different step from the process.
 
 
-\subsection{Data set used}
+To get the source code files and the change history, we first need to know the repository URL from GitHub (GitHub is a Git repository cloud-based hosting service). With the GitHub URL and a series of Git commands, the tool can download all the necessary data for dependencies extraction.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{tool_workflow.png}
+\caption{Tool workflow and major activities.}
+\label{fig:figworkflow}
+\end{figure}
+
+
+
+\subsection{Extracting structural dependencies}
+\label{subsec:extracting_structural_dependencies}
+
+\hspace{4em}A dependency is created between two elements that are in a relationship, indicating that one element of the relationship, in some manner, depends on the other \cite{Booch:2004:OAD:975416}, \cite{Cataldo2009SoftwareDW}.
+
+Structural dependencies can be identified by analyzing the source code \cite{structdep}. A structural dependency between two entities (e.g., a class and an interface) exists if one entity statically depends on the other, meaning it cannot be compiled without the dependent entity. In object-oriented systems, this dependency can be given by various types of relationships: one entity extends another (for classes), implements another (for interfaces), has attributes of the other entity's type, has methods with the other entity's type in their signature, uses local variables of the other entity's type, or calls methods of the other entity \cite{Sangal:2005:UDM:1094811.1094824, CalloArias2011, 1199197}.
+
+The tool gets the Git repository and the source code files by executing the \textit{"git clone"}. Then, it calls an external tool called \textit{srcML} \cite{srcML} to convert all source code files into XML files. We then extract all information about classes, interfaces, methods, or calls to other classes by parsing the XML files and building a dependency data structure. 
+
+Maletic and Collard \cite{srcMLCollard, Collard:2011:LTF:2067850.2068011, CollardsrcML2005} developed the \textit{srcML} tool to offer an XML-based representation of the source code. The tool preserves all source code information, including comments and formatting. The tool supports languages such as C, C++, Java, and C\#, and provides command-line utilities for converting an entire project to and from the \textit{srcML} format. 
+
+Another advantage of the \textit{srcML} tool is that it uses the same markup for different programming languages, making it easier to extract structural dependencies from source code written in languages like Java, C++, Python, or C\#.
+
+
+
+\subsection{Extracting logical dependencies}
+\label{subsec:extracting_logical_dependencies}
+
+\hspace{4em}\textit{Logical dependencies} (logical couplings) can be identified through software history analysis. Version control repositories (such as Git) store not only the source code of the system but also its change history. By examining both, we can extract structural and logical dependencies. The source code structure provides \textit{structural dependencies}, while the system’s change history provides \textit{logical dependencies} formed by pairs of files or components that co-evolve.
+
+As illustrated in Figure~\ref{fig:extracting_data_with_git}, the \texttt{git clone} command retrieves the entire repository, including its code and commit history. The \texttt{git diff} command retrieves differences between two specific commits, generating a text file that contains the differences between the two commits: code differences, the number of files changed, and the names of changed files.
+
+The commits are ordered by date, beginning with the oldest one and ending with the most recent one. The tool executes the \textit{"git diff"} command between each commit and its parent (the previous commit). 
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{gitdata.png}
+\caption{Using Git commands (\texttt{clone} and \texttt{diff}) to retrieve source code and commit changes.}
+\label{fig:extracting_data_with_git}
+\end{figure}
+
+
+Listing \ref{lst:git_diff} provides an example of a \texttt{git diff} output for three files: \texttt{User.java}, \texttt{Calculator.java}, and \texttt{Utils.java}. From the diff output, we can identify the names of the changed files and information about added or deleted lines of code, but not the specific entities (e.g., classes or interfaces) from those files. To determine the changed entities, we first extract the structural dependencies of the system and create a mapping between the entities defined in each file and the file. Later, we associate the changed files with their corresponding entities when processing the diff files using this mapping \cite{DepSACI, b4, icstcc-2024, enase19}. 
+
+For instance, in this example, the mapping can reveal that \texttt{User.java} contains the class \texttt{User}, \texttt{Calculator.java} contains the class \texttt{Calculator}, and \texttt{Utils.java} contains the class \texttt{Utils}. Even if Java typically enforces a standardized relationship between file and public entity names, this is not always the case for other programming languages, so we need a uniform approach.
+
+Using this mapping, we can say that the commit whose diff file with its parent is presented in Listing \ref{lst:git_diff} generates three pairs of co-changed entities: \texttt{Utils-Calculator}, \texttt{Utils-User}, and \texttt{Calculator-User}.
+
+\begin{lstlisting}[language=diff, caption={Example output of \texttt{git diff} between two commits.}, label={lst:git_diff}]
+commit 1a2b3c4d5e (HEAD -> main)
+Author: Developer <developer@example.com>
+Date:   Wed Dec 13 12:34:56 2024 +0000
+
+    Refactored code and added new features.
+
+diff --git a/src/User.java b/src/User.java
+index abc1234..def5678 100644
+--- a/src/User.java
++++ b/src/User.java
+@@ -1,5 +1,6 @@
++    public User(String name) {
++        this.name = name;
++    }
+
+-    public void greet() {
++    public void displayGreeting() {
+         System.out.println("Hello, " + name + "!");
+
+
+diff --git a/src/Calculator.java b/src/Calculator.java
+index 9876543..2345678 100644
+--- a/src/Calculator.java
++++ b/src/Calculator.java
+@@ -5,7 +5,7 @@ 
+-    public int subtract(int a, int b) {
++    public int subtractNumbers(int a, int b) {
+         return a - b;
+
+diff --git a/src/Utils.java b/src/Utils.java
+index 56789ab..789abcd 100644
+--- a/src/Utils.java
++++ b/src/Utils.java
+@@ -3,7 +3,7 @
+-    public static String getCurrentTime() {
++    public static String getFormattedTime() {
+         return java.time.LocalTime.now().toString();
+
+\end{lstlisting}
+
+
+The process of extracting and filtering co-changing pairs is illustrated in Figure \ref{fig:figfiltering}. To extract co-changing pairs, the tool parses each generated diff file. From each diff file, it identifies the number of changed files and their names. Once all the co-changing pairs for a diff file are extracted, the tool moves to the next diff file and repeats the process.
+
+Explained in more detail in subsections \ref{subsec:filtering_transaction_size}, \ref{subsec:filtering_support}, \ref{subsec:filtering_connection_strength}, and \ref{subsec:filtering_comments}, not every extracted co-changing pair is considered a logical dependency. For a pair to be considered a logical dependency, it must pass some criteria. These criteria are implemented as filters in the tool. Each filter processes the extracted co-changing pairs and outputs the pairs that meet the filter requirements. The filters can also be combined to ensure that only meaningful logical dependencies remain after filtering.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{pairs_filtering.png}
+\caption{Co-changing pairs extraction and filtering.}
+\label{fig:figfiltering}
+\end{figure}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Filtering logical dependencies}
+\label{sec:filtering_logical_dependencies}
+
+\hspace{4em}As discussed in Section \ref{ld-intro}, the number of co-changing pairs extracted from software repositories can be quite large, often reaching millions. This quantity, combined with noise in the data, makes it important to apply filtering techniques to identify meaningful co-changing pairs.
+
+This section presents four filtering techniques used to refine the extracted co-changing pairs. The filter based on commit transaction size, discussed in Section \ref{subsec:filtering_transaction_size}, is always applied. The experiments are performed by combining this filter with one of the other three filters: the support filter presented in Section \ref{subsec:filtering_support}, the connection strength filter presented in Section \ref{subsec:filtering_connection_strength}, or the comment change filter presented in Section \ref{subsec:filtering_comments}. The commit size filter aims to reduce the overall size of the co-changing pairs, while the support, connection strength, and code comments filters aim to reduce noise in the data.
+
+
+\subsection{Data set used for filtering analysis}
 \label{subsec:data_sets_used}
 
 \hspace{4em}To investigate logical dependencies extraction, filtering techniques and their interplay with structural dependencies, 27 open-source projects from GitHub\footnote{http://github.com/} were selected. Table \ref{table:1} provides an overview of all the software systems analyzed. The columns in the table represent the following information:
@@ -86,143 +203,6 @@ Regarding commit history, \textit{shipkit} is again the smallest, with 1,563 com
 }
 \end{table}
 
-
-
-
-\subsection{Extracting structural dependencies}
-\label{subsec:extracting_structural_dependencies}
-
-\hspace{4em}A dependency is created between two elements that are in a relationship, indicating that one element of the relationship, in some manner, depends on the other \cite{Booch:2004:OAD:975416}, \cite{Cataldo2009SoftwareDW}.
-
-Structural dependencies can be identified by analyzing the source code \cite{structdep}. A structural dependency between two entities (e.g., a class and an interface) exists if one entity statically depends on the other, meaning it cannot be compiled without the dependent entity. In object-oriented systems, this dependency can be given by various types of relationships: one entity extends another (for classes), implements another (for interfaces), has attributes of the other entity's type, has methods with the other entity's type in their signature, uses local variables of the other entity's type, or calls methods of the other entity \cite{Sangal:2005:UDM:1094811.1094824, CalloArias2011, 1199197}.
-
-We use an external tool called \textit{srcML} \cite{srcML} to convert all source code files into XML files. We then extract all information about classes, interfaces, methods, or calls to other classes by parsing the XML files and building a dependency data structure. 
-
-Maletic and Collard \cite{srcMLCollard, Collard:2011:LTF:2067850.2068011, CollardsrcML2005} developed the \textit{srcML} tool to offer an XML-based representation of the source code. The tool preserves all source code information, including comments and formatting. The tool supports languages such as C, C++, Java, and C\#, and provides command-line utilities for converting an entire project to and from the \textit{srcML} format. 
-
-Another advantage of the \textit{srcML} tool is that it uses the same markup for different programming languages, making it easier to extract structural dependencies from source code written in languages like Java, C++, Python, or C\#.
-
-
-
-\subsection{Extracting Logical Dependencies}
-\label{subsec:extracting_logical_dependencies}
-
-\hspace{4em}\textit{Logical dependencies} (logical couplings) can be identified through software history analysis. Version control repositories (such as Git) store not only the source code of the system but also its change history. By examining both, we can extract structural and logical dependencies. The source code structure provides \textit{structural dependencies}, while the system’s change history provides \textit{logical dependencies} formed by pairs of files or components that co-evolve.
-
-As illustrated in Figure~\ref{fig:extracting_data_with_git}, the \texttt{git clone} command retrieves the entire repository, including its code and commit history. The \texttt{git diff} command retrieves differences between two specific commits, generating a text file that contains the differences between the two commits: code differences, the number of files changed, and the names of changed files.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{gitdata.png}
-\caption{Using Git commands (\texttt{clone} and \texttt{diff}) to retrieve source code and commit changes.}
-\label{fig:extracting_data_with_git}
-\end{figure}
-
-
-Listing \ref{lst:git_diff} provides an example of a \texttt{git diff} output for three files: \texttt{User.java}, \texttt{Calculator.java}, and \texttt{Utils.java}. From the diff output, we can identify the names of the changed files and information about added or deleted lines of code, but not the specific entities (e.g., classes or interfaces) from those files. To determine the changed entities, we first extract the structural dependencies of the system and create a mapping between the entities defined in each file and the file. Later, we associate the changed files with their corresponding entities when processing the diff files using this mapping \cite{DepSACI, b4, icstcc-2024, enase19}. 
-
-For instance, in this example, the mapping can reveal that \texttt{User.java} contains the class \texttt{User}, \texttt{Calculator.java} contains the class \texttt{Calculator}, and \texttt{Utils.java} contains the class \texttt{Utils}. Even if Java typically enforces a standardized relationship between file and public entity names, this is not always the case for other programming languages, so we need a uniform approach.
-
-Using this mapping, we can say that the commit whose diff file with its parent is presented in Listing \ref{lst:git_diff} generates three pairs of co-changed entities: \texttt{Utils-Calculator}, \texttt{Utils-User}, and \texttt{Calculator-User}.
-
-\begin{lstlisting}[language=diff, caption={Example output of \texttt{git diff} between two commits.}, label={lst:git_diff}]
-commit 1a2b3c4d5e (HEAD -> main)
-Author: Developer <developer@example.com>
-Date:   Wed Dec 13 12:34:56 2024 +0000
-
-    Refactored code and added new features.
-
-diff --git a/src/User.java b/src/User.java
-index abc1234..def5678 100644
---- a/src/User.java
-+++ b/src/User.java
-@@ -1,5 +1,6 @@
-+    public User(String name) {
-+        this.name = name;
-+    }
-
--    public void greet() {
-+    public void displayGreeting() {
-         System.out.println("Hello, " + name + "!");
-     }
- }
-
-diff --git a/src/Calculator.java b/src/Calculator.java
-index 9876543..2345678 100644
---- a/src/Calculator.java
-+++ b/src/Calculator.java
-@@ -5,7 +5,7 @@ 
--    public int subtract(int a, int b) {
-+    public int subtractNumbers(int a, int b) {
-         return a - b;
-     }
- }
-
-diff --git a/src/Utils.java b/src/Utils.java
-index 56789ab..789abcd 100644
---- a/src/Utils.java
-+++ b/src/Utils.java
-@@ -3,7 +3,7 @
--    public static String getCurrentTime() {
-+    public static String getFormattedTime() {
-         return java.time.LocalTime.now().toString();
-     }
- }
-\end{lstlisting}
-
-
-
-
-\section{Tool for measuring software dependencies}
-\label{subsec:tool_measuring_dependencies}
-
-\hspace{4em}To extract structural and logical dependencies, we developed a tool that takes as input the source code repository URL of a given system and extracts the corresponding software dependencies \cite{DepSACI, enase19}. 
-
-From a workflow perspective, the tool performs three main activities: downloading the necessary data from the repository, extracting structural dependencies from the source code, and identifying and filtering co-changing pairs from the repository's commit history. Figure \ref{fig:figworkflow} illustrates these activities, with each block representing a different step from the process.
-
-
-To get the source code files and the change history, we first need to know the repository URL from GitHub (GitHub is a Git repository cloud-based hosting service). With the GitHub URL and a series of Git commands, the tool can download all the necessary data for dependencies extraction.
-
-The tool gets the Git repository and the source code files by executing the \textit{"git clone"} command. Afterward, it gets all the existing commits within the Git repository. The commits are ordered by date, beginning with the oldest one and ending with the most recent one. The tool executes the \textit{"git diff"} command between each commit and its parent (the previous commit). The "diff" command generates a text file that contains the differences between the two commits: code differences, the number of files changed and changed file names.
-
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{tool_workflow.png}
-\caption{Tool workflow and major activities.}
-\label{fig:figworkflow}
-\end{figure}
-
-
-
-\textbf{Extract structural dependencies.}
-
-To extract structural dependencies from the source code, the tool first converts each source file into the srcML format using the method introduced in subsection \ref{subsec:extracting_structural_dependencies}. The srcML format provides an XML representation of the source code, with markup tags identifying elements of the programming language syntax\cite{srcML}. 
-
-Once converted, the tool parses each file to identify all defined entities (such as classes, interfaces, and enums) from the file. It also detects all entities used by the defined entities. The connections between the defined and used entities form the structural dependencies.
-
-
-\textbf{Extract and filter co-changing pairs.}
-
-The process of extracting and filtering co-changing pairs is illustrated in Figure \ref{fig:figfiltering}. To extract co-changing pairs, the tool parses each generated diff file. From each file, it identifies the number of changed files and their names. Since the tool already knows the software entities contained in each file (from the structural dependencies extraction), it can determine co-changing pairs by linking entities from changed files. Once all the co-changing pairs for a diff file are extracted, the tool moves to the next diff file and repeats the process.
-
-Explained in more detail in subsections \ref{subsec:filtering_transaction_size}, \ref{subsec:filtering_support}, \ref{subsec:filtering_connection_strength}, and \ref{subsec:filtering_comments}, not every extracted co-changing pair is considered a logical dependency. For a pair to be considered a logical dependency, it must pass some criteria. These criteria are implemented as filters in the tool. Each filter processes the extracted co-changing pairs and outputs the pairs that meet the filter requirements. The filters can also be combined to ensure that only meaningful logical dependencies remain after filtering.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{pairs_filtering.png}
-\caption{Co-changing pairs extraction and filtering.}
-\label{fig:figfiltering}
-\end{figure}
-
-
-
-\section{Filtering logical dependencies}
-\label{sec:filtering_logical_dependencies}
-
-\hspace{4em}As discussed in Section \ref{ld-intro}, the number of co-changing pairs extracted from software repositories can be quite large, often reaching millions. This quantity, combined with noise in the data, makes it important to apply filtering techniques to identify meaningful co-changing pairs.
-
-This section presents four filtering techniques used to refine the extracted co-changing pairs. The filter based on commit transaction size, discussed in Section \ref{subsec:filtering_transaction_size}, is always applied. The experiments are performed by combining this filter with one of the other three filters: the support filter presented in Section \ref{subsec:filtering_support}, the connection strength filter presented in Section \ref{subsec:filtering_connection_strength}, or the comment change filter presented in Section \ref{subsec:filtering_comments}. The commit size filter aims to reduce the overall size of the co-changing pairs, while the support, connection strength, and code comments filters aim to reduce noise in the data.
 
 \subsection{Filtering based on commit transaction size}
 \label{subsec:filtering_transaction_size}
@@ -707,7 +687,7 @@ Excluding comments would add unnecessary complexity and increase runtime for the
 
 
 
-\subsection{Filtering recomandations}
+\subsection{Conclusions about filtering}
 \label{filtering_recomandations}
 
 \noindent
@@ -726,6 +706,15 @@ Our analysis shows that ignoring comment-only changes has minimal impact on the 
 - \textit{\textbf{Connection strength filtering:}} \\  
 This method identifies entities that co-change frequently, favoring stronger co-changes over incidental ones. Although a fixed threshold is not yet defined, connection strength filtering has proven more reliable than support filtering.
 }}
+
+
+
+
+
+
+
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

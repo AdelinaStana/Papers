@@ -457,12 +457,12 @@ Moonen et al. investigated the influence of history length (the number of analyz
 \hspace{4em}This section reviews several applications of software dependencies (e.g., structural, lexical, semantical, logical dependencies). These dependencies play an important role in various software engineering tasks, architecture reconstruction, clone identification, and more. 
 
 
-\textbf{Identifying Clones.} 
+\subsection{Clone detection}
 Research suggests that a considerable portion (around 5-10\%) of the source code in large-scale software is duplicate code (“clones”). Source code is often duplicated for a variety of reasons: programmers may simply reuse a piece of code by copying and pasting, or they may “reinvent the wheel” \cite{ClonesMayrand}, \cite{clones}. Detection and removal of clones can significantly decrease software maintenance costs \cite{CloneDetection}, \cite{cloneKamiya}.
 
 Structural dependencies can be used to detect code clones. For example, Cordy and Roy created the NiCad tool, which receives the entire code base of a project as input to detect project clones \cite{clones-nicad}. The same authors also used versioning system information to link clones to bug-fix commits from the versioning system \cite{clones-nicad-git}. Other researchers have used semantic dependencies and machine learning techniques to identify clones \cite{clones-ml}, while others have used lexical dependencies extracted from code comments \cite{clones-comments}.
 
-\textbf{Code Smells.}  
+\subsection{Code smell detection}
 Fowler \ defined code smells cite{bookFowler} as patterns generally associated with bad design and poor programming practices. Originally, code smells were used to identify areas in software that may require refactoring \cite{articlesmells}. Studies have found that code smells can impact software comprehension and increase changes and faults in the system \cite{5741260}, \cite{5328703}, \cite{articlefault-proneness}.
 
 Examples of code smells include:
@@ -482,8 +482,7 @@ Code smell detection approaches often use structural information extracted from 
 Certain smells, however, are more effectively detected using information from versioning systems, which capture logical dependencies. For instance, smells like \textit{Parallel Inheritance} and \textit{Shotgun Surgery} have been successfully identified by analyzing co-change patterns in version control systems \cite{6963448}.
 
 
-
-\textbf{Comprehension.}  
+\subsection{Software comprehension}
 Software comprehension is the process of gaining knowledge about a software system. An increased understanding of the software system helps activities such as bug correction, enhancement, reuse, and documentation \cite{Comprehension}, \cite{1199197}. 
 
 Previous studies show that the proportion of resources and time allocated to maintenance activities can vary from 50\% to 75\% \cite{articleLientz}. Within the maintenance process, the biggest effort is dedicated to understanding the system.
@@ -491,7 +490,7 @@ Previous studies show that the proportion of resources and time allocated to mai
 To support software comprehension, various tools have been developed to help this process. For example, the COSPEX tool developed by Gupta et al. uses source code analysis to help novice developers better comprehend their tasks \cite{Comprehension-Gupta}. Şora proposes a tool that uses structural dependencies and graph-based ranking to generate an executive summary highlighting the most important classes in the software system \cite{enase15}.
 
 
-\textbf{Fault Localization.}
+\subsection{Fault localization}
 
 Debugging software is an expensive and mostly a manual process. Among all debugging activities, fault localization is the most time-consuming task \cite{articleDebugging}. 
 
@@ -502,7 +501,7 @@ Several tools and methods have been developed to support in the fault localizati
 More recent studies have suggested enhancing fault localization techniques by incorporating information from versioning systems in addition to source code analysis. Wen et al. empirically demonstrated that versioning system data could improve fault localization. Their approach identifies code entities modified by more "bug-inducing commits" than regular commits, labeling them as potential fault sources \cite{fault-versioning}.
 
 
-\textbf{Defect Prediction.}
+\subsection{Defect prediction}
 
 Fault localization is the process of identifying elements responsible for software failures reported by users or discovered by developers. Defect prediction, on the other hand, predicts elements that are likely to be fault-prone before faults occur. Due to this difference, fault localization and defect prediction are studied as two separate research areas \cite{error-prone, fault-survey}.  
 
@@ -511,21 +510,12 @@ Research has shown that modules or entities most likely to contain defects can b
 
 \subsection{Applications used to validate logical dependencies}
 
+\hspace{4em}This subsection reviews the applications of software dependencies that will be used in this thesis to evaluate the usage of logical dependencies and the improvements they provide.
+
 \subsubsection{Key Class Detection}
 \label{key-class-related-work}
 
-The concept of key classes was first introduced by Zaidman et al.\ \cite{ZaidmanJurnal}, referring to classes found in documents that provide an architectural overview of the system or an introduction to its structure. Tahvildari and Kontogiannis provided a more detailed definition of the key classes concept: \textit{“Usually, the most important concepts of a system are implemented by very few key classes which can be characterized by specific properties. These classes, which we refer to as key classes, manage many other classes or use them in order to implement their functionality. The key classes are tightly coupled with other parts of the system.”}~\cite{Tahvildari2004ImprovingDQ}.
-
-Key class identification can be performed using different algorithms with various inputs. Most of the research is based on using structural dependencies~\cite{PagerankENASE}, \cite{enase15}, \cite{PagerankSACI}, \cite{Finding-key-classes}, \cite{ZaidmanJurnal}, \cite{rocclasification}, class diagrams~\cite{6676885}, or \textit{dynamic dependencies} obtained through runtime analysis \cite{ZaidmanJurnal}. 
-
-%%%%
-
-
-\hspace{4em}Zaidman et al. \cite{ZaidmanJurnal} were the first to introduce the concept of key classes, referring to classes commonly found in documents that provide an architectural overview of the system or an introduction to its structure. 
-
-Tahvildari and Kontogiannis offered a more detailed definition of key classes: “Usually, the most important concepts of a system are implemented by very few key classes which can be characterized by specific properties. These classes, which we refer to as key classes, manage many other classes or use them in order to implement their functionality. The key classes are tightly coupled with other parts of the system. Additionally, they tend to be rather complex since they implement much of the legacy system’s functionality” \cite{Tahvildari2004ImprovingDQ}.
-
-Other researchers have used similar concepts under different terms, such as important classes \cite{Meyer2014IdentifyingIC} or central software classes \cite{CentralClassesSteidl}. 
+\hspace{4em}The concept of key classes was first introduced by Zaidman et al.\ \cite{ZaidmanJurnal}, referring to classes found in documents that provide an architectural overview of the system or an introduction to its structure. Tahvildari and Kontogiannis provided a more detailed definition of the key classes concept: \textit{“Usually, the most important concepts of a system are implemented by very few key classes which can be characterized by specific properties. These classes, which we refer to as key classes, manage many other classes or use them in order to implement their functionality. The key classes are tightly coupled with other parts of the system.”}~\cite{Tahvildari2004ImprovingDQ}.
 
 Key class identification can be performed using different algorithms and input types. In the research by Osman et al., key class identification is performed using a machine learning algorithm with class diagrams as input \cite{6676885}. Thung et al. build on Osman et al.’s approach by incorporating network metrics and optimistic classification to enhance key class detection \cite{rocclasification}. 
 
@@ -543,13 +533,9 @@ Some researchers \cite{ZaidmanJurnal}, \cite{Ding2016AnIA}, \cite{PAN2018188} su
 \subsubsection{Architecture Reconstruction}
 \label{clustering-related-work}
 
+\hspace{4em}Currently, software systems contain tens of thousands of lines of code and are updated daily by multiple developers. The software architecture is important for understanding and maintaining a system. Often, code updates are made without checking or updating the architecture, and these updates cause the architecture to drift from the reality of the code over time. Therefore, reconstructing the architecture and verifying if it still matches the actual implementation is important \cite{RecoverySartipi, model-bennett, Kalliamvakou2016}.
 
-\hspace{4em}Currently, software systems contain tens of thousands of lines of code and are updated daily by multiple developers. The software architecture is important for understanding and maintaining a system. Often, code updates are made without checking or updating the architecture.
-
-These kinds of updates cause the architecture to drift from the reality of the code over time. Therefore, reconstructing the architecture and verifying if it still matches the actual implementation is important \cite{RecoverySartipi, model-bennett, Kalliamvakou2016}. Architecture reconstruction has mainly been done using structural dependencies \cite{sar,vPagerankENASE, Bass-archreconstruction, Capiluppi-semantic-dep}, but recent works also include lexical and logical dependencies \cite{lexical-dep}, \cite{corazza2}, \cite{maletic}.
-
-%%%%%
-\hspace{4em}Several studies have explored the use of different types of dependencies in software clustering, applying different algorithms to improve clustering results and using various metrics to evaluate the results obtained.
+Software Architecture Reconstruction (SAR) is a reverse engineering process aimed at recovering high-level architectural models of a software system. SAR outputs are usually architectural models, dependency graphs or clustering-based representations. Architecture reconstruction has mainly been done using structural dependencies as input \cite{sar, sar-2007, PagerankENASE, Bass-archreconstruction, Capiluppi-semantic-dep}, but recent works also include lexical and logical dependencies \cite{lexical-dep, corazza2, maletic}. 
 
 Tzerpos and Holt developed ACDC (Algorithm for Comprehension-Driven Clustering). This pattern-driven clustering algorithm uses subsystem structures such as source file patterns, directory patterns, system graph patterns, and support library patterns to detect similarities and create clusters \cite{acdc}. For result evaluation, the authors introduced the MoJo metric, which counts the minimum number of move and join operations required to transform one clustering result into another, assessing how close one clustering solution is to another \cite{b3}, \cite{tzerpos1}. Later, Wen and Tzerpos introduced the MoJoFM metric, an enhanced version of the original MoJo distance metric for more effective measurements, as presented in more detail in subsection \ref{subsec:mojofm} \cite{mojofm}.
 
