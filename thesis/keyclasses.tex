@@ -708,7 +708,7 @@ org.apache.catalina.Engine	&	4	&	1	\\
 \end{table}
 
 
-\subsection{Results using confidence metric for filtering}
+\subsection{Comparison between connection strength vs. confidence metric for filtering}
 \label{sec:measure_metrics}
 
 \hspace{4em}As mentioned in Chapter \ref{extraction}, we did not use the confidence metric because it does not consider the big picture of the system. A co-changing pair $A \rightarrow B$, where A updates only once in the entire history and always updates together with B, will have the highest possible confidence value. This behavior ignores the system context, so we introduced the strength metric to balance the metric to favor pairs that update more frequently.
@@ -758,12 +758,12 @@ These results help us answer the third research question: \textit{RQ3: Does appl
 
 
 
-\section{Correlation between details of the systems and results}
+\section{Correlation between SD-LD overlap and results obtained}
 \label{sec:key_overlapping}
 
-\hspace{4em}This section discusses the correlation between the system details and the results obtained in Section \ref{sec:key_plan_and_results}. This correlation aims to determine whether there are any links between the system details and the obtained results.
+\hspace{4em}This section discusses the correlation between the overlap of structural and logical dependencies and the key class detection results presented in Section \ref{sec:key_plan_and_results}. By analyzing the SD-LD overlap, we want to determine whether variations in the overlapping between the two types of dependencies influence the results of key class detection.
 
-The results are presented in Figures \ref{fig:plot_sd_ld_ant} - \ref{fig:plot_ld_hibernate}. We use plots to display the results and provide a clearer view of how the values fluctuate across different threshold settings. The system details are presented in two tables. Table \ref{tab:overlap} shows the overlap between structural and logical dependencies expressed as percentages. Each column represents the percentage of logical dependencies that are also structural. For each column, the logical dependencies are obtained by applying a different connection strength filter. The connection strength filter starts at 10, meaning that the entities update together in at least 10\% of the total commits involving two entities. The filter value is increased by 10 at each step until it reaches 100, indicating that the other entity is also present in all commits involving one entity \cite{b4}.
+The results are presented in Figures \ref{fig:plot_sd_ld_ant} - \ref{fig:plot_ld_hibernate}. We use plots to display the results and provide a clearer view of how the values fluctuate across different threshold settings. The system details are presented in two tables. Table \ref{tab:overlap} shows the overlap between structural and logical dependencies expressed as percentages. Each column represents the percentage of logical dependencies that are also structural. For each column, the logical dependencies are obtained by applying a different connection strength filter. The filter begins at 10, signifying that the entities co-update in at least 10\% of the total commits involving both. With each step, the filter value increases by 10 until it reaches 100\% \cite{b4}.
 
 
 
