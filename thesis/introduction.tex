@@ -2,7 +2,7 @@
 \section{Research scope and motivation}
 
 
-The continuous evolution of software systems has resulted in increasingly complex projects involving collaboration among multiple developers over extended periods. The version control systems play an important role in this collaboration by tracking the software changes made over time.
+\hspace{4em}The continuous evolution of software systems has resulted in increasingly complex projects involving collaboration among multiple developers over extended periods. The version control systems play an important role in this collaboration by tracking the software changes made over time.
 
 \textit{Logical dependencies}, also known as logical coupling or co-changes, are extracted from patterns of co-evolution observed in version control systems. These dependencies capture relationships between software components that frequently change together \cite{Zimmermann:2004:MVH:998675.999460}.
 Gall et al. \cite{Gall:1998:DLC:850947.853338, Gall:2003:CRH:942803.943741} introduced the concept of logical coupling and demonstrated that it could uncover hidden relationships between software entities.
@@ -36,54 +36,42 @@ This thesis also investigates whether different logical dependency association r
 This research proposes techniques for extracting, filtering, and integrating logical dependencies into dependency models. Various metrics will be used to evaluate the impact of incorporating logical dependencies and assess their impact on key class detection and software architecture reconstruction. The goal is to demonstrate that logical dependencies, when appropriately filtered, provide valuable information that can complement or, in some cases, replace structural dependencies.
 To achieve this, the following objectives have been established:
 
-\textbf{[O1]}: \textit{Study and analyze the current state of research on logical dependencies to improve their extraction and filtering methods.}
+\textbf{[O1]}: \textit{Study and analyze the current state of research on logical dependencies to improve their extraction and filtering methods. Develop a tool for extracting and filtering logical dependencies.}
 
 This objective involved the following tasks:
 \begin{itemize}
 \item \textbf{[T1.1]}: Review existing methods for logical dependency extraction from version control systems.
 \item \textbf{[T1.2]}: Identify and evaluate factors that influence the validity of logical dependencies, such as commit size thresholds, minimum co-change occurrences, and comment changes, to develop effective filtering methods.
-\item \textbf{[T1.3]}: Based on the observations from T1.2, propose filtering methods for logical dependencies.
-\item \textbf{[T1.4]}: Investigate the interplay between logical and structural dependencies to understand their overlap and differences better.
+\item \textbf{[T1.3]}: Designing a tool for extracting logical dependencies based on co-changing entities filtered with different configurable filters.
+\item \textbf{[T1.4]}: Propose a filtering method for logical dependencies.
+\item \textbf{[T1.5]}: Investigate the interplay between logical and structural dependencies to better understand their overlap and differences.
 \end{itemize}
-The outcomes of this objective [O1] have been published in [A1] and [A2].
+The outcomes of this objective [O1] have been published and described in more detail in [A1] and [A2], and the developed tool is further used in [A3], [A4], and [A5].
 
 
-\textbf{[O2]}: \textit{Develop a tool for extracting and filtering logical dependencies.}
-
+\textbf{[O2]}: \textit{Integrate logical dependencies in key class detection.}
 This objective involved the following tasks:
 \begin{itemize}
-\item \textbf{[T2.1]}: Designing a tool for extracting logical dependencies based on co-changing entities with different configurable filters.
-\item \textbf{[T2.2]}: Implementing and testing the filtering mechanisms by outputting the results in a commonly used format.
+\item \textbf{[T2.1]}: Modify the baseline key class detection tool to incorporate logical dependencies.
+\item \textbf{[T2.2]}: Evaluate the impact of combining logical and structural dependencies on key class detection performance.
+\item \textbf{[T2.3]}: Evaluate the impact of using only logical dependencies for key class detection.
+\item \textbf{[T2.4]}: Investigate the effect of filtering strategies (connection strength with different thresholds) on the key class detection results.
 \end{itemize}
-This objective [O2] has been published and described in more detail in [A1] and [A2], the developed tool being further used in [A3], [A4], and [A5].
+The outcomes of this objective [O2] have been published in [A3].
 
-
-
-\textbf{[O3]}: \textit{Integrate logical dependencies in key class detection.}
+\textbf{[O3]}: \textit{Refine software clustering using logical dependencies.}
 This objective involved the following tasks:
 \begin{itemize}
-\item \textbf{[T3.1]} Extract logical dependencies from version control systems and apply the proposed filter (connection strength).
-\item \textbf{[T3.2]} Modify the baseline key class detection tool to incorporate logical dependencies.
-\item \textbf{[T3.3]} Evaluate the impact of combining logical and structural dependencies on key class detection performance.
-\item \textbf{[T3.4]} Evaluate the impact of using only logical dependencies for key class detection.
-\item \textbf{[T3.5]} Investigate the effect of filtering strategies (connection strength with different thresholds) on the key class detection results.
+\item \textbf{[T3.1]}: Review and select suitable clustering algorithms for the experiments.
+\item \textbf{[T3.2]}: Use only logical dependencies as input for software clustering.
+\item \textbf{[T3.3]}: Combine logical and structural dependencies as input for clustering algorithms.
+\item \textbf{[T3.4]}: Investigate the impact of different connection strength filter thresholds on clustering results by using clustering evaluation metrics: MQ and MoJoFM.
+\item \textbf{[T3.5]}: Analyze the results: logical dependencies alone vs. combined dependencies with varying filter thresholds.
 \end{itemize}
-The outcomes of this activity [O3] have been published in [A3].
-
-\textbf{[O4]}: \textit{Refine software clustering using logical dependencies.}
-This objective involved the following tasks:
-\begin{itemize}
-\item \textbf{[T4.1]} Review and select suitable clustering algorithms for the experiments.
-\item \textbf{[T4.2]} Use only logical dependencies as input for software clustering.
-\item \textbf{[T4.3]} Combine logical and structural dependencies as input for clustering algorithms.
-\item \textbf{[T4.4]} Investigate the impact of different connection strength filter thresholds on clustering results by using clustering evaluation metrics: MQ and MoJoFM.
-\item \textbf{[T4.5]} Analyze the results: logical dependencies alone vs. combined dependencies with varying filter thresholds.
-\end{itemize}
-
-The outcomes of this objective [O4] have been published in [A4] and [A5].
+The outcomes of this objective [O3] have been published in [A4] and [A5].
 
 \section{Structure of the thesis}
-To be done at the end
+[ToDo]: later
 
 \section{Main Contributions}
 
@@ -104,67 +92,109 @@ To be done at the end
 \section{Software dependencies overview}
 
 \subsection{Structural dependencies}
-\hspace{4em} A dependency is created by two elements that are in a relationship and indicates that an element of the relationship, in some manner, depends on the other element of the relationship \cite{Booch:2004:OAD:975416}, \cite{Cataldo2009SoftwareDW}.
+\hspace{4em} A dependency is created by two elements that are in a relationship and indicates that an element of the relationship, in some manner, depends on the other element of the relationship \cite{Booch:2004:OAD:975416, Cataldo2009SoftwareDW}.
 
-Structural dependencies can be found by analyzing the source code \cite{Sangal:2005:UDM:1094811.1094824}, \cite{CalloArias2011}. 
-There are several types of relationships between these source code entities and all those create \textit{structural dependencies}:
-
-\textbf{Data Item Dependencies.}
-Data items can be variables, records or structures. A dependency is created between two data items when the value held in the first data item is used or affects the value from the second.
-
-
-\begin{verbatim}
-Example:
-
-int a = 10;
-int b = a + 5;  // b depends on a
-a = 20;         // changing a doesn't impact b
-\end{verbatim}
+Structural dependencies can be found by static analysis of the source code or complied code \cite{Sangal:2005:UDM:1094811.1094824, sd-mining, CalloArias2011}. 
 
 \textbf{Data Type Dependencies.}
 Data items are declared to be of a specific data type. Besides the built-in data types that every programming language has, developers can also create new types that they can use. Each time the data type definition is changed it will affect all the data items that are declared to be of that type. 
 
 
-\begin{verbatim}
-Example:
-
-class Rectangle { int width, height; }
-//Change posibility: class Rectangle { int width, height, color; }
-
-Rectangle r = new Rectangle();  
-r.width = 5;
-r.height = 10;
-// Existing code will fail to handle color in case of change
-\end{verbatim}
-
 \textbf{Subprogram Dependencies.}
 A subprogram is a sequence of instructions that performs a certain task. Depending on the programming language a subprogram may also be called a routine, a method, a function or a procedure. When a subprogram is changed, the developer must check the effects of that change in all the places that are calling that subprogram. Subprograms may also have dependencies with the data items that they receive as input or the data items that they are computing.
 
 
+\subsubsection{Structural Dependencies in Object-Oriented Context}
+
+In an object-oriented system, a structural dependency exists when one component relies on another through any of the following relationships \cite{sd-Mirjana}:
+
+\begin{itemize}
+    \item \textbf{Inheritance/Implementation:} A class extends another or implements an interface.
+    \item \textbf{Field Declarations:} A class declares a member variable (field) whose type is another class.
+    \item \textbf{Object Instantiation:} A class creates objects of another class using its constructor.
+    \item \textbf{Local Variables and Parameters:} A class’s method declares a local variable or parameter whose type is another class.
+    \item \textbf{Return Types:} A method’s return type is another class.
+    \item \textbf{Member Access:} A class accesses a field or calls a method of another class.
+\end{itemize}
+
+Structural dependencies imply that modifications in a class require updates across all dependent classes. Even minor changes, like renaming a method or a parameter type, can trigger changes in the dependent classes.
+
+
+\textbf{Example 1: Inheritance and field dependency}
+
+In this example, the \texttt{Cat} class extends the \texttt{Animal} class, and an \texttt{Owner} class holds a reference to a \texttt{Cat}. A change in \texttt{Cat} (such as renaming the \texttt{meow()} method) might require a corresponding update in \texttt{Owner}.
+
 \begin{verbatim}
-Example:
-
-// First implementation:
-class Calculator {
-    double calculateArea(double side) {
-        return side * side;  
+class Animal {
+    void eat() {
+        System.out.println("Animal is eating.");
     }
 }
 
-// Modified implementation:
-class Calculator {
-    double calculateArea(double radius) {
-        return Math.PI * radius * radius; 
+class Cat extends Animal {
+    void meow() {
+        System.out.println("Cat says meow.");
     }
 }
 
-Calculator calc = new Calculator();
-// Code expecting square area now gets circle area.
-double area = calc.calculateArea(5);  
+class Owner {
+    private Cat pet; 
 
+    public Owner(Cat pet) {
+        this.pet = pet;
+    }
+
+    void playWithPet() {
+        pet.meow(); 
+    }
+}
 \end{verbatim}
 
+\medskip
 
+\textbf{Example 2: Interface-based dependency}
+
+Here, the \texttt{Pet} interface is implemented by the \texttt{Cat} class. A \texttt{Veterinarian} class interacts with any \texttt{Pet} without needing to know its concrete type. Changes to the \texttt{Pet} interface, such as altering the signature of \texttt{play()}, would affect both the \texttt{Cat} implementation and the \texttt{Veterinarian} class.
+
+\begin{verbatim}
+interface Pet {
+    void play();
+}
+
+class Cat implements Pet {
+    public void play() {
+        System.out.println("Cat is playing.");
+    }
+}
+
+class Veterinarian {
+    void examine(Pet pet) {
+        System.out.println("Examining pet...");
+        pet.play();
+    }
+}
+\end{verbatim}
+
+\medskip
+
+\textbf{Example 3: Instantiation and method call dependency}
+
+In this example, the \texttt{CatHouse} class instantiates a new \texttt{Cat} and calls its method. The \texttt{CatHouse} class is structurally dependent on \texttt{Cat} since any change to the \texttt{Cat} class might necessitate corresponding changes in \texttt{CatHouse}.
+
+\begin{verbatim}
+class Cat {
+    void purr() {
+        System.out.println("Cat purrs.");
+    }
+}
+
+class CatHouse {
+    void welcomeGuest() {
+        Cat guestCat = new Cat(); 
+        guestCat.purr();  
+    }
+}
+\end{verbatim}
 
 
 
