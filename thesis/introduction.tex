@@ -94,7 +94,7 @@ The outcomes of this objective [O3] have been published in [A4] and [A5].
 \subsection{Structural dependencies}
 \hspace{4em} A dependency is created by two elements that are in a relationship and indicates that an element of the relationship, in some manner, depends on the other element of the relationship \cite{Booch:2004:OAD:975416, Cataldo2009SoftwareDW}.
 
-Structural dependencies can be found by static analysis of the source code or complied code \cite{Sangal:2005:UDM:1094811.1094824, sd-mining, CalloArias2011}. 
+Structural dependencies can be found by static analysis of the source code or compiled code \cite{Sangal:2005:UDM:1094811.1094824, sd-mining, CalloArias2011}. 
 
 \textbf{Data Type Dependencies.}
 Data items are declared to be of a specific data type. Besides the built-in data types that every programming language has, developers can also create new types that they can use. Each time the data type definition is changed it will affect all the data items that are declared to be of that type. 
@@ -122,7 +122,7 @@ Structural dependencies imply that modifications in a class require updates acro
 
 \textbf{Example 1: Inheritance and field dependency}
 
-In this example, the \texttt{Cat} class extends the \texttt{Animal} class, and an \texttt{Owner} class holds a reference to a \texttt{Cat}. A change in \texttt{Cat} (such as renaming the \texttt{meow()} method) might require a corresponding update in \texttt{Owner}.
+In this example, the \texttt{Cat} class extends the \texttt{Animal} class, and an \texttt{Owner} class holds a reference to a \texttt{Cat}. A change in \texttt{Cat} (such as renaming the \texttt{meow()} method) might require an update in \texttt{Owner}.
 
 \begin{verbatim}
 class Animal {
@@ -154,7 +154,7 @@ class Owner {
 
 \textbf{Example 2: Interface-based dependency}
 
-Here, the \texttt{Pet} interface is implemented by the \texttt{Cat} class. A \texttt{Veterinarian} class interacts with any \texttt{Pet} without needing to know its concrete type. Changes to the \texttt{Pet} interface, such as altering the signature of \texttt{play()}, would affect both the \texttt{Cat} implementation and the \texttt{Veterinarian} class.
+\texttt{Pet} interface is implemented by the \texttt{Cat} class. A \texttt{Veterinarian} class uses any \texttt{Pet} without needing to know its concrete type. Changes to the \texttt{Pet} interface, such as changing the signature of \texttt{play()}, would affect both the \texttt{Cat} implementation and the \texttt{Veterinarian} class.
 
 \begin{verbatim}
 interface Pet {
@@ -179,7 +179,7 @@ class Veterinarian {
 
 \textbf{Example 3: Instantiation and method call dependency}
 
-In this example, the \texttt{CatHouse} class instantiates a new \texttt{Cat} and calls its method. The \texttt{CatHouse} class is structurally dependent on \texttt{Cat} since any change to the \texttt{Cat} class might necessitate corresponding changes in \texttt{CatHouse}.
+In this example, the \texttt{CatHouse} class instantiates a new \texttt{Cat} and calls its method. The \texttt{CatHouse} class is structurally dependent on \texttt{Cat} since any change to the \texttt{Cat} class might necessitate changes in \texttt{CatHouse}.
 
 \begin{verbatim}
 class Cat {
@@ -392,7 +392,7 @@ Moonen et al. \cite{Moonen-commit, article-Moonen, 7476643} proposed an algorith
 
 As shown above, logical dependencies have been widely used in co-change prediction. Additionally, they have been used for various other purposes, such as detecting code clones \cite{Mandal-clones}, identifying buggy code \cite{buggy-code}, evaluating the impact of software changes \cite{1553643}, and identifying potential ripple effects caused by software changes during maintenance and evolution \cite{DBLP:conf/issre/OlivaG15, Oliva:2011:ISL:2067853.2068086}.
 
-Despite their utility, logical dependency usage presents several challenges. One significant issue is the large volume of information generated during extraction, which must be processed and filtered to remove noise \cite{Coupling-Lanza, articleEvolution, Shtern:2012:CMS:2332427.2332428}. For instance, \textit{Oliva and Gerosa} \cite{Oliva:2011:ISL:2067853.2068086} found that the set of co-changed classes was much larger than the set of structurally coupled classes. At least 91\% of logical dependencies involve files that are not structurally related. This implies that not all change dependencies are linked to structural dependencies and that other factors may cause software artifacts to be change-dependent.
+Despite their utility, logical dependency usage presents several challenges. One significant issue is the large volume of information generated during extraction, which must be processed and filtered to remove noise \cite{Coupling-Lanza, articleEvolution, Shtern:2012:CMS:2332427.2332428}. For instance, Oliva and Gerosa \cite{Oliva:2011:ISL:2067853.2068086} found that the set of co-changed classes was much larger than the set of structurally coupled classes. At least 91\% of logical dependencies involve files that are not structurally related. This implies that not all change dependencies are linked to structural dependencies and that other factors may cause software artifacts to be change-dependent.
 
 Ajienka and Capiluppi also explored the interplay between the logical and structural coupling of software classes. In \cite{DBLP:journals/jss/AjienkaC17, DBLP:journals/ese/AjienkaCC18}, they conducted experiments on 79 open-source systems. For each system, they identified the sets of structural dependencies, logical dependencies, and the intersections of these sets. They studied the overlap between these dependencies, concluding that not all co-changed class pairs (logical dependencies) are also linked by structural dependencies. Another observation, which was not deeply investigated by the authors in \cite{DBLP:journals/jss/AjienkaC17, DBLP:journals/ese/AjienkaCC18}, is the ratio between the total number of logical dependencies and structural dependencies in software systems. Based on their raw data, the average ratio across all analyzed projects is approximately 12.
 
@@ -412,15 +412,15 @@ Logical dependencies should integrate harmoniously with structural dependencies.
 
 One of the most frequently used filters for co-change extraction is the commit size filter. Commit size refers to the number of code files modified in a specific commit. Large commits, which involve a significant number of files, are often the result of non-code-related tasks, such as branch merges or folder renaming. These operations can introduce irrelevant co-changing pairs of entities, adding noise. To solve this issue, commit size filtering is applied to the information extracted from version control systems.
 
-\textit{Ajienka and Capiluppi} \cite{DBLP:journals/jss/AjienkaC17} established a threshold of 10 files, discarding all commits with more than 10 modified files from their research.
+Ajienka and Capiluppi \cite{DBLP:journals/jss/AjienkaC17} established a threshold of 10 files, discarding all commits with more than 10 modified files from their research.
 
-\textit{Kagdi et al.} also applied the same threshold, excluding commits with more than 10 source files from their analysis.
+Kagdi et al. also applied the same threshold, excluding commits with more than 10 source files from their analysis.
 
-\textit{Ying et al.} \cite{Ying-co-change} set a higher threshold, excluding transactions involving more than 100 files.
+Ying et al. \cite{Ying-co-change} set a higher threshold, excluding transactions involving more than 100 files.
 
-\textit{Zimmermann et al.} \cite{Zimmermann:2004:MVH:998675.999460} configured the ROSE tool to exclude changes involving more than 30 files.
+Zimmermann et al. \cite{Zimmermann:2004:MVH:998675.999460} configured the ROSE tool to exclude changes involving more than 30 files.
 
-\textit{Moonen et al.} \cite{Moonen-commit} considered seven different transaction filtering sizes: 2, 4, 6, 8, 10, 20, and 30 (with 30 being the upper bound suggested by Zimmermann) and recommended excluding transactions larger than 8 files.
+Moonen et al. \cite{Moonen-commit} considered seven different transaction filtering sizes: 2, 4, 6, 8, 10, 20, and 30 (with 30 being the upper bound suggested by Zimmermann) and recommended excluding transactions larger than 8 files.
 
 However, most of the works presented above do not discuss how the thresholds were chosen, nor do they analyze the impact of different threshold values on the quantity and quality of the data extracted.
 
@@ -460,19 +460,19 @@ If $A$ and $B$ are always modified together in all 10 commits involving $A$, the
 
 
 
-Many studies have used the support and confidence metrics. \textit{Zimmermann et al.} \cite{Zimmermann:2004:MVH:998675.999460}, in their ROSE tool, used different combinations of minimum support and confidence thresholds. They applied three minimum support thresholds, 1, 3, and 5, together with confidence thresholds ranging from 0.1 to 0.9, to predict future changes in software systems.
+Many studies have used the support and confidence metrics. Zimmermann et al. \cite{Zimmermann:2004:MVH:998675.999460}, in their ROSE tool, used different combinations of minimum support and confidence thresholds. They applied three minimum support thresholds, 1, 3, and 5, together with confidence thresholds ranging from 0.1 to 0.9, to predict future changes in software systems.
 
-\textit{Ying et al.} \cite{Ying-co-change} recommend potentially relevant source code to developers during modification tasks. The support thresholds in their study vary based on the analysis, ranging from 5 to 30 (5, 10, 15, 20, 25, 30). For confidence, Ying et al. chose not to use this metric, as they consider it misleading when some files are changed much more frequently than others.
+Ying et al. \cite{Ying-co-change} recommend potentially relevant source code to developers during modification tasks. The support thresholds in their study vary based on the analysis, ranging from 5 to 30 (5, 10, 15, 20, 25, 30). For confidence, Ying et al. chose not to use this metric, as they consider it misleading when some files are changed much more frequently than others.
 
-\textit{Kagdi et al.} \cite{article-Kagdi-commit}, in their studies on software change prediction, used minimum support thresholds of 1, 2, 4, and 8. For confidence, they considered all possible values greater than zero.
+Kagdi et al. \cite{article-Kagdi-commit}, in their studies on software change prediction, used minimum support thresholds of 1, 2, 4, and 8. For confidence, they considered all possible values greater than zero.
 
-\textit{Mandal et al.} \cite{Mandal-clones}, in their study on detecting clones and analyzing their evolution, developed a tool called MARC (Mining Association Rules among Clones). The tool detects code clones and ranks their change-proneness based on support and confidence values. In their experiments, they applied a minimum support threshold of 1.
+Mandal et al. \cite{Mandal-clones}, in their study on detecting clones and analyzing their evolution, developed a tool called MARC (Mining Association Rules among Clones). The tool detects code clones and ranks their change-proneness based on support and confidence values. In their experiments, they applied a minimum support threshold of 1.
 
-\textit{Oliva and Gerosa} \cite{Oliva:2011:ISL:2067853.2068086, OlivaG152} investigated the interplay between structural and logical dependencies, using a modified version of the support and confidence metrics introduced by Zimmermann, adjusted to a set of commits. The study found that the support interval [1, 7] contains 90\% of all logical dependencies, while the interval [0, 10] contains 99.9\% of logical dependencies. The interval [11, 31] represents only 0.1\% of logical dependencies, with high variation observed across coupling levels.
+Oliva and Gerosa \cite{Oliva:2011:ISL:2067853.2068086, OlivaG152} investigated the interplay between structural and logical dependencies, using a modified version of the support and confidence metrics introduced by Zimmermann, adjusted to a set of commits. The study found that the support interval [1, 7] contains 90\% of all logical dependencies, while the interval [0, 10] contains 99.9\% of logical dependencies. The interval [11, 31] represents only 0.1\% of logical dependencies, with high variation observed across coupling levels.
 
 The confidence metric was divided into three categories: low logical coupling (0.00–0.33), medium logical coupling (0.33–0.66), and high logical coupling (0.66–1.00). The study concluded that classes with high logical coupling were the least influenced by structural coupling.
 
-\textit{Ajienka and Capiluppi} \cite{DBLP:journals/ese/AjienkaCC18}, in their study on the overlappings between structural and logical dependencies used a support threshold of 0.1 and a confidence threshold of 0.01.
+Ajienka and Capiluppi \cite{DBLP:journals/ese/AjienkaCC18}, in their study on the overlappings between structural and logical dependencies used a support threshold of 0.1 and a confidence threshold of 0.01.
 
 
 
