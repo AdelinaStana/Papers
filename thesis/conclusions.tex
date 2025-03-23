@@ -1,6 +1,6 @@
 \chapter{Conclusion and future work}
 
-\section{Summary of research contributions}
+\section{Overview of research objectives and contributions}
 
 \hspace{4em}A brief chapter-level summary of the contributions made through this thesis is:
 
@@ -46,20 +46,19 @@ This chapter's contributions have been published in [A3].
 This chapter's contributions have been published in [A4] and [A5].
 
 
-\section{Contributions}
+\section{Summary of main contributions}
 
-[To be extended]
 \hspace{4em}The main contributions of this thesis are:  
 
 \begin{itemize}  
-    \item proposed methods for filtering logical dependencies extracted from version control systems to improve their reliability and usefulness, including the introduction of a new metric for filtering logical dependencies, called connection strength;  
-    \item developed a tool for extracting and filtering logical dependencies;  
-    \item integrated logical dependencies into key class detection and analyzed the impact of different filtering strategies when using logical dependencies both independently and in combination with structural dependencies;  
-    \item integrated logical dependencies into software clustering; this analysis involved using three distinct clustering algorithms and two evaluation metrics;  
+    \item proposed methods for filtering logical dependencies extracted from version control systems to improve their reliability and usefulness, including the introduction of a new metric for filtering logical dependencies, called connection strength;   \hfill (Published in [A1], [A2])
+    \item developed a tool for extracting and filtering logical dependencies;  \hfill (Published in [A1], [A2], [A3])
+    \item integrated logical dependencies into key class detection and analyzed the impact of different filtering strategies when using logical dependencies both independently and in combination with structural dependencies;  \hfill (Published in [A3])
+    \item integrated logical dependencies into software clustering; this analysis involved using three distinct clustering algorithms and two evaluation metrics;   \hfill (Published in [A4] and [A5])
 \end{itemize}  
 
 \section{Future work}
 
 \hspace{4em}In both key class detection and software clustering for architectural reconstruction analyses, selecting the appropriate strength threshold for logical dependencies proved important. For key class detection, thresholds between 40\% and 70\% led to an improvement over the baseline approach. In architectural reconstruction, lower thresholds between 10\% and 40\% provided the best trade-offs between coverage and clustering quality. 
 
-These findings suggest that the “ideal” threshold depends on the intended use case of logical dependencies. Future work will investigate automated methods for determining the optimal strength filter threshold for different systems.
+These findings suggest that the “ideal” threshold depends on the intended use case of logical dependencies. Future work will explore automated methods to determine the optimal strength filter threshold for systems with varying codebases and commit history sizes. This automation will enable the use of a single strength metric threshold for both key class detection and architectural reconstruction. The optimal threshold will be validated not only in these two previously explored areas but also in new fields where primarily structural dependencies have been used.

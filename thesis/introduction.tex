@@ -1,31 +1,25 @@
 \chapter{Introduction}
 \section{Research scope and motivation}
 
+\hspace{4em}Software engineering involves the development, maintenance, and evolution of software systems. Software projects have become increasingly complex and require collaboration among multiple developers over extended periods. Tools such as version control systems are important in this context, as they track software changes over time and ensure coordinated development.
 
-\hspace{4em}The continuous evolution of software systems has resulted in increasingly complex projects involving collaboration among multiple developers over extended periods. The version control systems play an important role in this collaboration by tracking the software changes made over time.
+\textit{Logical dependencies}, also known as logical coupling or co-changes, are extracted from patterns of co-evolution observed in version control systems. These dependencies capture relationships between software components that frequently change together. Unlike structural dependencies, which represent explicit relationships between code entities extracted from static code analysis, logical dependencies are derived from co-change patterns and can reveal relationships that are not visible in the system's static structure.
 
-\textit{Logical dependencies}, also known as logical coupling or co-changes, are extracted from patterns of co-evolution observed in version control systems. These dependencies capture relationships between software components that frequently change together \cite{Zimmermann:2004:MVH:998675.999460}.
-Gall et al. \cite{Gall:1998:DLC:850947.853338, Gall:2003:CRH:942803.943741} introduced the concept of logical coupling and demonstrated that it could uncover hidden relationships between software entities.
-Unlike structural dependencies, which represent explicit relationships between code entities extracted from static code analysis, logical dependencies are derived from co-change patterns and can reveal hidden relationships that are not visible in the system's static structure \cite{Gall:1998:DLC:850947.853338, Gall:2003:CRH:942803.943741, Yu:2007:UCC:1231330.1231370}.
+Logical dependencies have been applied across various domains in software engineering. These dependencies have been used for tasks such as software change prediction, software change impact analysis, identifying ripple effects during software maintenance and evolution, and exploring their connections to defects. By capturing relationships that are not always visible in the static code structure, logical dependencies complement structural dependencies to provide a better understanding of software systems.
 
+However, using logical dependencies presents some challenges: Co-changes in version control systems often include irrelevant relationships caused by refactorings or non-functional updates. It is important to filter out co-changes resulting from non-functional commits, as these can reduce the effectiveness of logical dependency analysis. Logical dependencies significantly outnumber structural dependencies, highlighting the importance of filtering techniques to reduce their volume and increase their validity.
 
-Logical dependencies have been applied across various domains of software engineering. These dependencies have been used for tasks such as software change prediction \cite{Zimmermann:2004:MVH:998675.999460, Moonen-commit, article-Moonen}, software change impact analysis \cite{1553643}, identifying ripple effects during software maintenance and evolution \cite{DBLP:conf/issre/OlivaG15, Oliva:2011:ISL:2067853.2068086, Poshyvanyk2009}, and exploring their connections to defects \cite{wiese, Zimmermann:2004:MVH:998675.999460}. By capturing relationships that are not always visible in the static code structure, logical dependencies complement structural dependencies to provide a better understanding of software systems.
-
-However, using logical dependencies presents some challenges: Co-changes in version control systems often include irrelevant relationships caused by refactorings, or non-functional updates. Gall et al. \cite{Gall:1998:DLC:850947.853338, Gall:2003:CRH:942803.943741} highlight the importance of filtering out co-changes resulting from non-functional commits, as these can reduce the effectiveness of logical dependency analysis. Ajienka and Capiluppi \cite{DBLP:journals/jss/AjienkaC17} confirmed that logical dependencies significantly outnumber structural dependencies, with an average ratio of approximately 12:1. This highlights the importance of filtering techniques to reduce the volume of logical dependencies and increase their validity.
-
-Current research has investigated various filtering techniques, such as commit size thresholds \cite{Moonen-commit}, support and confidence metrics \cite{Zimmermann:2004:MVH:998675.999460}, and history length and age \cite{article-Moonen}. However, the methods and thresholds applied leave room for further investigation.
+Current research has investigated various filtering techniques, such as commit size thresholds, support and confidence metrics, history length and age. However, the methods and thresholds applied still leave room for further investigation.
 
 The scope of this thesis is to improve the filtering and integration of logical dependencies into dependency models, which will be applied in two software engineering tasks: key class detection and software clustering for architectural reconstruction.
 
-\textit{Key Class Detection:} Identifying the most important classes in a system, referred to as key classes, is an important task in software maintenance and evolution. Key classes encapsulate core functionality and manage system operations \cite{ZaidmanJurnal}. Previous research has mainly relied on structural dependencies, using relationships between classes, such as method invocations, inheritance, or field accesses \cite{Finding-key-classes, ZaidmanJurnal} to detect key classes.
+\textit{Key Class Detection:} Identifying the most important classes in a system, referred to as key classes, is an important task in software maintenance and evolution. Key classes encapsulate core functionality and manage system operations. Previous research has mainly relied on structural dependencies, using relationships between classes, such as method invocations, inheritance, or field accesses, to detect key classes.
 
 By using logical dependencies, key class detection algorithms could achieve better results, as they can contain hidden relationships from the codebase or reinforce existing ones. This thesis investigates the usage of logical dependencies to complement or replace structural dependencies in key class detection algorithms.
 
-\textit{Software Clustering:} Software clustering is used to recover the architecture of a software system, mainly when the documentation is outdated or unavailable. It involves grouping software entities, such as files or classes, into cohesive modules based on their dependencies and interactions \cite{acdc, bunch, PagerankENASE}. Related research has explored various types of dependencies to enhance software clustering and architectural reconstruction, including structural dependencies \cite{bunch, PagerankENASE}, lexical dependencies (e.g., naming conventions and textual information) \cite{lexical-dep, corazza2} or logical dependencies \cite{b18}.
+\textit{Software Clustering:} Software clustering is used to recover the architecture of a software system, particularly when documentation is outdated or unavailable. It involves grouping software entities, such as files or classes, into cohesive modules based on their dependencies and interactions. Related research has explored various types of dependencies to enhance software clustering and architectural reconstruction, including structural dependencies, lexical dependencies (e.g., naming conventions and textual information), and logical dependencies.
 
-This thesis also investigates whether different logical dependency association rules (filters) affect clustering results. To evaluate the impact of logical dependencies, two metrics will be used: Modularization Quality (MQ) \cite{b10} and MoJoFM (Move and Join Effectiveness Measure) \cite{mojofm}, allowing the comparison of different approaches.
-
-
+This thesis also investigates whether different logical dependency association rules (filters) affect clustering results. To evaluate the impact of logical dependencies, two metrics will be used: Modularization Quality (MQ) and MoJoFM (Move and Join Effectiveness Measure), which will allow for the comparison of different approaches.
 
 
 
@@ -71,26 +65,23 @@ This objective involved the following tasks:
 The outcomes of this objective [O3] have been published in [A4] and [A5].
 
 \section{Structure of the thesis}
-\hspace{4em}Chapter 1 introduces the research on logical dependencies in software systems. It covers the motivation, scope, and objectives of the study, and highlights the key contributions of the current thesis.
+\hspace{4em}Chapter 1 introduces the research on logical dependencies in software systems. It covers the motivation, scope, objectives, and key contributions of the current thesis.
 
-Chapter 2 describes software dependencies, breaking them down into structural, lexical, logical, and other dependencies. It also provides an overview of software changes and version control systems and reviews current research on logical dependencies. The chapter continues with analyzing existing filtering techniques used in logical dependency research, building the foundation for the filters introduced in the next chapter. This chapter offers the theoretical context needed to understand the importance of logical dependencies and their applications.
+Chapter 2 begins with an overview of different types of software dependencies, including structural, lexical, and logical dependencies. It also provides an overview of software change and version control systems and reviews the current research on logical dependencies. The chapter continues by presenting existing filtering techniques used in logical dependency extraction, establishing the base for the filters introduced in the next chapter.
 
-Chapter 3 describes the methodology for extracting and filtering logical dependencies. It describes a tool developed for this purpose and explains the filtering techniques applied: commit size, support, connection strength, and code comments. The chapter continues with the validation of these techniques through experimental analysis, ensuring their effectiveness before applying them in further experiments.
+Chapter 3 describes the methodology for extracting and filtering logical dependencies. It describes a tool developed for this purpose and explains the filtering techniques applied: commit size, support, connection strength, and code comments. The chapter continues with the validation of these filters through experimental analysis, ensuring their effectiveness before applying them in further experiments. 
 
-Chapter 4 describes the combination of structural and logical dependencies into a unified dependency model. It examines the overlap between these dependencies, assigns appropriate weights to the two dependency types, and discusses integration techniques. This integration will be applied in the practical applications from the following chapters.
+Chapter 4 describes the combination of structural and logical dependencies into a unified dependency model. It studies the overlap between these dependencies, assigns appropriate weights to the two dependency types, and discusses integration techniques. This integration will be applied in the practical applications from the following chapters.
 
-Chapter 5 describes the use of logical dependencies in key class detection. It details modifications made to an existing key class detection tool to incorporate logical dependencies and evaluates the performance of key class detection when using both structural and logical dependencies, or just logical dependencies alone. Furthermore, it compares the usage of different strength metric thresholds and assesses their impact.
+Chapter 5 describes the use of logical dependencies in key class detection. It details modifications made to an existing key class detection tool to incorporate logical dependencies and evaluates the performance of key class detection when using both structural and logical dependencies, or just logical dependencies alone. Furthermore, it compares the usage of different connection strength metric thresholds for logical dependencies filtering and assesses their impact on the final results.
 
-Chapter 6 describes the use of logical dependencies in architectural reconstruction. It uses logical dependencies for software clustering for architectural reconstruction, evaluates clustering results using modularization quality and MoJoFM metrics, and examines the effects of different filtering thresholds on clustering results. A comparative analysis of clustering results with and without logical dependencies is also presented for one of the projects studied.
-
-
-Chapter 6 describes the use of logical dependencies in architectural reconstruction. It applies logical dependencies to software clustering for architectural reconstruction, evaluates clustering results using the modularization quality and MoJoFM metrics, and examines the effects of different filtering thresholds on the clustering results. A comparative analysis of clustering results, with and without logical dependencies, is also presented for one of the projects studied.
+Chapter 6 describes the use of logical dependencies in architectural reconstruction. It applies logical dependencies to software clustering for architectural reconstruction and evaluates clustering results using the modularization quality and MoJoFM metrics. It also examines the effects of different connection strength metric thresholds on the clustering results. A comparative analysis of clustering results, with and without logical dependencies, is also presented for one of the projects studied.
 
 Chapter 7 concludes this thesis by summarizing the research contributions and discussing future directions.
 
 \section{Main Contributions}
 
-\hspace{4em}The principal contributions of this thesis are:  
+\hspace{4em}The main contributions of this thesis are:  
 \begin{itemize}  
     \item proposing methods for filtering logical dependencies extracted from version control systems to improve their reliability and usefulness; this includes introducing a new metric for filtering logical dependencies, called connection strength;  
     \item developing a tool for extracting and filtering logical dependencies;  
