@@ -270,7 +270,7 @@ The co-changes that remain after applying the commit size filter are then proces
 
 \subsubsection{Dependency Extraction and Filtering Tool}
 
-To extract and filter the co-changes, we used a previously developed tool \cite{b4}. This tool takes the GitHub repository address and the threshold values for commit and strength filters as input. The tool clones the repository, downloads all commit diffs starting from the first commit, examines all files changed in each commit to identify which entities have changed in those files, and creates undirected co-change dependencies between all changed entities within a commit.
+We used a tool from our previous work \cite{b4} to extract co-changes from the versioning system and filter them into logical dependencies. This tool takes the GitHub repository address and the threshold values for commit and strength filters as input. The tool clones the repository, downloads all commit diffs starting from the first commit, examines all files changed in each commit to identify which entities have changed in those files, and creates undirected co-change dependencies between all changed entities within a commit.
 
 The commit size filter is applied to these undirected co-change dependencies since the metric value for $(A \rightarrow B)$ is the same as for $(B \rightarrow A)$. For the strength filter, each co-change dependency is converted into a directed co-change dependency, so for each $(A \rightarrow B)$ dependency, we have both $(A \rightarrow B)$ and $(B \rightarrow A)$. This conversion is necessary because, as mentioned in the previous section, the confidence filter evaluates the rule's antecedent. Thus, the metric value for $(A \rightarrow B)$ differs from the metric value for $(B \rightarrow A)$.
 
@@ -288,7 +288,7 @@ When structural dependencies (SD) and logical dependencies (LD) are combined in 
 
 Each entity in the system is represented as a node in the graph, and the dependencies between them are represented as directed weighted edges.
 
-\textit{SD and LD weights are combined} when the same pair of entities appear in both dependencies. In this case, the weights from SD and LD are summed, giving more influence to those entity pairs. When a pair of entities appear only in SD or only in LD, the edge is added to the graph together with its corresponding weight.
+\textit{SD and LD weights are combined} when the same pair of entities appear in both dependencies. In this case, the weights from SD and LD are summed, giving more influence to those entity pairs. When a pair of entities appear only in SD or only in LD, the edge is added to the graph together with its corresponding weight. No normalization is applied during the combination; we rely on the SD predefined weights and the co-change frequency-derived LD weights to reflect the importance of each dependency type.
 
 Figure \ref{fig:codegraph} illustrates combining structural and logical dependencies in the same dependency graph. The structural dependencies between \texttt{House}, \texttt{OrangeCat}, and \texttt{CatBehavior} entities are visible from the source code analysis.
 
@@ -349,7 +349,7 @@ DBSCAN can be applied for software clustering by considering software entities a
 \subsection{Clustering Result Evaluation}
 \label{subsec:evaluation_def}
 
-We evaluate the clustering results using two metrics: the Modularity Quality (MQ) metric and the Move and Join Effectiveness Measure (MoJoFM) metric. Each provides a different perspective on the quality of the clustering solutions.
+We evaluate the clustering results using two metrics: the Modularity Quality (MQ) metric and the Move and Join Effectiveness Measure (MoJoFM) metric. Each provides a different perspective on the quality of the clustering solutions. MQ reflects the internal structure and cohesiveness of the clusters, while MoJoFM offers an external perspective by comparing the result to a manually defined reference architecture.
 
 \subsubsection{Modularity Quality Metric}
 \label{subsec:mq}
@@ -370,6 +370,7 @@ The MQ metric is useful because it does not require additional input besides the
 \subsubsection{MoJoFM Metric}
 \label{subsec:mojofm}
 Wen and Tzerpos introduced the MoJoFM metric to evaluate the similarity between two different software clustering results \cite{mojofm}. The metric is based on the MoJo metric, which measures the absolute minimum number of \textit{Move} and \textit{Join} operations required to transform one clustering solution into another \cite{b3}, \cite{mojofm}. However, MoJoFM provides a similarity measure ranging between 0\% and 100\%, where 100\% indicates identical clustering solutions.
+Compared to the original MoJo metric, MoJoFM normalizes the result, making it easier to compare across different systems.
 
 The MoJoFM metric is calculated using Equation \eqref{eq:mojofm}:
 
@@ -385,7 +386,7 @@ Where:
 \item $\max(\text{mno}(\forall A, B))$ is the maximum possible number of such operations required to transform any clustering $A$ into clustering $B$.
 \end{itemize}
 
-To use the metric, we first need to generate a reference clustering solution for comparison. We manually created this reference based on our analysis of the codebase.
+To use the metric, we first need to generate a reference clustering solution for comparison. We manually created this reference based on our analysis of the codebase, taking into account naming conventions, package structure, class responsibilities, and available documentation. While this reference is not considered an absolute ground truth, it is a practical baseline.
 
 Using the MoJoFM metric, we can evaluate the similarity between the generated and reference clustering solutions. This metric is useful when combining multiple dependencies because it measures the similarity between the obtained clustering solutions and the same reference.
 
@@ -394,11 +395,11 @@ Using the MoJoFM metric, we can evaluate the similarity between the generated an
 \label{subsec:tool_workflow}
 
 \Figure[t!](topskip=0pt, botskip=0pt, midskip=0pt)[width=\textwidth]{workflow-tool.png}
-{ \textbf{Tool workflow overview: input, processing and output.}\label{fig:tool}}
+{ \textbf{Clustering tool workflow: input, graph construction, clustering, and evaluation.}\label{fig:tool}}
 
 To evaluate how logical dependencies impact the quality of clustering solutions, we developed a Python tool capable of using any type of dependency, either alone or combined with other types of dependencies, as long as it is provided in CSV format. The tool clusters and evaluates software clustering solutions using the MQ or MoJoFM metrics.
 
-
+The overall workflow of the tool, including the input, processing, and output steps described in more detail below, is shown in Figure \ref{fig:tool}.
 
 \subsubsection{Input}
 
@@ -408,9 +409,9 @@ Since the MoJoFM metric requires a reference solution to evaluate the obtained c
 
 \subsubsection{Processing}
 
-The dependencies are saved in the CSV file in the following format: \texttt{antecedent of a dependency, consequent of a dependency, weight}. The tool reads each line, adds the antecedent and consequent as nodes in a directed graph, and creates an edge between them, with the weight from the CSV file becoming the edge weight. The edge weights are summed if multiple dependency files are processed and the same dependency is found in multiple files.
+The dependencies are saved in the CSV file in the following format: \texttt{antecedent of a dependency, consequent of a dependency, weight}. The tool reads each line, adds the antecedent and consequent as nodes in a directed graph, and creates an edge between them, with the weight from the CSV file becoming the edge weight. The edge weights are summed if multiple dependency files are processed and the same dependency is found in multiple files. Self-loops cannot occur, as the input data consists only of pairs of distinct entities. Cycles are not explicitly handled or removed, as the clustering algorithms operate on the entire graph structure and are unaffected by their presence.
 
-The workflow of applying the clustering algorithms and performing the evaluations is shown in Figure \ref{fig:tool}. After all dependencies are read, the directed graph is passed to the clustering algorithms: Louvain, Leiden, and DBSCAN. Each algorithm generates its own clustering result. The results from each algorithm are then evaluated using the MQ metric and the MoJoFM metric. The MQ metric requires the directed graph and the clustering result, while the MoJoFM metric requires the reference clustering solution provided as input and the clustering result.
+After all dependencies are read, the directed graph is passed to the clustering algorithms: Louvain, Leiden, and DBSCAN. For Louvain and Leiden, the clustering is applied directly to the directed graph. For DBSCAN, the graph is first converted into a symmetric distance matrix by combining the edge weights in both directions (e.g., from A to B and B to A), ensuring compatibility with the algorithm’s requirements. Each algorithm generates its own clustering result. The results from each algorithm are then evaluated using the MQ metric and the MoJoFM metric. The MQ metric requires the directed graph and the clustering result, while the MoJoFM metric requires the reference clustering solution provided as input and the clustering result.
 
 
 \subsubsection{Output}
@@ -453,7 +454,7 @@ To assess the impact of logical dependencies and to answer the research question
 
 In the first scenario, we run the tool once, providing only the system's structural dependencies as input for the clustering algorithm.
 
-In the second scenario, we run the tool ten times, using only logical dependencies as input. We perform ten runs because we generate logical dependencies with different threshold values for the strength filter. We start with a threshold of 10 and increase it in steps of 10 up to 100, where 100 is the maximum value for the threshold.
+In the second scenario, we run the tool ten times, using only logical dependencies as input. Each run corresponds to a different strength threshold value applied when filtering co-changes during logical dependency extraction. We generate a new logical dependency file for each threshold value, starting with a threshold of 10 and increasing in increments of 10, up to and including 100, where 100 is the maximum value for the threshold. This results in ten separate CSV files, each containing a different subset of logical dependencies, which are then used as input for clustering.
 
 In the third scenario, we combine logical with structural dependencies. Similar to the second scenario, we ran the tool ten times using structural and logical dependencies generated with different strength thresholds.
 
@@ -463,6 +464,11 @@ In the third scenario, we combine logical with structural dependencies. Similar 
   \caption{ \textbf{Experimental scenarios for analyzing the impact of logical dependencies on clustering quality}}
   \label{fig:scenatrio}
 \end{figure}
+
+
+\subsection{Computing Environment}
+
+All experiments were conducted on a local machine with an Intel(R) Core(TM) i7-8665U CPU, using Windows 10. The implementation was done in Python 3.10.
 
 
 \section{Experimental Results}
