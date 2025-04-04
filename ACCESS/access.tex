@@ -233,7 +233,7 @@ The \textit{confidence metric} of $(A \rightarrow B)$, as defined in Equation \e
 
 
 \begin{equation}
-\text{Confidence}(A \rightarrow B) = \frac{\text{Nr. of commits containing } A \text{ and } B}{\text{Nr. of commits containing } A}
+\text{confidence}(A \rightarrow B) = \frac{\text{nr. of commits containing } A \text{ and } B}{\text{nr. of commits containing } A}
 \label{eq:confidence}
 \end{equation}
 
@@ -242,17 +242,20 @@ The confidence metric favors entities that change less and more frequently toget
 
 Assuming that (A) was changed in 10 commits and, of these 10 commits, 9 also included changes to (B), the confidence for the rule $(A \rightarrow B)$ is 0.9. On the other hand, if (C) was changed in 100 commits and, of these 100 commits, 50 also included changes to (D), the confidence for the rule $(C \rightarrow D)$ is 0.5. Therefore, in this scenario, we would have more confidence in the first pair $(A \rightarrow B)$ than in the second pair $(C \rightarrow D)$, even though the second pair has more than five times more updates together.
 
-To favor entities involved in more commits together, we calculated a \textit{system factor}. This system factor is the mean value of the support metric values for all entity pairs.
-
-The system factor is multiplied by the calculated confidence metric value, then scaled by 100. Finally, the results are clipped between 0 and 100.
+To favor entities involved in more commits together, we calculated a \textit{system factor}. This system factor is the mean value of the support metric values for all entity pairs. It is used to scale the strength values: it upscales strength values of entity pairs that appear together in many commits and helps downscale strength values of entity pairs that appear together only in a few commits, thus reducing the impact of weak relationships.
 
 
-We refer to this addition to the original calculation formula as the strength metric, and it is defined in Equation \eqref{eq:strength}.
+The strength metric is computed by multiplying the confidence value by the system factor and then scaling the result by 100. Since this calculation may produce values greater than 100, we clip the final result to remain within a valid percentage range of 0 to 100. The strength metric is meant to be expressed in percentages, which allows applying percentage-based thresholds (e.g., 10\%, 20\%) for filtering logical dependencies.
 
+We refer to this extended version of the confidence metric as the strength metric, and it is defined in Equation \eqref{eq:strength}. These strength values are expressed as percentages. If we inspect the formula closely, the strength value represents the percentage of commits involving the antecedent of the rule that also involve the consequent of the rule, scaled by the system factor.
+
+{\small
 \begin{equation}
-\text{strength}(A \rightarrow B) = \text{confidence}(A \rightarrow B) \times 100 \times \text{system factor}
+\text{strength}~[\%](A \rightarrow B) = \text{confidence}(A \rightarrow B) \times \text{system factor} \times 100
 \label{eq:strength}
 \end{equation}
+}
+
 
 
 \subsubsection{Filter Application Process}
@@ -309,6 +312,12 @@ In this section, we present the methodology used to evaluate the impact of logic
 First, we describe the clustering algorithms used in our experiments: Louvain, Leiden, and DBSCAN. Next, we introduce the evaluation metrics used to assess the quality of the clustering results. Finally, we present the workflow and implementation of the tool developed for this research, which is built to process structural and logical dependencies, apply the selected clustering algorithms, and compute the evaluation metrics.
 
 \subsection{Clustering Algorithms}
+
+We selected Louvain, Leiden, and DBSCAN because they are scalable to systems of different sizes and compatible with the structure of our input data. Another important criterion was that the clustering algorithms should not require the number of clusters to be specified in advance. This is important in our context, where the number of expected modules is unknown. Louvain and Leiden are community detection algorithms designed for graph-based data, aligning with how we represent structural and logical dependencies. Leiden was included alongside Louvain because it addresses some of Louvain’s limitations.
+DBSCAN was chosen because it offers a different clustering perspective. It can discover clusters of varying shapes and identify noise in the data. 
+
+Using these three algorithms allows us to observe better how the type of input dependencies influences clustering results.
+
 \subsubsection{Louvain}
 \label{subsubsec:louvain}
 
@@ -363,7 +372,7 @@ MQ = \left( \frac{1}{k} \sum_{i=1}^{k} A_i \right) - \left( \frac{1}{k(k-1)} \su
 \label{eq:mq}
 \end{equation}
 
-The MQ metric's value ranges between -1 and 1. A value of -1 means that the clusters have more connections between the clusters than within the clusters, while a value of 1 means that there are more connections within clusters than between clusters. A good clustering solution should have an MQ value close to 1, since this indicates that the clusters are more cohesive internally and have fewer connections to other clusters.
+The MQ metric's value ranges between -1 and 1. A value of -1 means that the clusters have more connections between the clusters than within the clusters, while a value of 1 means that there are more connections within clusters than between clusters. A good clustering solution should have an MQ value close to 1, since this indicates that the clusters are more cohesive internally and have fewer connections to other clusters. However, one limitation of MQ is that it can sometimes favor over-segmentation by rewarding small, tightly connected clusters. To address this, we also use the MoJoFM metric, defined in the next section, which helps identify such cases.
 
 The MQ metric is useful because it does not require additional input besides the clustering result. It relies on the structure of the clustered entities and their interactions.
 
@@ -397,7 +406,9 @@ Using the MoJoFM metric, we can evaluate the similarity between the generated an
 \Figure[t!](topskip=0pt, botskip=0pt, midskip=0pt)[width=\textwidth]{workflow-tool.png}
 { \textbf{Clustering tool workflow: input, graph construction, clustering, and evaluation.}\label{fig:tool}}
 
-To evaluate how logical dependencies impact the quality of clustering solutions, we developed a Python tool capable of using any type of dependency, either alone or combined with other types of dependencies, as long as it is provided in CSV format. The tool clusters and evaluates software clustering solutions using the MQ or MoJoFM metrics.
+To evaluate how logical dependencies impact the quality of clustering solutions, we developed a Python tool capable of using any type of dependency, either alone or combined with other types of dependencies, as long as it is provided in CSV format. Structural dependencies are extracted from the source code using static analysis, and logical dependencies are extracted from version control history. Both types of dependencies are extracted using tools developed in our previous work. 
+
+The tool clusters and evaluates software clustering solutions using the MQ or MoJoFM metrics.
 
 The overall workflow of the tool, including the input, processing, and output steps described in more detail below, is shown in Figure \ref{fig:tool}.
 
@@ -435,7 +446,7 @@ This section presents the projects used in our experiments and the approach take
 \begin{tabular}{|l|l|c|l|p{4.7cm}|}
 \hline
 \textbf{Project Name} & \textbf{Release Tag} & \textbf{Commits} & \textbf{GitHub Repository Link} & \textbf{Repository Description} \\ 
- &  & \textbf{Number} & &  \\ \hline
+ & \textbf{(Version)} & \textbf{Number} & &  \\ \hline
 Apache Ant & \href{https://github.com/apache/ant/tree/rel/1.10.13}{rel/1.10.13} & 14917 & \href{https://github.com/apache/ant}{https://github.com/apache/ant} & Apache Ant is a Java-based build tool. \\ \hline
 Apache Tomcat & \href{https://github.com/apache/tomcat/tree/8.5.93}{8.5.93} & 22698 & \href{https://github.com/apache/tomcat}{https://github.com/apache/tomcat} & 
 Apache Tomcat is an open-source Java web server and servlet container\\ \hline
@@ -454,7 +465,8 @@ To assess the impact of logical dependencies and to answer the research question
 
 In the first scenario, we run the tool once, providing only the system's structural dependencies as input for the clustering algorithm.
 
-In the second scenario, we run the tool ten times, using only logical dependencies as input. Each run corresponds to a different strength threshold value applied when filtering co-changes during logical dependency extraction. We generate a new logical dependency file for each threshold value, starting with a threshold of 10 and increasing in increments of 10, up to and including 100, where 100 is the maximum value for the threshold. This results in ten separate CSV files, each containing a different subset of logical dependencies, which are then used as input for clustering.
+In the second scenario, we run the tool ten times, using only logical dependencies as input. Each run corresponds to a different strength threshold value applied when filtering co-changes during logical dependency extraction. We generate a new logical dependency file for each threshold value, starting with a threshold of 10 and increasing in increments of 10, up to and including 100. A threshold of 0 is not used since a strength value of 0\% is not possible by the definition of the strength metric. There must be at least one co-change event between two entities to compute a valid strength value. We start at 10\% as a practical lower bound to avoid including a large number of low-confidence, noisy dependencies. The maximum threshold is set to 100\%, as strength metric values are clipped to a maximum of 100.
+This results in ten separate CSV files, each containing a different subset of logical dependencies, which are then used as input for clustering.
 
 In the third scenario, we combine logical with structural dependencies. Similar to the second scenario, we ran the tool ten times using structural and logical dependencies generated with different strength thresholds.
 
@@ -869,7 +881,7 @@ The optimal filtering threshold may vary depending on system characteristics ( n
 \label{sec:conclusion}
 Our findings indicate that using logical dependencies improves software clustering. Integrating LD with SD achieved higher MQ and MoJoFM values across all clustering algorithms and projects than the SD-only approach, demonstrating enhanced clustering due to the additional information provided by logical dependencies.
 
-Using logical dependencies alone achieved the highest MQ and MoJoFM values compared to SD-only and SD+LD combinations. However, these strength thresholds corresponded to low system coverage, meaning that a significant portion of software entities was excluded from the clustering process. This suggests that logical dependencies alone may not be sufficient if full system coverage is required.
+Using logical dependencies alone achieved the highest MQ and MoJoFM values compared to SD-only and SD+LD combinations. However, these strength thresholds corresponded to low system coverage, meaning that a significant portion of software entities was excluded from the clustering process. In contrast, SD+LD covers the entire system while maintaining comparable clustering quality. From a practical perspective, clustering results that include most or all entities are more useful in real-world scenarios. Furthermore, SD+LD retains the valuable co-change relationships captured by LD that structural dependencies alone may miss.
 
 The impact of using logical dependencies is influenced by the filtering thresholds applied during their extraction. Lower strength thresholds (10\% to 40\%) provided a good trade-off between including meaningful co-change relationships and minimizing noise. At these thresholds, the combined SD+LD approach outperformed the SD-only approach. At higher strength thresholds (e.g., 100\%), the reduced coverage and increased overlap between LD and SD minimized the advantages of using logical dependencies.
 
