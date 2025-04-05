@@ -51,11 +51,16 @@ Politehnica University of Timisoara, Romania (e-mail: ioana.sora@cs.upt.ro)}
 \corresp{Corresponding author: Adelina Diana Stana  (e-mail: adelina.stana@cs.upt.ro).}
 
 \begin{abstract}  
-Version control systems are important for tracking and managing changes in software code, but they also offer information about the relationships between software entities. When multiple software entities (e.g., classes, interfaces) are modified together, it may indicate an underlying connection. These code co-changes can be filtered to obtain logical dependencies (LD), which represent a type of software dependency that can complement structural or lexical dependencies to improve the understanding of a system's architecture.  
+Version control systems are important for tracking and managing changes in software code, but they also offer information about the relationships between software entities. When multiple software entities (e.g., classes, interfaces) are modified together, it may indicate an underlying connection. These code co-changes can be filtered to obtain logical dependencies, which represent a type of software dependency that can complement structural or lexical dependencies to improve understanding of a system's architecture.  
 
-In this paper, we explore the use of logical dependencies extracted from code co-changes as input for software clustering for architectural reconstruction. Since structural dependencies (SD) are the most commonly used dependencies in software clustering, we investigate whether integrating both logical and structural dependencies provides better results than using either dependency type alone.  
+This paper explores the use of logical dependencies, refined from code co-changes using filtering techniques, as input for software clustering, a technique that groups related software entities to support architectural reconstruction by recovering the system's modular structure. 
 
-Our experiments are conducted on four open-source Java projects from GitHub. We apply three distinct clustering algorithms (Louvain, Leiden, and DBSCAN) and evaluate their performance using two clustering evaluation metrics. Our results show that using logical and structural dependencies as inputs for software clustering improves the quality of software architecture reconstruction. Also, the experiments show that when structural dependencies cannot be extracted, then using only logical dependencies as input for software clustering enables architecture reconstruction with good results.  
+Our experiments are conducted on four open-source Java projects from GitHub. We apply three distinct clustering algorithms (Louvain, Leiden, and DBSCAN) and evaluate their performance using two clustering evaluation metrics (Modularization Quality and MoJoFM).
+
+To evaluate clustering quality, we conduct three experiments with different dependency configurations: (1) only structural dependencies, (2) only logical dependencies, and (3) a combination of both. Our goal is to assess which configuration performs better and to examine the limitations of using only logical dependencies.
+
+In recent years, dynamically typed languages like Python and JavaScript have gained popularity over statically typed languages. In such languages, static code analysis is often unreliable due to the lack of explicit type information, making structural relationships difficult to extract. Investigating whether logical dependencies can be used effectively and provide results comparable to structural dependencies may improve architectural reconstruction in these contexts.
+
 \end{abstract}  
 
 \begin{keywords}
@@ -122,12 +127,21 @@ Wu et al. \cite{wu} conducted a comparative study of six clustering algorithms u
 
 Mancoridis and Mitchell ~\cite{b10}, \cite{b101}, \cite{bunch} developed the Bunch tool for software clustering and used structural dependencies as input. The tool applies clustering algorithms to the structural dependency graph and outputs the system's organization. For evaluation, the authors introduced the Modularization Quality (MQ) metric, described in more detail in Section \ref{subsec:mq}, and is also used in our current experiments as an evaluation metric.
 
-
 Prajapati et al.~\cite{b18} propose a many-objective SBSR (search-based software remodularization) approach with an improved definition of objective functions based on lexical, structural, and change-history dependencies. The authors evaluate their approach on several open-source software systems using the MoJoFM metric for external evaluation and the MQ metric for internal evaluation.
 
 Şora et al.~\cite{b12}, \cite{b19} developed the ARTs (Architecture Reconstruction Tool Suite) for their experiments on improving software architecture reconstruction through clustering. The tool suite implements various clustering algorithms, such as minimum spanning tree-based, metric-based, search-based, and hierarchical clustering, primarily using structural dependencies as input. The research focuses on identifying the right factors for direct coupling between classes, indirect coupling, and layered architecture. The results of applying these different factors are evaluated using the MoJo distance metric.
 
 Silva et al.~\cite{b16} investigated using solely co-change dependencies as input for the Chameleon algorithm, an agglomerative hierarchical clustering method, to identify clusters. For evaluation, the authors used distribution maps to compare the clusters generated from co-change dependencies with the system's package structure.
+
+Many of the works above explore different types of dependencies for software clustering, such as structural \cite{b10, wu, b12, b19, tzerpos1, maletic, b18}, lexical or semantic \cite{b18, corazza2, b13, b14}, and co-change information \cite{b16}. At the same time, some combine multiple types, as in the case of Andritsos and Tzerpos \cite{tzerpos1} and Prajapati et al. \cite{b18}.
+
+While studies such as Prajapati et al. \cite{b18} combine co-change information with other dependencies, as in the current research, they do not explicitly investigate what limitations may arise when solely relying on them. Their work treats co-change coupling as one of several objectives in a many-objective search-based clustering approach. However, they do not consider co-changes possibly occurring coincidentally and introduce noise into the results.
+
+Our approach addresses this issue by using an improved version of the confidence metric introduced by Zimmermann et al. \cite{Zimmermann:2004:MVH:998675.999460}, which measures the importance of co-changing entities based on the frequency of their co-changing behavior. This metric has been adopted in various studies involving co-change filtering. For instance, Kagdi et al. used it for software change prediction \cite{article-Kagdi-commit}, and Mandal et al. applied it for clone detection \cite{Mandal-clones}.
+
+However, as highlighted in our previous research \cite{b4}, and other authors such as Ying et al. \cite{Ying-co-change}, the confidence metric can be misleading when some files change much more frequently than others. To address this issue, we  introduce and use an improved version of the confidence metric to extract more accurate logical dependencies (filtered co-changes) for clustering. 
+
+Furthermore, while most prior works rely on a single evaluation metric, typically either MQ or MoJo, we use both in our evaluation. We consider these metrics complementary, as each captures different aspects of clustering quality and helps to address the limitations of the other.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -911,6 +925,9 @@ In conclusion, when optimally filtered and combined with structural dependencies
 \bibitem{leiden} Traag, V. \& Waltman, L. \& van Eck, Nees Jan. (2019). From Louvain to Leiden: guaranteeing well-connected communities. Scientific Reports. 9. 5233. 10.1038/s41598-019-41695-z. 
 \bibitem{b10} S. Mancoridis, B. S. Mitchell, Y. Chen and E. R. Gansner, "Bunch: a clustering tool for the recovery and maintenance of software system structures," Proceedings IEEE International Conference on Software Maintenance - 1999 (ICSM'99). 'Software Maintenance for Business Change' (Cat. No.99CB36360), Oxford, UK, 1999, pp. 50-59, doi: 10.1109/ICSM.1999.792498.
 \bibitem{wu} Wu, A. E. Hassan and R. C. Holt, "Comparison of clustering algorithms in the context of software evolution," 21st IEEE International Conference on Software Maintenance (ICSM'05), Budapest, Hungary, 2005, pp. 525-535, doi: 10.1109/ICSM.2005.31.
+\bibitem{article-Kagdi-commit} Daihong Zhou, Jiyue Zhang, Ping Yu, and Wunan Guo. 2024. Enhancing Change Impact Prediction by Integrating Evolutionary Coupling with Software Change Relationships. In Proceedings of the 18th ACM/IEEE International Symposium on Empirical Software Engineering and Measurement (ESEM '24).
+\bibitem{Mandal-clones} M. Mandal, C. K. Roy and K. A. Schneider, "Automatic ranking of clones for refactoring through mining association rules," 2014 Software Evolution Week - IEEE Conference on Software Maintenance, Reengineering, and Reverse Engineering (CSMR-WCRE), Antwerp, Belgium, 2014, pp. 114-123, doi: 10.1109/CSMR-WCRE.2014.6747161.
+\bibitem{Ying-co-change} A. T. T. Ying, G. C. Murphy, R. Ng and M. C. Chu-Carroll, "Predicting source code changes by mining change history," in IEEE Transactions on Software Engineering, vol. 30, no. 9, pp. 574-586, Sept. 2004, doi: 10.1109/TSE.2004.52.
 \bibitem{b101} S. Mancoridis, B. S. Mitchell, C. Rorres, Y. Chen and E. R. Gansner, "Using automatic clustering to produce high-level system organizations of source code," Proceedings. 6th International Workshop on Program Comprehension. IWPC'98 (Cat. No.98TB100242), Ischia, Italy, 1998, pp. 45-52, doi: 10.1109/WPC.1998.693283.
 \bibitem{bunch} B. S. Mitchell and S. Mancoridis, "On the automatic modularization of software systems using the Bunch tool," in IEEE Transactions on Software Engineering, vol. 32, no. 3, pp. 193-208, March 2006, doi: 10.1109/TSE.2006.31. 
 \bibitem{dbscan} Martin Ester, Hans-Peter Kriegel, Jörg Sander, and Xiaowei Xu. 1996. A density-based algorithm for discovering clusters in large spatial databases with noise. In Proceedings of the Second International Conference on Knowledge Discovery and Data Mining (KDD'96). AAAI Press, 226–231.
