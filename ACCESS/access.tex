@@ -8,7 +8,7 @@
 \usepackage[table]{xcolor}
 \usepackage{algorithm}
 \usepackage{algorithmic}
-
+\usepackage{multirow}
 
 \usepackage{bm}
 \makeatletter
@@ -860,7 +860,47 @@ Gson also has relatively high overlap rates between LD and SD compared to the ot
 
 The results for this system highlight the difficulty of achieving better clustering solutions using logical dependencies in smaller systems with fewer commits. However, even for a small system like Gson, an improvement is still visible when using logical dependencies.
 
+\subsection{Cross-System Results Comparison}
 
+In addition to our per-system analysis, we perform a cross-system comparison to evaluate the impact of different dependency input configurations. Out of all the strength thresholds used in our experiments, we selected two representative cases for comparison against the \textit{SD-only} baseline:
+
+\textit{(1) SD+LD(20):} We selected a threshold of 20\% for logical dependencies because it represents the midpoint of the [10--40] interval, where we observed good MQ and MoJoFM scores across systems.
+
+\textit{(2) LD(100):} We selected the 100\% threshold for logical dependencies only, as this configuration gave the best results in almost all cases.
+
+We computed the average MQ and MoJoFM scores across all systems for this comparison. To statistically support the comparison, we used the Friedman test \cite{friedman}, a non-parametric test designed for repeated measures. This test was suitable in our case because the same systems were evaluated under each of the three input configurations (SD-only, SD+LD(20), and LD(100)). It is also well suited for small datasets; in our case, each group includes just four values. The Friedman test computes a chi-square statistic based on ranked data and returns a p-value that indicates whether the differences between the groups are statistically significant. A p-value below 0.05 is generally interpreted as a statistically significant difference between groups.
+
+Tables~\ref{tab:combined_mq} and \ref{tab:combined_mojofm} present the average MQ and MoJoFM scores for each input configuration, grouped by clustering algorithm. The results show that, on average, both SD+LD(20) and LD(100) outperform the baseline SD-only configuration. The Friedman test shows statistically significant differences for all clustering methods on MQ, and for Louvain and Leiden on MoJoFM.
+
+\begin{table}[htbp]
+\centering
+\caption{Average MQ scores across all systems for different input configurations and Friedman test results.}
+\label{tab:combined_mq}
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\textbf{Clustering} & \textbf{SD} & \textbf{SD+LD(20)} & \textbf{LD(100)} & \boldmath$\chi^2$ / p \\
+\hline
+Louvain & 0.132 & 0.247 & 0.591 & 8.00 / 0.018 \\
+Leiden  & 0.121 & 0.267 & 0.591 & 8.00 / 0.018 \\
+DBSCAN  & 0.135 & 0.152 & 0.627 & 8.00 / 0.018 \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Average MoJoFM scores across all systems for different input configurations and Friedman test results.}
+\label{tab:combined_mojofm}
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\textbf{Clustering} & \textbf{SD} & \textbf{SD+LD(20)} & \textbf{LD(100)} & \boldmath$\chi^2$ / p\\
+\hline
+Louvain & 57.37 & 61.21 & 71.61 & 6.50 / 0.039 \\
+Leiden  & 59.59 & 62.86 & 71.61 & 6.50 / 0.039 \\
+DBSCAN  & 49.15 & 50.29 & 61.03 & 2.80 / 0.247 \\
+\hline
+\end{tabular}
+\end{table}
 
 \section{Research Questions and Findings}
 \label{sec:rq}
@@ -964,7 +1004,7 @@ In conclusion, when optimally filtered and combined with structural dependencies
 \bibitem{b17} Murtagh, Fionn \& Contreras, Pedro. (2012). Algorithms for hierarchical clustering: An overview. Wiley Interdisc. Rew.: Data Mining and Knowledge Discovery. 2. 86-97. 10.1002/widm.53. 
 \bibitem{b18} Amarjeet Prajapati, Anshu Parashar, Amit Rathee. Multi-dimensional information-driven many-objective software remodularization approach. Frontiers of Computer Science in China, 17(3):173209, 2023.
 \bibitem{scikit} T. Bonald, N. de Lara, Q. Lutz, B. Charpentier, Scikit-network: Graph Analysis in Python, Journal of Machine Learning Research, vol.~21, no.~185, pp.~1--6, 2020. 
-
+\bibitem{friedman} Friedman, Milton. “The Use of Ranks to Avoid the Assumption of Normality Implicit in the Analysis of Variance.” Journal of the American Statistical Association 32 (1937): 675-701.
 
 
 \end{thebibliography}
