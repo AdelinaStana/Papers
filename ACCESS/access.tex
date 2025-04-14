@@ -54,9 +54,9 @@ Politehnica University of Timisoara, Romania (e-mail: ioana.sora@cs.upt.ro)}
 Version control systems are essential for tracking and managing changes in software code. They also provide information about the relationships between software entities: when multiple entities (e.g., classes or interfaces) are frequently modified together, it may indicate an underlying connection between them. These code co-changes can be analyzed to uncover logical dependencies — dependencies that complement structural or lexical dependencies.
 While structural dependencies are extracted using code analysis techniques, logical dependencies can be extracted solely from version control system logs. This makes their extraction independent of the programming language.
 
-Our work investigates filtering techniques to eliminate co-change situations that are not meaningful as logical dependencies. The effectiveness of these filtering techniques is validated by using the obtained logical dependencies in architectural reconstruction, a reverse engineering activity aimed at recovering a system's modular structure.
+Our work investigates filtering techniques to eliminate co-change situations that are not meaningful as logical dependencies. The effectiveness of these filtering techniques is investigated by using the obtained logical dependencies in architectural reconstruction, a reverse engineering activity aimed at recovering a system's modular structure.
 
-This paper explores the use of logical dependencies as input for architectural reconstruction. The main goal is to investigate whether logical dependencies can complement or even fully replace structural dependencies. We use clustering based on software dependencies to group related entities into modules.
+This paper explores the use of logical dependencies as input for architectural reconstruction. The main goal is to investigate whether logical dependencies can complement or even fully replace structural dependencies in this process. We use clustering based on software dependencies to group related entities into modules.
 
 We conduct experiments on four open-source Java projects using three clustering algorithms (Louvain, Leiden, and DBSCAN) and two evaluation metrics (Modularization Quality and MoJoFM). We consider three different dependency configurations: (1) only structural dependencies, (2) only logical dependencies, and (3) their combination. Our goal is to assess which configuration performs best and to examine the advantages and limitations of using logical dependencies.
 
@@ -75,7 +75,10 @@ Architectural reconstruction, code co-changes, logical dependencies, software cl
 
 Software systems often lack sufficient or up-to-date documentation. Even if there was original documentation at the beginning of development, it may become outdated over the years. Additionally, the original developers may leave the company, taking with them knowledge about how the software was designed. This situation challenges the teams when it comes to maintenance or modernization. In this context, recovering the system's architecture is essential. Understanding the system's architecture helps developers evaluate better and understand the nature and impact of changes they must make. 
 
-A common form of architectural abstraction involves identifying the system's modules. These modules represent the architectural components of the system and are created by grouping related software entities. Software entities are the fundamental building blocks of a program. Depending on the programming paradigm, they may include procedures and functions (in procedural programming) or classes and interfaces (in object-oriented programming). As analyzed in \cite{ducassepollet}, software architecture reconstruction is very often a bottom-up process where higher-level architectural abstractions are built starting from low-level existing artifacts: most often source code representations, but also other kinds of information, such as dynamic information extracted from a system execution or historical data from version control system repositories. If source code is used as input, a frequently used approach in state-of-the-art is to extract structural dependencies between the software entities through static analysis \cite{tzerpos1, wu, b10, bunch, b12, b19}. A few approaches \cite{acdc, b18} also use lexical dependencies (relationships between entities based on naming similarities and conventions).
+A common form of architectural abstraction involves identifying the system's modules. These modules represent the architectural components of the system and are created by grouping related software entities. Software entities are the fundamental building blocks of a program. Depending on the programming paradigm, they may include procedures and functions (in procedural programming) or classes and interfaces (in object-oriented programming). 
+
+
+Software architecture reconstruction is very often a bottom-up process where higher-level architectural abstractions are built starting from low-level existing artifacts: most often source code representations, but also other kinds of information, such as dynamic information extracted from a system execution or historical data from version control system repositories \cite{ducassepollet}. If source code is used as input, a frequently used approach in state-of-the-art is to extract structural dependencies between the software entities through static analysis \cite{tzerpos1, wu, b10, bunch, b12, b19}. A few approaches \cite{acdc, b18} also use lexical dependencies (relationships between entities based on naming similarities and conventions).
 
 Many state-of-the-art architectural reconstruction approaches use various software clustering techniques to process the different types of inputs. Software clustering involves creating cohesive groups (modules) of software entities based on their dependencies and interactions.
 
@@ -86,9 +89,9 @@ In this work, we focus on how to best exploit information from version control s
 \end{itemize}
 
 The need to filter co-changes before considering them as logical dependencies stems from the observation that some entities may be accidentally updated together in the same commit. The more frequently they are updated together (they appear in more commits), the more likely it is that there is a dependency between them. Also, a commit of a large size (involving a large number of files) is most likely a belated commit, or it reflects unrelated updates (such as formatting or configuration updates).
-The works of Zimmermann et al. \cite{Zimmermann:2004:MVH:998675.999460, b7} and  Capiluppi et al. \cite{b1, b12017} introduced the idea that co-changes must be filtered before considering them as dependencies. Different filtering techniques have been empirically proposed. Also, the filtered logical dependencies have been used in other types of applications, not just software architecture reconstruction.
+The works of Zimmermann et al. \cite{Zimmermann:2004:MVH:998675.999460, b7} and  Capiluppi et al. \cite{b1, b12017} introduced the idea that co-changes must be filtered before considering them as dependencies. These works proposed different empirical filtering techniques. Also, the filtered logical dependencies have been used in other types of applications, not just software architecture reconstruction.
 
-In our work, we use for filtering the metric of commit size and introduce a new metric called the connection strength metric. This metric is derived from the confidence metric introduced by Zimmermann et al. \cite{Zimmermann:2004:MVH:998675.999460} and used by other authors for various software engineering tasks \cite{article-Kagdi-commit}, \cite{Mandal-clones}. We introduced this new metric to alleviate some limitations of the confidence metric, as we explain in Section \ref{subsec:ld} of this paper. The connection strength metric was introduced in our previous research to improve key class detection \cite{b1}, \cite{b4}.
+In our work, we use for filtering the metric of commit size and introduce a new metric called the connection strength metric. This metric is derived from the confidence metric introduced by Zimmermann et al. \cite{Zimmermann:2004:MVH:998675.999460} and used by other authors for various software engineering tasks \cite{article-Kagdi-commit}, \cite{Mandal-clones}. We introduced this new metric to alleviate some limitations of the confidence metric, as we explain in Section \ref{subsec:ld} of this paper. The connection strength metric was introduced in our previous research on using logical dependencies to improve key class detection \cite{b1}, \cite{b4}.
 
 In this work, we refer to logical dependencies (LD) as being derived from co-changes after our filtering technique has been applied.
 
@@ -101,6 +104,8 @@ The following research questions guide our investigation:
 \end{itemize}
 
 To answer these research questions, we apply three different clustering algorithms (Louvain, Leiden, and DBSCAN) to different open-source projects. We then evaluate the results using two frequently used metrics in software clustering:  MQ (Modularization Quality) \cite{b10} and MoJoFM (Move and Join e\textbf{F}fectiveness \textbf{M}easure) \cite{mojofm}. We have chosen these two metrics to offer complementary insights, with each addressing the potential limitations of the other. Together, they allow us to assess the effectiveness of using structural and logical dependencies separately and in combination. The MoJoFM metric is used for external evaluation, evaluating against the perspective of the system's architect or developers. The MQ metric is used for internal evaluation based on the software structure itself. 
+
+
 The main contributions of this paper are as follows:
 \begin{itemize}
   \item We introduce a filtering approach that refines co-changes into reliable logical dependencies using two metrics: commit size and a confidence-based connection strength metric.
@@ -109,7 +114,7 @@ The main contributions of this paper are as follows:
 
 The paper is structured as follows. In Section \ref{sec:related_work}, we review the related work and previous studies that used various dependencies for software clustering and their metrics for evaluation.
 Section \ref{sec:dependencies} provides an overview of structural and logical dependencies used in our approach, explaining how these dependencies are extracted.
-Section \ref{sec:methodology_implementation} details the workflow and implementation of our approach, including the extraction and filtering of dependencies and the clustering algorithm used.
+Section \ref{sec:clustering_algorithms_evaluation} describes the clustering algorithms and evaluation metrics used, and Section~\ref{sec:tool_workflow} describes the tool implemented for this paper's experiments.
 The plan of our experiments on four open-source projects is presented in Section \ref{sec:plan}. Sections \ref{sec:results} and \ref{sec:rq} present and evaluate our results using the Modularization Quality (MQ) metric and the MoJoFM metric. 
 Finally, Section \ref{sec:conclusion} contains our conclusions and findings.
 
@@ -215,7 +220,7 @@ Structural dependencies (SD) are extracted using static code analysis. However, 
 
 We refer to logical dependencies as the filtered co-changes between software entities. A co-change occurs when two or more software entities are modified together during the same commit in the version control system. Co-changes indicate that these entities are likely directly or indirectly related or dependent on each other.
 
-Co-changes are associated with a degree of uncertainty. Compared to structural dependencies, where a dependency is certain, co-changes are less reliable. For example, if the system was migrated from one version control system to another, the first commit will include all the entities from the system at that point in time. Should we consider all these entities related to one another in this case? This would introduce false dependencies and reduce the likelihood of achieving accurate results when combining them with more reliable types of dependencies.
+Co-changes do not always imply a logical dependency. For example, if the system was migrated from one version control system to another, the first commit will include all the entities from the system at that point in time. Should we consider all these entities related to one another in this case? This would introduce false dependencies and reduce the likelihood of achieving accurate results when combining them with more reliable types of dependencies.
 
 Even if we address the issue of the first commit, a developer can still resolve multiple unrelated issues in the same commit (even though development processes do not recommend this).
 
@@ -234,7 +239,7 @@ A similar scenario occurs with merge commits. A merge commit is automatically cr
 Both scenarios above have in common the large number of files involved in the commits. Based on our previous research and measurements regarding the number of files involved in a commit, we set a threshold of 20 files \cite{b4}, \cite{b5}. 
 Other authors have proposed commit size thresholds relatively close to the one used in this paper. Capiluppi et al. \cite{b1,b12017} considered commits with fewer than 10 modified source code files; Ying et al. \cite{Ying-co-change} considered commits with fewer than 100 modified source code files; Zimmermann et al. \cite{Zimmermann:2004:MVH:998675.999460} configured the ROSE tool to exclude commits with more than 30 files; and Moonen et al. \cite{Moonen-commit} recommended a threshold of 8 files.
 
-Based on our previous studies, we observed that a threshold below 10 removes a significant number of commits from the history, and it is common for developers to modify 10 or more files in a single update. On the other hand, setting the threshold to 100 allows a single commit to introduce 4950 co-changes, which in some systems may result in up to 8 times more co-changes than the total number of structural dependencies extracted. Therefore, setting the threshold to 20 is a good tradeoff between keeping as much commit history information as possible and avoiding overcrowding the system with co-changes.
+Based on our previous studies \cite{b4, b5, b6}, we observed that a threshold below 10 removes a significant number of commits from the history, and it is common for developers to modify 10 or more files in a single update. On the other hand, setting the threshold to 100 allows a single commit to introduce 4950 co-changes, which in some systems may result in up to 8 times more co-changes than the total number of structural dependencies extracted. Therefore, setting the threshold to 20 is a good tradeoff between keeping as much commit history information as possible and avoiding overcrowding the system with co-changes.
 
 
 Table \ref{tab:commit_statistics} presents the commit statistics for the studied projects. The columns represent the percentage of commits with under 5 files modified, between 5 and 10 files, between 10 and 20 files, and above 20 files modified. We can observe that most commits have under 5 files changed, with Apache Tomcat having more than 90\% of the commits with less than 5 files changed. On the opposite side, only a few commits involve more than 20 files changed, Hibernate ORM having the highest percentage at 8.39\%. Overall, filtering based on commit size does not significantly reduce the number of commits considered.
@@ -341,12 +346,11 @@ When SD and LD overlap, such as between \texttt{OrangeCat} and \texttt{CatBehavi
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\section{Methodology and Implementation}
-\label{sec:methodology_implementation}
+\section{Clustering Algorithms and Evaluation Metrics}
+\label{sec:clustering_algorithms_evaluation}
 
-In this section, we present the methodology used to evaluate the impact of logical dependencies on the quality of software clustering solutions.
+In this section, we present the clustering algorithms used in our experiments: Louvain, Leiden, and DBSCAN. We also introduce the evaluation metrics used to assess the quality of the clustering results.
 
-First, we describe the clustering algorithms used in our experiments: Louvain, Leiden, and DBSCAN. Next, we introduce the evaluation metrics used to assess the quality of the clustering results. Finally, we present the workflow and implementation of the tool developed for this research, which is built to process structural and logical dependencies, apply the selected clustering algorithms, and compute the evaluation metrics.
 
 \subsection{Clustering Algorithms}
 
@@ -436,9 +440,10 @@ To use the metric, we first need to generate a reference clustering solution for
 
 Using the MoJoFM metric, we can evaluate the similarity between the generated and reference clustering solutions. This metric is useful when combining multiple dependencies because it measures the similarity between the obtained clustering solutions and the same reference.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Workflow for Software Clustering and Evaluation}
-\label{subsec:tool_workflow}
+\section{Tool Implementation and Workflow}
+\label{sec:tool_workflow}
 
 \Figure[t!](topskip=0pt, botskip=0pt, midskip=0pt)[width=\textwidth]{workflow-tool.png}
 { \textbf{Clustering tool workflow: input, graph construction, clustering, and evaluation.}\label{fig:tool}}
@@ -449,20 +454,20 @@ The tool clusters and evaluates software clustering solutions using the MQ or Mo
 
 The overall workflow of the tool, including the input, processing, and output steps described in more detail below, is shown in Figure \ref{fig:tool}.
 
-\subsubsection{Input}
+\subsection{Input}
 
 The tool takes one or multiple dependency CSV files as input and the reference solution required for the MoJoFM metric. We designed the tool to accept multiple dependency files so that we can generate clustering solutions based on either a single type of dependency (structural or logical) or a combination of both.
 
 Since the MoJoFM metric requires a reference solution to evaluate the obtained clustering solutions, we manually inspected the code and created reference clustering solutions, which we then provided as input for the tool.
 
-\subsubsection{Processing}
+\subsection{Processing}
 
 The dependencies are saved in the CSV file in the following format: \texttt{antecedent of a dependency, consequent of a dependency, weight}. The tool reads each line, adds the antecedent and consequent as nodes in a directed graph, and creates an edge between them, with the weight from the CSV file becoming the edge weight. The edge weights are summed if multiple dependency files are processed and the same dependency is found in multiple files. Self-loops cannot occur, as the input data consists only of pairs of distinct entities. Cycles are not explicitly handled or removed, as the clustering algorithms operate on the entire graph structure and are unaffected by their presence.
 
 After all dependencies are read, the directed graph is passed to the clustering algorithms: Louvain, Leiden, and DBSCAN. For Louvain and Leiden, the clustering is applied directly to the directed graph. For DBSCAN, the graph is first converted into a symmetric distance matrix by combining the edge weights in both directions (e.g., from A to B and B to A), ensuring compatibility with the algorithm’s requirements. Each algorithm generates its own clustering result. The results from each algorithm are then evaluated using the MQ metric and the MoJoFM metric. The MQ metric requires the directed graph and the clustering result, while the MoJoFM metric requires the reference clustering solution provided as input and the clustering result.
 
 
-\subsubsection{Output}
+\subsection{Output}
 
 After applying each clustering algorithm and completing both evaluations, we export the clustering result, the number of clusters from the clustering solution, and the MQ and MoJoFM metrics values.
 
@@ -498,7 +503,7 @@ We mainly chose projects with more than 10,000 commits in their commit history s
 
 \subsection{Tool runs}
 
-To assess the impact of logical dependencies and to answer the research questions from section \ref{sec:introduction}, we run the tool presented in Section \ref{subsec:tool_workflow} in three different scenarios for all the projects from table \ref{tab:project_info}. All three scenarios are illustrated in Fig. \ref{fig:scenatrio}.
+To assess the impact of logical dependencies and to answer the research questions from section \ref{sec:introduction}, we run the tool presented in Section \ref{sec:tool_workflow} in three different scenarios for all the projects from table \ref{tab:project_info}. All three scenarios are illustrated in Fig. \ref{fig:scenatrio}.
 
 In the first scenario, we run the tool once, providing only the system's structural dependencies as input for the clustering algorithm.
 
@@ -864,63 +869,59 @@ The results for this system highlight the difficulty of achieving better cluster
 
 \subsection{Cross-System Results Comparison}
 
-In addition to our per-system analysis, we perform a cross-system comparison to evaluate the impact of different dependency input configurations. Out of all the strength thresholds used in our experiments, we selected a set of representative configurations for cross-system comparison against the \textit{SD-only} baseline.
+In addition to our per-system analysis, we perform a cross-system comparison to evaluate the impact of different dependency input configurations. Out of all the strength thresholds used in our experiments, we selected three representative cases for comparison against the \textit{SD-only} baseline:
 
-We included the following configurations:
+\begin{enumerate}
+  \item \textit{SD+LD(20):} We selected a threshold of 20\% for logical dependencies because it represents the midpoint of the [10--40] interval, where we observed good MQ and MoJoFM results across systems.
+  \item \textit{LD(10):} We selected the 10\% threshold for logical dependencies only, as this configuration has the best system coverage among all LD-only cases.
+  \item \textit{LD(100):} We selected the 100\% threshold for logical dependencies only, as this configuration gave the best MQ and MoJoFM results in almost all cases.
+\end{enumerate}
 
-\begin{itemize}
-    \item \textit{SD}
-    \item \textit{SD+LD(10)}, \textit{SD+LD(20)}, \textit{SD+LD(30)}, \textit{SD+LD(40)}. These four combinations were selected because, at the level of individual systems, the best results were typically observed within the [10--40\%] threshold range. 
-    \item \textit{LD(10)}, \textit{LD(20)}, \textit{LD(30)}, \textit{LD(40)}. These thresholds were chosen to match the same [10--40] range as the combinations and because the coverage of logical dependencies remains reasonable at these thresholds.
-    \item \textit{LD(100)}. This configuration was included because it produced the highest metric results in many cases.
-\end{itemize}
+For this comparison, we computed the average MQ and MoJoFM results across all systems. To statistically support the comparison, we used the Friedman test \cite{friedman}, a non-parametric test designed for repeated measures. This test was suitable in our case because the same systems were evaluated under each of the four input configurations (SD-only, SD+LD(20),  LD(10), and LD(100)). It is also well suited for small datasets; in our case, each group includes just four values. The Friedman test computes a chi-square statistic based on ranked data and returns a p-value that indicates whether the differences between the groups are statistically significant. A p-value below 0.05 is generally interpreted as a statistically significant difference between groups.
 
-To statistically support the comparison, we used the Kruskal-Wallis test~\cite{kruskal}, a non-parametric method for comparing more than two groups. This test was appropriate in our case because we evaluated the same systems under ten distinct input configurations. Each group contains four values, one for each system.
-The Kruskal-Wallis test compares the distributions of multiple groups based on ranked data and returns a test statistic and a p-value. The p-value indicates whether the differences between the groups are statistically significant. A p-value below 0.05 is generally interpreted as a statistically significant difference between groups.
+Tables~\ref{tab:combined_mq} and \ref{tab:combined_mojofm} present the average MQ and MoJoFM results for each input configuration, grouped by clustering algorithm. The results show that, on average, SD+LD(20), LD(10), and LD(100) outperform the baseline SD-only configuration. The Friedman test indicates statistically significant differences for all clustering methods on MQ, and for Louvain and Leiden on MoJoFM. The last row in each table represents the average system coverage for each combination. We can observe that while LD(100) achieves the best results overall, LD(10) also performs well and offers better system coverage compared to LD(100).
 
 
-Tables~\ref{tab:combined_mq_extended} and \ref{tab:combined_mojofm_extended} present the average MQ and MoJoFM scores for each input configuration, grouped by clustering algorithm. The results show that configurations involving logical dependencies, alone or in combination with structural dependencies, outperform the SD-only baseline. The Kruskal-Wallis test shows statistically significant differences for all clustering methods on MQ, and for Louvain and Leiden on MoJoFM.
-
-\begin{table*}[htbp]
+\begin{table}[htbp]
+\small
 \centering
-\caption{Average MQ scores across all systems for different input configurations and Kruskal test results.}
-\label{tab:combined_mq_extended}
-\begin{tabular}{|l|c|cccc|ccccc|c|}
+\caption{Average MQ results across all systems for different input configurations and Friedman test results.}
+\label{tab:combined_mq}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{|l|c|c|c|c|c|}
 \hline
-\multirow{2}{*}{\textbf{Clustering}} & \multirow{2}{*}{\textbf{SD}} 
-& \multicolumn{4}{c|}{\textbf{SD+LD}} 
-& \multicolumn{5}{c|}{\textbf{LD only}} 
-& \multirow{2}{*}{\boldmath$\chi^2$ / p} \\
-\cline{3-11}
-& & (10) & (20) & (30) & (40) & (10) & (20) & (30) & (40) & (100) & \\
+\textbf{Clustering} & \textbf{SD} & \textbf{SD+LD(20)} & \textbf{LD(10)} & \textbf{LD(100)} & \boldmath$\chi^2$ / p \\
 \hline
-Louvain & 0.1323 & 0.2730 & 0.2475 & 0.2440 & 0.2728 & 0.4913 & 0.5072 & 0.5035 & 0.5555 & 0.5912 & 30.59 / <0.001 \\
-Leiden  & 0.1213 & 0.2485 & 0.2665 & 0.2423 & 0.2708 & 0.4933 & 0.5072 & 0.5035 & 0.5545 & 0.5912 & 30.71 / <0.001 \\
-DBSCAN  & 0.1352 & 0.1502 & 0.1522 & 0.1598 & 0.1532 & 0.4055 & 0.4790 & 0.5325 & 0.5420 & 0.6268 & 29.87 / <0.001 \\
+Louvain & 0.132 & 0.247 & 0.491 & 0.591 & 16.00 / 0.0003 \\
+Leiden  & 0.121 & 0.267 & 0.493 & 0.591 & 16.00 / 0.0003 \\
+DBSCAN  & 0.135 & 0.152 & 0.406 & 0.627 & 16.00 / 0.0003 \\
+\hline
+\shortstack[l]{\textit{System Avg.} \\ \textit{Coverage (\%)}}& 100.00 & 100.00 & 46.88 & 11.41 & -- \\
 \hline
 \end{tabular}
-\end{table*}
+}
+\end{table}
 
-\begin{table*}[htbp]
+
+\begin{table}[htbp]
+\small
 \centering
-\caption{Average MoJoFM scores across all systems for different input configurations and Kruskal test results.}
-\label{tab:combined_mojofm_extended}
-\begin{tabular}{|l|c|cccc|ccccc|c|}
+\caption{Average MoJoFM results across all systems for different input configurations and Friedman test results.}
+\label{tab:combined_mojofm}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{|l|c|c|c|c|c|}
 \hline
-\multirow{2}{*}{\textbf{Clustering}} & \multirow{2}{*}{\textbf{SD}} 
-& \multicolumn{4}{c|}{\textbf{SD+LD}} 
-& \multicolumn{5}{c|}{\textbf{LD only}} 
-& \multirow{2}{*}{\boldmath$\chi^2$ / p} \\
-\cline{3-11}
-& & (10) & (20) & (30) & (40) & (10) & (20) & (30) & (40) & (100) & \\
+\textbf{Clustering} & \textbf{SD} & \textbf{SD+LD(20)} & \textbf{LD(10)} & \textbf{LD(100)} & \boldmath$\chi^2$ / p \\
 \hline
-Louvain & 57.37 & 63.11 & 61.21 & 62.56 & 61.97 & 64.33 & 65.80 & 66.91 & 68.62 & 71.61 & 6.79 / 0.034 \\
-Leiden  & 59.59 & 62.65 & 62.86 & 61.62 & 62.17 & 64.15 & 65.55 & 67.06 & 68.84 & 71.61 & 6.08 / 0.048 \\
-DBSCAN  & 49.15 & 52.50 & 50.29 & 50.84 & 50.87 & 58.25 & 62.27 & 65.61 & 68.34 & 61.03 & 4.45 / 0.108 \\
+Louvain & 57.37 & 61.21 & 64.33 & 71.61 & 9.75 / 0.0076 \\
+Leiden  & 59.59 & 62.86 & 64.15 & 71.61 & 9.25 / 0.0098 \\
+DBSCAN  & 49.15 & 50.29 & 58.25 & 61.03 & 5.60 / 0.0608 \\
+\hline
+\shortstack[l]{\textit{System Avg.} \\ \textit{Coverage (\%)}}& 100.00 & 100.00 & 46.88 & 11.41 & -- \\
 \hline
 \end{tabular}
-\end{table*}
-
+}
+\end{table}
 
 \section{Research Questions and Findings}
 \label{sec:rq}
@@ -944,8 +945,7 @@ A stricter strength threshold (e.g., 40\%) filters out these weaker logical depe
 
 In contrast, systems like Ant and Tomcat, with higher ratios of commits to entities, obtain better results with logical dependencies at a 10\% strength threshold because entities participate in more commits on average.
 
-In conclusion, with an appropriate threshold, combining SD with LD leads to better clustering results than using SD alone.
-
+In conclusion, with an appropriate threshold, combining SD with LD leads to better clustering results than using SD alone. This statement is supported by our cross-system evaluation, in which the SD+LD(20) configuration achieved higher average MQ and MoJoFM results across all systems and clustering algorithms compared to SD-only while also maintaining full system coverage, as shown in Tables~\ref{tab:combined_mq} and \ref{tab:combined_mojofm}.
 
 \textit{\textbf{RQ2:} Can using only logical dependencies (LD) produce good software clustering results?} 
 
@@ -955,7 +955,7 @@ Thus, while LD(100) provides the highest metric results compared to SD+LD and SD
 
 On the other hand, LD(10) has, in most cases, better metric results than those for SD-only and SD+LD with better system coverage. Apache Ant and Tomcat LD(10) cover more than 60\% of the system, while for Hibernate and Gson, the coverage is slightly above 30\%. 
 
-Therefore, LD(10) can be an alternative to SD-only or SD+LD, especially if structural dependencies are not available.
+In the cross-system tables (Tables~\ref{tab:combined_mq} and \ref{tab:combined_mojofm}), we can observe that LD(10) has a coverage of 46.88\%, which is significantly higher than the 11.41\% coverage of LD(100), while still obtaining good average MQ and MoJoFM results. Therefore, LD(10) can be an alternative to SD-only or SD+LD, especially if structural dependencies are not available.
 
 It is also important to consider that LD-only performance at higher strength thresholds depends on the system's characteristics, such as the number of commits and entities. For the Gson project, the performance at a 100\% strength threshold is not as good as for the other systems, reaching its peak at a 40\% threshold. This is due to the low number of entities remaining at higher thresholds, with only 18 entities at the 80\% to 100\% strength thresholds, and the relatively small number of commits considered.
 
@@ -1023,8 +1023,8 @@ In conclusion, when optimally filtered and combined with structural dependencies
 \bibitem{b16} Silva, Luciana \& Valente, Marco \& Maia, Marcelo. (2015). Co-change Clusters: Extraction and Application on Assessing Software Modularity. Transactions on Aspect-Oriented Software Development. 10.1007/978-3-662-46734-3\_3. 
 \bibitem{b17} Murtagh, Fionn \& Contreras, Pedro. (2012). Algorithms for hierarchical clustering: An overview. Wiley Interdisc. Rew.: Data Mining and Knowledge Discovery. 2. 86-97. 10.1002/widm.53. 
 \bibitem{b18} Amarjeet Prajapati, Anshu Parashar, Amit Rathee. Multi-dimensional information-driven many-objective software remodularization approach. Frontiers of Computer Science in China, 17(3):173209, 2023.
-\bibitem{scikit} T. Bonald, N. de Lara, Q. Lutz, B. Charpentier, Scikit-network: Graph Analysis in Python, Journal of Machine Learning Research, vol.~21, no.~185, pp.~1--6, 2020. 
-\bibitem{kruskal} Kruskal, William H., and W. Allen Wallis. “Use of Ranks in One-Criterion Variance Analysis.” \textit{Journal of the American Statistical Association} 47, no. 260 (1952): 583–621.
+\bibitem{scikit} T. Bonald, N. de Lara, Q. Lutz, B. Charpentier, Scikit-network: Graph Analysis in Python, Journal of Machine Learning Research, vol.~21, no.~185, pp.~1--6, 2020.
+\bibitem{friedman} Friedman, Milton. “The Use of Ranks to Avoid the Assumption of Normality Implicit in the Analysis of Variance.” Journal of the American Statistical Association 32 (1937): 675-701.
 
 
 \end{thebibliography}
