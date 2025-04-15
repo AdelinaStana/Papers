@@ -45,8 +45,8 @@ Politehnica University of Timisoara, Romania (e-mail: adelina.stana@cs.upt.ro)}
 Politehnica University of Timisoara, Romania (e-mail: ioana.sora@cs.upt.ro)}
 
 \markboth
-{Author \headeretal: Preparation of Papers for IEEE TRANSACTIONS and JOURNALS}
-{Author \headeretal: Preparation of Papers for IEEE TRANSACTIONS and JOURNALS}
+{A. D. Stana and I. Șora: Refining Software Clustering: The Impact of Code Co-Changes on Architectural Reconstruction}
+{A. D. Stana and I. Șora: Refining Software Clustering: The Impact of Code Co-Changes on Architectural Reconstruction}
 
 \corresp{Corresponding author: Adelina Diana Stana  (e-mail: adelina.stana@cs.upt.ro).}
 
@@ -301,17 +301,17 @@ We refer to this extended version of the confidence metric as the strength metri
 
 
 \subsubsection{Filter Application Process}
-
-Fig. \ref{fig:filtering} illustrates the overall filter application process. We begin by extracting all co-changes from the versioning system, and the first filter applied is the commit size filter. The commit size filter has a strict threshold of 20 files, meaning that any co-changes from commits involving more than 20 files are filtered out.
-
-The co-changes that remain after applying the commit size filter are then processed using the strength filter. The strength filter uses multiple thresholds, precisely 10 different thresholds. We start with a threshold of 10 and increment it by 10 until we reach a maximum value of 100.
-
 \begin{figure}[t!]
   \centering
   \includegraphics[width=\columnwidth]{filtering.png}
   \caption{ \textbf{Filter application process}}
   \label{fig:filtering}
 \end{figure}
+
+Fig. \ref{fig:filtering} illustrates the overall filter application process. We begin by extracting all co-changes from the versioning system, and the first filter applied is the commit size filter. The commit size filter has a strict threshold of 20 files, meaning that any co-changes from commits involving more than 20 files are filtered out.
+
+The co-changes that remain after applying the commit size filter are then processed using the strength filter. The strength filter uses multiple thresholds, precisely 10 different thresholds. We start with a threshold of 10 and increment it by 10 until we reach a maximum value of 100.
+
 
 \subsubsection{Dependency Extraction and Filtering Tool}
 
@@ -348,6 +348,7 @@ When SD and LD overlap, such as between \texttt{OrangeCat} and \texttt{CatBehavi
 
 \section{Clustering Algorithms and Evaluation Metrics}
 \label{sec:clustering_algorithms_evaluation}
+
 
 In this section, we present the clustering algorithms used in our experiments: Louvain, Leiden, and DBSCAN. We also introduce the evaluation metrics used to assess the quality of the clustering results.
 
@@ -396,6 +397,9 @@ The DBSCAN algorithm starts by visiting an arbitrary point in the dataset. If th
 
 DBSCAN can be applied for software clustering by considering software entities as data points. A distance measure based on dependency weights can be used to compute the neighborhood between entities.
 
+\Figure[t!](topskip=0pt, botskip=0pt, midskip=0pt)[width=\textwidth]{workflow-tool.png}
+{ \textbf{Clustering tool workflow: input, graph construction, clustering, and evaluation.}\label{fig:tool}}
+
 \subsection{Clustering Result Evaluation}
 \label{subsec:evaluation_def}
 
@@ -440,13 +444,13 @@ To use the metric, we first need to generate a reference clustering solution for
 
 Using the MoJoFM metric, we can evaluate the similarity between the generated and reference clustering solutions. This metric is useful when combining multiple dependencies because it measures the similarity between the obtained clustering solutions and the same reference.
 
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Tool Implementation and Workflow}
 \label{sec:tool_workflow}
 
-\Figure[t!](topskip=0pt, botskip=0pt, midskip=0pt)[width=\textwidth]{workflow-tool.png}
-{ \textbf{Clustering tool workflow: input, graph construction, clustering, and evaluation.}\label{fig:tool}}
 
 To evaluate how logical dependencies impact the quality of clustering solutions, we developed a Python tool capable of using any type of dependency, either alone or combined with other types of dependencies, as long as it is provided in CSV format. Structural dependencies are extracted from the source code using static analysis, and logical dependencies are extracted from version control history. Both types of dependencies are extracted using tools developed in our previous work. 
 
